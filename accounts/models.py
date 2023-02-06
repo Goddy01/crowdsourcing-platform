@@ -127,33 +127,33 @@ class InvestorManager(models.Manager):
         # When the all() method of this custom manager is called, I will get all users that are investors.
         return super().get_queryset(*args, **kwargs).filter(type=User.Types.INVESTOR)
 
-class Moderator(settings.AUTH_USER_MODEL):
+class Moderator(User):
     objects = ModeratorManager()
     class Meta:
         proxy = True
         
     def save(self, *args, **kwargs):
         if not self.pk:
-            self.type = settings.AUTH_USER_MODEL.Types.MODERATOR
+            self.type = User.Types.MODERATOR
         return super().save(*args, **kwargs)
 
-class Innovator(settings.AUTH_USER_MODEL):
+class Innovator(User):
     objects = InnovatorManager()
     class Meta:
         proxy = True
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            self.type = settings.AUTH_USER_MODEL.INNOVATOR
+            self.type = User.Types.INNOVATOR
         return super().save(*args, **kwargs)
 
 
-class Investor(settings.AUTH_USER_MODEL):
+class Investor(User):
     objects = InvestorManager()
     class Meta:
         proxy = True
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            self.type = settings.AUTH_USER_MODEL.Types.INVESTOR
+            self.type = User.Types.INVESTOR
         return super().save(*args, **kwargs)
