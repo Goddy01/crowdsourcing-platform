@@ -62,8 +62,11 @@ diff-match-patch==20200713
 dill==0.3.6
 distributed==2022.5.0
 Django==4.1.6
+django-address==0.2.8
 django-celery-beat==2.4.0
 django-celery-results==2.4.0
+django-phonenumber-field==7.0.2
+django-phonenumbers==1.0.1
 django-timezone-field==5.0
 docutils==0.18.1
 entrypoints==0.4
@@ -171,6 +174,7 @@ pathspec==0.10.3
 patsy==0.5.3
 pep8==1.7.1
 pexpect==4.8.0
+phonenumbers==8.13.5
 pickleshare==0.7.5
 Pillow==9.3.0
 pip==22.3.1
