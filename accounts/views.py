@@ -19,9 +19,9 @@ def activation_sent_view(request):
 
 def innovator_sign_up(request):
     if request.method == 'POST':
-        signup_form = forms.InnovatorSignUpForm(request.POST)
-        if signup_form.is_valid():
-            user = signup_form.save(commit=False)
+        innovator_signup_form = forms.InnovatorSignUpForm(request.POST)
+        if innovator_signup_form.is_valid():
+            user = innovator_signup_form.save(commit=False)
             user.is_active = False
             user.type = "INNOVATOR"
             user.save()
@@ -33,18 +33,18 @@ def innovator_sign_up(request):
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
             })
-            to_email = [signup_form.cleaned_data.get('email')]
+            to_email = [innovator_signup_form.cleaned_data.get('email')]
             from_email = settings.EMAIL_HOST_USER
             send_mail(subject, message, from_email, to_email, fail_silently=True)
             return redirect('accounts:activation_sent')
     else:
-        signup_form = forms.InnovatorSignUpForm()
-    return render(request, 'accounts/sign_up.html')
+        innovator_signup_form = forms.InnovatorSignUpForm()
+    return render(request, 'accounts/sign_up.html', context={'innovator_signup_form': innovator_signup_form})
 
 def innovator_sign_in(request):
     if request.method == 'POST':
-        signin_form = forms.InnovatorSignInForm(request.POST)
-        if signin_form.is_valid():
+        innovator_signin_form = forms.InnovatorSignInForm(request.POST)
+        if innovator_signin_form.is_valid():
             email = request.POST['email'].lower()
             password = request.POST['password']
             user = authenticate(email=email, password=password)
@@ -52,8 +52,8 @@ def innovator_sign_in(request):
                 login(request, user)
                 return redirect('home')
     else:
-        signin_form = forms.InnovatorSignInForm()
-    return render(request, 'accounts/sign_in.html')
+        innovator_signin_form = forms.InnovatorSignInForm()
+    return render(request, 'accounts/sign_in.html', context={'innovator_signin_form': innovator_signin_form})
 
 def activate_account(request, uidb64, token):
     try:
