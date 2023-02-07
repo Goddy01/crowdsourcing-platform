@@ -53,7 +53,8 @@ def innovator_sign_in(request):
             user = authenticate(email=email, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('home')
+                # return redirect('home')
+                return HttpResponse('Logged In')
     else:
         innovator_signin_form = forms.InnovatorSignInForm()
     return render(request, 'accounts/sign_in.html', context={'innovator_signin_form': innovator_signin_form})
@@ -72,7 +73,8 @@ def activate_account(request, uidb64, token):
         user.signup_confirmation = True
         user.save()
         login(request, user)
-        return redirect('home')
+        # return redirect('home')
+        return HttpResponse('Logged In')
     else:
         return render(request, 'accounts/activation_invalid.html')
 

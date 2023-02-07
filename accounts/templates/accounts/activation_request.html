@@ -1,7 +1,6 @@
 {% autoescape off %}
+From CrowdsourceIt Team
+
 Hi {{ user.username }},
-
-Please click the following link to confirm your registration:
-
-http://{{ domain }}{% url 'accounts:activate' uidb64=uid token=token %}
+Please click the following link to confirm your registration: http://{{ domain }}{% url 'accounts:activate' uidb64=uid token=token %}
 {% endautoescape %}

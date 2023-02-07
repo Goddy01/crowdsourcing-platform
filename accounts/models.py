@@ -107,7 +107,7 @@ class User(AbstractBaseUser):
         return True
 
     class Types(models.TextChoices):
-        MODERATOR = "VENDOR", "Vendor"
+        MODERATOR = "MODERATOR", "Moderator"
         INNOVATOR = "INNOVATOR", "Innovator"
         INVESTOR = "INVESTOR", "Investor"
 
