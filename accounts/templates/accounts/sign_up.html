@@ -13,6 +13,7 @@
 </head>
 <body style='background: url("{% static 'images/bg-image1.jpg' %}");background-repeat: no-repeat;
 background-size: cover;'>
+{% include 'messages.html' %}
   <!-- Container Start -->
   <div class="errors mb-2 mx-auto" style="font-size: 12px;">
         {% for field in innovator_signup_form %}
