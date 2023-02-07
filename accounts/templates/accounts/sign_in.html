@@ -6,7 +6,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="{% static 'css/sign_in_up.css' %}">
-  <title>Registration Form Using HTML/CSS</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <title>Sign-In</title>
 </head>
 <style>
     #container {
@@ -38,6 +39,13 @@ background-size: cover;height: 100vh;'>
             <p>Don't have an account? <a href="{% url 'accounts:sign_up' %}" style="color: #0c5299;">Sign Up</a></p>
             <a href="#" style="font-size: 14px;color: #0c5299;">Forgot password?</a>
         </footer>
+        <div>
+            <h3 style="margin-bottom: 6px;text-align: center;">OR</h3>
+            <button type="submit" style="background-color: #fff;color: #333;">
+                <i class="fa fa-google" style="font-size: 22px;color: #469e52;margin-right: 10px;"></i>
+                <span>Login with Google</span>
+            </button>
+        </div>
       </form>
       <!-- Form Close -->
     </div>
