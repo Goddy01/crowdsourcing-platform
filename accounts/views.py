@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.shortcuts import render, redirect, HttpResponse
 from . import forms
 from django.contrib.auth import login, authenticate, logout
@@ -23,6 +24,8 @@ def innovator_sign_up(request):
         if innovator_signup_form.is_valid():
             user = innovator_signup_form.save(commit=False)
             user.is_active = False
+            user.date_joined = datetime.now()
+            user.last_login = datetime.now()
             user.type = "INNOVATOR"
             user.save()
             current_site = get_current_site(request)
