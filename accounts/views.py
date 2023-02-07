@@ -8,7 +8,8 @@ from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token
 from django.conf import settings
 from django.core.mail import send_mail
-from .models import UserAccount
+from .models import User
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 
@@ -19,6 +20,7 @@ def innovator_sign_up(request):
         if signup_form.is_valid():
             user = signup_form.save(commit=False)
             user.is_active = False
+            user.type = "INNOVATOR"
             user.save()
             current_site = get_current_site(request)
             subject = 'Activate your account'
@@ -36,5 +38,19 @@ def innovator_sign_up(request):
         signup_form = forms.SignUpForm()
     return render(request, 'accounts/sign_up.html')
 
-def sign_in(request):
+def innovator_sign_in(request):
+    if request.user.type == "INNOVATOR":
+        if request.method == 'POST':
+            signin_form = forms.SignInForm(request.POST)
+            if signin_form.is_valid():
+                email = request.POST['email'].lower()
+                password = request.POST['password']
+                user = authenticate(email=email, password=password)
+                if user is not None:
+                    login(request, user)
+                    return redirect('home')
+        else:
+            signin_form = forms.SignInForm()
+    else:
+        messages.error(request, 'No Innovator account found')
     return render(request, 'accounts/sign_in.html')

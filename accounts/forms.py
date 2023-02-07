@@ -1,16 +1,16 @@
 from django import forms
-from .models import User
+from .models import User, Innovator, Investor, Moderator
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm
 
-class SignUpForm(UserCreationForm):
+class InnovatorSignUpForm(UserCreationForm):
     class Meta:
-        model = User
+        model = Innovator
         fields = ['username', 'first_name', 'last_name', 'middle_name', 'email', 'password1', 'password2']
 
-class SignInForm(forms.ModelForm):
+class InnovatorSignInForm(forms.ModelForm):
     class Meta:
-        model = User
+        model = Innovator
         fields = ['email', 'password']
 
     def clean(self):
