@@ -18,7 +18,8 @@
         width: 100%;
 }
 </style>
-<body>
+<body style='background: url("{% static 'images/bg-image1.jpg' %}");background-repeat: no-repeat;
+background-size: cover;height: 100vh;'>
   <!-- Container Start -->
   <div id="container">
     <!-- Form Wrap Start -->
@@ -33,10 +34,10 @@
           <input type="password" name="password" id="password" placeholder="Enter your password">
         </div>
         <button type="submit">Login</button>
-        <a href="#" style="font-size: 14px;">Forgot password?</a>
         <footer>
             <p>Don't have an account? <a href="#">Sign Up</a></p>
-          </footer>
+            <a href="#" style="font-size: 14px;">Forgot password?</a>
+        </footer>
       </form>
       <!-- Form Close -->
     </div>

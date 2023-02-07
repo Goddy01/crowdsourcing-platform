@@ -11,6 +11,8 @@ body{
   background: #009579;
   color: #fff;
   line-height: 1.8;
+  /* background: var(--accent-color) url(../images/global-network.svg) no-repeat right bottom; */
+	/* color: var(--accent-alt-color); */
 }
 
 a{
@@ -27,8 +29,7 @@ a{
   background-color: #fff;
   padding: 15px 25px;
   color: #333;
-  border-top: 4px solid #49c1a2;
-  border-radius: 05px;
+  border-radius: 15px;
 }
 
 .form-wrap h1,
