@@ -8,7 +8,7 @@ from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token
 from django.conf import settings
 from django.core.mail import send_mail
-from .models import User
+from .models import User, Innovator, Investor, Moderator
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
@@ -54,3 +54,21 @@ def innovator_sign_in(request):
     else:
         messages.error(request, 'No Innovator account found')
     return render(request, 'accounts/sign_in.html')
+
+def activate_account(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = Innovator.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, Innovator.DoesNotExist):
+        user = None
+    # checking if the user exists, if the token is valid.
+    if user is not None and account_activation_token.check_token(user, token):
+        # if valid set active true 
+        user.is_active = True
+        # set signup_confirmation true
+        user.signup_confirmation = True
+        user.save()
+        login(request, user)
+        return redirect('home')
+    else:
+        return render(request, 'accounts/activation_invalid.html')
