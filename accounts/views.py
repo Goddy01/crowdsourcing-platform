@@ -19,7 +19,7 @@ def activation_sent_view(request):
 
 def innovator_sign_up(request):
     if request.method == 'POST':
-        signup_form = forms.SignUpForm(request.POST)
+        signup_form = forms.InnovatorSignUpForm(request.POST)
         if signup_form.is_valid():
             user = signup_form.save(commit=False)
             user.is_active = False
@@ -38,24 +38,21 @@ def innovator_sign_up(request):
             send_mail(subject, message, from_email, to_email, fail_silently=True)
             return redirect('accounts:activation_sent')
     else:
-        signup_form = forms.SignUpForm()
+        signup_form = forms.InnovatorSignUpForm()
     return render(request, 'accounts/sign_up.html')
 
 def innovator_sign_in(request):
-    if request.user.type == "INNOVATOR":
-        if request.method == 'POST':
-            signin_form = forms.SignInForm(request.POST)
-            if signin_form.is_valid():
-                email = request.POST['email'].lower()
-                password = request.POST['password']
-                user = authenticate(email=email, password=password)
-                if user is not None:
-                    login(request, user)
-                    return redirect('home')
-        else:
-            signin_form = forms.SignInForm()
+    if request.method == 'POST':
+        signin_form = forms.InnovatorSignInForm(request.POST)
+        if signin_form.is_valid():
+            email = request.POST['email'].lower()
+            password = request.POST['password']
+            user = authenticate(email=email, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('home')
     else:
-        messages.error(request, 'No Innovator account found')
+        signin_form = forms.InnovatorSignInForm()
     return render(request, 'accounts/sign_in.html')
 
 def activate_account(request, uidb64, token):
