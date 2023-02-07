@@ -8,9 +8,10 @@
 
 body{
   font-family: 'poppins';
-  background: #009579;
+  background: #28C117;
   color: #fff;
   line-height: 1.8;
+  
   /* background: var(--accent-color) url(../images/global-network.svg) no-repeat right bottom; */
 	/* color: var(--accent-alt-color); */
 }
@@ -60,7 +61,7 @@ a{
   width: 100%;
   padding: 10px;
   margin-top: 20px;
-  background-color: #49c1a2;
+  background-color: #28C117;
   color: #fff;
   cursor: pointer;
   border: 1px solid #49c1a2;
@@ -70,7 +71,7 @@ a{
 }
 
 .form-wrap button:hover{
-  background-color: #37a08e;
+  background-color: #469e52;
   transition: 1s;
 }
 
@@ -81,11 +82,7 @@ a{
 
 footer {
   text-align: center;
-  font-size: 15px;
+  font-size: 13px;
   margin-top: 10px;
   color: #333;
-}
-
-footer a {
-  color:#37a08e;
 }
