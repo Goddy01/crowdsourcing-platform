@@ -3,41 +3,50 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Login & Registration Form | CoderGirl</title>
-  
   <link rel="stylesheet" href="{% static 'css/sign_in_up.css' %}">
+  <title>Registration Form Using HTML/CSS</title>
 </head>
 <body>
-  <div class="container">
-    <input type="checkbox" id="check">
-    <div class="login form">
-      <header>Login</header>
-      <form action="#">
-        <input type="email" placeholder="Enter your email">
-        <input type="password" placeholder="Enter your password">
-        <div class="sign__group sign__group--checkbox">
-            <div style="display: flex;">
-                <input id="remember" name="remember" type="checkbox">
-                <label for="remember">Remember Me</label>
-            </div>
-            <div style="display: flex;">
-                <input id="policy" name="policy" type="checkbox">
-			    <label for="policy" style="font-size: 16px;">
-                    Do you agree with our <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a>
-                </label>
-            </div>
+  <!-- Container Start -->
+  <div id="container">
+    <!-- Form Wrap Start -->
+    <div class="form-wrap">
+      <h1>Sign In</h1>
+      <!-- Form Start -->
+      <form>
+        <div class="form-group">
+          <input type="text" name="firstname" id="first-name" placeholder="First Name">
         </div>
-        <input type="button" class="button" value="Login">
+        <div class="form-group">
+          <input type="text" name="lastname" id="last-name" placeholder="Last Name">
+        </div>
+        <div class="form-group">
+          <input type="text" name="middlename" id="middle-name" placeholder="Middle Name">
+        </div>
+        <div class="form-group">
+          <input type="email" name="email" id="email" placeholder="Email">
+        </div>
+        <div class="form-group">
+          <input type="password" name="firstname" id="first-name" placeholder="Password">
+        </div>
+        <div class="form-group">
+          <input type="password" name="firstname" id="first-name" placeholder="Confirm Password">
+        </div>
+        <button type="submit">Sign Up</button>
+        <p class="bottom-text">
+          By Clicking the Sign Up Button, you agree to our
+          <a href="#">Term & Conditions</a> and <a href="#">Primary Policy</a>
+        </p>
+        <footer>
+            <p>Already Have an Account? <a href="#">Login Here</a></p>
+          </footer>
       </form>
-      <div class="signup">
-        <a href="#">Forgot password?</a>
-        <span class="signup" style="display: block;">Don't have an account?
-         <label for="check">Signup</label>
-        </span>
-      </div>
+      <!-- Form Close -->
     </div>
+    <!-- Form Wrap Close -->
   </div>
+  <!-- Container Close -->
 </body>
 </html>
