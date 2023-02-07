@@ -14,6 +14,9 @@ from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
+def activation_sent_view(request):
+    return render(request, 'accounts/activation_sent.html')
+
 def innovator_sign_up(request):
     if request.method == 'POST':
         signup_form = forms.SignUpForm(request.POST)
