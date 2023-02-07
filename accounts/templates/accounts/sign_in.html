@@ -35,8 +35,8 @@ background-size: cover;height: 100vh;'>
         </div>
         <button type="submit">Login</button>
         <footer>
-            <p>Don't have an account? <a href="#">Sign Up</a></p>
-            <a href="#" style="font-size: 14px;">Forgot password?</a>
+            <p>Don't have an account? <a href="{% url 'accounts:sign_up' %}" style="color: #0c5299;">Sign Up</a></p>
+            <a href="#" style="font-size: 14px;color: #0c5299;">Forgot password?</a>
         </footer>
       </form>
       <!-- Form Close -->
