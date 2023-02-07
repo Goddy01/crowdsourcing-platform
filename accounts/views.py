@@ -72,3 +72,9 @@ def activate_account(request, uidb64, token):
         return redirect('home')
     else:
         return render(request, 'accounts/activation_invalid.html')
+
+
+@login_required
+def sign_out(request):
+    logout(request)
+    return redirect('home')
