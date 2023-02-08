@@ -206,10 +206,10 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 SITE_ID = 1
 
-LOGIN_URL = 'innovator_sign_in'
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_URL = 'sign_out'
-LOGOUT_REDIRECT_URL = 'innovator_sign_in'
+LOGIN_URL = 'accounts2:innovator_sign_in'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_URL = 'accounts2:sign_out'
+LOGOUT_REDIRECT_URL = 'accounts2:innovator_sign_in'
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')

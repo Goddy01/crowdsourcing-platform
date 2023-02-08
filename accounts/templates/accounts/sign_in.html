@@ -60,7 +60,7 @@ background-size: cover;height: 100vh;'>
     <div id="form-wrap">
       <h1 class="font-weight-bold">Login</h1>
       <!-- Form Start -->
-      <form style="padding: 20px;" action="{% url 'accounts:innovator_sign_in' %}" method="post">
+      <form style="padding: 20px;" action="{% url 'accounts2:innovator_sign_in' %}" method="post">
         {% csrf_token %}
         <div class="form-group">
           <input type="email" name="email" id="email" placeholder="Enter your email" value="{{ request.POST.email }}">
@@ -70,7 +70,7 @@ background-size: cover;height: 100vh;'>
         </div>
         <button type="submit">Login</button>
         <footer>
-            <p style="font-size: 16px;">Don't have an account? <a href="{% url 'accounts:innovator_sign_up' %}" style="color: #0c5299;">Sign Up</a></p>
+            <p style="font-size: 16px;">Don't have an account? <a href="{% url 'accounts2:innovator_sign_up' %}" style="color: #0c5299;">Sign Up</a></p>
             <a href="#" style="font-size: 16px;color: #0c5299;">Forgot password?</a>
         </footer>
         <div>
