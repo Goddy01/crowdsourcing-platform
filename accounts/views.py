@@ -83,5 +83,5 @@ def activate_account(request, uidb64, token):
 @login_required
 def sign_out(request):
     logout(request)
-    # return redirect('home')
-    return HttpResponse('Logged Out')
+    return redirect('home')
+    # return HttpResponse('Logged Out')

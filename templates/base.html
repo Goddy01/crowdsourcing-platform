@@ -56,14 +56,34 @@
 						</ul>
 					</li>
 					<li class="menu-account menu-item-has-children">
-						<a href="account-overview.html"><em class="mdi mdi-account-outline"></em> <span class="account-details"><span class="account-name">John Doe</span> <span class="account-balance"><em class="screen-reader-text">Total balance: </em><strong class="account-balance-amount">€215.50</strong></span></span><em class="mdi mdi-chevron-down"></em></a>
+						<a href="account-overview.html">
+                            <em class="mdi mdi-account-outline"></em> 
+                            <span class="account-details">
+                                <span class="account-name">
+                                    {% if request.user.is_authenticated %}
+                                    {{ request.user.username|title }}
+                                    {% else %}
+                                    Guest
+                                    {% endif %}
+                                </span> 
+                                <span class="account-balance">
+                                    <em class="screen-reader-text">Total balance: </em>
+                                    <strong class="account-balance-amount">€215.50</strong>
+                                </span>
+                            </span>
+                            <em class="mdi mdi-chevron-down"></em>
+                        </a>
 						<ul class="sub-menu">
 							<li><a href="account-overview.html">Overview</a></li>
 							<li><a href="account-investments.html">Investments</a></li>
 							<li><a href="account-statement.html">Statement</a></li>
 							<li><a href="account-funding.html">Funding</a></li>
 							<li><a href="account-profile.html">Profile</a></li>
-							<li class="account-logout"><a href="#">Logout</a></li>
+                            {% if request.user.is_authenticated %}
+							<li class="account-logout"><a href="{% url 'accounts:sign_out' %}">Logout</a></li>
+                            {% else %}
+                            <li class="account-logout"><a href="{% url 'accounts:innovator_sign_in' %}">Login</a></li>
+                            {% endif %}
 						</ul>
 					</li>
 				</ul>
