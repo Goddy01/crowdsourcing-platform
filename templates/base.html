@@ -80,9 +80,9 @@
 							<li><a href="account-funding.html">Funding</a></li>
 							<li><a href="account-profile.html">Profile</a></li>
                             {% if request.user.is_authenticated %}
-							<li class="account-logout"><a href="{% url 'accounts2:sign_out' %}">Logout</a></li>
+							<li class="account-logout"><a href="{% url 'accounts:sign_out' %}">Logout</a></li>
                             {% else %}
-                            <li class="account-logout"><a href="{% url 'accounts2:innovator_sign_in' %}">Login</a></li>
+                            <li class="account-logout"><a href="{% url 'accounts:innovator_sign_in' %}">Login</a></li>
                             {% endif %}
 						</ul>
 					</li>

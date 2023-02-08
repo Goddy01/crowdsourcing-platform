@@ -21,8 +21,7 @@ from core import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/', include('allauth.urls')),
-    path('accounts2/', include('accounts.urls', 'accounts2')),
+    path('accounts/', include('accounts.urls', 'accounts')),
     path('', views.home, name='home'),
 ]
 
