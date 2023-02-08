@@ -10,7 +10,7 @@ from django.conf import settings
 
 class AccountManager(BaseUserManager):
     """Creates and saves a user with the given details"""
-    def create_user(self, email, username, first_name, last_name, middle_name, phone_num, password):
+    def create_user(self, email, username, first_name, last_name, middle_name, phone_num, password=None):
         if not email:
             raise ValueError("The user must provide an email")
         if not username:
@@ -60,7 +60,7 @@ def upload_location_pfp(instance, filename):
 def upload_location_id_card(instance, filename):
     return f'id_cards/{str(instance.username)}/-{filename}'
 
-class User(AbstractBaseUser):
+class UserProfile(AbstractBaseUser):
     last_name =                     models.CharField(max_length=256)
     first_name =                    models.CharField(max_length=256)
     middle_name =                   models.CharField(max_length=256)
@@ -85,7 +85,7 @@ class User(AbstractBaseUser):
     # is_customer             = models.BooleanField(default=False)
 
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ['username', ]
 
     objects = AccountManager()
@@ -116,45 +116,45 @@ class User(AbstractBaseUser):
 class ModeratorManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
         # When the all() method of this custom manager is called, I will get all users that are moderators.
-        return super().get_queryset(*args, **kwargs).filter(type=User.Types.MODERATOR)
+        return super().get_queryset(*args, **kwargs).filter(type=UserProfile.Types.MODERATOR)
 
 class InnovatorManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
         # When the all() method of this custom manager is called, I will get all users that are innovators.
-        return super().get_queryset(*args, **kwargs).filter(type=User.Types.INNOVATOR)
+        return super().get_queryset(*args, **kwargs).filter(type=UserProfile.Types.INNOVATOR)
 
 class InvestorManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
         # When the all() method of this custom manager is called, I will get all users that are investors.
-        return super().get_queryset(*args, **kwargs).filter(type=User.Types.INVESTOR)
+        return super().get_queryset(*args, **kwargs).filter(type=UserProfile.Types.INVESTOR)
 
-class Moderator(User):
+class Moderator(UserProfile):
     objects = ModeratorManager()
     class Meta:
         proxy = True
         
     def save(self, *args, **kwargs):
         if not self.pk:
-            self.type = User.Types.MODERATOR
+            self.type = UserProfile.Types.MODERATOR
         return super().save(*args, **kwargs)
 
-class Innovator(User):
+class Innovator(UserProfile):
     objects = InnovatorManager()
     class Meta:
         proxy = True
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            self.type = User.Types.INNOVATOR
+            self.type = UserProfile.Types.INNOVATOR
         return super().save(*args, **kwargs)
 
 
-class Investor(User):
+class Investor(UserProfile):
     objects = InvestorManager()
     class Meta:
         proxy = True
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            self.type = User.Types.INVESTOR
+            self.type = UserProfile.Types.INVESTOR
         return super().save(*args, **kwargs)

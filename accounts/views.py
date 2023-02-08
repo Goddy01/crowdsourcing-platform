@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.shortcuts import render, redirect, HttpResponse
-from . import forms
+from .forms import InnovatorSignInForm, InnovatorSignUpForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -9,7 +9,7 @@ from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token
 from django.conf import settings
 from django.core.mail import send_mail
-from .models import User, Innovator, Investor, Moderator
+from .models import UserProfile, Innovator, Investor, Moderator
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
@@ -20,9 +20,9 @@ def activation_sent_view(request):
 
 def innovator_sign_up(request):
     if request.method == 'POST':
-        innovator_signup_form = forms.InnovatorSignUpForm(request.POST)
-        if innovator_signup_form.is_valid():
-            user = innovator_signup_form.save(commit=False)
+        form = InnovatorSignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
             user.is_active = False
             user.date_joined = datetime.now()
             user.last_login = datetime.now()
@@ -36,28 +36,28 @@ def innovator_sign_up(request):
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
             })
-            to_email = [innovator_signup_form.cleaned_data.get('email')]
+            to_email = [form.cleaned_data.get('email')]
             from_email = settings.EMAIL_HOST_USER
             send_mail(subject, message, from_email, to_email, fail_silently=True)
             return redirect('accounts:activation_sent')
     else:
-        innovator_signup_form = forms.InnovatorSignUpForm()
-    return render(request, 'accounts/sign_up.html', context={'innovator_signup_form': innovator_signup_form})
+        form = InnovatorSignUpForm()
+    return render(request, 'accounts/sign_up.html', context={'innovator_signup_form': form})
 
 def innovator_sign_in(request):
     if request.method == 'POST':
-        innovator_signin_form = forms.InnovatorSignInForm(request.POST)
-        if innovator_signin_form.is_valid():
-            email = request.POST['email'].lower()
-            password = request.POST['password']
-            user = authenticate(email=email, password=password)
-            if user is not None:
+        form = InnovatorSignInForm(request.POST)
+        # print('ERROR: ', innovator_signin_form)
+        if form.is_valid():
+            user = authenticate(email=form.cleaned_data.get('email'), password=form.cleaned_data.get('password'))
+            if user:
                 login(request, user)
-                # return redirect('home')
                 return HttpResponse('Logged In')
+            else:
+                messages.error(request, 'User Not Found')
     else:
-        innovator_signin_form = forms.InnovatorSignInForm()
-    return render(request, 'accounts/sign_in.html', context={'innovator_signin_form': innovator_signin_form})
+        form = InnovatorSignInForm()
+    return render(request, 'accounts/sign_in.html', context={'innovator_signin_form': form})
 
 def activate_account(request, uidb64, token):
     try:
@@ -82,4 +82,5 @@ def activate_account(request, uidb64, token):
 @login_required
 def sign_out(request):
     logout(request)
-    return redirect('home')
+    # return redirect('home')
+    return HttpResponse('Logged Out')

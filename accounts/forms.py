@@ -1,5 +1,6 @@
+from django.contrib import messages
 from django import forms
-from .models import User, Innovator, Investor, Moderator
+from .models import UserProfile, Innovator, Investor, Moderator
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm
 
@@ -17,13 +18,18 @@ class InnovatorSignUpForm(UserCreationForm):
 
 class InnovatorSignInForm(forms.ModelForm):
     class Meta:
-        model = Innovator
+        model = UserProfile
         fields = ['email', 'password']
 
     def clean(self):
-        email = self.cleaned_data.get('email').lower()
-        password = self.cleaned_data.get('password')
-        user = authenticate(email=email, password=password)
+        if self.is_valid():
+            email = self.cleaned_data['email'].lower()
+            password = self.cleaned_data['password']
+            print(email)
+            print(password)
+            user = authenticate(email=email, password=password)
 
-        if user is None:
-            raise forms.ValidationError('Account does not exist.')
+            print('USER: ', user)
+            if not user:
+                print('ACCOUNT DOES NOT EXIST')
+                raise forms.ValidationError('Invalid login details.')
