@@ -52,7 +52,8 @@ def innovator_sign_in(request):
             user = authenticate(email=form.cleaned_data.get('email'), password=form.cleaned_data.get('password'))
             if user:
                 login(request, user)
-                return HttpResponse('Logged In')
+                return redirect('home')
+                # return HttpResponse('Logged In')
             else:
                 messages.error(request, 'User Not Found')
     else:
@@ -73,8 +74,8 @@ def activate_account(request, uidb64, token):
         user.signup_confirmation = True
         user.save()
         login(request, user)
-        # return redirect('home')
-        return HttpResponse('Logged In')
+        return redirect('home')
+        # return HttpResponse('Logged In')
     else:
         return render(request, 'accounts/activation_invalid.html')
 
