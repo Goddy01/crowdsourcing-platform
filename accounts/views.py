@@ -27,6 +27,8 @@ def innovator_sign_up(request):
             user.date_joined = datetime.now()
             user.last_login = datetime.now()
             user.type = "INNOVATOR"
+            user.first_name = user.social_auth.get(provider='linkedin').extra_data['first_name'] or user.social_auth.get(provider='google-oauth2').extra_data['first_name']
+            user.last_name = user.social_auth.get(provider='linkedin').extra_data['last_name'] or user.social_auth.get(provider='google-oauth2').extra_data['last_name']
             user.save()
             current_site = get_current_site(request)
             subject = 'Activate your account'

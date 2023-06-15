@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+from django.db import IntegrityError
 from enum import unique
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
@@ -10,33 +11,38 @@ from django.conf import settings
 
 class AccountManager(BaseUserManager):
     """Creates and saves a user with the given details"""
-    def create_user(self, email, username, first_name, last_name, middle_name, phone_num, password=None):
+    def create_user(self, email, username, first_name=None, last_name=None, password=None):
         if not email:
             raise ValueError("The user must provide an email")
         if not username:
             raise ValueError("The user must provide a username")
-        if not first_name:
-            raise ValueError("The user must provide their first_name")
-        if not last_name:
-            raise ValueError("The user must provide their last_name")
-        if not middle_name:
-            raise ValueError("The user must provide their middle_name")
-        if not phone_num:
-            raise ValueError("The user must provide their phone number")
+        
+        # Validate email is unique in database
+        if UserProfile.objects.filter(email = self.normalize_email(email).lower()).exists():
+            raise ValueError('This email has already been registered.')
+
+        # if not middle_name:
+        #     raise ValueError("The user must provide their middle_name")
+        # if not phone_num:
+            # raise ValueError("The user must provide their phone number")
 
         user = self.model(
             email=self.normalize_email(email),
             username=username,
             first_name=first_name,
             last_name=last_name,
-            middle_name=middle_name,
-            phone_num=phone_num
+            # middle_name=middle_name,
+            # phone_num=phone_num
         )
         user.set_password(password)
+        # Save and catch IntegrityError (due to email being unique)
+        # try:
         user.save(using=self._db)
-        return user
+        # except IntegrityError:
+        #     raise ValueError('This email has already been registered.')
+        # return user
 
-    def create_superuser(self, email, username, first_name, last_name, middle_name, phone_num, password):
+    def create_superuser(self, email, username, first_name, last_name, password):
         """Creates and saves a superuser with the given details"""
         user = self.create_user(
             email=email,
@@ -44,8 +50,8 @@ class AccountManager(BaseUserManager):
             password=password,
             first_name=first_name,
             last_name=last_name,
-            middle_name=middle_name,
-            phone_num=phone_num,
+            # middle_name=middle_name,
+            # phone_num=phone_num,
         )
 
         user.is_admin = True
@@ -86,7 +92,8 @@ class UserProfile(AbstractBaseUser):
 
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'middle_name', 'phone_num']
+    # REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'middle_name', 'phone_num']
+    REQUIRED_FIELDS = ['username', ]
 
     objects = AccountManager()
 
