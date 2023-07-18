@@ -18,8 +18,8 @@ class AccountManager(BaseUserManager):
             raise ValueError("The user must provide a username")
         
         # Validate email is unique in database
-        if UserProfile.objects.filter(email = self.normalize_email(email).lower()).exists():
-            raise ValueError('This email has already been registered.')
+        # if UserProfile.objects.filter(email = self.normalize_email(email).lower()).exists():
+        #     raise ValueError('This email has already been registered.')
 
         # if not middle_name:
         #     raise ValueError("The user must provide their middle_name")

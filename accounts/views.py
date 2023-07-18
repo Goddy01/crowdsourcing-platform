@@ -12,7 +12,7 @@ from django.core.mail import send_mail
 from .models import UserProfile, Innovator, Investor, Moderator
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-
+ 
 
 # Create your views here.
 def activation_sent_view(request):
@@ -55,6 +55,7 @@ def innovator_sign_in(request):
             if user:
                 login(request, user)
                 return redirect('home')
+                    # raise ValueError('This email has already been registered.')
                 # return HttpResponse('Logged In')
             else:
                 messages.error(request, 'User Not Found')

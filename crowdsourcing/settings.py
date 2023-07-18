@@ -81,7 +81,7 @@ TEMPLATES = [
 
 # For SOCIAL-AUTH
 AUTHENTICATION_BACKENDS = [
-    'social_core.backends.linkedin.LinkedinOAuth2',
+    # 'social_core.backends.linkedin.LinkedinOAuth2',
     'social_core.backends.google.GoogleOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 ]
@@ -187,12 +187,13 @@ MESSAGE_TAGS = {
         messages.ERROR: 'alert-danger',
  }
 
-LOGIN_URL = 'accounts:innovator_sign_in'
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_URL = 'accounts:innovator_sign_out'
-LOGOUT_REDIRECT_URL = 'accounts:innovator_sign_in'
+LOGIN_URL = '/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
 SOCIAL_AUTH_PIPELINE = (
 'social.pipeline.social_auth.social_details',
@@ -216,19 +217,19 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_FIELD_SELECTORS = {
     'phone': 'phoneNumbers(value)',}
 
 
-SOCIAL_AUTH_LINKEDIN_OAUTH2_KEY = os.environ.get('SOCIAL_AUTH_LINKEDIN_OAUTH2_KEY')
-SOCIAL_AUTH_LINKEDIN_OAUTH2_SECRET = os.environ.get('SOCIAL_AUTH_LINKEDIN_OAUTH2_SECRET')
+# SOCIAL_AUTH_LINKEDIN_OAUTH2_KEY = os.environ.get('SOCIAL_AUTH_LINKEDIN_OAUTH2_KEY')
+# SOCIAL_AUTH_LINKEDIN_OAUTH2_SECRET = os.environ.get('SOCIAL_AUTH_LINKEDIN_OAUTH2_SECRET')
 
 
 
-# Add email to requested authorizations.
-SOCIAL_AUTH_LINKEDIN_OAUTH2_SCOPE = ['r_liteprofile', 'r_emailaddress']
-# Add the fields so they will be requested from linkedin.
-SOCIAL_AUTH_LINKEDIN_OAUTH2_FIELD_SELECTORS = ['emailAddress']
-# Arrange to add the fields to UserSocialAuth.extra_data
-SOCIAL_AUTH_LINKEDIN_OAUTH2_EXTRA_DATA = [('id', 'id'),
-                                          ('firstName', 'first_name'),
-                                          ('lastName', 'last_name'),
-                                          ('emailAddress', 'email_address')]
+# # Add email to requested authorizations.
+# SOCIAL_AUTH_LINKEDIN_OAUTH2_SCOPE = ['r_liteprofile', 'r_emailaddress']
+# # Add the fields so they will be requested from linkedin.
+# SOCIAL_AUTH_LINKEDIN_OAUTH2_FIELD_SELECTORS = ['emailAddress']
+# # Arrange to add the fields to UserSocialAuth.extra_data
+# SOCIAL_AUTH_LINKEDIN_OAUTH2_EXTRA_DATA = [('id', 'id'),
+#                                           ('firstName', 'first_name'),
+#                                           ('lastName', 'last_name'),
+#                                           ('emailAddress', 'email_address')]
 
-SOCIAL_AUTH_USER_FIELDS=['email','first_name', 'last_name', 'username','password']
+# SOCIAL_AUTH_USER_FIELDS=['email','first_name', 'last_name', 'username','password']
