@@ -19,12 +19,14 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from core import views
+from accounts.views import email_exists
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls', 'accounts')), # For social-auth
     path('social-auth/', include('social_django.urls', namespace='social')),
     path('', views.home, name='home'),
+    path('email-exists', email_exists, name='email-exists'),
     path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(template_name="password/password_change_done.html"), name="password_change_done"),
 
     # path('password_change/', auth_views.PasswordChangeView.as_view(template_name='password/password_change.html'), name='password_change'),

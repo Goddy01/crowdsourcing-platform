@@ -168,12 +168,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'accounts.UserProfile'
 
 # SMTP CONFIGS
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 465
-# EMAIL_PORT = 587
-EMAIL_USE_SSL = True
+# EMAIL_PORT = '465'
+EMAIL_PORT = '587'
+EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = 'CrowdsourceIt Team <noreply@crowdsourceit.com>'
@@ -187,10 +187,10 @@ MESSAGE_TAGS = {
         messages.ERROR: 'alert-danger',
  }
 
-LOGIN_URL = '/'
+LOGIN_URL = 'accounts:innovator_sign_in'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = 'accounts:innovator_sign_in'
 
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
@@ -232,4 +232,4 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_FIELD_SELECTORS = {
 #                                           ('lastName', 'last_name'),
 #                                           ('emailAddress', 'email_address')]
 
-# SOCIAL_AUTH_USER_FIELDS=['email','first_name', 'last_name', 'username','password']
+SOCIAL_AUTH_USER_FIELDS=['first_name', 'last_name', 'password', 'email', 'username']

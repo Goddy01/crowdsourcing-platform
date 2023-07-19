@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+from django.http import HttpResponse, HttpResponseRedirect
 from django.db import IntegrityError
 from enum import unique
 from django.db import models
@@ -6,6 +6,9 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.core.validators import RegexValidator
 from phonenumber_field.modelfields import PhoneNumberField
 from django.conf import settings
+from django.core.exceptions import ValidationError
+from social_django.models import UserSocialAuth
+from django.shortcuts import redirect
 # Create your models here.
 
 
@@ -18,13 +21,36 @@ class AccountManager(BaseUserManager):
             raise ValueError("The user must provide a username")
         
         # Validate email is unique in database
-        # if UserProfile.objects.filter(email = self.normalize_email(email).lower()).exists():
-        #     raise ValueError('This email has already been registered.')
+        # email = email
+        # user = UserProfile.objects.filter(email=email).first()
+        # if user:
+        # print('EMAIL: ', email)
+        # try:
+        #     social_auth = UserSocialAuth.objects.get(uid=email, provider='google-oauth2')
+        #     if social_auth:
+        #         print('1')
+        #         return HttpResponse('An email fo google auth dey exieeest')
+        # except UserSocialAuth.DoesNotExist:
+        #     django_auth = UserProfile.objects.get(email=email)
+        #     if django_auth:
+        #         print('2')
+        #         return HttpResponse('An email fo google auth dey exist')
+        # email = email
+        # if UserSocialAuth.objects.filter(uid__iexact=email, provider='google-oauth2').exists() or UserProfile.objects.filter(email__iexact=email).exists():
+        # if UserProfile.objects.get(email = self.normalize_email(self.social_auth().get('email')).lower()):
+            # raise ValidationError('This email has already been registered.')
+            # return HttpResponse('This email has already been registered.')
 
         # if not middle_name:
         #     raise ValueError("The user must provide their middle_name")
         # if not phone_num:
             # raise ValueError("The user must provide their phone number")
+        try:
+            UserSocialAuth.objects.get(uid__iexact=email, user=UserProfile.objects.get(email__iexact=email)).social_auth(provider='google-oauth2').extra_data['email']
+        except:
+            print('111BROOOSS')
+            return None
+            # return 'This email is linked with an account created through a Google account'
 
         user = self.model(
             email=self.normalize_email(email),
@@ -67,7 +93,7 @@ def upload_location_id_card(instance, filename):
     return f'id_cards/{str(instance.username)}/-{filename}'
 
 class UserProfile(AbstractBaseUser):
-    last_name =                     models.CharField(max_length=256)
+    last_name =                     models.CharField(max_length=256, null=True, blank=True)
     first_name =                    models.CharField(max_length=256)
     middle_name =                   models.CharField(max_length=256)
     username =                      models.CharField(max_length=256, unique=True, blank=False)
