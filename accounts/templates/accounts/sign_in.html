@@ -34,18 +34,18 @@ background-size: cover;height: 100vh;'>
   {% if email_exists %}
   <div class="alert alert-danger p-3 m-3 text-center text-light bg-danger border-0" role="alert">
     {{ email_exists }}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="margin-top: -8px;">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="margin-top: -4px;color: white;">
         &times;
     </button>
   </div>
   {% endif %}
-  <div class="errors mb-2 mx-auto" style="font-size: 12px;">
+  <div class="errors mb-2 mx-auto">
         {% for field in innovator_signin_form %}
             <p>
             {% for error in field.errors %}
-            <div class="alert alert-danger p-3 m-3" role="alert">
+            <div class="alert alert-danger p-3 m-3 text-center text-light bg-danger border-0" role="alert">
                 {{error}}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="margin-top: -8px;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="margin-top: -4px;color: whitesmoke;">
                     &times;
                 </button>
             </div>
@@ -54,11 +54,11 @@ background-size: cover;height: 100vh;'>
         {% endfor %}
 
         {% if innovator_signin_form.non_field_errors %}
-        <div class="alert alert-danger p-3 m-3" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <div class="alert alert-danger p-3 m-3 text-center text-light bg-danger border-0" role="alert">
+          {{innovator_signin_form.non_field_errors.as_text|cut:"* "}}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="margin-top: -4px;color: whitesmoke;">
                 &times;
             </button>
-            <p>{{innovator_signin_form.non_field_errors.as_text|cut:"* "}}</p>
         </div>
         {% endif %}
     </div>
