@@ -8,28 +8,9 @@ from social_django.models import UserSocialAuth
 
 
 class ContributorSignUpForm(UserCreationForm):
-    username = forms.CharField(error_messages={'required': 'Please enter your username'})
-    first_name = forms.CharField(error_messages={'required': 'Please enter your firstname'})
-    last_name = forms.CharField(error_messages={'required': 'Please enter your last name'})
-    # middle_name = forms.CharField(error_messages={'required': 'Please enter your middle name'})
-    email = forms.CharField(error_messages={'required': 'Please enter your email'})
-    password1 = forms.CharField(error_messages={'required': 'Please enter your first password'})
-    password2 = forms.CharField(error_messages={'required': 'Please enter your second password'})
     class Meta:
         model = Contributor
-        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2'] #, 'middle_name'
-
-        # def clean_email(self):
-        #     email = self.cleaned_data['email'].lower()
-        #     # try:
-        #     if UserSocialAuth.objects.filter(uid_iexact=email, provider='google-oauth2').exists():
-        #         print('1')
-        #         raise forms.ValidationError('An email fo google auth dey exieeest')
-        #     # except UserSocialAuth.DoesNotExist:
-        #     if UserProfile.objects.filter(email__iexact=email).exists():
-        #         print('2')
-        #         raise forms.ValidationError('An email fo google auth dey exist')
-        #     return email
+        fields = ['is_project_mgr', 'is_investor']
 
 class ContributorSignInForm(forms.ModelForm):
     class Meta:
