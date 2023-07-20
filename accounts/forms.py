@@ -42,6 +42,13 @@ class ContributorSignInForm(AuthenticationForm):
                     raise forms.ValidationError("Invalid login details. Please try again.")
 
         return cleaned_data
+    
+    def clean_remember_me(self):
+        # Custom validation for the remember_me field if needed
+        # For example, you might enforce that it is checked for certain users.
+        remember_me = self.cleaned_data.get('remember_me')
+        # Your validation logic here
+        return remember_me
 
 class ModeratorSignInForm(AuthenticationForm):
     class Meta:
@@ -68,6 +75,13 @@ class ModeratorSignInForm(AuthenticationForm):
                     raise forms.ValidationError("Invalid login details. Please try again.")
 
         return cleaned_data
+    
+    def clean_remember_me(self):
+        # Custom validation for the remember_me field if needed
+        # For example, you might enforce that it is checked for certain users.
+        remember_me = self.cleaned_data.get('remember_me')
+        # Your validation logic here
+        return remember_me
 class CustomPasswordResetForm(PasswordResetForm):
     error_messages = {
         'password_mismatch': _("The two password fields didn't match."),
