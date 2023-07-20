@@ -138,6 +138,13 @@ class Contributor(models.Model):
 
     def __str__(self):
         return f"Contributor: {self.user.email}"
+    
+class Moderator(models.Model):
+    user = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
+    area_of_expertise = models.CharField(max_length=200)
+
+    def __str__(self):
+        return f"Moderator: {self.user.email}"
 
 class ReviewerManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
