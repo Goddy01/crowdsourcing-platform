@@ -119,10 +119,10 @@ class BaseUser(AbstractBaseUser):
         return True
 
     class Types(models.TextChoices):
-        CONTRIBUTOR = "CONTRIBUTOR", "Contributor"
-        REVIEWER = "REVIEWER", "Reviewer"
-        INVESTOR = "INVESTOR", "Investor"
-        PROJECT_MANAGER = "PROJECT MANAGER", "Project Manager"
+        CONTRIBUTOR = "CONTRIBUTOR", "Contributor" #done
+        REVIEWER = "REVIEWER", "Reviewer" # done
+        INVESTOR = "INVESTOR", "Investor" # done
+        PROJECT_MANAGER = "PROJECT MANAGER", "Project Manager" # done
         ADMINISTRATOR = "ADMINISTRATOR", "Administrator"
 
     type =                          models.CharField(max_length=50, default=Types.CONTRIBUTOR, choices=Types.choices, verbose_name='Type')
@@ -147,7 +147,11 @@ class Moderator(models.Model):
     def __str__(self):
         return f"Moderator: {self.user.email}"
 
+class Admin(models.Model):
+    user = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f"Admin: {self.user.email}"
 class Reviewer(UserProfile):
     objects = ReviewerManager()
     class Meta:
