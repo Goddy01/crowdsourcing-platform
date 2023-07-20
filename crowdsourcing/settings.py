@@ -81,7 +81,6 @@ TEMPLATES = [
 
 # For SOCIAL-AUTH
 AUTHENTICATION_BACKENDS = [
-    # 'social_core.backends.linkedin.LinkedinOAuth2',
     'social_core.backends.google.GoogleOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 ]

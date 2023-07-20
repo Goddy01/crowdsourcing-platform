@@ -11,13 +11,13 @@ class InnovatorSignUpForm(UserCreationForm):
     username = forms.CharField(error_messages={'required': 'Please enter your username'})
     first_name = forms.CharField(error_messages={'required': 'Please enter your firstname'})
     last_name = forms.CharField(error_messages={'required': 'Please enter your last name'})
-    middle_name = forms.CharField(error_messages={'required': 'Please enter your middle name'})
+    # middle_name = forms.CharField(error_messages={'required': 'Please enter your middle name'})
     email = forms.CharField(error_messages={'required': 'Please enter your email'})
     password1 = forms.CharField(error_messages={'required': 'Please enter your first password'})
     password2 = forms.CharField(error_messages={'required': 'Please enter your second password'})
     class Meta:
         model = Innovator
-        fields = ['username', 'first_name', 'last_name', 'middle_name', 'email', 'password1', 'password2']
+        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2'] #, 'middle_name'
 
         # def clean_email(self):
         #     email = self.cleaned_data['email'].lower()

@@ -27,20 +27,18 @@ def innovator_sign_up(request):
     else:
         if request.method == 'POST':
             form = InnovatorSignUpForm(request.POST)
-            print('PRINCE')
             if form.is_valid():
-                print('GOD IS GOOD')
                 user = form.save(commit=False)
                 user.is_active = False
                 user.date_joined = datetime.now()
                 user.last_login = datetime.now()
                 user.type = "INNOVATOR"
-                user.first_name = user.social_auth.get(provider='linkedin').extra_data['first_name'] or user.social_auth.get(provider='google-oauth2').extra_data['first_name']
-                user.last_name = user.social_auth.get(provider='linkedin').extra_data['last_name'] or user.social_auth.get(provider='google-oauth2').extra_data['last_name']
-                random_number = random.randint(1000, 9999)  # Generate a random 4-digit number
-                user.username = f"{user.social_auth(provider='google-oauth2').extra_data['lastname']}{user.social_auth(provider='google-oauth2').extra_data['firstname']}{random_number}"
-                # try:
-                user.email = user.social_auth(provider='google-oauth2').extra_data['email']
+                # user.first_name = user.cl
+                # user.last_name = user.social_auth.get(provider='linkedin').extra_data['last_name'] or user.social_auth.get(provider='google-oauth2').extra_data['last_name']
+                # random_number = random.randint(1000, 9999)  # Generate a random 4-digit number
+                # user.username = f"{user.social_auth(provider='google-oauth2').extra_data['lastname']}{user.social_auth(provider='google-oauth2').extra_data['firstname']}{random_number}"
+                # # try:
+                # user.email = user.social_auth(provider='google-oauth2').extra_data['email']
                 # except:
                     # except IntegrityError:
                     # form.add_error('email', 'This email is already registered.')
@@ -108,7 +106,7 @@ def activate_account(request, uidb64, token):
         # set signup_confirmation true
         user.signup_confirmation = True
         user.save()
-        login(request, user)
+        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
         return redirect('home')
         # return HttpResponse('Logged In')
     else:
