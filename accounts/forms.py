@@ -19,7 +19,7 @@ class ModeratorSignUpForm(UserCreationForm):
         
 class ContributorSignInForm(AuthenticationForm):
     class Meta:
-        model = UserProfile
+        model = Contributor
         fields = ['email', 'password']
 
     def clean(self):
@@ -32,17 +32,42 @@ class ContributorSignInForm(AuthenticationForm):
 
             if user is None:
                 try:
-                    # Check if the user with the provided username exists
+                    # Check if the user with the provided email address exists
                     user = Contributor.objects.get(email=email)
                 except Contributor.DoesNotExist:
                     # Handle the case when the account does not exist
-                    raise forms.ValidationError("Account with this username does not exist.")
+                    raise forms.ValidationError("Account with this email address does not exist.")
                 else:
                     # Handle the case when the account exists but login details are invalid
                     raise forms.ValidationError("Invalid login details. Please try again.")
 
         return cleaned_data
 
+class ModeratorSignInForm(AuthenticationForm):
+    class Meta:
+        model = Moderator
+        fields = ['email', 'password']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if self.is_valid():
+            email = self.cleaned_data['email'].lower()
+            password = self.cleaned_data['password']
+
+            user = authenticate(email=email, password=password)
+
+            if user is None:
+                try:
+                    # Check if the user with the provided email address exists
+                    user = Moderator.objects.get(email=email)
+                except Moderator.DoesNotExist:
+                    # Handle the case when the account does not exist
+                    raise forms.ValidationError("Account with this email address does not exist.")
+                else:
+                    # Handle the case when the account exists but login details are invalid
+                    raise forms.ValidationError("Invalid login details. Please try again.")
+
+        return cleaned_data
 class CustomPasswordResetForm(PasswordResetForm):
     error_messages = {
         'password_mismatch': _("The two password fields didn't match."),
