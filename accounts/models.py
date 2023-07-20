@@ -162,6 +162,15 @@ class InvestorManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
         # When the all() method of this custom manager is called, I will get all users that are investors.
         return super().get_queryset(*args, **kwargs).filter(type=UserProfile.Types.INVESTOR)
+class Project_MngrManager(models.Manager):
+    def get_queryset(self, *args, **kwargs):
+        # When the all() method of this custom manager is called, I will get all users that are innovators.
+        return super().get_queryset(*args, **kwargs).filter(type=UserProfile.Types.PROJECT_MANAGER)
+
+class AdministratorManager(models.Manager):
+    def get_queryset(self, *args, **kwargs):
+        # When the all() method of this custom manager is called, I will get all users that are investors.
+        return super().get_queryset(*args, **kwargs).filter(type=UserProfile.Types.ADMINISTRATOR)
 
 class Reviewer(UserProfile):
     objects = ReviewerManager()
@@ -170,7 +179,7 @@ class Reviewer(UserProfile):
         
     def save(self, *args, **kwargs):
         if not self.pk:
-            self.type = UserProfile.Types.MODERATOR
+            self.type = UserProfile.Types.REVIEWER
         return super().save(*args, **kwargs)
 
 class Contributor(UserProfile):
@@ -180,9 +189,8 @@ class Contributor(UserProfile):
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            self.type = UserProfile.Types.INNOVATOR
+            self.type = UserProfile.Types.CONTRIBUTOR
         return super().save(*args, **kwargs)
-
 
 class Investor(UserProfile):
     objects = InvestorManager()
@@ -192,4 +200,24 @@ class Investor(UserProfile):
     def save(self, *args, **kwargs):
         if not self.pk:
             self.type = UserProfile.Types.INVESTOR
+        return super().save(*args, **kwargs)
+
+class Project_Manager(UserProfile):
+    objects = Project_MngrManager()
+    class Meta:
+        proxy = True
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.type = UserProfile.Types.PROJECT_MANAGER
+        return super().save(*args, **kwargs)
+
+class Administrator(UserProfile):
+    objects = AdministratorManager()
+    class Meta:
+        proxy = True
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.type = UserProfile.Types.ADMINISTRATOR
         return super().save(*args, **kwargs)
