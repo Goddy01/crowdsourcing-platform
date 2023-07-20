@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django import forms
-from .models import UserProfile, Contributor, Investor, Reviewer
+from .models import UserProfile, Contributor, Admin, Moderator
 from django.contrib.auth import authenticate, password_validation
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 from django.utils.translation import gettext_lazy as _
@@ -11,6 +11,11 @@ class ContributorSignUpForm(UserCreationForm):
     class Meta:
         model = Contributor
         fields = ['is_project_mgr', 'is_investor']
+
+class ModeratorSignUpForm(UserCreationForm):
+    class Meta:
+        model = Moderator
+        fields = ['area_of_expertise']
 
 class ContributorSignInForm(forms.ModelForm):
     class Meta:
