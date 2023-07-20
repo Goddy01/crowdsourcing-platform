@@ -2,7 +2,7 @@ from django.contrib import messages
 from django import forms
 from .models import UserProfile, Contributor, Admin, Moderator
 from django.contrib.auth import authenticate, password_validation
-from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
+from django.contrib.auth.forms import UserCreationForm, PasswordResetForm, AuthenticationForm
 from django.utils.translation import gettext_lazy as _
 from social_django.models import UserSocialAuth
 
@@ -17,23 +17,31 @@ class ModeratorSignUpForm(UserCreationForm):
         model = Moderator
         fields = ['area_of_expertise']
         
-class ContributorSignInForm(forms.ModelForm):
+class ContributorSignInForm(AuthenticationForm):
     class Meta:
         model = UserProfile
         fields = ['email', 'password']
 
     def clean(self):
+        cleaned_data = super().clean()
         if self.is_valid():
             email = self.cleaned_data['email'].lower()
             password = self.cleaned_data['password']
-            print(email)
-            print(password)
+
             user = authenticate(email=email, password=password)
 
-            print('USER: ', user)
-            if not user:
-                print('ACCOUNT DOES NOT EXIST')
-                raise forms.ValidationError('Invalid login details.')
+            if user is None:
+                try:
+                    # Check if the user with the provided username exists
+                    user = Contributor.objects.get(email=email)
+                except Contributor.DoesNotExist:
+                    # Handle the case when the account does not exist
+                    raise forms.ValidationError("Account with this username does not exist.")
+                else:
+                    # Handle the case when the account exists but login details are invalid
+                    raise forms.ValidationError("Invalid login details. Please try again.")
+
+        return cleaned_data
 
 class CustomPasswordResetForm(PasswordResetForm):
     error_messages = {
