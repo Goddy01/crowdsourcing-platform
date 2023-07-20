@@ -32,27 +32,8 @@ def contributor_sign_up(request):
                 user.is_active = False
                 user.date_joined = datetime.now()
                 user.last_login = datetime.now()
-                user.type = "CONTRIBUTOR"
-                # user.first_name = user.cl
-                # user.last_name = user.social_auth.get(provider='linkedin').extra_data['last_name'] or user.social_auth.get(provider='google-oauth2').extra_data['last_name']
-                # random_number = random.randint(1000, 9999)  # Generate a random 4-digit number
-                # user.username = f"{user.social_auth(provider='google-oauth2').extra_data['lastname']}{user.social_auth(provider='google-oauth2').extra_data['firstname']}{random_number}"
-                # # try:
-                # user.email = user.social_auth(provider='google-oauth2').extra_data['email']
-                # except:
-                    # except IntegrityError:
-                    # form.add_error('email', 'This email is already registered.')
-                # try:
-                #     UserProfile.objects.filter(email=user.social_auth(provider='google-oauth2').extra_data['email']).exists()
-                #     print('BROOOSS')
-                #     return redirect('email-exists')
-                # except:
-                #     form.add_error('email', 'This email is already registered.')
-                #     raise ValueError('This email has already been registered.')
-                # try:
-                #     UserProfile.objects.get(email=user.social_auth(provider='google-oauth1').extra_data['email']).exists() or UserProfile.objects.get(email=user.email)
-                # except ValidationError as e:
-                #     return HttpResponse('Email already exists')
+                user.is_project_mgr = form.cleaned_data['is_project_mgr']
+                user.is_project_mgr = form.cleaned_data['is_investor']
                 user.save()
                 current_site = get_current_site(request)
                 subject = 'Activate your account'
