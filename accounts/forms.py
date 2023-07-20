@@ -10,12 +10,12 @@ from social_django.models import UserSocialAuth
 class ContributorSignUpForm(UserCreationForm):
     class Meta:
         model = Contributor
-        fields = ['is_project_mgr', 'is_investor']
+        fields = ['last_name', 'first_name', 'username', 'email', 'is_project_mgr', 'is_investor']
 
 class ModeratorSignUpForm(UserCreationForm):
     class Meta:
         model = Moderator
-        fields = ['area_of_expertise']
+        fields = ['last_name', 'first_name', 'username', 'email', 'area_of_expertise']
         
 class ContributorSignInForm(AuthenticationForm):
     class Meta:
