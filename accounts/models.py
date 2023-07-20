@@ -93,7 +93,6 @@ class BaseUser(AbstractBaseUser):
     is_superuser =                  models.BooleanField(default=False)
     is_verified =                   models.BooleanField(default=False)
     signup_confirmation =           models.BooleanField(default=False)
-    is_projectmgr                 = models.BooleanField(default=False)
 
 
     USERNAME_FIELD = "email"
@@ -118,14 +117,6 @@ class BaseUser(AbstractBaseUser):
         """Checks if the user has permission to view the app 'app_label'"""
         return True
 
-    class Types(models.TextChoices):
-        CONTRIBUTOR = "CONTRIBUTOR", "Contributor" #done
-        REVIEWER = "REVIEWER", "Reviewer" # done
-        INVESTOR = "INVESTOR", "Investor" # done
-        PROJECT_MANAGER = "PROJECT MANAGER", "Project Manager" # done
-        ADMINISTRATOR = "ADMINISTRATOR", "Administrator"
-
-    type =                          models.CharField(max_length=50, default=Types.CONTRIBUTOR, choices=Types.choices, verbose_name='Type')
 
 # CONTRIBUTOR Model
 class Contributor(models.Model):
@@ -140,6 +131,7 @@ class Contributor(models.Model):
     def __str__(self):
         return f"Contributor: {self.user.email}"
     
+# MODERATOR Model
 class Moderator(models.Model):
     user = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
     area_of_expertise = models.CharField(max_length=200)
@@ -147,57 +139,9 @@ class Moderator(models.Model):
     def __str__(self):
         return f"Moderator: {self.user.email}"
 
+# ADMINISTRATOR Model
 class Admin(models.Model):
     user = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"Admin: {self.user.email}"
-class Reviewer(UserProfile):
-    objects = ReviewerManager()
-    class Meta:
-        proxy = True
-        
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            self.type = UserProfile.Types.REVIEWER
-        return super().save(*args, **kwargs)
-
-class Contributor(UserProfile):
-    objects = ContributorManager()
-    class Meta:
-        proxy = True
-
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            self.type = UserProfile.Types.CONTRIBUTOR
-        return super().save(*args, **kwargs)
-
-class Investor(UserProfile):
-    objects = InvestorManager()
-    class Meta:
-        proxy = True
-
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            self.type = UserProfile.Types.INVESTOR
-        return super().save(*args, **kwargs)
-
-# class Project_Manager(UserProfile):
-#     objects = Project_MngrManager()
-#     class Meta:
-#         proxy = True
-
-#     def save(self, *args, **kwargs):
-#         if not self.pk:
-#             self.type = UserProfile.Types.PROJECT_MANAGER
-#         return super().save(*args, **kwargs)
-
-class Administrator(UserProfile):
-    objects = AdministratorManager()
-    class Meta:
-        proxy = True
-
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            self.type = UserProfile.Types.ADMINISTRATOR
-        return super().save(*args, **kwargs)
