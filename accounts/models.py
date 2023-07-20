@@ -138,10 +138,3 @@ class Moderator(models.Model):
 
     def __str__(self):
         return f"Moderator: {self.user.email}"
-
-# ADMINISTRATOR Model
-class Admin(models.Model):
-    user = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"Admin: {self.user.email}"

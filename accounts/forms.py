@@ -16,7 +16,7 @@ class ModeratorSignUpForm(UserCreationForm):
     class Meta:
         model = Moderator
         fields = ['area_of_expertise']
-
+        
 class ContributorSignInForm(forms.ModelForm):
     class Meta:
         model = UserProfile
