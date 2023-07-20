@@ -94,7 +94,6 @@ class BaseUser(AbstractBaseUser):
     is_verified =                   models.BooleanField(default=False)
     signup_confirmation =           models.BooleanField(default=False)
     is_projectmgr                 = models.BooleanField(default=False)
-    is_moderator                  = models.BooleanField(default=False)
 
 
     USERNAME_FIELD = "email"
@@ -135,6 +134,8 @@ class Contributor(models.Model):
     upvotes_received =              models.IntegerField(default=0)
     downvotes_received =            models.IntegerField(default=0)
     reputation_score =              models.IntegerField(default=0)
+    is_project_mgr =                models.BooleanField(default=False)
+    is_investor =                   models.BooleanField(default=True)
 
     def __str__(self):
         return f"Contributor: {self.user.email}"
@@ -146,29 +147,6 @@ class Moderator(models.Model):
     def __str__(self):
         return f"Moderator: {self.user.email}"
 
-class ReviewerManager(models.Manager):
-    def get_queryset(self, *args, **kwargs):
-        # When the all() method of this custom manager is called, I will get all users that are moderators.
-        return super().get_queryset(*args, **kwargs).filter(type=UserProfile.Types.REVIEWER)
-
-class ContributorManager(models.Manager):
-    def get_queryset(self, *args, **kwargs):
-        # When the all() method of this custom manager is called, I will get all users that are innovators.
-        return super().get_queryset(*args, **kwargs).filter(type=UserProfile.Types.CONTRIBUTOR)
-
-class InvestorManager(models.Manager):
-    def get_queryset(self, *args, **kwargs):
-        # When the all() method of this custom manager is called, I will get all users that are investors.
-        return super().get_queryset(*args, **kwargs).filter(type=UserProfile.Types.INVESTOR)
-# class Project_MngrManager(models.Manager):
-#     def get_queryset(self, *args, **kwargs):
-#         # When the all() method of this custom manager is called, I will get all users that are innovators.
-#         return super().get_queryset(*args, **kwargs).filter(type=UserProfile.Types.PROJECT_MANAGER)
-
-class AdministratorManager(models.Manager):
-    def get_queryset(self, *args, **kwargs):
-        # When the all() method of this custom manager is called, I will get all users that are investors.
-        return super().get_queryset(*args, **kwargs).filter(type=UserProfile.Types.ADMINISTRATOR)
 
 class Reviewer(UserProfile):
     objects = ReviewerManager()
