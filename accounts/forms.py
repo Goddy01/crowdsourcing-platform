@@ -1,21 +1,25 @@
 from django.contrib import messages
 from django import forms
-from .models import UserProfile, Contributor, Admin, Moderator
+from .models import Contributor, Moderator, BaseUser
 from django.contrib.auth import authenticate, password_validation
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm, AuthenticationForm
 from django.utils.translation import gettext_lazy as _
 from social_django.models import UserSocialAuth
 
 
+class BaseUserSignUpForm(UserCreationForm):
+    class Meta:
+        model = BaseUser
+        fields = ['last_name', 'first_name', 'username', 'email']
 class ContributorSignUpForm(UserCreationForm):
     class Meta:
         model = Contributor
-        fields = ['last_name', 'first_name', 'username', 'email', 'is_project_mgr', 'is_investor']
+        fields = ['is_project_mgr', 'is_investor']
 
 class ModeratorSignUpForm(UserCreationForm):
     class Meta:
         model = Moderator
-        fields = ['last_name', 'first_name', 'username', 'email', 'area_of_expertise']
+        fields = ['area_of_expertise']
         
 class ContributorSignInForm(AuthenticationForm):
     class Meta:

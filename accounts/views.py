@@ -10,7 +10,7 @@ from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token
 from django.conf import settings
 from django.core.mail import send_mail
-from .models import UserProfile, Contributor, Investor, Reviewer
+from .models import BaseUser, Contributor, Moderator
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import random
