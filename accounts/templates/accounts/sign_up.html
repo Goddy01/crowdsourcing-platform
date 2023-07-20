@@ -31,7 +31,7 @@ background-size: cover;'>
   </div>
   {% endif %}
     <div class="errors mb-2 mx-4 mt-3">
-        {% for field in innovator_signup_form %}
+        {% for field in contributor_signup_form %}
             <p>
             {% for error in field.errors %}
             <div class="alert alert-danger p-3 m-3 text-center text-light bg-danger border-0" role="alert">
@@ -44,9 +44,9 @@ background-size: cover;'>
             </p>
         {% endfor %}
 
-        {% if innovator_signup_form.non_field_errors %}
+        {% if contributor_signup_form.non_field_errors %}
         <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="margin-top: -4px;color: whitesmoke;">
-            {{innovator_signup_form.non_field_errors}}
+            {{contributor_signup_form.non_field_errors}}
           <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="margin-top: -4px;color: whitesmoke;">
               &times;
           </button>
@@ -58,7 +58,7 @@ background-size: cover;'>
     <div id="form-wrap" class="p">
       <h1 class="font-weight-bold">Sign Up</h1>    
       <!-- Form Start -->
-      <form action="{% url 'accounts:innovator_sign_up' %}" method="post">
+      <form action="{% url 'accounts:contributor_sign_up' %}" method="post">
         {% csrf_token %}
         <div class="form-group">
             <input type="text" name="username" id="username" placeholder="Username">
@@ -86,7 +86,7 @@ background-size: cover;'>
           By Clicking the Sign Up Button, you agree to our
           <a href="#" style="color:#0c5299;">Term & Conditions</a> and <a href="#" style="color:#0c5299;">Privacy Policy</a>
           <footer style="font-size: 16px;">
-                <span>Already Have an Account? <a href="{% url 'accounts:innovator_sign_in' %}" style="color: #0c5299;">Login Here</a></span>
+                <span>Already Have an Account? <a href="{% url 'accounts:contributor_sign_in' %}" style="color: #0c5299;">Login Here</a></span>
             </footer>
         <div>
             <h3 style="margin-bottom: 6px;text-align: center;font-size: 20px;" class="font-weight-bold">OR</h3>

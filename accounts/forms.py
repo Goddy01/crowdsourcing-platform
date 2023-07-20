@@ -1,13 +1,13 @@
 from django.contrib import messages
 from django import forms
-from .models import UserProfile, Innovator, Investor, Moderator
+from .models import UserProfile, Contributor, Investor, Reviewer
 from django.contrib.auth import authenticate, password_validation
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 from django.utils.translation import gettext_lazy as _
 from social_django.models import UserSocialAuth
 
 
-class InnovatorSignUpForm(UserCreationForm):
+class ContributorSignUpForm(UserCreationForm):
     username = forms.CharField(error_messages={'required': 'Please enter your username'})
     first_name = forms.CharField(error_messages={'required': 'Please enter your firstname'})
     last_name = forms.CharField(error_messages={'required': 'Please enter your last name'})
@@ -16,7 +16,7 @@ class InnovatorSignUpForm(UserCreationForm):
     password1 = forms.CharField(error_messages={'required': 'Please enter your first password'})
     password2 = forms.CharField(error_messages={'required': 'Please enter your second password'})
     class Meta:
-        model = Innovator
+        model = Contributor
         fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2'] #, 'middle_name'
 
         # def clean_email(self):
@@ -31,7 +31,7 @@ class InnovatorSignUpForm(UserCreationForm):
         #         raise forms.ValidationError('An email fo google auth dey exist')
         #     return email
 
-class InnovatorSignInForm(forms.ModelForm):
+class ContributorSignInForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ['email', 'password']

@@ -1,7 +1,7 @@
 from .forms import CustomPasswordResetForm
 from datetime import datetime
 from django.shortcuts import render, redirect, HttpResponse
-from .forms import InnovatorSignInForm, InnovatorSignUpForm
+from .forms import ContributorSignInForm, ContributorSignUpForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -10,7 +10,7 @@ from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token
 from django.conf import settings
 from django.core.mail import send_mail
-from .models import UserProfile, Innovator, Investor, Moderator
+from .models import UserProfile, Contributor, Investor, Reviewer
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import random
@@ -20,19 +20,19 @@ from django.core.exceptions import ValidationError
 def activation_sent_view(request):
     return render(request, 'accounts/activation_sent.html')
 
-def innovator_sign_up(request):
+def contributor_sign_up(request):
     context = {}
     if not request.META.get('HTTP_REFERER'):
         context['email_exists'] = 'A Google account is already linked with the email provided.'
     else:
         if request.method == 'POST':
-            form = InnovatorSignUpForm(request.POST)
+            form = ContributorSignUpForm(request.POST)
             if form.is_valid():
                 user = form.save(commit=False)
                 user.is_active = False
                 user.date_joined = datetime.now()
                 user.last_login = datetime.now()
-                user.type = "INNOVATOR"
+                user.type = "CONTRIBUTOR"
                 # user.first_name = user.cl
                 # user.last_name = user.social_auth.get(provider='linkedin').extra_data['last_name'] or user.social_auth.get(provider='google-oauth2').extra_data['last_name']
                 # random_number = random.randint(1000, 9999)  # Generate a random 4-digit number
@@ -67,18 +67,18 @@ def innovator_sign_up(request):
                 send_mail(subject, message, from_email, to_email, fail_silently=True)
                 return redirect('accounts:activation_sent')
         else:
-            form = InnovatorSignUpForm()
-        context['innovator_signup_form'] = form
-    return render(request, 'accounts/sign_up.html', context={'innovator_signup_form': form})
+            form = ContributorSignUpForm()
+        context['contributor_signup_form'] = form
+    return render(request, 'accounts/sign_up.html', context={'contributor_signup_form': form})
 
-def innovator_sign_in(request):
+def contributor_sign_in(request):
     context = {}
     if not request.META.get('HTTP_REFERER'):
         context['email_exists'] = 'A Google account is already linked with the email provided.'
     else:
         if request.method == 'POST':
-            form = InnovatorSignInForm(request.POST)
-            # print('ERROR: ', innovator_signin_form)
+            form = ContributorSignInForm(request.POST)
+            # print('ERROR: ', contributor_signin_form)
             if form.is_valid():
                 user = authenticate(email=form.cleaned_data.get('email'), password=form.cleaned_data.get('password'))
                 if user:
@@ -89,15 +89,15 @@ def innovator_sign_in(request):
                 else:
                     messages.error(request, 'User Not Found')
         else:
-            form = InnovatorSignInForm()
-        context['innovator_signin_form'] = form
+            form = ContributorSignInForm()
+        context['contributor_signin_form'] = form
     return render(request, 'accounts/sign_in.html', context)
 
 def activate_account(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
-        user = Innovator.objects.get(pk=uid)
-    except(TypeError, ValueError, OverflowError, Innovator.DoesNotExist):
+        user = Contributor.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, Contributor.DoesNotExist):
         user = None
     # checking if the user exists, if the token is valid.
     if user is not None and account_activation_token.check_token(user, token):

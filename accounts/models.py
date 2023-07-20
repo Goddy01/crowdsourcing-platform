@@ -148,23 +148,23 @@ class UserProfile(AbstractBaseUser):
 
     type =                          models.CharField(max_length=50, default=Types.CONTRIBUTOR, choices=Types.choices, verbose_name='Type')
 
-class ModeratorManager(models.Manager):
+class ReviewerManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
         # When the all() method of this custom manager is called, I will get all users that are moderators.
-        return super().get_queryset(*args, **kwargs).filter(type=UserProfile.Types.MODERATOR)
+        return super().get_queryset(*args, **kwargs).filter(type=UserProfile.Types.REVIEWER)
 
-class InnovatorManager(models.Manager):
+class ContributorManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
         # When the all() method of this custom manager is called, I will get all users that are innovators.
-        return super().get_queryset(*args, **kwargs).filter(type=UserProfile.Types.INNOVATOR)
+        return super().get_queryset(*args, **kwargs).filter(type=UserProfile.Types.CONTRIBUTOR)
 
 class InvestorManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
         # When the all() method of this custom manager is called, I will get all users that are investors.
         return super().get_queryset(*args, **kwargs).filter(type=UserProfile.Types.INVESTOR)
 
-class Moderator(UserProfile):
-    objects = ModeratorManager()
+class Reviewer(UserProfile):
+    objects = ReviewerManager()
     class Meta:
         proxy = True
         
@@ -173,8 +173,8 @@ class Moderator(UserProfile):
             self.type = UserProfile.Types.MODERATOR
         return super().save(*args, **kwargs)
 
-class Innovator(UserProfile):
-    objects = InnovatorManager()
+class Contributor(UserProfile):
+    objects = ContributorManager()
     class Meta:
         proxy = True
 
