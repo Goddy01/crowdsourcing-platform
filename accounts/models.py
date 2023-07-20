@@ -93,9 +93,9 @@ def upload_location_id_card(instance, filename):
     return f'id_cards/{str(instance.username)}/-{filename}'
 
 class UserProfile(AbstractBaseUser):
-    last_name =                     models.CharField(max_length=256, null=True, blank=True)
-    first_name =                    models.CharField(max_length=256)
-    middle_name =                   models.CharField(max_length=256)
+    last_name =                     models.CharField(max_length=256, null=False, blank=False)
+    first_name =                    models.CharField(max_length=256, null=False, blank=False)
+    middle_name =                   models.CharField(max_length=256, null=True, blank=False)
     username =                      models.CharField(max_length=256, unique=True, blank=False)
     email =                         models.EmailField(max_length=128, unique=True, blank=False)
     pfp =                           models.ImageField(upload_to=upload_location_pfp, blank=False, null=True)
