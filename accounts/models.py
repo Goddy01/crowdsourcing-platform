@@ -19,32 +19,7 @@ class AccountManager(BaseUserManager):
             raise ValueError("The user must provide an email")
         if not username:
             raise ValueError("The user must provide a username")
-        
-        # Validate email is unique in database
-        # email = email
-        # user = UserProfile.objects.filter(email=email).first()
-        # if user:
-        # print('EMAIL: ', email)
-        # try:
-        #     social_auth = UserSocialAuth.objects.get(uid=email, provider='google-oauth2')
-        #     if social_auth:
-        #         print('1')
-        #         return HttpResponse('An email fo google auth dey exieeest')
-        # except UserSocialAuth.DoesNotExist:
-        #     django_auth = UserProfile.objects.get(email=email)
-        #     if django_auth:
-        #         print('2')
-        #         return HttpResponse('An email fo google auth dey exist')
-        # email = email
-        # if UserSocialAuth.objects.filter(uid__iexact=email, provider='google-oauth2').exists() or UserProfile.objects.filter(email__iexact=email).exists():
-        # if UserProfile.objects.get(email = self.normalize_email(self.social_auth().get('email')).lower()):
-            # raise ValidationError('This email has already been registered.')
-            # return HttpResponse('This email has already been registered.')
-
-        # if not middle_name:
-        #     raise ValueError("The user must provide their middle_name")
-        # if not phone_num:
-            # raise ValueError("The user must provide their phone number")
+          # raise ValueError("The user must provide their phone number")
         try:
             UserSocialAuth.objects.get(uid__iexact=email, user=UserProfile.objects.get(email__iexact=email)).social_auth(provider='google-oauth2').extra_data['email']
         except:
@@ -92,11 +67,12 @@ def upload_location_pfp(instance, filename):
 def upload_location_id_card(instance, filename):
     return f'id_cards/{str(instance.username)}/-{filename}'
 
-class UserProfile(AbstractBaseUser):
+class BaseUser(AbstractBaseUser):
     last_name =                     models.CharField(max_length=256, null=False, blank=False)
     first_name =                    models.CharField(max_length=256, null=False, blank=False)
     middle_name =                   models.CharField(max_length=256, null=True, blank=False)
     username =                      models.CharField(max_length=256, unique=True, blank=False)
+    date_of_birth =                 models.DateField()
     email =                         models.EmailField(max_length=128, unique=True, blank=False)
     pfp =                           models.ImageField(upload_to=upload_location_pfp, blank=False, null=True)
     id_card =                       models.ImageField(upload_to=upload_location_id_card, blank=False, null=True)
@@ -107,6 +83,10 @@ class UserProfile(AbstractBaseUser):
     phone_num =                     PhoneNumberField(null=True, blank=True, verbose_name="Phone Number")
     date_joined =                   models.DateTimeField(auto_now_add=True)
     last_login =                    models.DateTimeField(auto_now=True)
+    updated_at =                    models.DateTimeField(auto_now=True)
+    facebook =                      models.URLField(default='https://facebook.com/')
+    twitter =                       models.URLField(default='https://twitter.com/')
+    instagram =                     models.URLField(default='https://instagram.com/')
     is_admin =                      models.BooleanField(default=False)
     is_staff =                      models.BooleanField(default=False)
     is_active =                     models.BooleanField(default=True)
@@ -147,6 +127,17 @@ class UserProfile(AbstractBaseUser):
         ADMINISTRATOR = "ADMINISTRATOR", "Administrator"
 
     type =                          models.CharField(max_length=50, default=Types.CONTRIBUTOR, choices=Types.choices, verbose_name='Type')
+
+# CONTRIBUTOR Model
+class Contributor(models.Model):
+    user =                          models.OneToOneField(BaseUser, on_delete=models.CASCADE)
+    contributions_count =           models.IntegerField(default=0)
+    upvotes_received =              models.IntegerField(default=0)
+    downvotes_received =            models.IntegerField(default=0)
+    reputation_score =              models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"Contributor: {self.user.email}"
 
 class ReviewerManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
