@@ -140,11 +140,13 @@ class UserProfile(AbstractBaseUser):
         return True
 
     class Types(models.TextChoices):
-        MODERATOR = "MODERATOR", "Moderator"
-        INNOVATOR = "INNOVATOR", "Innovator"
+        CONTRIBUTOR = "CONTRIBUTOR", "Contributor"
+        REVIEWER = "REVIEWER", "Reviewer"
         INVESTOR = "INVESTOR", "Investor"
+        PROJECT_MANAGER = "PROJECT MANAGER", "Project Manager"
+        ADMINISTRATOR = "ADMINISTRATOR", "Administrator"
 
-    type =                          models.CharField(max_length=50, default=Types.INNOVATOR, choices=Types.choices, verbose_name='Type')
+    type =                          models.CharField(max_length=50, default=Types.CONTRIBUTOR, choices=Types.choices, verbose_name='Type')
 
 class ModeratorManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
