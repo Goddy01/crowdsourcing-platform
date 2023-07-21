@@ -43,6 +43,8 @@ class ModeratorSignUpForm(UserCreationForm):
             except:
                 raise forms.ValidationError("E dey.")
 class ContributorSignInForm(forms.ModelForm):
+    email = forms.EmailField(widget=forms.EmailInput())
+    password = forms.CharField(widget=forms.PasswordInput())
     class Meta:
         model = Contributor
         fields = ['email', 'password']
@@ -77,6 +79,8 @@ class ContributorSignInForm(forms.ModelForm):
         return remember_me
 
 class ModeratorSignInForm(forms.ModelForm):
+    email = forms.EmailField(widget=forms.EmailInput())
+    password = forms.CharField(widget=forms.PasswordInput())
     class Meta:
         model = Moderator
         fields = ['email', 'password']
