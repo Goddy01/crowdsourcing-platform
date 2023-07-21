@@ -83,8 +83,8 @@ def contributor_sign_in(request):
 def activate_account(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
-        user = Contributor.objects.get(pk=uid)
-    except(TypeError, ValueError, OverflowError, Contributor.DoesNotExist):
+        user = BaseUser.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, BaseUser.DoesNotExist):
         user = None
     # checking if the user exists, if the token is valid.
     if user is not None and account_activation_token.check_token(user, token):
