@@ -16,18 +16,24 @@ class ContributorSignUpForm(UserCreationForm):
     last_name = forms.CharField(widget=forms.TextInput())
     username = forms.CharField(widget=forms.TextInput())
     email = forms.EmailField(widget=forms.EmailInput())
+    password1 = forms.CharField(widget=forms.PasswordInput())
+    password2 = forms.CharField(widget=forms.PasswordInput())
+
     class Meta:
         model = Contributor
-        fields = ['last_name', 'first_name', 'username', 'email', 'is_project_mgr', 'is_investor']
+        fields = ['last_name', 'first_name', 'username', 'email', 'is_project_mgr', 'is_investor', 'password1', 'password2']
 
 class ModeratorSignUpForm(UserCreationForm):
     first_name = forms.CharField(widget=forms.TextInput())
     last_name = forms.CharField(widget=forms.TextInput())
     username = forms.CharField(widget=forms.TextInput())
     email = forms.EmailField(widget=forms.EmailInput())
+    password1 = forms.CharField(widget=forms.PasswordInput())
+    password2 = forms.CharField(widget=forms.PasswordInput())
+
     class Meta:
         model = Moderator
-        fields = ['last_name', 'first_name', 'username', 'email', 'area_of_expertise']
+        fields = ['last_name', 'first_name', 'username', 'email', 'area_of_expertise', 'password1', 'password2']
 
     def clean(self):
         if self.is_valid():
