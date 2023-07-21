@@ -21,9 +21,13 @@ class ContributorSignUpForm(UserCreationForm):
         fields = ['last_name', 'first_name', 'username', 'email', 'is_project_mgr', 'is_investor']
 
 class ModeratorSignUpForm(UserCreationForm):
+    first_name = forms.CharField(widget=forms.TextInput())
+    last_name = forms.CharField(widget=forms.TextInput())
+    username = forms.CharField(widget=forms.TextInput())
+    email = forms.EmailField(widget=forms.EmailInput())
     class Meta:
         model = Moderator
-        fields = ['area_of_expertise']
+        fields = ['last_name', 'first_name', 'username', 'email', 'area_of_expertise']
 
     def clean(self):
         if self.is_valid():
