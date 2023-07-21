@@ -51,8 +51,8 @@ def contributor_sign_up(request):
                 send_mail(subject, message, from_email, to_email, fail_silently=True)
                 return redirect('accounts:activation_sent')
         else:
-            for error in form.errors:
-                print('ERROR: ', error)
+            # for error in form.errors:
+            print('ERRORS: ', form.errors.as_data())
     else:
         form = ContributorSignUpForm()
     context['contributor_signup_form'] = form
