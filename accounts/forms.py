@@ -30,11 +30,12 @@ class ContributorSignUpForm(UserCreationForm):
         email = self.cleaned_data.get('email')
         if BaseUser.objects.filter(email=email):
             raise forms.ValidationError('A user with this email address already exist.')
-    
+        return email
     def clean_username(self):
         username = self.cleaned_data.get('username')
         if BaseUser.objects.filter(username=username):
             raise forms.ValidationError('A user with this username already exist.')
+        return username
         
 class ModeratorSignUpForm(UserCreationForm):
     area_of_expertise = forms.CharField(widget=forms.CharField)
