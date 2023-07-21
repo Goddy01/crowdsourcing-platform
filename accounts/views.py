@@ -1,7 +1,7 @@
 from .forms import CustomPasswordResetForm
 from datetime import datetime
 from django.shortcuts import render, redirect, HttpResponse
-from .forms import ContributorSignInForm, ContributorSignUpForm
+from .forms import ContributorSignInForm, ContributorSignUpForm, BaseUserSignUpForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -26,8 +26,9 @@ def contributor_sign_up(request):
         context['email_exists'] = 'A Google account is already linked with the email provided.'
     else:
         if request.method == 'POST':
-            form = ContributorSignUpForm(request.POST)
-            if form.is_valid():
+            form = BaseUserSignUpForm(request.POST)
+            form2 = ContributorSignUpForm(request.POST)
+            if form.is_valid() and form2.is_valid():
                 user = form.save(commit=False)
                 user.is_active = False
                 user.date_joined = datetime.now()
@@ -54,24 +55,24 @@ def contributor_sign_up(request):
 
 def contributor_sign_in(request):
     context = {}
-    if not request.META.get('HTTP_REFERER'):
-        context['email_exists'] = 'A Google account is already linked with the email provided.'
+    # if not request.META.get('HTTP_REFERER'):
+    #     context['email_exists'] = 'A Google account is already linked with the email provided.'
+    # else:
+    if request.method == 'POST':
+        form = ContributorSignInForm(request.POST)
+        # print('ERROR: ', contributor_signin_form)
+        if form.is_valid():
+            user = authenticate(email=form.cleaned_data.get('email'), password=form.cleaned_data.get('password'))
+            if user:
+                login(request, user)
+                return redirect('home')
+                    # raise ValueError('This email has already been registered.')
+                # return HttpResponse('Logged In')
+            else:
+                messages.error(request, 'User Not Found')
     else:
-        if request.method == 'POST':
-            form = ContributorSignInForm(request.POST)
-            # print('ERROR: ', contributor_signin_form)
-            if form.is_valid():
-                user = authenticate(email=form.cleaned_data.get('email'), password=form.cleaned_data.get('password'))
-                if user:
-                    login(request, user)
-                    return redirect('home')
-                        # raise ValueError('This email has already been registered.')
-                    # return HttpResponse('Logged In')
-                else:
-                    messages.error(request, 'User Not Found')
-        else:
-            form = ContributorSignInForm()
-        context['contributor_signin_form'] = form
+        form = ContributorSignInForm()
+    context['contributor_signin_form'] = form
     return render(request, 'accounts/sign_in.html', context)
 
 def activate_account(request, uidb64, token):

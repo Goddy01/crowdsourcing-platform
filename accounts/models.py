@@ -9,56 +9,47 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from social_django.models import UserSocialAuth
 from django.shortcuts import redirect
+from django.db.models.signals import post_save
 # Create your models here.
 
 
-class AccountManager(BaseUserManager):
+class BaseUserMgr(BaseUserManager):
     """Creates and saves a user with the given details"""
-    def create_user(self, email, username, first_name=None, last_name=None, password=None):
+    def create_user(self, email, username, password=None):
         if not email:
             raise ValueError("The user must provide an email")
         if not username:
             raise ValueError("The user must provide a username")
           # raise ValueError("The user must provide their phone number")
-        try:
-            UserSocialAuth.objects.get(uid__iexact=email, user=UserProfile.objects.get(email__iexact=email)).social_auth(provider='google-oauth2').extra_data['email']
-        except:
-            print('111BROOOSS')
-            return None
+        # try:
+        #     UserSocialAuth.objects.get(uid__iexact=email, user=BaseUser.objects.get(email__iexact=email)).social_auth(provider='google-oauth2').extra_data['email']
+        # except:
+        #     return None
             # return 'This email is linked with an account created through a Google account'
 
         user = self.model(
             email=self.normalize_email(email),
-            username=username,
-            first_name=first_name,
-            last_name=last_name,
-            # middle_name=middle_name,
-            # phone_num=phone_num
+            username=username
+            # first_name=first_name,
+            # last_name=last_name
         )
         user.set_password(password)
-        # Save and catch IntegrityError (due to email being unique)
-        # try:
         user.save(using=self._db)
-        # except IntegrityError:
-        #     raise ValueError('This email has already been registered.')
-        # return user
+        return user
 
-    def create_superuser(self, email, username, first_name, last_name, password):
+    def create_superuser(self, email, username, password):
         """Creates and saves a superuser with the given details"""
         user = self.create_user(
             email=email,
             username=username,
-            password=password,
-            first_name=first_name,
-            last_name=last_name,
-            # middle_name=middle_name,
-            # phone_num=phone_num,
+            password=password
         )
 
         user.is_admin = True
         user.is_staff = True
         user.is_superuser = True
         user.save(using=self._db)
+        # return user
 
 
 def upload_location_pfp(instance, filename):
@@ -68,11 +59,11 @@ def upload_location_id_card(instance, filename):
     return f'id_cards/{str(instance.username)}/-{filename}'
 
 class BaseUser(AbstractBaseUser):
-    last_name =                     models.CharField(max_length=256, null=False, blank=False)
-    first_name =                    models.CharField(max_length=256, null=False, blank=False)
+    last_name =                     models.CharField(max_length=256, null=True, blank=False)
+    first_name =                    models.CharField(max_length=256, null=True, blank=False)
     middle_name =                   models.CharField(max_length=256, null=True, blank=False)
     username =                      models.CharField(max_length=256, unique=True, blank=False)
-    date_of_birth =                 models.DateField()
+    date_of_birth =                 models.DateField(null=True, blank=False)
     email =                         models.EmailField(max_length=128, unique=True, blank=False)
     pfp =                           models.ImageField(upload_to=upload_location_pfp, blank=False, null=True)
     id_card =                       models.ImageField(upload_to=upload_location_id_card, blank=False, null=True)
@@ -100,11 +91,11 @@ class BaseUser(AbstractBaseUser):
     # REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'middle_name', 'phone_num']
     REQUIRED_FIELDS = ['username', ]
 
-    objects = AccountManager()
+    objects = BaseUserMgr()
 
     def __str__(self):
         return self.username
-
+    
     def get_full_name(self):
         '''Returns the first_name plus the last_name, with a space in between.'''
         full_name = '%s, %s %s' % (self.last_name, self.first_name, self.middle_name)
@@ -128,9 +119,23 @@ class Contributor(models.Model):
     reputation_score =              models.IntegerField(default=0)
     is_project_mgr =                models.BooleanField(default=False)
     is_investor =                   models.BooleanField(default=True)
+    
+    # USERNAME_FIELD = "email"
+    # # REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'middle_name', 'phone_num']
+    # REQUIRED_FIELDS = ['username', ]
 
     def __str__(self):
         return f"Contributor: {self.user.email}"
+    
+    # def create_contributor_profile(sender, instance, created, **kwargs):
+    #     if created:
+    #         BaseUser.objects.create(user=instance)
+
+    # def save_contributor_profile(sender, instance, created, **kwargs):
+    #     instance.baseuser.save()
+
+    # post_save.connect(create_contributor_profile, sender=BaseUser)
+    # post_save.connect(save_contributor_profile, sender=BaseUser)
     
 # MODERATOR Model
 class Moderator(models.Model):

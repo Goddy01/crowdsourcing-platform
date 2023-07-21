@@ -2,7 +2,7 @@ from django.contrib import messages
 from django import forms
 from .models import Contributor, Moderator, BaseUser
 from django.contrib.auth import authenticate, password_validation
-from django.contrib.auth.forms import UserCreationForm, PasswordResetForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 from django.utils.translation import gettext_lazy as _
 from social_django.models import UserSocialAuth
 
@@ -12,23 +12,35 @@ class BaseUserSignUpForm(UserCreationForm):
         model = BaseUser
         fields = ['last_name', 'first_name', 'username', 'email']
 class ContributorSignUpForm(UserCreationForm):
+    first_name = forms.CharField(widget=forms.TextInput())
+    last_name = forms.CharField(widget=forms.TextInput())
+    username = forms.CharField(widget=forms.TextInput())
+    email = forms.EmailField(widget=forms.EmailInput())
     class Meta:
         model = Contributor
-        fields = ['is_project_mgr', 'is_investor']
+        fields = ['last_name', 'first_name', 'username', 'email', 'is_project_mgr', 'is_investor']
 
 class ModeratorSignUpForm(UserCreationForm):
     class Meta:
         model = Moderator
         fields = ['area_of_expertise']
-        
-class ContributorSignInForm(AuthenticationForm):
+
+    def clean(self):
+        if self.is_valid():
+            email = self.cleaned_data['email'].lower()
+            try:
+                UserSocialAuth.objects.get(uid__iexact=email, user=BaseUser.objects.get(email__iexact=email)).social_auth(provider='google-oauth2').extra_data['email']
+            except:
+                raise forms.ValidationError("E dey.")
+class ContributorSignInForm(forms.ModelForm):
     class Meta:
         model = Contributor
         fields = ['email', 'password']
 
     def clean(self):
-        cleaned_data = super().clean()
+        # cleaned_data = super().clean()
         if self.is_valid():
+            print('Ani ko lor')
             email = self.cleaned_data['email'].lower()
             password = self.cleaned_data['password']
 
@@ -45,7 +57,7 @@ class ContributorSignInForm(AuthenticationForm):
                     # Handle the case when the account exists but login details are invalid
                     raise forms.ValidationError("Invalid login details. Please try again.")
 
-        return cleaned_data
+        # return cleaned_data
     
     def clean_remember_me(self):
         # Custom validation for the remember_me field if needed
@@ -54,7 +66,7 @@ class ContributorSignInForm(AuthenticationForm):
         # Your validation logic here
         return remember_me
 
-class ModeratorSignInForm(AuthenticationForm):
+class ModeratorSignInForm(forms.ModelForm):
     class Meta:
         model = Moderator
         fields = ['email', 'password']
