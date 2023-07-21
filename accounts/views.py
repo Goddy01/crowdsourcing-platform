@@ -15,6 +15,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import random
 from django.core.exceptions import ValidationError
+from django.db import transaction
+
 
 # Create your views here.
 def activation_sent_view(request):
@@ -22,19 +24,19 @@ def activation_sent_view(request):
 
 def contributor_sign_up(request):
     context = {}
-    if not request.META.get('HTTP_REFERER'):
-        context['email_exists'] = 'A Google account is already linked with the email provided.'
-    else:
-        if request.method == 'POST':
-            form = BaseUserSignUpForm(request.POST)
-            form2 = ContributorSignUpForm(request.POST)
-            if form.is_valid() and form2.is_valid():
-                user = form.save(commit=False)
+    # if not request.META.get('HTTP_REFERER'):
+    #     context['email_exists'] = 'A Google account is already linked with the email provided.'
+    # else:
+    if request.method == 'POST':
+        form = ContributorSignUpForm(request.POST)
+        if form.is_valid():
+            with transaction.atomic():
+                user = form.save()
                 user.is_active = False
                 user.date_joined = datetime.now()
                 user.last_login = datetime.now()
-                user.is_project_mgr = form.cleaned_data['is_project_mgr']
-                user.is_project_mgr = form.cleaned_data['is_investor']
+                # user.is_project_mgr = form.cleaned_data['is_project_mgr']
+                # user.is_project_mgr = form.cleaned_data['is_investor']
                 user.save()
                 current_site = get_current_site(request)
                 subject = 'Activate your account'
@@ -49,8 +51,11 @@ def contributor_sign_up(request):
                 send_mail(subject, message, from_email, to_email, fail_silently=True)
                 return redirect('accounts:activation_sent')
         else:
-            form = ContributorSignUpForm()
-        context['contributor_signup_form'] = form
+            for error in form.errors:
+                print('ERROR: ', error)
+    else:
+        form = ContributorSignUpForm()
+    context['contributor_signup_form'] = form
     return render(request, 'accounts/sign_up.html', context={'contributor_signup_form': form})
 
 def contributor_sign_in(request):

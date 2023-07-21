@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, password_validation
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 from django.utils.translation import gettext_lazy as _
 from social_django.models import UserSocialAuth
+from django.db import transaction
 
 
 class BaseUserSignUpForm(UserCreationForm):
@@ -12,34 +13,28 @@ class BaseUserSignUpForm(UserCreationForm):
         model = BaseUser
         fields = ['last_name', 'first_name', 'username', 'email']
 class ContributorSignUpForm(UserCreationForm):
-    first_name = forms.CharField(widget=forms.TextInput())
-    last_name = forms.CharField(widget=forms.TextInput())
-    username = forms.CharField(widget=forms.TextInput())
-    email = forms.EmailField(widget=forms.EmailInput())
-    password1 = forms.CharField(widget=forms.PasswordInput())
-    password2 = forms.CharField(widget=forms.PasswordInput())
-
     class Meta:
-        model = Contributor
-        fields = ['last_name', 'first_name', 'username', 'email', 'is_project_mgr', 'is_investor', 'password1', 'password2']
+        model = BaseUser
+        fields = ['last_name', 'first_name', 'username', 'email']
 
-    def clean(self):
-        if self.is_valid():
-            email = self.cleaned_data['email'].lower()
-            try:
-                UserSocialAuth.objects.get(uid__iexact=email, user=BaseUser.objects.get(email__iexact=email)).social_auth(provider='google-oauth2').extra_data['email']
-            except:
-                raise forms.ValidationError("A Google account is already associated with the email provided.")
+    @transaction.atomic
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        # user.is_teacher = True
+        if commit:
+            user.save()
+        contributor = Contributor.objects.create(user=user)
+        return user
+    
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if BaseUser.objects.filter(email=email):
+            raise forms.ValidationError('A user with this email address already exist.')
+        
 class ModeratorSignUpForm(UserCreationForm):
-    first_name = forms.CharField(widget=forms.TextInput())
-    last_name = forms.CharField(widget=forms.TextInput())
-    username = forms.CharField(widget=forms.TextInput())
-    email = forms.EmailField(widget=forms.EmailInput())
-    password1 = forms.CharField(widget=forms.PasswordInput())
-    password2 = forms.CharField(widget=forms.PasswordInput())
-
+    area_of_expertise = forms.CharField(widget=forms.CharField)
     class Meta:
-        model = Moderator
+        model = BaseUser
         fields = ['last_name', 'first_name', 'username', 'email', 'area_of_expertise', 'password1', 'password2']
 
     def clean(self):
