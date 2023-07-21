@@ -120,9 +120,9 @@ class Contributor(models.Model):
     is_project_mgr =                models.BooleanField(default=False)
     is_investor =                   models.BooleanField(default=True)
     
-    # USERNAME_FIELD = "email"
-    # # REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'middle_name', 'phone_num']
-    # REQUIRED_FIELDS = ['username', ]
+    USERNAME_FIELD = "email"
+    # REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'middle_name', 'phone_num']
+    REQUIRED_FIELDS = ['username', ]
 
     def __str__(self):
         return f"Contributor: {self.user.email}"
@@ -144,3 +144,7 @@ class Moderator(models.Model):
 
     def __str__(self):
         return f"Moderator: {self.user.email}"
+    
+    USERNAME_FIELD = "email"
+    # REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'middle_name', 'phone_num']
+    REQUIRED_FIELDS = ['username', ]

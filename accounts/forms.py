@@ -23,6 +23,13 @@ class ContributorSignUpForm(UserCreationForm):
         model = Contributor
         fields = ['last_name', 'first_name', 'username', 'email', 'is_project_mgr', 'is_investor', 'password1', 'password2']
 
+    def clean(self):
+        if self.is_valid():
+            email = self.cleaned_data['email'].lower()
+            try:
+                UserSocialAuth.objects.get(uid__iexact=email, user=BaseUser.objects.get(email__iexact=email)).social_auth(provider='google-oauth2').extra_data['email']
+            except:
+                raise forms.ValidationError("A Google account is already associated with the email provided.")
 class ModeratorSignUpForm(UserCreationForm):
     first_name = forms.CharField(widget=forms.TextInput())
     last_name = forms.CharField(widget=forms.TextInput())
@@ -41,7 +48,7 @@ class ModeratorSignUpForm(UserCreationForm):
             try:
                 UserSocialAuth.objects.get(uid__iexact=email, user=BaseUser.objects.get(email__iexact=email)).social_auth(provider='google-oauth2').extra_data['email']
             except:
-                raise forms.ValidationError("E dey.")
+                raise forms.ValidationError("A Google account is already associated with the email provided.")
 class ContributorSignInForm(forms.ModelForm):
     email = forms.EmailField(widget=forms.EmailInput())
     password = forms.CharField(widget=forms.PasswordInput())
@@ -61,7 +68,7 @@ class ContributorSignInForm(forms.ModelForm):
             if user is None:
                 try:
                     # Check if the user with the provided email address exists
-                    user = Contributor.objects.get(email=email)
+                    user = Contributor.objects.get(user__email=email)
                 except Contributor.DoesNotExist:
                     # Handle the case when the account does not exist
                     raise forms.ValidationError("Account with this email address does not exist.")
