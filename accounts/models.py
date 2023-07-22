@@ -148,3 +148,8 @@ class Moderator(models.Model):
     USERNAME_FIELD = "email"
     # REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'middle_name', 'phone_num']
     REQUIRED_FIELDS = ['username', ]
+
+
+class GenModSignUpLink(models.Model):
+    admin = models.OneToOneField(BaseUser, on_delete=models.SET_NULL)
+    mod_email = models.EmailField(null=True, blank=False)
