@@ -100,6 +100,7 @@ def activate_account(request, uidb64, token):
         return render(request, 'accounts/activation_invalid.html')
 
 def generate_moderator_sign_up_link(request):
+    context = {}
     if request.user.is_admin:
         if request.method == 'POST':
             form = GenModSignUpLinkForm()
@@ -119,9 +120,14 @@ def generate_moderator_sign_up_link(request):
                 to_email = [form.cleaned_data.get('email')]
                 from_email = settings.EMAIL_HOST_USER
                 send_mail(subject, message, from_email, to_email, fail_silently=True)
+                return redirect('accounts:moderator_account_setup_sent')
+            else:
+                print('ERRORS: ', form.errors.as_data())
+        else:
+            form = ContributorSignUpForm()
+            context['contributor_signup_form'] = form
     else:
         return HttpResponse('You do not have access to this page')
-    return redirect('accounts:moderator_account_setup_sent')
 
 
 def moderator_sign_up(request):
