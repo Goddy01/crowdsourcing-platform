@@ -151,5 +151,5 @@ class Moderator(models.Model):
 
 
 class GenModSignUpLink(models.Model):
-    admin = models.OneToOneField(BaseUser, on_delete=models.SET_NULL)
-    mod_email = models.EmailField(null=True, blank=False)
+    admin = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
+    mod_email = models.EmailField(null=False, blank=False)
