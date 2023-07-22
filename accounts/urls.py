@@ -9,4 +9,5 @@ urlpatterns = [
     path('activate-account/<slug:uidb64>/<slug:token>/', views.activate_account, name='activate'),
     path('sign-out/', views.sign_out, name='sign_out'),
     path('social-auth/', include('social_django.urls', namespace='social')),
+    path('generate-link/<slug:uidb64>/<slug:token>/', views.generate_moderator_sign_up_link, name='gen_mod_sign_up_link'),
 ]

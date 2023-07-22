@@ -1,7 +1,7 @@
 from .forms import CustomPasswordResetForm
 from datetime import datetime
 from django.shortcuts import render, redirect, HttpResponse
-from .forms import ContributorSignInForm, ContributorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm
+from .forms import ContributorSignInForm, ContributorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, GenModSignUpLinkForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
