@@ -1,7 +1,7 @@
 from .forms import CustomPasswordResetForm
 from datetime import datetime
 from django.shortcuts import render, redirect, HttpResponse
-from .forms import ContributorSignInForm, ContributorSignUpForm, BaseUserSignUpForm
+from .forms import ContributorSignInForm, ContributorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -99,19 +99,37 @@ def activate_account(request, uidb64, token):
     else:
         return render(request, 'accounts/activation_invalid.html')
 
+def moderator_sign_up(request):
+    context = {}
+    if request.method == 'POST':
+        form = ModeratorSignUpForm(request.POST)
+        if form.is_valid():
+            with transaction.atomic():
+                user = form.save()
+                user.is_active = False
+                user.date_joined = datetime.now()
+                user.last_login = datetime.now()
+                user.save()
+                current_site = get_current_site(request)
+                subject = 'Activate your account'
+                message = render_to_string('accounts/activation_request.html', {
+                    'user': user,
+                    'domain': current_site.domain,
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': account_activation_token.make_token(user),
+                })
+                to_email = [form.cleaned_data.get('email')]
+                from_email = settings.EMAIL_HOST_USER
+                send_mail(subject, message, from_email, to_email, fail_silently=True)
+                return redirect('accounts:activation_sent')
+        else:
+            print('ERRORS: ', form.errors.as_data())
+    else:
+        form = ContributorSignUpForm()
+    context['moderator_signup_form'] = form
+    return render(request, 'accounts/sign_up.html', context={'moderator_signup_form': form})
 
 @login_required
 def sign_out(request):
     logout(request)
     return redirect('home')
-    # return HttpResponse('Logged Out')
-
-# def password_reset_view(request):
-#     form = CustomPasswordResetForm()
-#     print('FORM: ', form)
-#     return render(request, 'password/password_reset.html', {'form': form})
-def email_exists(request):
-    context = {
-        'email': 'Email already exists',
-    }
-    return render(request, 'password/email_exists.html', context)
