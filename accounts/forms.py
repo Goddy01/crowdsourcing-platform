@@ -42,14 +42,16 @@ class ModeratorSignUpForm(UserCreationForm):
     class Meta:
         model = BaseUser
         fields = ['last_name', 'first_name', 'username', 'email', 'area_of_expertise', 'password1', 'password2']
+    
+    @transaction.atomic
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        # user.is_teacher = True
+        if commit:
+            user.save()
+        contributor = Moderator.objects.create(user=user)
+        return user
 
-    def clean(self):
-        if self.is_valid():
-            email = self.cleaned_data['email'].lower()
-            try:
-                UserSocialAuth.objects.get(uid__iexact=email, user=BaseUser.objects.get(email__iexact=email)).social_auth(provider='google-oauth2').extra_data['email']
-            except:
-                raise forms.ValidationError("A Google account is already associated with the email provided.")
 class ContributorSignInForm(forms.ModelForm):
     email = forms.EmailField(widget=forms.EmailInput())
     password = forms.CharField(widget=forms.PasswordInput())
