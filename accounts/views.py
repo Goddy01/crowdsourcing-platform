@@ -109,8 +109,8 @@ def generate_moderator_sign_up_link(request):
                 user_username = request.user.username
                 user = BaseUser.objects.get(is_admin=True, username=user_username)
                 current_site = get_current_site(request)
-                subject = 'Activate your account'
-                message = render_to_string('accounts/activation_request.html', {
+                subject = 'Set up your Moderator account'
+                message = render_to_string('accounts/link_generation_form.html', {
                     'user': user,
                     'domain': current_site.domain,
                     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
