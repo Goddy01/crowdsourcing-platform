@@ -136,6 +136,9 @@ class ModeratorSignInForm(forms.ModelForm):
         return remember_me
     
 class GenModSignUpLinkForm(forms.ModelForm):
+    class Meta:
+        model = GenModSignUpLink
+        fields = ['mod_email']
 class CustomPasswordResetForm(PasswordResetForm):
     error_messages = {
         'password_mismatch': _("The two password fields didn't match."),
