@@ -153,3 +153,6 @@ class Moderator(models.Model):
 class GenModSignUpLink(models.Model):
     admin = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
     mod_email = models.EmailField(null=False, blank=False)
+
+    def __str__(self):
+        return f"{self.admin.username} - {self.mod_email}"
