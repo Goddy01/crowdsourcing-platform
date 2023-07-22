@@ -57,6 +57,12 @@ class ModeratorSignUpForm(UserCreationForm):
         if BaseUser.objects.filter(email=email):
             raise forms.ValidationError('A user with this email address already exist.')
         return email
+    
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if BaseUser.objects.filter(username=username):
+            raise forms.ValidationError('A user with this username already exist.')
+        return username
 
 class ContributorSignInForm(forms.ModelForm):
     email = forms.EmailField(widget=forms.EmailInput())
