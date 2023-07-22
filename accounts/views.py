@@ -104,7 +104,8 @@ def generate_moderator_sign_up_link(request):
         if request.method == 'POST':
             form = GenModSignUpLinkForm()
             if form.is_valid():
-                form.save()
+                gen_form = form.save(commit=False)
+                gen_form.admin = BaseUser.objects.get(username=request.user.username, is_admin=True)
                 user_username = request.user.username
                 user = BaseUser.objects.get(is_admin=True, username=user_username)
                 current_site = get_current_site(request)

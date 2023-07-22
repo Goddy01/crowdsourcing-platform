@@ -134,6 +134,8 @@ class ModeratorSignInForm(forms.ModelForm):
         remember_me = self.cleaned_data.get('remember_me')
         # Your validation logic here
         return remember_me
+    
+class GenModSignUpLinkForm(forms.ModelForm):
 class CustomPasswordResetForm(PasswordResetForm):
     error_messages = {
         'password_mismatch': _("The two password fields didn't match."),
