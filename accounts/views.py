@@ -17,6 +17,7 @@ import random
 from django.core.exceptions import ValidationError
 from django.db import transaction
 import secrets
+from cryptography.fernet import Fernet
 
 
 # Create your views here.
@@ -103,6 +104,13 @@ def activate_account(request, uidb64, token):
 
 def generate_registration_token():
     return secrets.token_urlsafe(32)  # Generates a 32-character URL-safe token
+
+
+
+def encrypt_token(token, secret_key):
+    fernet = Fernet(secret_key)
+    encrypted_token = fernet.encrypt(token.encode())
+    return encrypted_token
 
 
 def generate_moderator_sign_up_link(request, uidb64, token):
