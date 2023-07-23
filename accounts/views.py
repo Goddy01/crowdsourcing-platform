@@ -105,8 +105,9 @@ def send_moderator_details(request):
         if form.is_valid():
             gen_form = form.save(commit=False)
             gen_form.admin = BaseUser.objects.get(username=request.user.username, is_admin=True)
-            user_username = request.user.username
-            user = BaseUser.objects.get(is_admin=True, username=user_username)
+            gen_form.time_sent = datetime.now()
+            gen_form.mod_email = gen_form.cleaned_data['mod_email']
+            user = BaseUser.objects.get(is_admin=True, username=request.user.username)
             current_site = get_current_site(request)
             subject = 'Your Moderator Account Login Details'
             to_email = [form.cleaned_data.get('mod_email')]
