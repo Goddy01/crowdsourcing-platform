@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import BaseUser, Contributor
+from .models import BaseUser, Contributor, Moderator
 from django.contrib.auth.admin import UserAdmin
 # Register your models here.
 class AccountAdmin(UserAdmin):
@@ -15,3 +15,4 @@ admin.site.register(BaseUser, AccountAdmin)
 #     list_filter = ()
 #     fieldsets = ()
 admin.site.register(Contributor)
+admin.site.register(Moderator)

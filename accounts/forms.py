@@ -38,7 +38,7 @@ class ContributorSignUpForm(UserCreationForm):
         return username
         
 class ModeratorSignUpForm(UserCreationForm):
-    area_of_expertise = forms.CharField(widget=forms.CharField)
+    area_of_expertise = forms.CharField()
     class Meta:
         model = BaseUser
         fields = ['last_name', 'first_name', 'username', 'email', 'area_of_expertise']
@@ -54,13 +54,13 @@ class ModeratorSignUpForm(UserCreationForm):
     
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        if Moderator.objects.filter(email=email):
+        if Moderator.objects.filter(user__email=email):
             raise forms.ValidationError('A moderator with this email address already exist.')
         return email
     
     def clean_username(self):
         username = self.cleaned_data.get('username')
-        if Moderator.objects.filter(username=username):
+        if Moderator.objects.filter(user__username=username):
             raise forms.ValidationError('A moderator with this username already exist.')
         return username
 

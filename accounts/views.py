@@ -1,4 +1,3 @@
-from .forms import CustomPasswordResetForm
 from datetime import datetime
 from django.shortcuts import render, redirect, HttpResponse
 from .forms import ContributorSignInForm, ContributorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, GenModSignUpLinkForm
@@ -16,8 +15,6 @@ from django.contrib.auth.decorators import login_required
 import random
 from django.core.exceptions import ValidationError
 from django.db import transaction
-import secrets
-from cryptography.fernet import Fernet
 
 
 # Create your views here.
@@ -101,22 +98,10 @@ def activate_account(request, uidb64, token):
     else:
         return render(request, 'accounts/activation_invalid.html')
 
-
-def generate_registration_token():
-    return secrets.token_urlsafe(32)  # Generates a 32-character URL-safe token
-
-
-
-def encrypt_token(token, secret_key):
-    fernet = Fernet(secret_key)
-    encrypted_token = fernet.encrypt(token.encode())
-    return encrypted_token
-
-
-def generate_moderator_sign_up_link(request, uidb64, token):
+def generate_moderator_sign_up_link(request):
     context = {}
-    if request.user.is_admin:
-        if request.method == 'POST':
+    if request.method == 'POST':
+        if request.user.is_admin:
             form = GenModSignUpLinkForm(request.POST)
             if form.is_valid():
                 gen_form = form.save(commit=False)
@@ -125,35 +110,29 @@ def generate_moderator_sign_up_link(request, uidb64, token):
                 user = BaseUser.objects.get(is_admin=True, username=user_username)
                 current_site = get_current_site(request)
                 subject = 'Set up your Moderator account'
+                # template_names = 
                 message = render_to_string('accounts/generation_request.html', {
                     'user': user,
                     'domain': current_site.domain,
                     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                     'token': account_activation_token.make_token(user),
                 })
+
+                # brev = render_to_string('accounts/moderator_sign_up.html', {
+                #     'user': user,
+                context['uid'] = urlsafe_base64_encode(force_bytes(user.pk))
+                context['token'] = account_activation_token.make_token(user)
+                #     'domain': current_site.domain,
+                #     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                #     'token': account_activation_token.make_token(user),
+                # })
                 to_email = [form.cleaned_data.get('mod_email')]
                 print(to_email)
+                # print('UID: ', urlsafe_base64_encode(force_bytes(user.pk)))
+                # print('TOKEN: ', account_activation_token.make_token(user))
                 from_email = settings.EMAIL_HOST_USER
                 send_mail(subject, message, from_email, to_email, fail_silently=True)
                 print('DONE!!!')
-                try:
-                    uid = force_str(urlsafe_base64_decode(uidb64))
-                    user = BaseUser.objects.get(pk=uid)
-                except(TypeError, ValueError, OverflowError, BaseUser.DoesNotExist):
-                    user = None
-                # checking if the user exists, if the token is valid.
-                account_activation_token.check_token(user, token)
-                #     # if valid set active true 
-                #     user.is_active = True
-                #     # set signup_confirmation true
-                #     user.signup_confirmation = True
-                #     user.save()
-                #     login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-                #     return redirect('accounts:moderator_account_setup_sent')
-                #     # return redirect('home')
-                #     # return HttpResponse('Logged In')
-                # else:
-                #     return render(request, 'accounts/activation_invalid.html')
                 return redirect('accounts:moderator_account_setup_sent')
             else:
                 print('FAILED')
@@ -161,8 +140,8 @@ def generate_moderator_sign_up_link(request, uidb64, token):
         # else:
         #     form = ContributorSignUpForm()
         #     context['contributor_signup_form'] = form
-    else:
-        return HttpResponse('You do not have access to this page')
+        else:
+            return HttpResponse('You do not have access to this page')
     return render(request, 'accounts/generate_moderator_sign_up_form.html', {'admin': request.user.username})
 
 def moderation_account_setup_done(request):
@@ -173,7 +152,17 @@ def moderator_sign_up(request, uidb64, token):
     if request.method == 'POST':
         form = ModeratorSignUpForm(request.POST)
         if form.is_valid():
+            print('GOOD')
             with transaction.atomic():
+                try:
+                    uid = force_str(urlsafe_base64_decode(uidb64))
+                    print('UID: ', uid)
+                    context['uid'] = uid
+                    user = BaseUser.objects.get(pk=uid, is_admin=True)
+                except(TypeError, ValueError, OverflowError, BaseUser.DoesNotExist):
+                    user = None
+                context['token'] = account_activation_token.check_token(user, token)
+                print('TOKEN: ', account_activation_token.check_token(user, token))
                 user = form.save()
                 user.is_active = False
                 user.date_joined = datetime.now()
@@ -181,39 +170,23 @@ def moderator_sign_up(request, uidb64, token):
                 user.save()
                 # try:
                 #     uid = force_str(urlsafe_base64_decode(uidb64))
-                #     user = BaseUser.objects.get(pk=uid)
+                #     print('UID: ', uid)
+                #     user = BaseUser.objects.get(pk=uid, is_admin=True)
                 # except(TypeError, ValueError, OverflowError, BaseUser.DoesNotExist):
                 #     user = None
-                # # checking if the user exists, if the token is valid.
-                # if user is not None and account_activation_token.check_token(user, token):
-                #     # if valid set active true 
-                #     user.is_active = True
-                #     # set signup_confirmation true
-                #     user.signup_confirmation = True
-                #     user.save()
-                #     login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-                #     return redirect('home')
-                #     # return HttpResponse('Logged In')
-                # else:
-                #     return render(request, 'accounts/activation_invalid.html')
-                # current_site = get_current_site(request)
-                # subject = 'Activate your account'
-                # message = render_to_string('accounts/activation_request.html', {
-                #     'user': user,
-                #     'domain': current_site.domain,
-                #     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                #     'token': account_activation_token.make_token(user),
-                # })
-                # to_email = [form.cleaned_data.get('email')]
-                # from_email = settings.EMAIL_HOST_USER
-                # send_mail(subject, message, from_email, to_email, fail_silently=True)
-                # return redirect('accounts:activation_sent')
+                # context['token'] = account_activation_token.check_token(user, token)
+                # print('TOKEN: ', account_activation_token.check_token(user, token))
+
         else:
             print('ERRORS: ', form.errors.as_data())
     else:
         form = ContributorSignUpForm()
     context['moderator_signup_form'] = form
-    return render(request, 'accounts/moderator_sign_up.html', context={'moderator_signup_form': form})
+    # context['uid'] = request.GET.get('uidb64')
+    # print('UIDB: ', request.GET)
+    # context['token'] = account_activation_token.check_token(user, token)
+    # context['moderator_signup_form'] = form
+    return render(request, 'accounts/moderator_sign_up.html', context)
 
 @login_required
 def sign_out(request):
