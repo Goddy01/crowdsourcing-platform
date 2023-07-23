@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django import forms
-from .models import Contributor, Moderator, BaseUser, GenModSignUpLink
+from .models import Contributor, Moderator, BaseUser
 from django.contrib.auth import authenticate, password_validation
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 from django.utils.translation import gettext_lazy as _
@@ -83,8 +83,8 @@ class ContributorSignInForm(forms.ModelForm):
             if user is None:
                 try:
                     # Check if the user with the provided email address exists
-                    user = Contributor.objects.get(user__email=email)
-                except Contributor.DoesNotExist:
+                    user = BaseUser.objects.get(email=email)
+                except BaseUser.DoesNotExist:
                     # Handle the case when the account does not exist
                     raise forms.ValidationError("Account with this email address does not exist.")
                 else:
@@ -135,10 +135,10 @@ class ModeratorSignInForm(forms.ModelForm):
         # Your validation logic here
         return remember_me
     
-class GenModSignUpLinkForm(forms.ModelForm):
-    class Meta:
-        model = GenModSignUpLink
-        fields = ['mod_email']
+# class GenModSignUpLinkForm(forms.ModelForm):
+#     class Meta:
+#         model = GenModSignUpLink
+#         fields = ['mod_email']
 class CustomPasswordResetForm(PasswordResetForm):
     error_messages = {
         'password_mismatch': _("The two password fields didn't match."),

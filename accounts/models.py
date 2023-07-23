@@ -151,10 +151,11 @@ class Moderator(models.Model):
     REQUIRED_FIELDS = ['username', ]
 
 
-class GenModSignUpLink(models.Model):
-    admin = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
-    mod_email = models.EmailField(null=False, blank=False)
-    time_sent = models.DateTimeField(auto_now_add=True, null=True)
+# class GenModSignUpLink(models.Model):
+#     admin = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
+#     mod_email = models.EmailField(null=False, blank=False)
+#     time_sent = models.DateTimeField(auto_now_add=True, null=True)
+#     random_string = models.CharField(null=True, max_length=255)
 
-    def __str__(self):
-        return f"{self.admin.username} - {self.mod_email}"
+#     def __str__(self):
+#         return f"{self.admin.username} - {self.mod_email}"

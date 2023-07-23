@@ -16,12 +16,12 @@
     <div class="form-wrap mt-5">
         <div class="text-center">
             <p class="font-weight-bold">
-                Welcome {{ admin }}
+                Welcome {{ request.session.admin }}
             </p>
             <form style="padding: 20px;" action="{% url 'accounts:send_mod_details' %}" method="post" id="crowdsourceit-form">
                 {% csrf_token %}
                 <div class="form-group">
-                  <input class="form-control" type="mod_email" name="mod_email" id="mod_email" placeholder="Enter moderator's email" value="">
+                  <input class="form-control" type="mod_email" name="mod_email" id="mod_email" placeholder="" value="{{ request.session.mod_email }}">
                 </div>
                 <button type="submit" style="height: 40px;" class="p-2">Send Link</button>
             </form>

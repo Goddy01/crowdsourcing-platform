@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.shortcuts import render, redirect, HttpResponse
-from .forms import ContributorSignInForm, ContributorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, GenModSignUpLinkForm
+from .forms import ContributorSignInForm, ContributorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -15,7 +15,6 @@ from django.contrib.auth.decorators import login_required
 import random
 from django.core.exceptions import ValidationError
 from django.db import transaction
-import random, string
 
 
 # Create your views here.
@@ -99,14 +98,12 @@ def activate_account(request, uidb64, token):
     else:
         return render(request, 'accounts/activation_invalid.html')
 
-def generate_random_string(length):
-    characters = string.ascii_letters + string.digits
-    return ''.join(random.choice(characters) for _ in range(length))
-
 def send_moderator_details(request):
     context = {}
     if request.method == 'POST':
         form = GenModSignUpLinkForm(request.POST)
+        # context['admin'] = request.user.username
+        request.session['admin'] = request.user.username
         if form.is_valid():
             gen_form = form.save(commit=False)
             gen_form.admin = BaseUser.objects.get(username=request.user.username, is_admin=True)
@@ -116,7 +113,7 @@ def send_moderator_details(request):
             current_site = get_current_site(request)
             subject = 'Your Moderator Account Login Details'
             to_email = [form.cleaned_data.get('mod_email')]
-            # template_names = 
+            request.session['mod_email'] = form.cleaned_data.get('mod_email')
             message = render_to_string('accounts/send_mod_details.html', {
                 'user': user,
                 'domain': current_site.domain,
@@ -124,16 +121,18 @@ def send_moderator_details(request):
                 'token': account_activation_token.make_token(user),
                 'to_email':  to_email,
                 'lastname': Moderator.objects.get(user__email=to_email[0]).user.last_name,
-                'password': Moderator.objects.get(user__email=to_email[0]).user.username,
+                'password': f"moderator_{Moderator.objects.get(user__email=to_email[0]).user.last_name}",
             })
             to_email = [form.cleaned_data.get('mod_email')]
+            context['to_email'] = to_email
             from_email = settings.EMAIL_HOST_USER
             send_mail(subject, message, from_email, to_email, fail_silently=True)
             return redirect('accounts:moderator_account_setup_sent')
         else:
             print('FAILED')
             print('ERRORS: ', form.errors.as_data())
-    return render(request, 'accounts/generate_moderator_sign_up_form.html', {'admin': request.user.username})
+    print('CONTEXT: ', request.session.get('to_email'))
+    return render(request, 'accounts/generate_moderator_sign_up_form.html', {'admin': request.session.get('admin'), 'to_email': request.session.get('mod_email')})
 
 def moderation_account_setup_done(request):
     return render(request, 'accounts/moderator_account_setup_sent.html')
@@ -159,7 +158,27 @@ def moderator_sign_up(request):
                         # user.
                         print('ADMIN: ', BaseUser.objects.get(username=request.user.username))
                         user.save()
-                        return redirect('accounts:send_mod_details')
+
+#                       SENDS THE LOGIN DETAILS TO THE MODERATOR
+                        gen_form = form.save(commit=False)
+                        gen_form.admin = BaseUser.objects.get(username=request.user.username, is_admin=True)
+                        gen_form.time_sent = datetime.now()
+                        gen_form.mod_email = request.POST.get('mod_email')
+                        user = BaseUser.objects.get(is_admin=True, username=request.user.username)
+                        current_site = get_current_site(request)
+                        subject = 'Your Moderator Account Login Details'
+                        to_email = [form.cleaned_data.get('mod_email')]
+                        request.session['mod_email'] = form.cleaned_data.get('mod_email')
+                        message = render_to_string('accounts/send_mod_details.html', {
+                            'user': user,
+                            'domain': current_site.domain,
+                            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                            'token': account_activation_token.make_token(user),
+                            'to_email':  to_email,
+                            'lastname': Moderator.objects.get(user__email=to_email[0]).user.last_name,
+                            'password': f"moderator_{Moderator.objects.get(user__email=to_email[0]).user.last_name}",
+                        })
+                        # return redirect('accounts:send_mod_details')
                 else:
                     print('ERRORS: ', form.errors.as_data())
             else:
