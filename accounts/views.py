@@ -98,50 +98,33 @@ def activate_account(request, uidb64, token):
     else:
         return render(request, 'accounts/activation_invalid.html')
 
-def generate_moderator_sign_up_link(request):
+def send_moderator_details(request):
     context = {}
     if request.method == 'POST':
-        if request.user.is_admin:
-            form = GenModSignUpLinkForm(request.POST)
-            if form.is_valid():
-                gen_form = form.save(commit=False)
-                gen_form.admin = BaseUser.objects.get(username=request.user.username, is_admin=True)
-                user_username = request.user.username
-                user = BaseUser.objects.get(is_admin=True, username=user_username)
-                current_site = get_current_site(request)
-                subject = 'Set up your Moderator account'
-                # template_names = 
-                message = render_to_string('accounts/generation_request.html', {
-                    'user': user,
-                    'domain': current_site.domain,
-                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                    'token': account_activation_token.make_token(user),
-                })
-
-                # brev = render_to_string('accounts/moderator_sign_up.html', {
-                #     'user': user,
-                context['uid'] = urlsafe_base64_encode(force_bytes(user.pk))
-                context['token'] = account_activation_token.make_token(user)
-                #     'domain': current_site.domain,
-                #     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                #     'token': account_activation_token.make_token(user),
-                # })
-                to_email = [form.cleaned_data.get('mod_email')]
-                print(to_email)
-                # print('UID: ', urlsafe_base64_encode(force_bytes(user.pk)))
-                # print('TOKEN: ', account_activation_token.make_token(user))
-                from_email = settings.EMAIL_HOST_USER
-                send_mail(subject, message, from_email, to_email, fail_silently=True)
-                print('DONE!!!')
-                return redirect('accounts:moderator_account_setup_sent')
-            else:
-                print('FAILED')
-                print('ERRORS: ', form.errors.as_data())
-        # else:
-        #     form = ContributorSignUpForm()
-        #     context['contributor_signup_form'] = form
+        form = GenModSignUpLinkForm(request.POST)
+        if form.is_valid():
+            gen_form = form.save(commit=False)
+            gen_form.admin = BaseUser.objects.get(username=request.user.username, is_admin=True)
+            user_username = request.user.username
+            user = BaseUser.objects.get(is_admin=True, username=user_username)
+            current_site = get_current_site(request)
+            subject = 'Your Moderator Account Login Details'
+            to_email = [form.cleaned_data.get('mod_email')]
+            # template_names = 
+            message = render_to_string('accounts/send_mod_details.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
+                'to_email':  to_email,
+            })
+            to_email = [form.cleaned_data.get('mod_email')]
+            from_email = settings.EMAIL_HOST_USER
+            send_mail(subject, message, from_email, to_email, fail_silently=True)
+            return redirect('accounts:moderator_account_setup_sent')
         else:
-            return HttpResponse('You do not have access to this page')
+            print('FAILED')
+            print('ERRORS: ', form.errors.as_data())
     return render(request, 'accounts/generate_moderator_sign_up_form.html', {'admin': request.user.username})
 
 def moderation_account_setup_done(request):
@@ -149,43 +132,25 @@ def moderation_account_setup_done(request):
 
 def moderator_sign_up(request, uidb64, token):
     context = {}
-    if request.method == 'POST':
-        form = ModeratorSignUpForm(request.POST)
-        if form.is_valid():
-            print('GOOD')
-            with transaction.atomic():
-                try:
-                    uid = force_str(urlsafe_base64_decode(uidb64))
-                    print('UID: ', uid)
-                    context['uid'] = uid
-                    user = BaseUser.objects.get(pk=uid, is_admin=True)
-                except(TypeError, ValueError, OverflowError, BaseUser.DoesNotExist):
-                    user = None
-                context['token'] = account_activation_token.check_token(user, token)
-                print('TOKEN: ', account_activation_token.check_token(user, token))
-                user = form.save()
-                user.is_active = False
-                user.date_joined = datetime.now()
-                user.last_login = datetime.now()
-                user.save()
-                # try:
-                #     uid = force_str(urlsafe_base64_decode(uidb64))
-                #     print('UID: ', uid)
-                #     user = BaseUser.objects.get(pk=uid, is_admin=True)
-                # except(TypeError, ValueError, OverflowError, BaseUser.DoesNotExist):
-                #     user = None
-                # context['token'] = account_activation_token.check_token(user, token)
-                # print('TOKEN: ', account_activation_token.check_token(user, token))
-
+    if request.user.is_admin:
+        if request.method == 'POST':
+            form = ModeratorSignUpForm(request.POST)
+            if form.is_valid():
+                with transaction.atomic():
+                    user = form.save()
+                    user.is_active = False
+                    user.date_joined = datetime.now()
+                    user.last_login = datetime.now()
+                    user.signup_confirmation = True
+                    # user.
+                    user.save()
+            else:
+                print('ERRORS: ', form.errors.as_data())
         else:
-            print('ERRORS: ', form.errors.as_data())
+            form = ModeratorSignUpForm()
     else:
-        form = ContributorSignUpForm()
+        return HttpResponse('You do not have access to this page')
     context['moderator_signup_form'] = form
-    # context['uid'] = request.GET.get('uidb64')
-    # print('UIDB: ', request.GET)
-    # context['token'] = account_activation_token.check_token(user, token)
-    # context['moderator_signup_form'] = form
     return render(request, 'accounts/moderator_sign_up.html', context)
 
 @login_required

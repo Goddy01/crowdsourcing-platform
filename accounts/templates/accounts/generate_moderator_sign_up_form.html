@@ -18,7 +18,7 @@
             <p class="font-weight-bold">
                 Welcome {{ admin }}
             </p>
-            <form style="padding: 20px;" action="{% url 'accounts:gen_mod_sign_up_link' %}" method="post" id="crowdsourceit-form">
+            <form style="padding: 20px;" action="{% url 'accounts:send_mod_details' %}" method="post" id="crowdsourceit-form">
                 {% csrf_token %}
                 <div class="form-group">
                   <input class="form-control" type="mod_email" name="mod_email" id="mod_email" placeholder="Enter moderator's email" value="">

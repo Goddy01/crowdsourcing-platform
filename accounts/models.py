@@ -114,6 +114,7 @@ class BaseUser(AbstractBaseUser):
 class Contributor(models.Model):
     user =                          models.OneToOneField(BaseUser, on_delete=models.CASCADE)
     contributions_count =           models.IntegerField(default=0)
+    setup_by_admin =                models.OneToOneField(BaseUser, default=0, null=False, on_delete=models.CASCADE, related_name='setup_by')
     upvotes_received =              models.IntegerField(default=0)
     downvotes_received =            models.IntegerField(default=0)
     reputation_score =              models.IntegerField(default=0)
@@ -153,7 +154,7 @@ class Moderator(models.Model):
 class GenModSignUpLink(models.Model):
     admin = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
     mod_email = models.EmailField(null=False, blank=False)
-    time_sent = models.DateTimeField(auto_now_add=True)
+    time_sent = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         return f"{self.admin.username} - {self.mod_email}"

@@ -1,6 +1,0 @@
-{% autoescape off %}
-From CrowdsourceIt Team
-
-Hi {{ to_email }},
-Please click the following link to begin the registration for a moderator account: http://{{ domain }}{% url 'accounts:moderator_sign_up' uidb64=uid token=token %}
-{% endautoescape %}
