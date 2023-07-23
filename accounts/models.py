@@ -144,7 +144,7 @@ class Moderator(models.Model):
     area_of_expertise = models.CharField(max_length=200)
 
     def __str__(self):
-        return f"Moderator: {self.user.email}"
+        return f"Moderator: {self.user.username}"
     
     USERNAME_FIELD = "email"
     # REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'middle_name', 'phone_num']
@@ -159,3 +159,9 @@ class Moderator(models.Model):
 
 #     def __str__(self):
 #         return f"{self.admin.username} - {self.mod_email}"
+
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            Moderator.objects.create(user=instance)
+
+    post_save.connect(create_user_profile, sender=BaseUser)

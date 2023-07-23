@@ -38,19 +38,27 @@ class ContributorSignUpForm(UserCreationForm):
         return username
         
 class ModeratorSignUpForm(UserCreationForm):
-    area_of_expertise = forms.CharField()
+    # area_of_expertise = forms.CharField()
     class Meta:
-        model = BaseUser
-        fields = ['last_name', 'first_name', 'username', 'email', 'area_of_expertise']
+        model = Moderator
+        fields = ['area_of_expertise']
     
     @transaction.atomic
     def save(self, commit=True):
-        user = super().save(commit=False)
+        print('USER: ', self.instance)
+        # user = self.instance.user
+        
         # user.is_teacher = True
+        # if user.user:
+        #     user.user.save()
         if commit:
             user.save()
-        moderator = Moderator.objects.create(user=user)
-        return user
+        base_user = super().user.save(commit=False)
+
+        if commit:
+            base_user.save()
+        # moderator = BaseUser.objects.create(user=user)
+        return base_user
     
     def clean_email(self):
         email = self.cleaned_data.get('email')
