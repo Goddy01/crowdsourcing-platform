@@ -16,6 +16,7 @@ from django.contrib.auth.decorators import login_required
 import random
 from django.core.exceptions import ValidationError
 from django.db import transaction
+import secrets
 
 
 # Create your views here.
@@ -99,7 +100,12 @@ def activate_account(request, uidb64, token):
     else:
         return render(request, 'accounts/activation_invalid.html')
 
-def generate_moderator_sign_up_link(request):
+
+def generate_registration_token():
+    return secrets.token_urlsafe(32)  # Generates a 32-character URL-safe token
+
+
+def generate_moderator_sign_up_link(request, uidb64, token):
     context = {}
     if request.user.is_admin:
         if request.method == 'POST':
@@ -122,13 +128,31 @@ def generate_moderator_sign_up_link(request):
                 from_email = settings.EMAIL_HOST_USER
                 send_mail(subject, message, from_email, to_email, fail_silently=True)
                 print('DONE!!!')
+                try:
+                    uid = force_str(urlsafe_base64_decode(uidb64))
+                    user = BaseUser.objects.get(pk=uid)
+                except(TypeError, ValueError, OverflowError, BaseUser.DoesNotExist):
+                    user = None
+                # checking if the user exists, if the token is valid.
+                account_activation_token.check_token(user, token)
+                #     # if valid set active true 
+                #     user.is_active = True
+                #     # set signup_confirmation true
+                #     user.signup_confirmation = True
+                #     user.save()
+                #     login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                #     return redirect('accounts:moderator_account_setup_sent')
+                #     # return redirect('home')
+                #     # return HttpResponse('Logged In')
+                # else:
+                #     return render(request, 'accounts/activation_invalid.html')
                 return redirect('accounts:moderator_account_setup_sent')
             else:
                 print('FAILED')
                 print('ERRORS: ', form.errors.as_data())
-        else:
-            form = ContributorSignUpForm()
-            context['contributor_signup_form'] = form
+        # else:
+        #     form = ContributorSignUpForm()
+        #     context['contributor_signup_form'] = form
     else:
         return HttpResponse('You do not have access to this page')
     return render(request, 'accounts/generate_moderator_sign_up_form.html', {'admin': request.user.username})
@@ -136,7 +160,7 @@ def generate_moderator_sign_up_link(request):
 def moderation_account_setup_done(request):
     return render(request, 'accounts/moderator_account_setup_sent.html')
 
-def moderator_sign_up(request):
+def moderator_sign_up(request, uidb64, token):
     context = {}
     if request.method == 'POST':
         form = ModeratorSignUpForm(request.POST)
@@ -147,6 +171,23 @@ def moderator_sign_up(request):
                 user.date_joined = datetime.now()
                 user.last_login = datetime.now()
                 user.save()
+                # try:
+                #     uid = force_str(urlsafe_base64_decode(uidb64))
+                #     user = BaseUser.objects.get(pk=uid)
+                # except(TypeError, ValueError, OverflowError, BaseUser.DoesNotExist):
+                #     user = None
+                # # checking if the user exists, if the token is valid.
+                # if user is not None and account_activation_token.check_token(user, token):
+                #     # if valid set active true 
+                #     user.is_active = True
+                #     # set signup_confirmation true
+                #     user.signup_confirmation = True
+                #     user.save()
+                #     login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                #     return redirect('home')
+                #     # return HttpResponse('Logged In')
+                # else:
+                #     return render(request, 'accounts/activation_invalid.html')
                 # current_site = get_current_site(request)
                 # subject = 'Activate your account'
                 # message = render_to_string('accounts/activation_request.html', {
