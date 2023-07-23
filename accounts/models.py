@@ -164,4 +164,8 @@ class Moderator(models.Model):
         if created:
             Moderator.objects.create(user=instance)
 
+    def save_user_profile(sender, instance, created, **kwargs):
+        instance.user.save()
+    
     post_save.connect(create_user_profile, sender=BaseUser)
+    post_save.connect(save_user_profile, sender=BaseUser)
