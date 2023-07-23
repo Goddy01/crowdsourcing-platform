@@ -49,7 +49,7 @@ class ModeratorSignUpForm(UserCreationForm):
         # user.is_teacher = True
         if commit:
             user.save()
-        contributor = Moderator.objects.create(user=user)
+        moderator = Moderator.objects.create(user=user)
         return user
     
     def clean_email(self):

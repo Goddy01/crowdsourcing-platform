@@ -140,7 +140,7 @@ class Contributor(models.Model):
 # MODERATOR Model
 class Moderator(models.Model):
     user = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
-    setup_by_admin =                models.OneToOneField(BaseUser, default=0, null=False, on_delete=models.CASCADE, related_name='setup_by')
+    setup_by_admin = models.OneToOneField(BaseUser, null=True, on_delete=models.CASCADE, related_name='setup_by')
     area_of_expertise = models.CharField(max_length=200)
 
     def __str__(self):

@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 import random
 from django.core.exceptions import ValidationError
 from django.db import transaction
+import random, string
 
 
 # Create your views here.
@@ -98,6 +99,10 @@ def activate_account(request, uidb64, token):
     else:
         return render(request, 'accounts/activation_invalid.html')
 
+def generate_random_string(length):
+    characters = string.ascii_letters + string.digits
+    return ''.join(random.choice(characters) for _ in range(length))
+
 def send_moderator_details(request):
     context = {}
     if request.method == 'POST':
@@ -106,7 +111,7 @@ def send_moderator_details(request):
             gen_form = form.save(commit=False)
             gen_form.admin = BaseUser.objects.get(username=request.user.username, is_admin=True)
             gen_form.time_sent = datetime.now()
-            gen_form.mod_email = gen_form.cleaned_data['mod_email']
+            gen_form.mod_email = request.POST.get('mod_email')
             user = BaseUser.objects.get(is_admin=True, username=request.user.username)
             current_site = get_current_site(request)
             subject = 'Your Moderator Account Login Details'
@@ -118,6 +123,8 @@ def send_moderator_details(request):
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
                 'to_email':  to_email,
+                'lastname': Moderator.objects.get(user__email=to_email[0]).user.last_name,
+                'password': Moderator.objects.get(user__email=to_email[0]).user.username,
             })
             to_email = [form.cleaned_data.get('mod_email')]
             from_email = settings.EMAIL_HOST_USER
@@ -131,26 +138,36 @@ def send_moderator_details(request):
 def moderation_account_setup_done(request):
     return render(request, 'accounts/moderator_account_setup_sent.html')
 
-def moderator_sign_up(request, uidb64, token):
+def moderator_sign_up(request):
     context = {}
-    if request.user.is_admin:
-        if request.method == 'POST':
-            form = ModeratorSignUpForm(request.POST)
-            if form.is_valid():
-                with transaction.atomic():
-                    user = form.save()
-                    user.is_active = False
-                    user.date_joined = datetime.now()
-                    user.last_login = datetime.now()
-                    user.signup_confirmation = True
-                    # user.
-                    user.save()
+    if request.user.is_authenticated:
+        if request.user.is_admin:
+            if request.method == 'POST':
+                form = ModeratorSignUpForm(request.POST)
+                if form.is_valid():
+                    with transaction.atomic():   
+                        user = form.save()
+                        user.is_active = True
+                        user.date_joined = datetime.now()
+                        user.last_login = datetime.now()
+                        user.signup_confirmation = True
+                        user.is_staff = True
+                        user.is_verified = True
+                        user.area_of_expertise = request.POST.get('area_of_expertise')
+                        print('EXPERTISE', user.area_of_expertise)
+                        user.setup_by_admin = BaseUser.objects.get(username=request.user.username)
+                        # user.
+                        print('ADMIN: ', BaseUser.objects.get(username=request.user.username))
+                        user.save()
+                        return redirect('accounts:send_mod_details')
+                else:
+                    print('ERRORS: ', form.errors.as_data())
             else:
-                print('ERRORS: ', form.errors.as_data())
+                form = ModeratorSignUpForm()
         else:
-            form = ModeratorSignUpForm()
+            return HttpResponse('Sike! You do not have admin privileges.')
     else:
-        return HttpResponse('You do not have access to this page')
+        return HttpResponse('You must be logged in to access this page')
     context['moderator_signup_form'] = form
     return render(request, 'accounts/moderator_sign_up.html', context)
 
