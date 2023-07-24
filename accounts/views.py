@@ -143,47 +143,71 @@ def moderator_sign_up(request):
     if request.user.is_authenticated:
         if request.user.is_admin:
             if request.method == 'POST':
-                form = ModeratorSignUpForm(request.POST)
-                if form.is_valid():
-                    with transaction.atomic():   
-                        user = form.save()
-                        user.user.is_active = True
-                        user.user.date_joined = datetime.now()
-                        user.user.last_login = datetime.now()
-                        user.user.signup_confirmation = True
-                        user.user.is_staff = True
-                        user.user.is_verified = True
-                        user.user.first_name = form.cleaned_data['first_name']
-                        user.user.last_name = form.cleaned_data['last_name']
-                        user.user.username = form.cleaned_data['username']
-                        user.user.email = form.cleaned_data['email']
-                        if form.cleaned_data['password1'] == form.cleaned_data['password']:
-                            user.user.set_password(form.cleaned_data['password1'])
-                        else:
-                            raise ValidationError('The two passwords do not match')
-                        user.area_of_expertise = request.POST.get('area_of_expertise')
-                        print('EXPERTISE', user.area_of_expertise)
-                        user.setup_by_admin = BaseUser.objects.get(username=request.user.username, is_admin=True)
-                        # user.
-                        print('ADMIN: ', BaseUser.objects.get(username=request.user.username))
-                        # user.save()
+                data = {key: value for key, value in request.POST.items() if key != 'area_of_expertise'}
+                baseuser_form = BaseUserSignUpForm(data)
+                mod_form_data = {'area_of_expertise': request.POST.get('area_of_expertise')}
+                mod_form = ModeratorSignUpForm(mod_form_data)
+                if mod_form.is_valid() and baseuser_form.is_valid():
+                    # with transaction.atomic():   
+                    base_user_obj = baseuser_form.save(commit=False)
+                    mod_user_obj = mod_form.save(commit=False)
+
+                    base_user_obj.is_active = True,
+                    base_user_obj.date_joined = datetime.now(),
+                    base_user_obj.last_login = datetime.now(),
+                    base_user_obj.signup_confirmation = True,
+                    base_user_obj.is_staff = True,
+                    base_user_obj.is_verified = True
+                    
+                    mod_user_obj.user = base_user_obj
+                    admin = BaseUser.objects.get(username=request.user.username, is_admin=True)
+                    mod_user_obj.setup_by_admin = admin
+                    
+                    # base_user = BaseUser.objects.create(
+                    #     last_name = request.POST.get('last_name'),
+                    #     first_name = request.POST.get('first_name'),
+                    #     username = request.POST.get('username'),
+                    #     email = request.POST.get('email'),
+                    #     is_active = True,
+                    #     date_joined = datetime.now(),
+                    #     last_login = datetime.now(),
+                    #     signup_confirmation = True,
+                    #     is_staff = True,
+                    #     is_verified = True
+                    # )
+                    # base_user.save()
+                    # print('USER: ', base_user.email)
+                    # mod_user = Moderator(
+                    #     user=base_user,
+                    #     area_of_expertise=form.cleaned_data['area_of_expertise'],
+                    #     setup_by_admin=BaseUser.objects.get(username=request.user.username, is_admin=True)
+
+                    # )
+                    base_user_obj.save()
+                    mod_user_obj.save()
+                    # user.area_of_expertise = request.POST.get('area_of_expertise')
+                    # print('EXPERTISE', user.area_of_expertise)
+                    # user.setup_by_admin = BaseUser.objects.get(username=request.user.username, is_admin=True)
+                    # user.
+                    print('ADMIN: ', BaseUser.objects.get(username=request.user.username))
+                    # user.save()
 
 #                       TO SEND THE LOGIN DETAILS TO THE MODERATOR
-                        admin = BaseUser.objects.get(is_admin=True, username=request.user.username)
-                        current_site = get_current_site(request)
-                        subject = 'Your Moderator Account Login Details'
-                        to_email = [form.cleaned_data.get('email')]
-                        request.session['mod_email'] = form.cleaned_data.get('mod_email')
-                        message = render_to_string('accounts/send_mod_details.html', {
-                            'user': user,
-                            'domain': current_site.domain,
-                            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                            'token': account_activation_token.make_token(user),
-                            'to_email':  to_email,
-                            'lastname': Moderator.objects.get(user__email=to_email[0]).user.last_name,
-                            'password': f"moderator_{Moderator.objects.get(user__email=to_email[0]).user.last_name}",
-                        })
-                        # return redirect('accounts:send_mod_details')
+                    # admin = BaseUser.objects.get(is_admin=True, username=request.user.username)
+                    current_site = get_current_site(request)
+                    subject = 'Your Moderator Account Login Details'
+                    # to_email = [form.cleaned_data.get('email')]
+                    request.session['mod_email'] = form.cleaned_data.get('mod_email')
+                    message = render_to_string('accounts/send_mod_details.html', {
+                        'user': mod_user_obj,
+                        'domain': current_site.domain,
+                        'uid': urlsafe_base64_encode(force_bytes(mod_user_obj.pk)),
+                        'token': account_activation_token.make_token(mod_user_obj),
+                        'to_email':  base_user_obj.email,
+                        'lastname': base_user_obj.last_name,
+                        'password': f"moderator_{BaseUser.objects.get(email=request.POST.get('email')).last_name}",
+                    })
+                    # return redirect('accounts:send_mod_details')
                 else:
                     print('ERRORS: ', form.errors.as_data())
             else:

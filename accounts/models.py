@@ -160,12 +160,12 @@ class Moderator(models.Model):
 #     def __str__(self):
 #         return f"{self.admin.username} - {self.mod_email}"
 
-    def create_user_profile(sender, instance, created, **kwargs):
-        if created:
-            Moderator.objects.create(user=instance)
+    # def create_user_profile(sender, instance, created, **kwargs):
+    #     if created:
+    #         Moderator.objects.create(user=instance)
 
-    def save_user_profile(sender, instance, created, **kwargs):
-        instance.user.save()
+    # def save_user_profile(sender, instance, created, **kwargs):
+    #     instance.user.save()
     
-    post_save.connect(create_user_profile, sender=BaseUser)
-    post_save.connect(save_user_profile, sender=BaseUser)
+    # post_save.connect(create_user_profile, sender=BaseUser)
+    # post_save.connect(save_user_profile, sender=BaseUser)

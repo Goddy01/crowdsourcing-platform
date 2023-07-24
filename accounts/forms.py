@@ -12,6 +12,18 @@ class BaseUserSignUpForm(UserCreationForm):
     class Meta:
         model = BaseUser
         fields = ['last_name', 'first_name', 'username', 'email']
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if BaseUser.objects.filter(email=email):
+            raise forms.ValidationError('A user with this email address already exist.')
+        return email
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if BaseUser.objects.filter(username=username):
+            raise forms.ValidationError('A user with this username already exist.')
+        return username
+
 class ContributorSignUpForm(UserCreationForm):
     class Meta:
         model = BaseUser
@@ -43,22 +55,22 @@ class ModeratorSignUpForm(UserCreationForm):
         model = Moderator
         fields = ['area_of_expertise']
     
-    @transaction.atomic
-    def save(self, commit=True):
-        print('USER: ', self.instance)
-        # user = self.instance.user
+    # @transaction.atomic
+    # def save(self, commit=True):
+    #     print('USER: ', self.instance)
+    #     user = self.instance.baseuser
         
-        # user.is_teacher = True
-        # if user.user:
-        #     user.user.save()
-        if commit:
-            user.save()
-        base_user = super().user.save(commit=False)
+    #     # user.is_teacher = True
+    #     # if user.user:
+    #     #     user.user.save()
+    #     if commit:
+    #         user.save()
+    #     base_user = super().user.save(commit=False)
 
-        if commit:
-            base_user.save()
-        # moderator = BaseUser.objects.create(user=user)
-        return base_user
+    #     if commit:
+    #         base_user.save()
+    #     # moderator = BaseUser.objects.create(user=user)
+    #     return base_user
     
     def clean_email(self):
         email = self.cleaned_data.get('email')
