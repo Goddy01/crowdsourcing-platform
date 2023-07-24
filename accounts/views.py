@@ -183,24 +183,9 @@ def moderator_sign_up(request):
                         'lastname': base_user_obj.last_name,
                         'password': f"moderator_{BaseUser.objects.get(email=request.POST.get('email')).last_name}",
                     })
-                    # request.session['mod_base_signup_form'] = baseuser_form # To send the error in the form
-                    # request.session['moderator_signup_form'] = mod_form # To send the errors in the form
-                    # request.session['mod_email'] = request.POST.get('mod_email')
-                    # request.session['admin'] = request.user.username
-                    # return redirect('accounts:send_mod_details')
                 else:
                     print('BASE USER FORM ERRORS: ', baseuser_form.errors.as_data())
                     print('MOD USER FORM ERRORS: ', mod_form.errors.as_data())
-                    # request.session['mod_base_signup_form_data'] = data
-                    # request.session['moderator_signup_form_data'] = mod_form_data
-                    # request.session['mod_email'] = request.POST.get('mod_email')
-                    # request.session['admin'] = request.user.username
-                    # return redirect('accounts:moderator_sign_up')
-                
-                # context['moderator_signup_form'] = mod_form
-                # context['mod_base_signup_form'] = baseuser_form
-                # context['mod_email'] = request.POST.get('email')
-                # context['admin'] = BaseUser.objects.get(is_admin=True, username=request.user.username)
             else:
                 mod_form = ModeratorSignUpForm()
                 baseuser_form = BaseUserSignUpForm()
@@ -210,16 +195,6 @@ def moderator_sign_up(request):
             return HttpResponse('Sike! You do not have admin privileges.')
     else:
         return HttpResponse('You must be logged in to access this page')
-    # context['mod_base_signup_form'] = request.session.get('mod_base_signup_form')
-    # context['moderator_signup_form'] = request.session.get('moderator_signup_form') # To send the errors in the form
-    # context['mod_email'] = request.session.get('mod_email')
-    # context['admin'] = request.session.get('admin')
-    context = {
-        'mod_base_signup_form': baseuser_form,
-        'moderator_signup_form': mod_form,
-        'mod_email': request.session.get('mod_email'),
-        'admin': request.session.get('admin'),
-    }
     print('THIS IS CONTEXT: ', context['moderator_signup_form'].errors.as_data())
     return render(request, 'accounts/moderator_sign_up.html', {
         'mod_base_signup_form': baseuser_form,
