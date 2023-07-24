@@ -151,21 +151,12 @@ class Moderator(models.Model):
     REQUIRED_FIELDS = ['username', ]
 
 
-# class GenModSignUpLink(models.Model):
-#     admin = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
-#     mod_email = models.EmailField(null=False, blank=False)
-#     time_sent = models.DateTimeField(auto_now_add=True, null=True)
-#     random_string = models.CharField(null=True, max_length=255)
+def create_moderator_profile(sender, instance, created, **kwargs):
+    if created:
+        Moderator.objects.create(user=instance)
 
-#     def __str__(self):
-#         return f"{self.admin.username} - {self.mod_email}"
+def save_moderator_profile(sender, instance, created, **kwargs):
+    instance.user.save()
 
-    # def create_user_profile(sender, instance, created, **kwargs):
-    #     if created:
-    #         Moderator.objects.create(user=instance)
-
-    # def save_user_profile(sender, instance, created, **kwargs):
-    #     instance.user.save()
-    
-    # post_save.connect(create_user_profile, sender=BaseUser)
-    # post_save.connect(save_user_profile, sender=BaseUser)
+    post_save.connect(create_moderator_profile, sender=BaseUser)
+    post_save.connect(save_moderator_profile, sender=BaseUser)

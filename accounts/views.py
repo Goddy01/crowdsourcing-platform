@@ -24,9 +24,6 @@ def activation_sent_view(request):
 
 def contributor_sign_up(request):
     context = {}
-    # if not request.META.get('HTTP_REFERER'):
-    #     context['email_exists'] = 'A Google account is already linked with the email provided.'
-    # else:
     if request.method == 'POST':
         form = ContributorSignUpForm(request.POST)
         if form.is_valid():
@@ -60,9 +57,6 @@ def contributor_sign_up(request):
 
 def contributor_sign_in(request):
     context = {}
-    # if not request.META.get('HTTP_REFERER'):
-    #     context['email_exists'] = 'A Google account is already linked with the email provided.'
-    # else:
     if request.method == 'POST':
         form = ContributorSignInForm(request.POST)
         # print('ERROR: ', contributor_signin_form)
@@ -99,42 +93,6 @@ def activate_account(request, uidb64, token):
     else:
         return render(request, 'accounts/activation_invalid.html')
 
-# def send_moderator_details(request):
-#     context = {}
-#     if request.method == 'POST':
-#         form = GenModSignUpLinkForm(request.POST)
-#         # context['admin'] = request.user.username
-#         request.session['admin'] = request.user.username
-#         if form.is_valid():
-#             gen_form = form.save(commit=False)
-#             gen_form.admin = BaseUser.objects.get(username=request.user.username, is_admin=True)
-#             gen_form.time_sent = datetime.now()
-#             gen_form.mod_email = request.POST.get('mod_email')
-#             user = BaseUser.objects.get(is_admin=True, username=request.user.username)
-#             current_site = get_current_site(request)
-#             subject = 'Your Moderator Account Login Details'
-#             to_email = [form.cleaned_data.get('mod_email')]
-#             request.session['mod_email'] = form.cleaned_data.get('mod_email')
-#             message = render_to_string('accounts/send_mod_details.html', {
-#                 'user': user,
-#                 'domain': current_site.domain,
-#                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-#                 'token': account_activation_token.make_token(user),
-#                 'to_email':  to_email,
-#                 'lastname': Moderator.objects.get(user__email=to_email[0]).user.last_name,
-#                 'password': f"moderator_{Moderator.objects.get(user__email=to_email[0]).user.last_name}",
-#             })
-#             to_email = [form.cleaned_data.get('mod_email')]
-#             context['to_email'] = to_email
-#             from_email = settings.EMAIL_HOST_USER
-#             send_mail(subject, message, from_email, to_email, fail_silently=True)
-#             return redirect('accounts:moderator_account_setup_sent')
-#         else:
-#             print('FAILED')
-#             print('ERRORS: ', form.errors.as_data())
-#     print('CONTEXT: ', request.session.get('to_email'))
-#     return render(request, 'accounts/generate_moderator_sign_up_form.html', {'admin': request.session.get('admin'), 'to_email': request.session.get('mod_email')})
-
 def moderation_account_setup_done(request):
     return render(request, 'accounts/moderator_account_setup_sent.html')
 
@@ -147,7 +105,9 @@ def moderator_sign_up(request):
             if request.method == 'POST':
                 data = {key: value for key, value in request.POST.items() if key != 'area_of_expertise'}
                 baseuser_form = BaseUserSignUpForm(data)
-                mod_form_data = {'area_of_expertise': request.POST.get('area_of_expertise')}
+                unwanted_mod_form_list = ['first_name', 'last_name', 'username', 'email']
+                # data = {key: value for key, value in request.POST.items() if key not in unwanted_mod_form_list}
+                mod_form_data = {key: value for key, value in request.POST.items() if key not in unwanted_mod_form_list}
                 mod_form = ModeratorSignUpForm(mod_form_data)
                 if mod_form.is_valid() and baseuser_form.is_valid():
                     # with transaction.atomic():   
@@ -165,7 +125,6 @@ def moderator_sign_up(request):
                     admin = BaseUser.objects.get(username=request.user.username, is_admin=True)
                     mod_user_obj.setup_by_admin = admin
                     
-                    
                     base_user_obj.save()
                     mod_user_obj.save()
                     
@@ -173,7 +132,6 @@ def moderator_sign_up(request):
                     
                     current_site = get_current_site(request)
                     subject = 'Your Moderator Account Login Details'
-                    # request.session['mod_email'] = form.cleaned_data.get('mod_email')
                     message = render_to_string('accounts/send_mod_details.html', {
                         'user': mod_user_obj,
                         'domain': current_site.domain,
@@ -195,7 +153,6 @@ def moderator_sign_up(request):
             return HttpResponse('Sike! You do not have admin privileges.')
     else:
         return HttpResponse('You must be logged in to access this page')
-    print('THIS IS CONTEXT: ', context['moderator_signup_form'].errors.as_data())
     return render(request, 'accounts/moderator_sign_up.html', {
         'mod_base_signup_form': baseuser_form,
         'moderator_signup_form': mod_form,
