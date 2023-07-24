@@ -10,31 +10,37 @@ from django.db import transaction
 
 class BaseUserSignUpForm(UserCreationForm):
     username = forms.CharField(
-            max_length=100,
             error_messages={
-                'required': 'Please enter your username.',
-                'max_length': 'Name cannot be longer than 100 characters.',
+                'required': 'Please enter your username.'
             }
         )
     first_name = forms.CharField(
-            max_length=100,
             error_messages={
-                'required': 'Please enter your firstname.',
-                'max_length': 'Name cannot be longer than 100 characters.',
+                'required': 'Please enter your firstname.'
             }
         )
     last_name = forms.CharField(
-            max_length=100,
             error_messages={
-                'required': 'Please enter your lastname.',
-                'max_length': 'Name cannot be longer than 100 characters.',
+                'required': 'Please enter your lastname.'
             }
         )
     email = forms.CharField(
-            max_length=100,
             error_messages={
-                'required': 'Please enter your email.',
-                'max_length': 'Name cannot be longer than 100 characters.',
+                'required': 'Please enter your email.'
+            }
+        )
+    
+    password1 = forms.CharField(
+        widget=forms.PasswordInput,
+            error_messages={
+                'required': 'Please enter your password.'
+            }
+        )
+    
+    password2 = forms.CharField(
+        widget=forms.PasswordInput,
+            error_messages={
+                'required': 'Please confirm your password by entering it again.'
             }
         )
     class Meta:
@@ -79,10 +85,8 @@ class ContributorSignUpForm(UserCreationForm):
         
 class ModeratorSignUpForm(UserCreationForm):
     area_of_expertise = forms.CharField(
-            max_length=100,
             error_messages={
-                'required': 'Please enter your area of expertise.',
-                'max_length': 'Name cannot be longer than 100 characters.',
+                'required': 'Please enter your area of expertise.'
             }
         )
     # area_of_expertise = forms.CharField()
