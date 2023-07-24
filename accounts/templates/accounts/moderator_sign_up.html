@@ -39,7 +39,7 @@ background-size: cover;height: 100vh;'>
         {% endfor %}
 
         {% if moderator_signup_form.non_field_errors %}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="margin-top: -4px;color: whitesmoke;">
+        <div class="alert alert-danger p-3 m-3 text-center text-light bg-danger border-0" role="alert">
             {{moderator_signup_form.non_field_errors}}
           <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="margin-top: -4px;color: whitesmoke;">
               &times;
@@ -63,7 +63,7 @@ background-size: cover;height: 100vh;'>
         {% endfor %}
 
         {% if mod_base_signup_form.non_field_errors %}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="margin-top: -4px;color: whitesmoke;">
+        <div class="alert alert-danger p-3 m-3 text-center text-light bg-danger border-0" role="alert">
             {{mod_base_signup_form.non_field_errors}}
           <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="margin-top: -4px;color: whitesmoke;">
               &times;
