@@ -50,19 +50,17 @@ class ContributorSignUpForm(UserCreationForm):
         return username
         
 class ModeratorSignUpForm(UserCreationForm):
+    area_of_expertise = forms.CharField(
+            max_length=100,
+            error_messages={
+                'required': 'Please enter your area of expertise.',
+                'max_length': 'Name cannot be longer than 100 characters.',
+            }
+        )
     # area_of_expertise = forms.CharField()
     class Meta:
         model = Moderator
         fields = ['area_of_expertise']
-    
-    class MyForm(forms.Form):
-        area_of_expertise = forms.CharField(
-            max_length=100,
-            error_messages={
-                'required': 'Please enter area of expertise.',
-                'max_length': 'Name cannot be longer than 100 characters.',
-            }
-        )
         # email = forms.EmailField(
         #     error_messages={
         #         'required': 'Please enter a valid email address.',
