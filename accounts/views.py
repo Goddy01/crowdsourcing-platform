@@ -140,6 +140,8 @@ def moderation_account_setup_done(request):
 
 def moderator_sign_up(request):
     context = {}
+    baseuser_form = BaseUserSignUpForm()  # Define the form here
+    mod_form = ModeratorSignUpForm()  # Define the form here
     if request.user.is_authenticated:
         if request.user.is_admin:
             if request.method == 'POST':
@@ -163,41 +165,15 @@ def moderator_sign_up(request):
                     admin = BaseUser.objects.get(username=request.user.username, is_admin=True)
                     mod_user_obj.setup_by_admin = admin
                     
-                    # base_user = BaseUser.objects.create(
-                    #     last_name = request.POST.get('last_name'),
-                    #     first_name = request.POST.get('first_name'),
-                    #     username = request.POST.get('username'),
-                    #     email = request.POST.get('email'),
-                    #     is_active = True,
-                    #     date_joined = datetime.now(),
-                    #     last_login = datetime.now(),
-                    #     signup_confirmation = True,
-                    #     is_staff = True,
-                    #     is_verified = True
-                    # )
-                    # base_user.save()
-                    # print('USER: ', base_user.email)
-                    # mod_user = Moderator(
-                    #     user=base_user,
-                    #     area_of_expertise=form.cleaned_data['area_of_expertise'],
-                    #     setup_by_admin=BaseUser.objects.get(username=request.user.username, is_admin=True)
-
-                    # )
+                    
                     base_user_obj.save()
                     mod_user_obj.save()
-                    # user.area_of_expertise = request.POST.get('area_of_expertise')
-                    # print('EXPERTISE', user.area_of_expertise)
-                    # user.setup_by_admin = BaseUser.objects.get(username=request.user.username, is_admin=True)
-                    # user.
+                    
                     print('ADMIN: ', BaseUser.objects.get(username=request.user.username))
-                    # user.save()
-
-#                       TO SEND THE LOGIN DETAILS TO THE MODERATOR
-                    # admin = BaseUser.objects.get(is_admin=True, username=request.user.username)
+                    
                     current_site = get_current_site(request)
                     subject = 'Your Moderator Account Login Details'
-                    # to_email = [form.cleaned_data.get('email')]
-                    request.session['mod_email'] = form.cleaned_data.get('mod_email')
+                    # request.session['mod_email'] = form.cleaned_data.get('mod_email')
                     message = render_to_string('accounts/send_mod_details.html', {
                         'user': mod_user_obj,
                         'domain': current_site.domain,
@@ -207,19 +183,50 @@ def moderator_sign_up(request):
                         'lastname': base_user_obj.last_name,
                         'password': f"moderator_{BaseUser.objects.get(email=request.POST.get('email')).last_name}",
                     })
+                    # request.session['mod_base_signup_form'] = baseuser_form # To send the error in the form
+                    # request.session['moderator_signup_form'] = mod_form # To send the errors in the form
+                    # request.session['mod_email'] = request.POST.get('mod_email')
+                    # request.session['admin'] = request.user.username
                     # return redirect('accounts:send_mod_details')
                 else:
-                    print('ERRORS: ', form.errors.as_data())
+                    print('BASE USER FORM ERRORS: ', baseuser_form.errors.as_data())
+                    print('MOD USER FORM ERRORS: ', mod_form.errors.as_data())
+                    # request.session['mod_base_signup_form_data'] = data
+                    # request.session['moderator_signup_form_data'] = mod_form_data
+                    # request.session['mod_email'] = request.POST.get('mod_email')
+                    # request.session['admin'] = request.user.username
+                    # return redirect('accounts:moderator_sign_up')
+                
+                # context['moderator_signup_form'] = mod_form
+                # context['mod_base_signup_form'] = baseuser_form
+                # context['mod_email'] = request.POST.get('email')
+                # context['admin'] = BaseUser.objects.get(is_admin=True, username=request.user.username)
             else:
-                form = ModeratorSignUpForm()
+                mod_form = ModeratorSignUpForm()
+                baseuser_form = BaseUserSignUpForm()
+                mod_email = request.POST.get('email')
+                admin = BaseUser.objects.get(is_admin=True, username=request.user.username)
         else:
             return HttpResponse('Sike! You do not have admin privileges.')
     else:
         return HttpResponse('You must be logged in to access this page')
-    context['moderator_signup_form'] = form
-    context['mod_email'] = request.POST.get('mod_email')
-    context['admin'] = request.user.username
-    return render(request, 'accounts/moderator_sign_up.html', context)
+    # context['mod_base_signup_form'] = request.session.get('mod_base_signup_form')
+    # context['moderator_signup_form'] = request.session.get('moderator_signup_form') # To send the errors in the form
+    # context['mod_email'] = request.session.get('mod_email')
+    # context['admin'] = request.session.get('admin')
+    context = {
+        'mod_base_signup_form': baseuser_form,
+        'moderator_signup_form': mod_form,
+        'mod_email': request.session.get('mod_email'),
+        'admin': request.session.get('admin'),
+    }
+    print('THIS IS CONTEXT: ', context['moderator_signup_form'].errors.as_data())
+    return render(request, 'accounts/moderator_sign_up.html', {
+        'mod_base_signup_form': baseuser_form,
+        'moderator_signup_form': mod_form,
+        'mod_email': request.session.get('mod_email'),
+        'admin': request.session.get('admin'),
+    })
 
 @login_required
 def sign_out(request):

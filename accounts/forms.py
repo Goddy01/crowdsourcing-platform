@@ -55,22 +55,20 @@ class ModeratorSignUpForm(UserCreationForm):
         model = Moderator
         fields = ['area_of_expertise']
     
-    # @transaction.atomic
-    # def save(self, commit=True):
-    #     print('USER: ', self.instance)
-    #     user = self.instance.baseuser
-        
-    #     # user.is_teacher = True
-    #     # if user.user:
-    #     #     user.user.save()
-    #     if commit:
-    #         user.save()
-    #     base_user = super().user.save(commit=False)
-
-    #     if commit:
-    #         base_user.save()
-    #     # moderator = BaseUser.objects.create(user=user)
-    #     return base_user
+    class MyForm(forms.Form):
+        area_of_expertise = forms.CharField(
+            max_length=100,
+            error_messages={
+                'required': 'Please enter area of expertise.',
+                'max_length': 'Name cannot be longer than 100 characters.',
+            }
+        )
+        # email = forms.EmailField(
+        #     error_messages={
+        #         'required': 'Please enter a valid email address.',
+        #         'invalid': 'Invalid email address format.',
+        #     }
+        # )
     
     def clean_email(self):
         email = self.cleaned_data.get('email')
