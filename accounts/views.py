@@ -109,41 +109,42 @@ def moderator_sign_up(request):
                 # data = {key: value for key, value in request.POST.items() if key not in unwanted_mod_form_list}
                 mod_form_data = {key: value for key, value in request.POST.items() if key not in unwanted_mod_form_list}
                 mod_form = ModeratorSignUpForm(mod_form_data)
-                if mod_form.is_valid() and baseuser_form.is_valid():
-                    # with transaction.atomic():   
-                    base_user_obj = baseuser_form.save(commit=False)
-                    mod_user_obj = mod_form.save(commit=False)
+                with transaction.atomic():
+                    if mod_form.is_valid() and baseuser_form.is_valid():
+                        # with transaction.atomic():   
+                        base_user_obj = baseuser_form.save(commit=False)
+                        mod_user_obj = mod_form.save(commit=False)
 
-                    base_user_obj.is_active = True,
-                    base_user_obj.date_joined = datetime.now(),
-                    base_user_obj.last_login = datetime.now(),
-                    base_user_obj.signup_confirmation = True,
-                    base_user_obj.is_staff = True,
-                    base_user_obj.is_verified = True
-                    
-                    mod_user_obj.user = base_user_obj
-                    admin = BaseUser.objects.get(username=request.user.username, is_admin=True)
-                    mod_user_obj.setup_by_admin = admin
-                    
-                    base_user_obj.save()
-                    mod_user_obj.save()
-                    
-                    print('ADMIN: ', BaseUser.objects.get(username=request.user.username))
-                    
-                    current_site = get_current_site(request)
-                    subject = 'Your Moderator Account Login Details'
-                    message = render_to_string('accounts/send_mod_details.html', {
-                        'user': mod_user_obj,
-                        'domain': current_site.domain,
-                        'uid': urlsafe_base64_encode(force_bytes(mod_user_obj.pk)),
-                        'token': account_activation_token.make_token(mod_user_obj),
-                        'to_email':  base_user_obj.email,
-                        'lastname': base_user_obj.last_name,
-                        'password': f"moderator_{BaseUser.objects.get(email=request.POST.get('email')).last_name}",
-                    })
-                else:
-                    print('BASE USER FORM ERRORS: ', baseuser_form.errors.as_data())
-                    print('MOD USER FORM ERRORS: ', mod_form.errors.as_data())
+                        base_user_obj.is_active = True,
+                        base_user_obj.date_joined = datetime.now(),
+                        base_user_obj.last_login = datetime.now(),
+                        base_user_obj.signup_confirmation = True,
+                        base_user_obj.is_staff = True,
+                        base_user_obj.is_verified = True
+                        
+                        mod_user_obj.user = base_user_obj
+                        admin = BaseUser.objects.get(username=request.user.username, is_admin=True)
+                        mod_user_obj.setup_by_admin = admin
+                        
+                        base_user_obj.save()
+                        mod_user_obj.save()
+                        
+                        print('ADMIN: ', BaseUser.objects.get(username=request.user.username))
+                        
+                        current_site = get_current_site(request)
+                        subject = 'Your Moderator Account Login Details'
+                        message = render_to_string('accounts/send_mod_details.html', {
+                            'user': mod_user_obj,
+                            'domain': current_site.domain,
+                            'uid': urlsafe_base64_encode(force_bytes(mod_user_obj.pk)),
+                            'token': account_activation_token.make_token(mod_user_obj),
+                            'to_email':  base_user_obj.email,
+                            'lastname': base_user_obj.last_name,
+                            'password': f"moderator_{BaseUser.objects.get(email=request.POST.get('email')).last_name}",
+                        })
+                    else:
+                        print('BASE USER FORM ERRORS: ', baseuser_form.errors.as_data())
+                        print('MOD USER FORM ERRORS: ', mod_form.errors.as_data())
             else:
                 mod_form = ModeratorSignUpForm()
                 baseuser_form = BaseUserSignUpForm()

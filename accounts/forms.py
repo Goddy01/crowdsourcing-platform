@@ -84,21 +84,24 @@ class ContributorSignUpForm(UserCreationForm):
         return username
         
 class ModeratorSignUpForm(UserCreationForm):
-    area_of_expertise = forms.CharField(
+    area_of_expertise = forms.CharField(widget=forms.TextInput(),
             error_messages={
                 'required': 'Please enter your area of expertise.'
             }
         )
     # area_of_expertise = forms.CharField()
     class Meta:
-        model = Moderator
+        model = BaseUser
         fields = ['area_of_expertise']
-        # email = forms.EmailField(
-        #     error_messages={
-        #         'required': 'Please enter a valid email address.',
-        #         'invalid': 'Invalid email address format.',
-        #     }
-        # )
+    
+    @transaction.atomic
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.is_student = True
+        if commit:
+            user.save()
+        moderator = Moderator.objects.create(user=user, area_of_expertise=self.cleaned_data.get('area_of_expertise'))
+        return user
     
     def clean_email(self):
         email = self.cleaned_data.get('email')
