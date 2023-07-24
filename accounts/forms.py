@@ -9,6 +9,34 @@ from django.db import transaction
 
 
 class BaseUserSignUpForm(UserCreationForm):
+    username = forms.CharField(
+            max_length=100,
+            error_messages={
+                'required': 'Please enter your username.',
+                'max_length': 'Name cannot be longer than 100 characters.',
+            }
+        )
+    first_name = forms.CharField(
+            max_length=100,
+            error_messages={
+                'required': 'Please enter your firstname.',
+                'max_length': 'Name cannot be longer than 100 characters.',
+            }
+        )
+    last_name = forms.CharField(
+            max_length=100,
+            error_messages={
+                'required': 'Please enter your lastname.',
+                'max_length': 'Name cannot be longer than 100 characters.',
+            }
+        )
+    email = forms.CharField(
+            max_length=100,
+            error_messages={
+                'required': 'Please enter your email.',
+                'max_length': 'Name cannot be longer than 100 characters.',
+            }
+        )
     class Meta:
         model = BaseUser
         fields = ['last_name', 'first_name', 'username', 'email']
