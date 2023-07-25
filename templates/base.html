@@ -56,6 +56,14 @@
 							<li><a href="contact.html">Contact Details</a></li>
 						</ul>
 					</li>
+                    {% if request.user.is_authenticated %}
+                    <!-- <li><a href="news.html">News</a></li> -->
+                    <li class="account-logout">
+                        <a href="{% url 'accounts:sign_out' %}">
+                        Logout
+                        </a>
+                    </li>
+                    {% else %}
                     <li class="menu-item-has-children">
 						<a>Login<em class="mdi mdi-chevron-down"></em></a>
 						<ul class="sub-menu">
@@ -63,9 +71,6 @@
 							<li><a href="{% url 'accounts:moderator_sign_in' %}">Login as a Moderator</a></li>
 						</ul>
 					</li>
-                    {% if request.user.is_authenticated %}
-                    <!-- <li><a href="news.html">News</a></li> -->
-                    <li class="account-logout"><a href="{% url 'accounts:sign_out' %}">Logout</a></li>
                     {% endif %}
 					<li class="menu-account menu-item-has-children">
 						<a href="account-overview.html">
