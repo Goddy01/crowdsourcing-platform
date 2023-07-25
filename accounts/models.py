@@ -15,10 +15,14 @@ from django.db.models.signals import post_save
 
 class BaseUserMgr(BaseUserManager):
     """Creates and saves a user with the given details"""
-    def create_user(self, email, username, password=None):
+    def create_user(self, email, username, first_name, last_name, password=None):
         if not email:
             raise ValueError("The user must provide an email")
         if not username:
+            raise ValueError("The user must provide a username")
+        if not first_name:
+            raise ValueError("The user must provide an email")
+        if not last_name:
             raise ValueError("The user must provide a username")
           # raise ValueError("The user must provide their phone number")
         # try:
@@ -29,9 +33,9 @@ class BaseUserMgr(BaseUserManager):
 
         user = self.model(
             email=self.normalize_email(email),
-            username=username
-            # first_name=first_name,
-            # last_name=last_name
+            username=username,
+            first_name=first_name,
+            last_name=last_name
         )
         user.set_password(password)
         user.save(using=self._db)

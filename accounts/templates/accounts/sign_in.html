@@ -31,14 +31,6 @@
 <body style='background: url("{% static 'images/bg-image1.jpg' %}");background-repeat: no-repeat;
 background-size: cover;height: 100vh;'>
   <!-- Container Start -->
-  {% if email_exists %}
-  <div class="alert alert-danger p-3 m-3 text-center text-light bg-danger border-0" role="alert">
-    {{ email_exists }}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="margin-top: -4px;color: white;">
-        &times;
-    </button>
-  </div>
-  {% endif %}
   <div class="errors mb-2 mx-auto">
         {% for field in contributor_signin_form %}
             <p>
@@ -65,7 +57,7 @@ background-size: cover;height: 100vh;'>
   <div id="container">
     <!-- Form Wrap Start -->
     <div id="form-wrap">
-      <h1 class="font-weight-bold">Login</h1>
+      <h1 class="font-weight-bold">Login as a Contributor</h1>
       <!-- Form Start -->
       <form style="padding: 20px;" action="{% url 'accounts:contributor_sign_in' %}" method="post" id="crowdsourceit-form">
         {% csrf_token %}
@@ -88,12 +80,6 @@ background-size: cover;height: 100vh;'>
               <span>Login with Google</span>
           </button>
           </a>
-          <!-- <a class="text-decoration-none" id="facebook-login" href="{% url 'social:begin' 'linkedin-oauth2' %}">
-            <button type="button" style="background-color: #fff;color: #333;">
-                <i class="fa fa-linkedin" style="font-size: 22px;color: #469e52;margin-right: 5px;"></i>
-                <span>Login with Linkedln</span>
-            </button>
-            </a> -->
       </div>
       </form>
       <!-- Form Close -->
