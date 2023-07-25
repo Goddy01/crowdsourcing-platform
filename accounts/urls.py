@@ -10,7 +10,7 @@ urlpatterns = [
     path('sign-out/', views.sign_out, name='sign_out'),
     path('social-auth/', include('social_django.urls', namespace='social')),
     # path('generate-link/', views.send_moderator_details, name='send_mod_details'),
-    path('generated/', views.moderation_account_setup_done, name='moderator_account_setup_sent'),
+    path('account-details-sent/', views.moderation_account_setup_done, name='moderator_account_setup_sent'),
     path('moderator-sign-up/', views.moderator_sign_up, name='moderator_sign_up'),
     # path(),
 ]

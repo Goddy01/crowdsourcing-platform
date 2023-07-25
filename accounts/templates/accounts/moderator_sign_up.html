@@ -25,7 +25,6 @@ background-size: cover;height: 100vh;'>
     <div class="errors mb-2 mx-4 mt-3">
         {% for field in moderator_signup_form %}
             <p>
-            {% if field.name != 'password1' and field.name != 'password2' %}
             {% for error in field.errors %}
             <div class="alert alert-danger p-3 m-3 text-center text-light bg-danger border-0" role="alert">
                 {{error}}
@@ -34,37 +33,12 @@ background-size: cover;height: 100vh;'>
                 </button>
             </div>
             {% endfor %}
-            {% endif %}
             </p>
         {% endfor %}
 
         {% if moderator_signup_form.non_field_errors %}
         <div class="alert alert-danger p-3 m-3 text-center text-light bg-danger border-0" role="alert">
             {{moderator_signup_form.non_field_errors}}
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="margin-top: -4px;color: whitesmoke;">
-              &times;
-          </button>
-        </div>
-        {% endif %}
-    </div>
-    
-    <div class="errors mb-2 mx-4 mt-3">
-        {% for field in mod_base_signup_form %}
-            <p>  
-            {% for error in field.errors %}
-            <div class="alert alert-danger p-3 m-3 text-center text-light bg-danger border-0" role="alert">
-                {{error}}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="margin-top: -4px;color: whitesmoke;">
-                    &times;
-                </button>
-            </div>
-            {% endfor %}
-            </p>
-        {% endfor %}
-
-        {% if mod_base_signup_form.non_field_errors %}
-        <div class="alert alert-danger p-3 m-3 text-center text-light bg-danger border-0" role="alert">
-            {{mod_base_signup_form.non_field_errors}}
           <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="margin-top: -4px;color: whitesmoke;">
               &times;
           </button>

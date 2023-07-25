@@ -84,6 +84,41 @@ class ContributorSignUpForm(UserCreationForm):
         return username
         
 class ModeratorSignUpForm(UserCreationForm):
+    username = forms.CharField(
+            error_messages={
+                'required': 'Please enter your username.'
+            }
+        )
+    first_name = forms.CharField(
+            error_messages={
+                'required': 'Please enter your firstname.'
+            }
+        )
+    last_name = forms.CharField(
+            error_messages={
+                'required': 'Please enter your lastname.'
+            }
+        )
+    email = forms.CharField(
+            error_messages={
+                'required': 'Please enter your email.'
+            }
+        )
+    
+    password1 = forms.CharField(
+        widget=forms.PasswordInput,
+            error_messages={
+                'required': 'Please enter your password.'
+            }
+        )
+    
+    password2 = forms.CharField(
+        widget=forms.PasswordInput,
+            error_messages={
+                'required': 'Please confirm your password by entering it again.'
+            }
+        )
+    
     area_of_expertise = forms.CharField(widget=forms.TextInput(),
             error_messages={
                 'required': 'Please enter your area of expertise.'
@@ -92,12 +127,12 @@ class ModeratorSignUpForm(UserCreationForm):
     # area_of_expertise = forms.CharField()
     class Meta:
         model = BaseUser
-        fields = ['area_of_expertise']
+        fields = ['last_name', 'first_name', 'username', 'email', 'area_of_expertise']
     
     @transaction.atomic
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.is_student = True
+        # user.is_student = True
         if commit:
             user.save()
         moderator = Moderator.objects.create(user=user, area_of_expertise=self.cleaned_data.get('area_of_expertise'))
@@ -105,13 +140,13 @@ class ModeratorSignUpForm(UserCreationForm):
     
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        if Moderator.objects.filter(user__email=email):
+        if BaseUser.objects.filter(email=email):
             raise forms.ValidationError('A moderator with this email address already exist.')
         return email
     
     def clean_username(self):
         username = self.cleaned_data.get('username')
-        if Moderator.objects.filter(user__username=username):
+        if BaseUser.objects.filter(username=username):
             raise forms.ValidationError('A moderator with this username already exist.')
         return username
 
