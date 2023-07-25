@@ -60,13 +60,11 @@ def contributor_sign_in(request):
             user = authenticate(email=form.cleaned_data.get('email'), password=form.cleaned_data.get('password'))
             if user:
                 login(request, user)
-                print('NA AM: ', request.POST.get('remember_me'))
                 if request.POST.get('remember_me') is None:
                     request.session.set_expiry(0)
                     # request.session.modified = True
                 else:
                     request.session.set_expiry(1209600)
-                    print('YOU NO GO FIT LOGOUT')
                     
                 return redirect('home')
     else:
@@ -160,6 +158,11 @@ def moderator_sign_in(request):
             user = authenticate(email=form.cleaned_data.get('email'), password=form.cleaned_data.get('password'))
             if user:
                 login(request, user)
+                if request.POST.get('remember_me') is None:
+                    request.session.set_expiry(0)
+                    # request.session.modified = True
+                else:
+                    request.session.set_expiry(1209600)
                 return redirect('home')
     else:
         form = ModeratorSignInForm()
