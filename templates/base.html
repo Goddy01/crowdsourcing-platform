@@ -72,7 +72,7 @@
                             <span class="account-details">
                                 <span class="account-name">
                                     {% if request.user.is_authenticated %}
-                                    {{ request.user.username|title }}
+                                    {{ request.user.username }}
                                     {% else %}
                                     Guest
                                     {% endif %}
@@ -93,7 +93,7 @@
 						</ul>
 					</li>
                     {% if request.user.is_authenticated %}
-                    <li class="account-logout mdx-4">
+                    <li class="account-logout">
                         <a href="{% url 'accounts:sign_out' %}">
                             <i style="font-size: 24px;" class="fa-solid fa-right-from-bracket"></i>
                             Logout

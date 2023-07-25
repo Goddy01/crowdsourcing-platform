@@ -165,16 +165,16 @@ class ContributorSignInForm(forms.ModelForm):
 
             user = authenticate(email=email, password=password)
 
-            if user is None:
+            if user is not None:
                 try:
                     # Check if the user with the provided email address exists
-                    user = Contributor.objects.get(email=email)
+                    user = Contributor.objects.get(user__email=email)
                 except Contributor.DoesNotExist:
                     # Handle the case when the account does not exist
-                    raise forms.ValidationError("Account with this email address does not exist.")
-                else:
-                    # Handle the case when the account exists but login details are invalid
-                    raise forms.ValidationError("Invalid login details. Please try again.")
+                    raise forms.ValidationError("A contributor account with this email address does not exist.")
+            else:
+                # Handle the case when the account exists but login details are invalid
+                raise forms.ValidationError("Invalid login details. Please try again.")
 
         # return cleaned_data
     
