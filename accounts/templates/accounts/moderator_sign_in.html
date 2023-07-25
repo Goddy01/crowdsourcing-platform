@@ -31,7 +31,6 @@
 <body style='background: url("{% static 'images/bg-image1.jpg' %}");background-repeat: no-repeat;
 background-size: cover;height: 100vh;'>
   <!-- Container Start -->
-  {% endif %}
   <div class="errors mb-2 mx-auto">
         {% for field in moderator_sign_in_form %}
             <p>
@@ -58,7 +57,7 @@ background-size: cover;height: 100vh;'>
   <div id="container">
     <!-- Form Wrap Start -->
     <div id="form-wrap">
-      <h1 class="font-weight-bold">Login</h1>
+      <h1 class="font-weight-bold">Login as a Moderator</h1>
       <!-- Form Start -->
       <form style="padding: 20px;" action="{% url 'accounts:moderator_sign_in' %}" method="post" id="crowdsourceit-form">
         {% csrf_token %}
@@ -69,8 +68,7 @@ background-size: cover;height: 100vh;'>
           <input type="password" name="password" id="password" placeholder="Enter your password">
         </div>
         <button type="submit" form="crowdsourceit-form">Login</button>
-        <footer>
-            <p style="font-size: 16px;">Don't have an account? <a href="{% url 'accounts:contributor_sign_up' %}" style="color: #0c5299;">Sign Up</a></p>
+        <footer class="mt-2">
             <a href="{% url 'password_reset' %}" style="font-size: 16px;color: #0c5299;">Forgot password?</a>
         </footer>
       </div>
