@@ -189,6 +189,7 @@ class ContributorSignInForm(forms.ModelForm):
 class ModeratorSignInForm(forms.ModelForm):
     email = forms.EmailField(widget=forms.EmailInput())
     password = forms.CharField(widget=forms.PasswordInput())
+    remember_me = forms.BooleanField(required=False, initial=False)
     class Meta:
         model = Moderator
         fields = ['email', 'password']
