@@ -128,17 +128,7 @@ class Contributor(models.Model):
     REQUIRED_FIELDS = ['username', ]
 
     def __str__(self):
-        return f"Contributor: {self.user.email}"
-    
-    # def create_contributor_profile(sender, instance, created, **kwargs):
-    #     if created:
-    #         BaseUser.objects.create(user=instance)
-
-    # def save_contributor_profile(sender, instance, created, **kwargs):
-    #     instance.baseuser.save()
-
-    # post_save.connect(create_contributor_profile, sender=BaseUser)
-    # post_save.connect(save_contributor_profile, sender=BaseUser)
+        return f"Contributor: {self.user.username}"
     
 # MODERATOR Model
 class Moderator(models.Model):
