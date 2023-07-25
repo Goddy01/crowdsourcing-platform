@@ -88,7 +88,6 @@ class BaseUser(AbstractBaseUser):
     is_superuser =                  models.BooleanField(default=False)
     is_verified =                   models.BooleanField(default=False)
     signup_confirmation =           models.BooleanField(default=False)
-    remember_me =                   models.BooleanField(default=False)
 
 
     USERNAME_FIELD = "email"
