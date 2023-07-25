@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/accounts.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<title>Sign-In</title>
+</head>
+<style>
+    #container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        max-width: 430px;
+        width: 100%;
+}
+</style>
+<body style='background: url("{% static 'images/bg-image1.jpg' %}");background-repeat: no-repeat;
+background-size: cover;height: 100vh;'>
+  <!-- Container Start -->
+  {% endif %}
+  <div class="errors mb-2 mx-auto">
+        {% for field in moderator_sign_in_form %}
+            <p>
+            {% for error in field.errors %}
+            <div class="alert alert-danger p-3 m-3 text-center text-light bg-danger border-0" role="alert">
+                {{error}}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="margin-top: -4px;color: whitesmoke;">
+                    &times;
+                </button>
+            </div>
+            {% endfor %}
+            </p>
+        {% endfor %}
+
+        {% if moderator_sign_in_form.non_field_errors %}
+        <div class="alert alert-danger p-3 m-3 text-center text-light bg-danger border-0" role="alert">
+          {{moderator_sign_in_form.non_field_errors.as_text|cut:"* "}}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="margin-top: -4px;color: whitesmoke;">
+                &times;
+            </button>
+        </div>
+        {% endif %}
+    </div>
+  <div id="container">
+    <!-- Form Wrap Start -->
+    <div id="form-wrap">
+      <h1 class="font-weight-bold">Login</h1>
+      <!-- Form Start -->
+      <form style="padding: 20px;" action="{% url 'accounts:moderator_sign_in' %}" method="post" id="crowdsourceit-form">
+        {% csrf_token %}
+        <div class="form-group">
+          <input type="email" name="email" id="email" placeholder="Enter your email" value="{{ request.POST.email }}">
+        </div>
+        <div class="form-group">
+          <input type="password" name="password" id="password" placeholder="Enter your password">
+        </div>
+        <button type="submit" form="crowdsourceit-form">Login</button>
+        <footer>
+            <p style="font-size: 16px;">Don't have an account? <a href="{% url 'accounts:contributor_sign_up' %}" style="color: #0c5299;">Sign Up</a></p>
+            <a href="{% url 'password_reset' %}" style="font-size: 16px;color: #0c5299;">Forgot password?</a>
+        </footer>
+      </div>
+      </form>
+      <!-- Form Close -->
+    </div>
+    <!-- Form Wrap Close -->
+  </div>
+  <!-- Container Close -->
+</body>
+<script>
+    
+</script>
+</html>

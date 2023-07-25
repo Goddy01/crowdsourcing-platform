@@ -154,9 +154,9 @@ def moderator_sign_in(request):
                 login(request, user)
                 return redirect('home')
     else:
-        form = ContributorSignInForm()
-    context['contributor_signin_form'] = form
-    return render(request, 'accounts/moderator_sign_ign.html', context)
+        form = ModeratorSignInForm()
+    context['moderator_signin_form'] = form
+    return render(request, 'accounts/moderator_sign_in.html', context)
 
 @login_required
 def sign_out(request):
