@@ -67,6 +67,10 @@ background-size: cover;height: 100vh;'>
         <div class="form-group">
           <input type="password" name="password" id="password" placeholder="Enter your password">
         </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="remember_me" name="remember_me">
+          <label class="form-check-label">Remember Me</label>
+        </div> 
         <button type="submit" form="crowdsourceit-form">Login</button>
         <footer>
             <p style="font-size: 16px;">Don't have an account? <a href="{% url 'accounts:contributor_sign_up' %}" style="color: #0c5299;">Sign Up</a></p>

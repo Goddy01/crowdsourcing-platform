@@ -62,6 +62,7 @@ def contributor_sign_in(request):
                 login(request, user)
                 if not request.POST.get('remember_me'):
                     request.session.set_expiry(0)
+                    request.session.modified = True
                 return redirect('home')
     else:
         form = ContributorSignInForm()

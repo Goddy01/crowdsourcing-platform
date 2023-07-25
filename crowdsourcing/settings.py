@@ -233,3 +233,17 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_FIELD_SELECTORS = {
 #                                           ('emailAddress', 'email_address')]
 
 SOCIAL_AUTH_USER_FIELDS=['first_name', 'last_name', 'password', 'email', 'username']
+
+
+
+# Set the session engine to 'django.contrib.sessions.backends.signed_cookies'
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+
+# Set the session cookie age to a reasonable duration (e.g., 2 weeks)
+SESSION_COOKIE_AGE = 1209600  # 2 weeks in seconds
+
+# Set the session cookie secure to True if using HTTPS on production
+SESSION_COOKIE_SECURE = False
+
+# Set SESSION_COOKIE_HTTPONLY to True for added security
+SESSION_COOKIE_HTTPONLY = True
