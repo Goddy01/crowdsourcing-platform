@@ -155,7 +155,7 @@ def moderator_sign_in(request):
                 return redirect('home')
     else:
         form = ModeratorSignInForm()
-    context['moderator_signin_form'] = form
+    context['moderator_sign_in_form'] = form
     return render(request, 'accounts/moderator_sign_in.html', context)
 
 @login_required
