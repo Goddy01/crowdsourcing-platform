@@ -200,16 +200,16 @@ class ModeratorSignInForm(forms.ModelForm):
 
             user = authenticate(email=email, password=password)
 
-            if user is None:
+            if user is not None:
                 try:
                     # Check if the user with the provided email address exists
                     user = Moderator.objects.get(user__email=email)
                 except Moderator.DoesNotExist:
                     # Handle the case when the account does not exist
-                    raise forms.ValidationError("A moderator with this email address does not exist.")
-                else:
-                    # Handle the case when the account exists but login details are invalid
-                    raise forms.ValidationError("Invalid login details. Please try again.")
+                    raise forms.ValidationError("A moderator account with this email address does not exist.")
+            else:
+                # Handle the case when the account exists but login details are invalid
+                raise forms.ValidationError("Invalid login details. Please try again.")
     
     def clean_remember_me(self):
         # Custom validation for the remember_me field if needed
