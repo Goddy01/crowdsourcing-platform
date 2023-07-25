@@ -61,10 +61,6 @@ def contributor_sign_in(request):
             if user:
                 login(request, user)
                 return redirect('home')
-                    # raise ValueError('This email has already been registered.')
-                # return HttpResponse('Logged In')
-            else:
-                messages.error(request, 'User Not Found')
     else:
         form = ContributorSignInForm()
     context['contributor_signin_form'] = form
@@ -147,6 +143,20 @@ def moderator_sign_up(request):
         'mod_email': request.session.get('mod_email'),
         'admin': request.session.get('admin'),
     })
+
+def moderator_sign_in(request):
+    context = {}
+    if request.method == 'POST':
+        form = ModeratorSignInForm(request.POST)
+        if form.is_valid():
+            user = authenticate(email=form.cleaned_data.get('email'), password=form.cleaned_data.get('password'))
+            if user:
+                login(request, user)
+                return redirect('home')
+    else:
+        form = ContributorSignInForm()
+    context['contributor_signin_form'] = form
+    return render(request, 'accounts/moderator_sign_ign.html', context)
 
 @login_required
 def sign_out(request):
