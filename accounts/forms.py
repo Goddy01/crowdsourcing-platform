@@ -168,8 +168,8 @@ class ContributorSignInForm(forms.ModelForm):
             if user is None:
                 try:
                     # Check if the user with the provided email address exists
-                    user = BaseUser.objects.get(email=email)
-                except BaseUser.DoesNotExist:
+                    user = Contributor.objects.get(email=email)
+                except Contributor.DoesNotExist:
                     # Handle the case when the account does not exist
                     raise forms.ValidationError("Account with this email address does not exist.")
                 else:
