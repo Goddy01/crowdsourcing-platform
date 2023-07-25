@@ -61,9 +61,13 @@ def contributor_sign_in(request):
             if user:
                 login(request, user)
                 print('NA AM: ', request.POST.get('remember_me'))
-                if request.POST.get('remember_me') != 1:
+                if request.POST.get('remember_me') is None:
                     request.session.set_expiry(0)
                     # request.session.modified = True
+                else:
+                    request.session.set_expiry(1209600)
+                    print('YOU NO GO FIT LOGOUT')
+                    
                 return redirect('home')
     else:
         form = ContributorSignInForm()

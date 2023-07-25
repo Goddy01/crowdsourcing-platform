@@ -243,9 +243,9 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 SESSION_COOKIE_AGE = 1209600  # 2 weeks in seconds
 
 # Set the session cookie secure to True if using HTTPS on production
-SESSION_COOKIE_SECURE = False
+# SESSION_COOKIE_SECURE = False
 
 # Set SESSION_COOKIE_HTTPONLY to True for added security
-SESSION_COOKIE_HTTPONLY = True
+# SESSION_COOKIE_HTTPONLY = True
 
 # SESSION_EXPIRE_AT_BROWSER_CLOSE = False
