@@ -160,7 +160,6 @@ class ContributorSignInForm(forms.ModelForm):
     def clean(self):
         # cleaned_data = super().clean()
         if self.is_valid():
-            print('Ani ko lor')
             email = self.cleaned_data['email'].lower()
             password = self.cleaned_data['password']
 
@@ -194,7 +193,7 @@ class ModeratorSignInForm(forms.ModelForm):
         fields = ['email', 'password']
 
     def clean(self):
-        cleaned_data = super().clean()
+        # cleaned_data = super().clean()
         if self.is_valid():
             email = self.cleaned_data['email'].lower()
             password = self.cleaned_data['password']
@@ -204,15 +203,13 @@ class ModeratorSignInForm(forms.ModelForm):
             if user is None:
                 try:
                     # Check if the user with the provided email address exists
-                    user = Moderator.objects.get(email=email)
-                except Moderator.DoesNotExist:
+                    user = BaseUser.objects.get(email=email)
+                except BaseUser.DoesNotExist:
                     # Handle the case when the account does not exist
                     raise forms.ValidationError("Account with this email address does not exist.")
                 else:
                     # Handle the case when the account exists but login details are invalid
                     raise forms.ValidationError("Invalid login details. Please try again.")
-
-        return cleaned_data
     
     def clean_remember_me(self):
         # Custom validation for the remember_me field if needed
