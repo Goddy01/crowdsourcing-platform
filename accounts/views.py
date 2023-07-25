@@ -60,9 +60,10 @@ def contributor_sign_in(request):
             user = authenticate(email=form.cleaned_data.get('email'), password=form.cleaned_data.get('password'))
             if user:
                 login(request, user)
-                if not request.POST.get('remember_me'):
+                print('NA AM: ', request.POST.get('remember_me'))
+                if request.POST.get('remember_me') != 1:
                     request.session.set_expiry(0)
-                    request.session.modified = True
+                    # request.session.modified = True
                 return redirect('home')
     else:
         form = ContributorSignInForm()
