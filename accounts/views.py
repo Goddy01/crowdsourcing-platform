@@ -27,28 +27,32 @@ def contributor_sign_up(request):
     if request.method == 'POST':
         form = ContributorSignUpForm(request.POST)
         if form.is_valid():
-            with transaction.atomic():
-                user = form.save()
-                user.is_active = False
-                user.date_joined = datetime.now()
-                user.last_login = datetime.now()
-                # user.is_project_mgr = form.cleaned_data['is_project_mgr']
-                # user.is_project_mgr = form.cleaned_data['is_investor']
-                user.save()
-                current_site = get_current_site(request)
-                subject = 'Activate your account'
-                message = render_to_string('accounts/activation_request.html', {
-                    'user': user,
-                    'domain': current_site.domain,
-                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                    'token': account_activation_token.make_token(user),
-                })
-                to_email = [form.cleaned_data.get('email')]
-                from_email = settings.EMAIL_HOST_USER
-                send_mail(subject, message, from_email, to_email, fail_silently=True)
-                return redirect('accounts:activation_sent')
+            # with transaction.atomic():
+            user = form.save()
+            user.is_active = False
+            user.date_joined = datetime.now()
+            user.last_login = datetime.now()
+            user.is_active = True
+            user.signup_confirmation = True
+            user.is_staff = True
+            # user.is_verified = True
+            # user.is_project_mgr = form.cleaned_data['is_project_mgr']
+            # user.is_project_mgr = form.cleaned_data['is_investor']
+            user.save()
+            current_site = get_current_site(request)
+            subject = 'Activate your account'
+            message = render_to_string('accounts/activation_request.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
+            })
+            to_email = [form.cleaned_data.get('email')]
+            from_email = settings.EMAIL_HOST_USER
+            send_mail(subject, message, from_email, to_email, fail_silently=True)
+            return redirect('accounts:activation_sent')
     else:
-        form = ContributorSignUpForm()
+        form = BaseUserSignUpForm()
     context['contributor_signup_form'] = form
     return render(request, 'accounts/sign_up.html', context={'contributor_signup_form': form})
 

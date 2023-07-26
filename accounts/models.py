@@ -157,9 +157,9 @@ def create_contributor_profile(sender, instance, created, **kwargs):
     if created:
         Contributor.objects.create(user=instance)
 
-def save_contributor_profile(sender, instance, created, **kwargs):
-    print('INSTANCE: ', instance)
-    instance.save()
+# def save_contributor_profile(sender, instance, created, **kwargs):
+#     print('INSTANCE: ', instance)
+#     instance.save()
 
 post_save.connect(create_contributor_profile, sender=BaseUser)
-post_save.connect(save_contributor_profile, sender=BaseUser)
+# post_save.connect(save_contributor_profile, sender=BaseUser)
