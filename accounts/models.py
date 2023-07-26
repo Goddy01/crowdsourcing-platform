@@ -144,12 +144,13 @@ class Moderator(models.Model):
     REQUIRED_FIELDS = ['username', ]
 
 
-def create_moderator_profile(sender, instance, created, **kwargs):
+def create_contributor_profile(sender, instance, created, **kwargs):
     if created:
-        Moderator.objects.create(user=instance)
+        Contributor.objects.create(user=instance)
 
-def save_moderator_profile(sender, instance, created, **kwargs):
-    instance.user.save()
+def save_contributor_profile(sender, instance, created, **kwargs):
+    print('INSTANCE: ', instance)
+    instance.baseuser.save()
 
-    post_save.connect(create_moderator_profile, sender=BaseUser)
-    post_save.connect(save_moderator_profile, sender=BaseUser)
+post_save.connect(create_contributor_profile, sender=BaseUser)
+post_save.connect(save_contributor_profile, sender=BaseUser)

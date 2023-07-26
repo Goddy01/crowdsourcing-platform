@@ -47,6 +47,14 @@ class BaseUserSignUpForm(UserCreationForm):
         model = BaseUser
         fields = ['last_name', 'first_name', 'username', 'email']
 
+    def save(self, commit=True):
+        user = super().save()
+        # user.is_teacher = True
+        if commit:
+            user.save()
+        contributor = Contributor.objects.create(user=user)
+        return user
+
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if BaseUser.objects.filter(email=email):
