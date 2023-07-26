@@ -57,7 +57,7 @@ def contributor_sign_up(request):
         print('BRO: ', request.POST.get('first_name'))
         context['firstname'] = request.POST.get('first_name')
     context['contributor_signup_form'] = form
-    return render(request, 'accounts/sign_up.html', context={'contributor_signup_form': form})
+    return render(request, 'accounts/new_sign_up.html', context={'contributor_signup_form': form})
 
 def contributor_sign_in(request):
     context = {}
@@ -150,7 +150,7 @@ def moderator_sign_up(request):
             return HttpResponse('Sike! You do not have admin privileges.')
     else:
         return HttpResponse('You must be logged in to access this page')
-    return render(request, 'accounts/moderator_sign_up.html', {
+    return render(request, 'accounts/moderator_new_sign_up.html', {
         # 'mod_base_signup_form': baseuser_form,
         'moderator_signup_form': mod_form,
         'mod_email': request.session.get('mod_email'),
