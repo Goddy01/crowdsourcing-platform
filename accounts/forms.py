@@ -47,13 +47,13 @@ class BaseUserSignUpForm(UserCreationForm):
         model = BaseUser
         fields = ['last_name', 'first_name', 'username', 'email']
 
-    def save(self, commit=True):
-        user = super().save()
-        # user.is_teacher = True
-        if commit:
-            user.save()
-        contributor = Contributor.objects.create(user=user)
-        return user
+    # def save(self, commit=True):
+    #     user = super().save()
+    #     # user.is_teacher = True
+    #     if commit:
+    #         user.save()
+    #     # contributor = Contributor.objects.create(user=user)
+    #     return user
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -71,14 +71,14 @@ class ContributorSignUpForm(UserCreationForm):
         model = BaseUser
         fields = ['last_name', 'first_name', 'username', 'email']
 
-    @transaction.atomic
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        # user.is_teacher = True
-        if commit:
-            user.save()
-        contributor = Contributor.objects.create(user=user)
-        return user
+    # @transaction.atomic
+    # def save(self, commit=True):
+    #     user = super().save(commit=False)
+    #     # user.is_teacher = True
+    #     if commit:
+    #         user.save()
+    #     contributor = Contributor.objects.create(user=user)
+    #     return user
     
     def clean_email(self):
         email = self.cleaned_data.get('email')

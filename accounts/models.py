@@ -150,7 +150,7 @@ def create_contributor_profile(sender, instance, created, **kwargs):
 
 def save_contributor_profile(sender, instance, created, **kwargs):
     print('INSTANCE: ', instance)
-    instance.baseuser.save()
+    instance.save()
 
 post_save.connect(create_contributor_profile, sender=BaseUser)
 post_save.connect(save_contributor_profile, sender=BaseUser)
