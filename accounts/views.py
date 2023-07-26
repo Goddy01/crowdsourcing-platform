@@ -32,9 +32,9 @@ def contributor_sign_up(request):
             user.is_active = False
             user.date_joined = datetime.now()
             user.last_login = datetime.now()
-            user.is_active = True
-            user.signup_confirmation = True
-            user.is_staff = True
+            # user.is_active = True
+            # user.signup_confirmation = True
+            # user.is_staff = True
             # user.is_verified = True
             # user.is_project_mgr = form.cleaned_data['is_project_mgr']
             # user.is_project_mgr = form.cleaned_data['is_investor']

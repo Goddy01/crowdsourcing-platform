@@ -10,6 +10,7 @@ from django.core.exceptions import ValidationError
 from social_django.models import UserSocialAuth
 from django.shortcuts import redirect
 from django.db.models.signals import post_save
+import datetime
 # Create your models here.
 
 
@@ -155,7 +156,12 @@ class Moderator(models.Model):
 
 def create_contributor_profile(sender, instance, created, **kwargs):
     if created:
-        Contributor.objects.create(user=instance)
+        Contributor.objects.create(
+            user=instance,
+            user__is_active = True,
+            user__signup_confirmation = True,
+            user__is_staff = True
+            )
 
 # def save_contributor_profile(sender, instance, created, **kwargs):
 #     print('INSTANCE: ', instance)
