@@ -140,6 +140,11 @@ class Contributor(models.Model):
     def __str__(self):
         return f"Contributor: {self.user.username}"
     
+    def save(self, *args, **kwargs):
+        if not self.pk:  # Check if the user is being created (not updating).
+            self.signup_confirmation=True
+        super().save(*args, **kwargs)
+    
 # MODERATOR Model
 class Moderator(models.Model):
     user = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
@@ -156,16 +161,10 @@ class Moderator(models.Model):
 
 def create_contributor_profile(sender, instance, created, **kwargs):
     if created:
+        print('INSTANCE: ', instance.is_active)
         Contributor.objects.create(
-            user=instance,
-            user__is_active = True,
-            user__signup_confirmation = True,
-            user__is_staff = True
+            user=instance
             )
-
-# def save_contributor_profile(sender, instance, created, **kwargs):
-#     print('INSTANCE: ', instance)
-#     instance.save()
 
 post_save.connect(create_contributor_profile, sender=BaseUser)
 # post_save.connect(save_contributor_profile, sender=BaseUser)
