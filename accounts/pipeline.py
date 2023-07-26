@@ -1,6 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 import urllib
+from .models import Contributor
 
 # This is initially from https://github.com/python-social-auth/social-core/blob/master/social_core/pipeline/user.py
 def get_username(strategy, details, backend, user=None, *args, **kwargs):
@@ -21,3 +22,13 @@ def get_username(strategy, details, backend, user=None, *args, **kwargs):
     return {
         'username': details.get('email').lower(),
     }
+
+def save_profile(backend, user, response, *args, **kwargs):
+    # if Contributor.objects.filter(user_id=user.id).count() == 0 :
+    contributor = Contributor.objects.create(
+        is_project_mgr=True, 
+        user=user, 
+        # user__signup_confirmation=True
+        )
+        # your logic for new fields 
+        # contributor.save()

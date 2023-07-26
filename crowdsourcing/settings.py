@@ -193,10 +193,10 @@ LOGOUT_URL = '/'
 LOGOUT_REDIRECT_URL = 'accounts:contributor_sign_in'
 
 
-SOCIAL_AUTH_URL_NAMESPACE = 'social'
+# SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
-SOCIAL_AUTH_EMAIL_FORM_HTML = 'demo/email_signup.html'
-SOCIAL_AUTH_EMAIL_VALIDATION_URL = '/email-sent/'
+# SOCIAL_AUTH_EMAIL_FORM_HTML = 'demo/email_signup.html'
+# SOCIAL_AUTH_EMAIL_VALIDATION_URL = '/email-sent/'
 
 SOCIAL_AUTH_PIPELINE = (
 'social.pipeline.social_auth.social_details',
@@ -207,9 +207,10 @@ SOCIAL_AUTH_PIPELINE = (
 # "common.pipeline.require_email",
 # "common.pipeline.require_country",
 # "common.pipeline.require_city",
-"social_core.pipeline.mail.mail_validation",
+# "social_core.pipeline.mail.mail_validation",
 'accounts.pipeline.get_username',
 'social.pipeline.user.create_user',
+'accounts.pipeline.save_profile',
 'social.pipeline.social_auth.associate_user',
 'social.pipeline.social_auth.load_extra_data',
 'social.pipeline.user.user_details'

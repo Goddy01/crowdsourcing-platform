@@ -139,11 +139,7 @@ class Contributor(models.Model):
 
     def __str__(self):
         return f"Contributor: {self.user.username}"
-    
-    def save(self, *args, **kwargs):
-        if not self.pk:  # Check if the user is being created (not updating).
-            self.signup_confirmation=True
-        super().save(*args, **kwargs)
+
     
 # MODERATOR Model
 class Moderator(models.Model):

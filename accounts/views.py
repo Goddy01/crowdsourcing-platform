@@ -48,11 +48,14 @@ def contributor_sign_up(request):
                 'token': account_activation_token.make_token(user),
             })
             to_email = [form.cleaned_data.get('email')]
+            context['firstname'] = request.POST.get('first_name')
             from_email = settings.EMAIL_HOST_USER
             send_mail(subject, message, from_email, to_email, fail_silently=True)
             return redirect('accounts:activation_sent')
     else:
         form = BaseUserSignUpForm()
+        print('BRO: ', request.POST.get('first_name'))
+        context['firstname'] = request.POST.get('first_name')
     context['contributor_signup_form'] = form
     return render(request, 'accounts/sign_up.html', context={'contributor_signup_form': form})
 
