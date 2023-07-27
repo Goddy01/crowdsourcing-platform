@@ -54,8 +54,6 @@ def contributor_sign_up(request):
             return redirect('accounts:activation_sent')
     else:
         form = BaseUserSignUpForm()
-        print('BRO: ', request.POST.get('first_name'))
-        context['firstname'] = request.POST.get('first_name')
     context['contributor_signup_form'] = form
     return render(request, 'accounts/new_sign_up.html', context={'contributor_signup_form': form})
 
