@@ -151,7 +151,7 @@ def moderator_sign_up(request):
             return HttpResponse('Sike! You do not have admin privileges.')
     else:
         return HttpResponse('You must be logged in to access this page')
-    return render(request, 'accounts/moderator_new_sign_up.html', {
+    return render(request, 'accounts/new_moderator_sign_up.html', {
         # 'mod_base_signup_form': baseuser_form,
         'moderator_signup_form': mod_form,
         'mod_email': request.session.get('mod_email'),
