@@ -10,6 +10,7 @@ from django.core.exceptions import ValidationError
 from social_django.models import UserSocialAuth
 from django.shortcuts import redirect
 from django.db.models.signals import post_save
+from django.dispatch import receiver
 import datetime
 # Create your models here.
 
@@ -131,7 +132,7 @@ class Contributor(models.Model):
     downvotes_received =            models.IntegerField(default=0)
     reputation_score =              models.IntegerField(default=0)
     is_project_mgr =                models.BooleanField(default=False)
-    is_investor =                   models.BooleanField(default=True)
+    is_investor =                   models.BooleanField(default=False)
     
     USERNAME_FIELD = "email"
     # REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'middle_name', 'phone_num']
@@ -144,7 +145,7 @@ class Contributor(models.Model):
 # MODERATOR Model
 class Moderator(models.Model):
     user = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
-    setup_by_admin = models.OneToOneField(BaseUser, null=True, on_delete=models.CASCADE, related_name='setup_by')
+    setup_by_admin = models.OneToOneField(BaseUser, null=True, on_delete=models.CASCADE, related_name='setup_by', unique=False)
     area_of_expertise = models.CharField(max_length=200)
 
     def __str__(self):
@@ -155,12 +156,15 @@ class Moderator(models.Model):
     REQUIRED_FIELDS = ['username', ]
 
 
-def create_contributor_profile(sender, instance, created, **kwargs):
-    if created:
-        print('INSTANCE: ', instance.is_active)
-        Contributor.objects.create(
-            user=instance
-            )
+# @receiver(post_save, sender=Contributor)
+# def create_contributor_profile(sender, instance, created, **kwargs):
+#     if created:
+#         # print('INSTANCE: ', instance.is_staff)
+#         # print('THIS', instance.request. META['HTTP_REFERER'])
+#         if not instance.is_staff:
+#             Contributor.objects.create(
+#             user=instance
+#             )
 
-post_save.connect(create_contributor_profile, sender=BaseUser)
+# post_save.connect(create_contributor_profile, sender=BaseUser)
 # post_save.connect(save_contributor_profile, sender=BaseUser)

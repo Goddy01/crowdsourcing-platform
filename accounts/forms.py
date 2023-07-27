@@ -84,6 +84,14 @@ class ContributorSignUpForm(UserCreationForm):
     #         user.save()
     #     contributor = Contributor.objects.create(user=user)
     #     return user
+    @transaction.atomic
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        # user.is_student = True
+        if commit:
+            user.save()
+        moderator = Contributor.objects.create(user=user)
+        return user
     
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -117,7 +125,11 @@ class ModeratorSignUpForm(UserCreationForm):
                 'required': 'Please enter your email.'
             }
         )
-    
+    phone_num = forms.CharField(
+            error_messages={
+                'required': 'Please enter your phone.'
+            }
+        )
     password1 = forms.CharField(
         widget=forms.PasswordInput,
             error_messages={
@@ -137,10 +149,11 @@ class ModeratorSignUpForm(UserCreationForm):
                 'required': 'Please enter your area of expertise.'
             }
         )
+    
     # area_of_expertise = forms.CharField()
     class Meta:
         model = BaseUser
-        fields = ['last_name', 'first_name', 'username', 'email', 'area_of_expertise']
+        fields = ['last_name', 'first_name', 'username', 'email', 'area_of_expertise', 'phone_num']
     
     @transaction.atomic
     def save(self, commit=True):

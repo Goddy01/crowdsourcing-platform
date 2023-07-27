@@ -122,10 +122,10 @@ def moderator_sign_up(request):
                         mod_user_obj.is_verified = True
                         mod_user_obj.save()
 
-                        moderator = Moderator.objects.get(user__email=mod_user_obj.email)
+                        # moderator = Moderator.objects.get(user__email=mod_user_obj.email)
                         admin = BaseUser.objects.get(username=request.user.username, is_admin=True)
-                        moderator.setup_by_admin = admin
-                        moderator.save()
+                        mod_user_obj.setup_by_admin = admin
+                        mod_user_obj.save()
                         
                         
                         current_site = get_current_site(request)
