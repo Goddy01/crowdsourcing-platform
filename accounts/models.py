@@ -145,7 +145,7 @@ class Contributor(models.Model):
 # MODERATOR Model
 class Moderator(models.Model):
     user = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
-    setup_by_admin = models.OneToOneField(BaseUser, null=True, on_delete=models.CASCADE, related_name='setup_by', unique=False)
+    setup_by_admin = models.ForeignKey(BaseUser, null=True, on_delete=models.CASCADE, related_name='setup_by', unique=False)
     area_of_expertise = models.CharField(max_length=200)
 
     def __str__(self):
@@ -154,6 +154,7 @@ class Moderator(models.Model):
     USERNAME_FIELD = "email"
     # REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'middle_name', 'phone_num']
     REQUIRED_FIELDS = ['username', ]
+
 
 
 # @receiver(post_save, sender=Contributor)
