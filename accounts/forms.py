@@ -29,6 +29,11 @@ class BaseUserSignUpForm(UserCreationForm):
                 'required': 'Please enter your email.'
             }
         )
+    phone_num = forms.CharField(
+            error_messages={
+                'required': 'Please enter your phone.'
+            }
+        )
     
     password1 = forms.CharField(
         widget=forms.PasswordInput,
@@ -69,7 +74,7 @@ class BaseUserSignUpForm(UserCreationForm):
 class ContributorSignUpForm(UserCreationForm):
     class Meta:
         model = BaseUser
-        fields = ['last_name', 'first_name', 'username', 'email']
+        fields = ['last_name', 'first_name', 'username', 'email', 'phone_num']
 
     # @transaction.atomic
     # def save(self, commit=True):

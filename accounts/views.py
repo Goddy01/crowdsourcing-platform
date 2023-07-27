@@ -52,6 +52,9 @@ def contributor_sign_up(request):
             from_email = settings.EMAIL_HOST_USER
             send_mail(subject, message, from_email, to_email, fail_silently=True)
             return redirect('accounts:activation_sent')
+        else:
+            print('ERROR DEY BREV')
+            print('ERRORS: ', form.errors.as_data())
     else:
         form = BaseUserSignUpForm()
     context['contributor_signup_form'] = form
