@@ -122,7 +122,7 @@ def moderator_sign_up(request):
                         mod_user_obj.is_verified = True
                         mod_user_obj.save()
 
-                        admin = BaseUser.objects.filter(username=request.user.username, is_admin=True).first()
+                        admin = BaseUser.objects.get(username=request.user.username, is_admin=True)
                         moderator = Moderator.objects.filter(user__email=mod_user_obj.email).update(setup_by_admin=admin)
                         # moderator.setup_by_admin = admin
                         # moderator.save()
