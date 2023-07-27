@@ -27,6 +27,29 @@
 <body style="background-color: #8fc4b7;height: 100%;">
     <section class=" h-100" style="background-color: #8fc4b7;height: 100%;">
         <div class="container   py-5 h-100">
+          <div class="errors mb-2 mx-4 mt-3">
+        {% for field in contributor_signup_form %}
+            <p>
+            {% for error in field.errors %}
+            <div class="alert alert-danger p-3 m-3 text-center text-light bg-danger border-0" role="alert">
+                {{error}}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="margin-top: -4px;color: whitesmoke;">
+                    &times;
+                </button>
+            </div>
+            {% endfor %}
+            </p>
+        {% endfor %}
+
+        {% if contributor_signup_form.non_field_errors %}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="margin-top: -4px;color: whitesmoke;">
+            {{contributor_signup_form.non_field_errors}}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="margin-top: -4px;color: whitesmoke;">
+              &times;
+          </button>
+        </div>
+        {% endif %}
+    </div>
           <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-lg-8 col-xl-7">
               <div class="card rounded-lg animate__animated animate__zoomIn">
