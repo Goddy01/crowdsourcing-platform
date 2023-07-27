@@ -24,7 +24,7 @@ class BaseUserSignUpForm(UserCreationForm):
                 'required': 'Please enter your lastname.'
             }
         )
-    email = forms.CharField(
+    email = forms.EmailField(
             error_messages={
                 'required': 'Please enter your email.'
             }
@@ -87,7 +87,7 @@ class ContributorSignUpForm(UserCreationForm):
                 'required': 'Please enter your lastname.'
             }
         )
-    email = forms.CharField(
+    email = forms.EmailField(
             error_messages={
                 'required': 'Please enter your email.'
             }
@@ -159,7 +159,8 @@ class ModeratorSignUpForm(UserCreationForm):
                 'required': 'Please enter your lastname.'
             }
         )
-    email = forms.CharField(
+    email = forms.EmailField(
+        widget=forms.EmailInput(),
             error_messages={
                 'required': 'Please enter your email.'
             }
@@ -216,8 +217,10 @@ class ModeratorSignUpForm(UserCreationForm):
         return username
 
 class ContributorSignInForm(forms.ModelForm):
-    email = forms.EmailField(widget=forms.EmailInput())
-    password = forms.CharField(widget=forms.PasswordInput())
+    email = forms.EmailField(widget=forms.EmailInput(), error_messages={
+                'required': 'Please enter your email.'
+            })
+    password = forms.CharField(widget=forms.PasswordInput(), error_messages={'required': 'Please enter your password'})
     remember_me = forms.BooleanField(required=False, initial=False)
     class Meta:
         model = Contributor

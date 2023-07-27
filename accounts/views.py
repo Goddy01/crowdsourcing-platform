@@ -75,7 +75,9 @@ def contributor_sign_in(request):
     else:
         form = ContributorSignInForm()
     context['contributor_signin_form'] = form
-    return render(request, 'accounts/sign_in.html', context)
+    return render(request, 'accounts/new_sign_in.html', {
+        'contributor_signin_form': form
+    })
 
 def activate_account(request, uidb64, token):
     try:
