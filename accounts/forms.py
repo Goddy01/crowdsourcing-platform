@@ -72,6 +72,45 @@ class BaseUserSignUpForm(UserCreationForm):
         return username
 
 class ContributorSignUpForm(UserCreationForm):
+    username = forms.CharField(
+            error_messages={
+                'required': 'Please enter your username.'
+            }
+        )
+    first_name = forms.CharField(
+            error_messages={
+                'required': 'Please enter your firstname.'
+            }
+        )
+    last_name = forms.CharField(
+            error_messages={
+                'required': 'Please enter your lastname.'
+            }
+        )
+    email = forms.CharField(
+            error_messages={
+                'required': 'Please enter your email.'
+            }
+        )
+    phone_num = forms.CharField(
+            error_messages={
+                'required': 'Please enter your phone.'
+            }
+        )
+    password1 = forms.CharField(
+        widget=forms.PasswordInput,
+            error_messages={
+                'required': 'Please enter your password.'
+            }
+        )
+    
+    password2 = forms.CharField(
+        widget=forms.PasswordInput,
+            error_messages={
+                'required': 'Please confirm your password by entering it again.'
+            }
+        )
+    
     class Meta:
         model = BaseUser
         fields = ['last_name', 'first_name', 'username', 'email', 'phone_num']
