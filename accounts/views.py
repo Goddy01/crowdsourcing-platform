@@ -55,7 +55,7 @@ def contributor_sign_up(request):
     else:
         form = ContributorSignUpForm()
     context['contributor_signup_form'] = form
-    return render(request, 'accounts/new_sign_up.html', context={'contributor_signup_form': form})
+    return render(request, 'accounts/new_sign_up.html', context={'contributor_signup_form': form, 'password1': request.POST.get('password1'), 'password2': request.POST.get('password2')})
 
 def contributor_sign_in(request):
     context = {}
