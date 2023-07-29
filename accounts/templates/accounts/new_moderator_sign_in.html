@@ -33,7 +33,7 @@
                 }
             }
             .errorlist {
-               list-style: none;
+               list-style: disc;
                 }
         </style>
 <body style="background-image: url(https://theivanovosti.files.wordpress.com/2017/03/eqb0011-blogphoto_0225_original-1024x547.jpg); background-repeat: no-repeat; background-size: cover; height: 100vh">
@@ -53,7 +53,7 @@
                   <ul>
                     {% for field in moderator_sign_in_form %}
                     {% for error in field.errors %}
-                    <li style="list-style: disc;">{{ error }}</li>
+                    <li class="ml-2">{{ error }}</li>
                     {% endfor %}
                     {% endfor %}
                   </ul>        
@@ -74,7 +74,7 @@
                 <span aria-hidden="true">&times;</span>
               </button> -->
             <!-- </div> -->
-            <div class="toast-body text-white"">
+            <div class="toast-body text-white ml-3">
               {{moderator_sign_in_form.non_field_errors}}
             </div>
           </div>
