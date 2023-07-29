@@ -174,7 +174,7 @@ def moderator_sign_in(request):
     else:
         form = ModeratorSignInForm()
     context['moderator_sign_in_form'] = form
-    return render(request, 'accounts/moderator_sign_in.html', context)
+    return render(request, 'accounts/new_moderator_sign_in.html', context)
 
 @login_required
 def sign_out(request):
