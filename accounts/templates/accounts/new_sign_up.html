@@ -33,8 +33,8 @@
         }
       }
     </style>
-<body style="background-image: url(https://theivanovosti.files.wordpress.com/2017/03/eqb0011-blogphoto_0225_original-1024x547.jpg); background-repeat: no-repeat; background-size: cover;" >
-    <section class=" h-100 position-relative" style="background-color: #;height: 100%;">
+<body style="background-image: url(https://theivanovosti.files.wordpress.com/2017/03/eqb0011-blogphoto_0225_original-1024x547.jpg); background-repeat: no-repeat; background-size: cover;">
+    <section class=" h-100 position-relative" style="height: 100%;">
         <div class="container   py-5 h-100">
           <div class="errors mb-2 mx-4 mt-3">
         
@@ -53,12 +53,13 @@
     <div class="row justify-content-center mb-2">
       <div class="col-lg-8 col-xl-3 toastDiv">
             <!-- Then put toasts within -->
-        <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false">
-          <div class="toast-header d-flex justify-content-end">
+        {% if contributor_signup_form.errors %}
+            <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false">
+          <!-- <div class="toast-header d-flex justify-content-end">
             <button type="button" class="ml-2 mb-1 close d-flex justify-content-end" data-dismiss="toast" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
-          </div>
+          </div> -->
           <div class="toast-body text-white m-2">
             <ul>
               {% for field in contributor_signup_form %}
@@ -77,7 +78,7 @@
             </ul>        
           </div>
         </div>
-      
+      {% endif %}
       </div>
 
 
@@ -179,6 +180,6 @@
 
   setTimeout(function() {
     $('.toast').toast('hide')
-  }, 7000)
+  }, 5000)
   </script>
 </html>

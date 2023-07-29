@@ -24,13 +24,19 @@
     
         <title>Sign-Up</title>
         <style>
+            @media (min-width: 1200px) {
+                .toastDiv{
+                position: absolute;
+                right: 4px;
+                top: 12px;
+                }
             .errorlist {
                list-style: none;
 }
         </style>
     </head>
-<body style="background-color: #8fc4b7;height: 100%;">
-    <section class=" h-100" style="background-color: #8fc4b7;height: 100%;">
+<body style="background-image: url(https://theivanovosti.files.wordpress.com/2017/03/eqb0011-blogphoto_0225_original-1024x547.jpg); background-repeat: no-repeat; background-size: cover;">
+    <section class=" h-100" style="height: 100%;">
         <div class="container py-5 h-100">
             <div class="errors mb-2 mx-4 mt-3">
                 {% for field in contributor_signin_form %}
