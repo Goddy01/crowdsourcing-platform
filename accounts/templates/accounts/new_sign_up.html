@@ -32,6 +32,9 @@
           top: 12px;
         }
       }
+      .errorlist {
+               list-style: disc;
+                }
     </style>
 <body style="background-image: url(https://theivanovosti.files.wordpress.com/2017/03/eqb0011-blogphoto_0225_original-1024x547.jpg); background-repeat: no-repeat; background-size: cover; min-height: 100vh;">
     <section class=" h-100 position-relative" style="height: 100%;">
@@ -51,14 +54,14 @@
                     {% for field in contributor_signup_form %}
                     {% if field.name != 'password2' %}
                     {% for error in field.errors %}
-                    <li style="list-style: disc;">{{ error }}</li>
+                    <li class="ml-2">{{ error }}</li>
                     {% endfor %}
                     {% endif %}
                     {% if field.name == 'password2' and password1 and not password2 %}
-                    <li style="list-style: disc;">{{ field.errors }}</li>
+                    <li class="ml-2">{{ field.errors }}</li>
                     {% endif %}
                     {% if field.name == 'password2' and password1 and password2 %}
-                    <li style="list-style: disc;">{{ field.errors }}</li>
+                    <li class="ml-2">{{ field.errors }}</li>
                     {% endif %}
                     {% endfor %}
                   </ul>        
@@ -78,7 +81,9 @@
               </button>
             </div> -->
             <div class="toast-body text-white">
-              {{contributor_signup_form.non_field_errors}}
+              <p class="ml-2" style="list-style: disc;">
+                  {{contributor_signup_form.non_field_errors}}
+              </p>
             </div>
           </div>
           {% endif %}
@@ -87,7 +92,7 @@
    
           <div class="row d-flex justify-content-center align-items-center w-100 m-auto">
             <div class="col-lg-5 col-xl-6">
-              <div class="card mt-5 rounded-lg animate__animated animate__zoomIn">
+              <div class="card mt-3 rounded-lg animate__animated animate__zoomIn">
               <div class="text-center pt-5">
                 <h1 class="fs-1 font-weight-bold">CrowdSource<span class="text-success font-weight-bolder">It</span></h1>
               </div>
