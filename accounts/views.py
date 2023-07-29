@@ -154,6 +154,8 @@ def moderator_sign_up(request):
         'moderator_signup_form': mod_form,
         'mod_email': request.session.get('mod_email'),
         'admin': request.session.get('admin'),
+        'password1': request.POST.get('password1'),
+        'password2': request.POST.get('password2')
     })
 
 def moderator_sign_in(request):
