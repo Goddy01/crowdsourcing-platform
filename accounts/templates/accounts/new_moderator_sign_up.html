@@ -23,35 +23,70 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     
         <title>Sign-Up</title>
+        <style>
+          @media (min-width: 1200px) {
+            .toastDiv{
+              position: absolute;
+              right: 4px;
+              /* top: 12px; */
+            }
+          }
+        </style>  
     </head>
-<body style="background-color: #8fc4b7;height: 100%;">
-    <section class=" h-100" style="background-color: #8fc4b7;height: 100%;">
-        <div class="container   py-5 h-100">
-          <div class="errors mb-2 mx-4 mt-3">
-        {% for field in moderator_signup_form %}
-            <p>
-            {% for error in field.errors %}
-            <div class="alert alert-danger p-3 m-3 text-center text-light bg-danger border-0" role="alert">
-                {{error}}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="margin-top: -4px;color: whitesmoke;">
-                    &times;
-                </button>
+<body style="background-image: url(https://theivanovosti.files.wordpress.com/2017/03/eqb0011-blogphoto_0225_original-1024x547.jpg); background-repeat: no-repeat; background-size: cover; height: auto; min-height: 100vh;">
+    <section class="h-100 position-relative" style="height: 100%;">
+        <div class="container py-5 h-100">
+          <div class="row justify-content-center mb-2">
+            <div class="col-lg-8 col-xl-3 toastDiv">
+                  <!-- Then put toasts within -->
+              {% if moderator_signup_form.errors %}
+                  <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto">
+                <!-- <div class="toast-header d-flex justify-content-end">
+                  <button type="button" class="ml-2 mb-1 close d-flex justify-content-end" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div> -->
+                <div class="toast-body text-white m-2">
+                  <ul>
+                    {% for field in moderator_signup_form %}
+                    {% if field.name != 'password2' %}
+                    {% for error in field.errors %}
+                    <li style="list-style: disc;">{{ error }}</li>
+                    {% endfor %}
+                    {% endif %}
+                    {% if field.name == 'password2' and password1 and not password2 %}
+                    <li style="list-style: disc;">{{ field.errors }}</li>
+                    {% endif %}
+                    {% if field.name == 'password2' and password1 and password2 %}
+                    <li style="list-style: disc;">{{ field.errors }}</li>
+                    {% endif %}
+                    {% endfor %}
+                  </ul>        
+                </div>
+              </div>
+            {% endif %}
             </div>
-            {% endfor %}
-            </p>
-        {% endfor %}
 
-        {% if moderator_signup_form.non_field_errors %}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="margin-top: -4px;color: whitesmoke;">
-            {{moderator_signup_form.non_field_errors}}
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="margin-top: -4px;color: whitesmoke;">
-              &times;
-          </button>
-        </div>
-        {% endif %}
-    </div>
-          <div class="row d-flex justify-content-center align-items-center h-100">
-            <div class="col-lg-8 col-xl-7">
+
+            {% if moderator_signup_form.non_field_errors %}
+            <div class="col-lg-8 col-xl-3 toastDiv">
+              <!-- Then put toasts within -->
+          <div class="card toast m-auto bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin-bottom: 1rem !important;">
+            <!-- <div class="toast-header d-flex justify-content-end">
+              <button type="button" class="ml-2 mb-1 close d-flex justify-content-end" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div> -->
+            <div class="toast-body text-white">
+              {{moderator_signup_form.non_field_errors}}
+            </div>
+          </div>
+          {% endif %}
+
+          </div>
+
+          <div class="row justify-content-center align-items-center w-100 m-auto">
+            <div class="col-lg-5 col-xl-6">
               <div class="card rounded-lg animate__animated animate__zoomIn">
               <div class="text-center pt-5">
                 <h1 class="fs-1 font-weight-bold">CrowdSource<span class="text-success font-weight-bolder">It</span></h1>
@@ -95,7 +130,7 @@
                         <button type="submit" class="w-50 btn btn-success  mb-1">Create Account</button>
                     </div>
                   </form>
-      
+      </div>
                 </div>
               </div>
             </div>  
@@ -105,4 +140,14 @@
         </div>
       </section>
 </body>
+<script>
+  $(document).ready(function(){
+    $('.toast').toast('show');
+  });
+
+  setTimeout(function() {
+    $('.toast').toast('hide')
+  }, 5000)
+  </script>
+</html>
 </html>

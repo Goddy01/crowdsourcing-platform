@@ -18,9 +18,17 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <title>Sign-Up</title>
-</head>
-<body style='background: url("{% static 'images/bg-image1.jpg' %}");background-repeat: no-repeat;background-position: center;
-background-size: cover;height: 100vh;'>
+    <style>
+      @media (min-width: 1200px) {
+        .toastDiv{
+          position: absolute;
+          right: 4px;
+          top: 12px;
+        }
+      }
+    </style>
+  </head>
+<body style="background-image: url(https://theivanovosti.files.wordpress.com/2017/03/eqb0011-blogphoto_0225_original-1024x547.jpg); background-repeat: no-repeat; background-size: cover; height: 100vh;">
   <!-- Container Start -->
     <div class="errors mb-2 mx-4 mt-3">
         {% for field in moderator_signup_form %}
