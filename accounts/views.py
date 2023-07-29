@@ -70,7 +70,6 @@ def contributor_sign_in(request):
                     # request.session.modified = True
                 else:
                     request.session.set_expiry(1209600)
-                    
                 return redirect('home')
     else:
         form = ContributorSignInForm()

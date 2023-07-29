@@ -256,8 +256,9 @@ class ContributorSignInForm(forms.ModelForm):
         return remember_me
 
 class ModeratorSignInForm(forms.ModelForm):
-    email = forms.EmailField(widget=forms.EmailInput())
-    password = forms.CharField(widget=forms.PasswordInput())
+    email = forms.EmailField(widget=forms.EmailInput(), error_messages={
+                'required': 'Please enter your email.'})
+    password = forms.CharField(widget=forms.PasswordInput(), error_messages={'required': 'Please enter your password'})
     remember_me = forms.BooleanField(required=False, initial=False)
     class Meta:
         model = Moderator
