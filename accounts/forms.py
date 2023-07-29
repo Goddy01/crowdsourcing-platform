@@ -239,9 +239,9 @@ class ContributorSignInForm(forms.ModelForm):
                 try:
                     # Check if the user with the provided email address exists
                     user = Contributor.objects.get(user__email=email)
-                except Contributor.DoesNotExist:
+                except:
                     # Handle the case when the account does not exist
-                    raise forms.ValidationError("A contributor account with this email address does not exist.")
+                    raise forms.ValidationError("Invalid login details. Please try again.")
             else:
                 # Handle the case when the account exists but login details are invalid
                 raise forms.ValidationError("Invalid login details. Please try again.")
@@ -275,11 +275,8 @@ class ModeratorSignInForm(forms.ModelForm):
                 try:
                     # Check if the user with the provided email address exists
                     user = Moderator.objects.get(user__email=email)
-                except Moderator.DoesNotExist:
+                except:
                     # Handle the case when the account does not exist
-                    raise forms.ValidationError("A moderator account with this email address does not exist.")
-                else:
-                # Handle the case when the account exists but login details are invalid
                     raise forms.ValidationError("Invalid login details. Please try again.")
             else:
                 # Handle the case when the account exists but login details are invalid
