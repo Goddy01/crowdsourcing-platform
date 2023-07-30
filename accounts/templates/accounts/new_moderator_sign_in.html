@@ -42,7 +42,7 @@
             <div class="row justify-content-center mb-2">
             <div class="col-lg-8 col-xl-3 toastDiv">
                   <!-- Then put toasts within -->
-              {% if moderator_sign_in_form.errors and not moderator_sign_in_form.non_field_errors %}
+              {% if moderator_login_form.errors and not moderator_login_form.non_field_errors %}
                   <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto">
                 <!-- <div class="toast-header d-flex justify-content-end">
                   <button type="button" class="ml-2 mb-1 close d-flex justify-content-end" data-dismiss="toast" aria-label="Close">
@@ -51,7 +51,7 @@
                 </div> -->
                 <div class="toast-body text-white m-2">
                   <ul>
-                    {% for field in moderator_sign_in_form %}
+                    {% for field in moderator_login_form %}
                     {% for error in field.errors %}
                     <li class="ml-2">{{ error }}</li>
                     {% endfor %}
@@ -64,7 +64,7 @@
             
 
 
-            {% if moderator_sign_in_form.non_field_errors %}
+            {% if moderator_login_form.non_field_errors %}
             <!-- <div class="row justify-content-center mb-2"> -->
             <div class="col-lg-8 col-xl-3 toastDiv">
               <!-- Then put toasts within -->
@@ -75,7 +75,7 @@
               </button> -->
             <!-- </div> -->
             <div class="toast-body text-white ml-3">
-              {{moderator_sign_in_form.non_field_errors}}
+              {{moderator_login_form.non_field_errors}}
             </div>
           </div>
           {% endif %}
@@ -92,7 +92,7 @@
                 <div class="card-body">
                   <h4 class="mb-4 text-center pb-2 pb-md-0 mb-md-4 px-md-2">Moderator Login</h4>
       
-                  <form class="px-md-2" method="POST" action="{% url 'accounts:moderator_sign_in' %}">
+                  <form class="px-md-2" method="POST" action="{% url 'accounts:moderator_login' %}">
                     {% csrf_token %}
                     <div class="form-row px-1 mb-4">
                         <input type="email" name="email" id="email" class="form-control" placeholder="Email Address">

@@ -188,10 +188,10 @@ MESSAGE_TAGS = {
         messages.ERROR: 'alert-danger',
  }
 
-LOGIN_URL = 'accounts:contributor_sign_in'
+LOGIN_URL = 'accounts:contributor_login'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_URL = '/'
-LOGOUT_REDIRECT_URL = 'accounts:contributor_sign_in'
+LOGOUT_REDIRECT_URL = 'accounts:contributor_login'
 
 
 # SOCIAL_AUTH_URL_NAMESPACE = 'social'

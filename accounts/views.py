@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.shortcuts import render, redirect, HttpResponse
-from .forms import ContributorSignInForm, ContributorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm
+from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -9,7 +9,7 @@ from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token
 from django.conf import settings
 from django.core.mail import send_mail
-from .models import BaseUser, Contributor, Moderator
+from .models import BaseUser, Innovator, Moderator
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import random
@@ -25,7 +25,7 @@ def activation_sent_view(request):
 def innovator_sign_up(request):
     context = {}
     if request.method == 'POST':
-        form = ContributorSignUpForm(request.POST)
+        form = InnovatorSignUpForm(request.POST)
         if form.is_valid():
             with transaction.atomic():
                 user = form.save()
@@ -53,14 +53,14 @@ def innovator_sign_up(request):
                 send_mail(subject, message, from_email, to_email, fail_silently=True)
                 return redirect('accounts:activation_sent')
     else:
-        form = ContributorSignUpForm()
+        form = InnovatorSignUpForm()
     context['innovator_signup_form'] = form
     return render(request, 'accounts/new_sign_up.html', context={'innovator_signup_form': form, 'password1': request.POST.get('password1'), 'password2': request.POST.get('password2')})
 
-def innovator_sign_in(request):
+def innovator_login(request):
     context = {}
     if request.method == 'POST':
-        form = ContributorSignInForm(request.POST)
+        form = InnovatorSignInForm(request.POST)
         if form.is_valid():
             user = authenticate(email=form.cleaned_data.get('email'), password=form.cleaned_data.get('password'))
             if user:
@@ -72,9 +72,9 @@ def innovator_sign_in(request):
                     request.session.set_expiry(1209600)
                 return redirect('home')
     else:
-        form = ContributorSignInForm()
+        form = InnovatorSignInForm()
     context['innovator_signin_form'] = form
-    return render(request, 'accounts/new_sign_in.html', {
+    return render(request, 'accounts/new_login.html', {
         'innovator_signin_form': form
     })
 
@@ -158,7 +158,7 @@ def moderator_sign_up(request):
         'password2': request.POST.get('password2')
     })
 
-def moderator_sign_in(request):
+def moderator_login(request):
     context = {}
     if request.method == 'POST':
         form = ModeratorSignInForm(request.POST)
@@ -174,8 +174,8 @@ def moderator_sign_in(request):
                 return redirect('home')
     else:
         form = ModeratorSignInForm()
-    context['moderator_sign_in_form'] = form
-    return render(request, 'accounts/new_moderator_sign_in.html', context)
+    context['moderator_login_form'] = form
+    return render(request, 'accounts/new_moderator_login.html', context)
 
 @login_required
 def sign_out(request):
@@ -184,8 +184,8 @@ def sign_out(request):
 
 def profile(request):
     if not request.user.is_authenticated:
-        return redirect('accounts:innovator_sign_in')
-    user = Contributor.objects.get(user__username=request.user.username)
+        return redirect('accounts:innovator_login')
+    user = Innovator.objects.get(user__username=request.user.username)
     return render(request, 'accounts/profile.html', {
         'user': user
     })

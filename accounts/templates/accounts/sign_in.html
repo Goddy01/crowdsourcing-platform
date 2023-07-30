@@ -59,7 +59,7 @@ background-size: cover;height: 100vh;'>
     <div id="form-wrap">
       <h1 class="font-weight-bold">Login as a Contributor</h1>
       <!-- Form Start -->
-      <form style="padding: 20px;" action="{% url 'accounts:contributor_sign_in' %}" method="post" id="crowdsourceit-form">
+      <form style="padding: 20px;" action="{% url 'accounts:contributor_login' %}" method="post" id="crowdsourceit-form">
         {% csrf_token %}
         <div class="form-group">
           <input type="email" name="email" id="email" placeholder="Enter your email" value="{{ request.POST.email }}">
