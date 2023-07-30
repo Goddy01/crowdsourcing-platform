@@ -1,3 +1,7 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Edit Profile{% endblock title %}
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -75,7 +79,7 @@ color: #9b9ca1;
 <div class="col-12">
 
 <div class="my-5">
-<h3>My Profile</h3>
+<h3 class="text-success">My Profile</h3>
 <hr>
 </div>
 
@@ -85,7 +89,7 @@ color: #9b9ca1;
 <div class="col-xxl-8 mb-5 mb-xxl-0">
 <div class="bg-secondary-soft px-4 py-5 rounded">
 <div class="row g-3">
-<h4 class="mb-4 mt-0">Contact detail</h4>
+<h4 class="mb-4 mt-0 text-success">Contact detail</h4>
 
 <div class="col-md-6">
 <label class="form-label">First Name *</label>
@@ -219,3 +223,4 @@ color: #9b9ca1;
 </script>
 </body>
 </html>
+{% endblock content %}
