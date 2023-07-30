@@ -194,3 +194,6 @@ def profile(request):
     return render(request, 'accounts/profile.html', {
         'user': user
     })
+
+def edit_profile(request):
+    return render(request, 'accounts/update_profile.html')
