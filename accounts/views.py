@@ -22,7 +22,7 @@ from django.db import transaction
 def activation_sent_view(request):
     return render(request, 'accounts/activation_sent.html')
 
-def contributor_sign_up(request):
+def innovator_sign_up(request):
     context = {}
     if request.method == 'POST':
         form = ContributorSignUpForm(request.POST)
@@ -54,10 +54,10 @@ def contributor_sign_up(request):
                 return redirect('accounts:activation_sent')
     else:
         form = ContributorSignUpForm()
-    context['contributor_signup_form'] = form
-    return render(request, 'accounts/new_sign_up.html', context={'contributor_signup_form': form, 'password1': request.POST.get('password1'), 'password2': request.POST.get('password2')})
+    context['innovator_signup_form'] = form
+    return render(request, 'accounts/new_sign_up.html', context={'innovator_signup_form': form, 'password1': request.POST.get('password1'), 'password2': request.POST.get('password2')})
 
-def contributor_sign_in(request):
+def innovator_sign_in(request):
     context = {}
     if request.method == 'POST':
         form = ContributorSignInForm(request.POST)
@@ -73,9 +73,9 @@ def contributor_sign_in(request):
                 return redirect('home')
     else:
         form = ContributorSignInForm()
-    context['contributor_signin_form'] = form
+    context['innovator_signin_form'] = form
     return render(request, 'accounts/new_sign_in.html', {
-        'contributor_signin_form': form
+        'innovator_signin_form': form
     })
 
 def activate_account(request, uidb64, token):
@@ -184,7 +184,7 @@ def sign_out(request):
 
 def profile(request):
     if not request.user.is_authenticated:
-        return redirect('accounts:contributor_sign_in')
+        return redirect('accounts:innovator_sign_in')
     user = Contributor.objects.get(user__username=request.user.username)
     return render(request, 'accounts/profile.html', {
         'user': user

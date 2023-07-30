@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django import forms
-from .models import Contributor, Moderator, BaseUser
+from .models import Innovator, Moderator, BaseUser
 from django.contrib.auth import authenticate, password_validation
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 from django.utils.translation import gettext_lazy as _
@@ -57,7 +57,7 @@ class BaseUserSignUpForm(UserCreationForm):
     #     # user.is_teacher = True
     #     if commit:
     #         user.save()
-    #     # contributor = Contributor.objects.create(user=user)
+    #     # innovator = Innovator.objects.create(user=user)
     #     return user
 
     def clean_email(self):
@@ -71,7 +71,7 @@ class BaseUserSignUpForm(UserCreationForm):
             raise forms.ValidationError('A user with this username already exist.')
         return username
 
-class ContributorSignUpForm(UserCreationForm):
+class InnovatorSignUpForm(UserCreationForm):
     username = forms.CharField(
             error_messages={
                 'required': 'Please enter your username.'
@@ -121,7 +121,7 @@ class ContributorSignUpForm(UserCreationForm):
     #     # user.is_teacher = True
     #     if commit:
     #         user.save()
-    #     contributor = Contributor.objects.create(user=user)
+    #     innovator = Innovator.objects.create(user=user)
     #     return user
     @transaction.atomic
     def save(self, commit=True):
@@ -129,7 +129,7 @@ class ContributorSignUpForm(UserCreationForm):
         # user.is_student = True
         if commit:
             user.save()
-        moderator = Contributor.objects.create(user=user)
+        moderator = Innovator.objects.create(user=user)
         return user
     
     def clean_email(self):
@@ -216,14 +216,14 @@ class ModeratorSignUpForm(UserCreationForm):
             raise forms.ValidationError('A moderator with this username already exist.')
         return username
 
-class ContributorSignInForm(forms.ModelForm):
+class InnovatorSignInForm(forms.ModelForm):
     email = forms.EmailField(widget=forms.EmailInput(), error_messages={
                 'required': 'Please enter your email.'
             })
     password = forms.CharField(widget=forms.PasswordInput(), error_messages={'required': 'Please enter your password'})
     remember_me = forms.BooleanField(required=False, initial=False)
     class Meta:
-        model = Contributor
+        model = Innovator
         fields = ['email', 'password']
 
     def clean(self):
@@ -233,12 +233,12 @@ class ContributorSignInForm(forms.ModelForm):
             password = self.cleaned_data['password']
 
             user = authenticate(email=email, password=password)
-            # if Contributor.objects.get(user__email=email, signup_confirmation=False):
+            # if Innovator.objects.get(user__email=email, signup_confirmation=False):
             #     raise forms.ValidationError("You haven't confirmed your email address")
             if user is not None:
                 try:
                     # Check if the user with the provided email address exists
-                    user = Contributor.objects.get(user__email=email)
+                    user = Innovator.objects.get(user__email=email)
                 except:
                     # Handle the case when the account does not exist
                     raise forms.ValidationError("Invalid login details. Please try again.")

@@ -126,9 +126,9 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
 
 
 # CONTRIBUTOR Model
-class Contributor(models.Model):
+class Innovator(models.Model):
     user =                          models.OneToOneField(BaseUser, on_delete=models.CASCADE)
-    contributions_count =           models.IntegerField(default=0)
+    innovations_count =             models.IntegerField(default=0)
     upvotes_received =              models.IntegerField(default=0)
     downvotes_received =            models.IntegerField(default=0)
     reputation_score =              models.IntegerField(default=0)
@@ -140,7 +140,7 @@ class Contributor(models.Model):
     REQUIRED_FIELDS = ['username', ]
 
     def __str__(self):
-        return f"Contributor: {self.user.username}"
+        return f"Innovator: {self.user.username}"
 
     
 # MODERATOR Model

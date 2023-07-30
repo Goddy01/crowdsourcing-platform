@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import BaseUser, Contributor, Moderator
+from .models import BaseUser, Innovator, Moderator
 from django.contrib.auth.admin import UserAdmin
 # Register your models here.
 class AccountAdmin(UserAdmin):
@@ -9,10 +9,10 @@ class AccountAdmin(UserAdmin):
     fieldsets = ()
 admin.site.register(BaseUser, AccountAdmin)
 
-# class ContributorAdmin(UserAdmin):
+# class InnovatorAdmin(UserAdmin):
 #     readonly_fields = ('date_joined', 'last_login')
 #     filter_horizontal = ()
 #     list_filter = ()
 #     fieldsets = ()
-admin.site.register(Contributor)
+admin.site.register(Innovator)
 admin.site.register(Moderator)
