@@ -13,6 +13,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 import datetime
 from django.contrib.auth.models import PermissionsMixin
+from django_countries.fields import CountryField
 # Create your models here.
 
 
@@ -76,9 +77,9 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     id_card =                       models.ImageField(upload_to=upload_location_id_card, blank=False, null=True)
     city =                          models.CharField(max_length=128, blank=False, null=True)
     state =                         models.CharField(max_length=128, blank=False, null=True)
-    country =                       models.CharField(max_length=128, blank=False, null=True)
+    country =                       CountryField(max_length=255, null=True, blank=False)
     address =                       models.CharField(max_length=128, blank=False, null=True)
-    phone_num =                     PhoneNumberField(null=True, blank=True, verbose_name="Phone Number")
+    phone_num =                     PhoneNumberField(null=True, blank=False, verbose_name="Phone Number", unique=True)
     date_joined =                   models.DateTimeField(auto_now_add=True)
     last_login =                    models.DateTimeField(auto_now=True)
     updated_at =                    models.DateTimeField(auto_now=True)
