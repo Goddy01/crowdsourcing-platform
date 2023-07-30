@@ -185,4 +185,7 @@ def sign_out(request):
 def profile(request):
     if not request.user.is_authenticated:
         return redirect('accounts:contributor_sign_in')
-    return render(request, 'accounts/profile.html')
+    user = Contributor.objects.get(user__username=request.user.username)
+    return render(request, 'accounts/profile.html', {
+        'user': user
+    })

@@ -14,9 +14,9 @@
     </head>
         <header class="head">
             <p class="logo border-bottom">
-                <h1 class="m-2 pt-2 w-100">
-                    <span class="text-success">Godwin</span>
-                    Adigun
+                <h1 class="m-3 pt-2 w-100">
+                    <span class="text-success">{{ user.user.first_name }}</span>
+                    {{ user.user.last_name }}
                 </h1>
                  <a class="navbar-toggler d-block d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="bi bi-list"></i>
@@ -44,7 +44,7 @@
                         <div class="imgcover mb-4">
                             <img src="{% static 'accounts/images/square.jpg' %}" class="rounded-pill bg-white p-2 shadow" alt="">
                         </div>
-                        <b class="fs-6">Hellow I am, Eiden Jackeson</b>
+                        <b class="fs-6">Hello I am, {{user.user.first_name}} {{user.user.last_name}}</b>
                         <h1 class="fw-bold mb-4 fs-1">Full Stack Develper</h1>
                         <p>Mauris cursus libero eu gravida malesuada. Vivamus efficitur sollicitudin tincidunt. Vivamus iaculis, est et posuere facilisis, sem nisi volutpat enim, eget hendrerit libero ligula quis lacus</p>
                         <ul>
@@ -63,7 +63,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-7">
-                        <p><b>I am, Eiden Jackeson</b></p>
+                        <p><b>I am, {{user.user.first_name}} {{user.user.last_name}}</b></p>
                         <p class="pt-2 fs-6 text-justify">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus pulvinar magna ut bibendum imperdiet. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum id tempor libero. Praesent vel magna eget purus dignissim interdum. Sed efficitur malesuada dui, ac interdum ante scelerisque non. Curabitur quis euismod lorem, vel rutrum ante. Sed non vestibulum turpis. Phasellus sit amet nisl in diam congue tristique. Nullam convallis lectus ac nisl iaculis, non posuere ipsum interdum. Vivamus nec justo ac sapien convallis maximus.</p>
                         
                         <h4 class=" fs-5 my-3 mt-4 fw-bolder">What is my skill level ?</h4>
