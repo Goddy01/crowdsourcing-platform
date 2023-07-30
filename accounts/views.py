@@ -199,4 +199,12 @@ def profile(request):
     })
 
 def edit_profile(request):
-    return render(request, 'accounts/update_profile.html')
+    if not request.user.is_authenticated:
+        return redirect('accounts:innovator_login')
+    try:
+        user = Innovator.objects.get(user__username=request.user.username)
+    except Innovator.DoesNotExist:
+        return HttpResponse('User Not Found!')
+    return render(request, 'accounts/edit_profile.html', {
+        'user': user
+    })
