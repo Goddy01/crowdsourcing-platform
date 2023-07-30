@@ -85,6 +85,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     facebook =                      models.URLField(default='https://facebook.com/')
     twitter =                       models.URLField(default='https://twitter.com/')
     instagram =                     models.URLField(default='https://instagram.com/')
+    linkedin =                      models.URLField(default='https://linkedin.com/')
     is_admin =                      models.BooleanField(default=False)
     is_staff =                      models.BooleanField(default=False)
     is_active =                     models.BooleanField(default=True)

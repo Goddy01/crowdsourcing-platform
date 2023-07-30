@@ -70,7 +70,10 @@ def innovator_login(request):
                     # request.session.modified = True
                 else:
                     request.session.set_expiry(1209600)
-                return redirect('home')
+                user = Innovator.objects.get(user__email=form.cleaned_data.get('email'))
+                if user.user.is_verified:
+                    return redirect('home')
+                return redirect('accounts:edit_profile')
     else:
         form = InnovatorSignInForm()
     context['innovator_signin_form'] = form

@@ -36,30 +36,63 @@
                 }
             }
             @media (min-width: 1200px) {
-                .toastDiv{
+                .toastDiv {
                 position: absolute;
-                right: 2px;
+                right: -110px;
                 top: 3rem;
                 z-index: 5
                 }
+                
             }
+            
+            @media (min-width: 1200px) {
+                .account-errors {
+                position: absolute;
+                right: -110px;
+                top: 11rem;
+                z-index: 5
+                }
+                
+            }
+            /* .account-errors li {
+                margin-top: 100px;
+            } */
         </style>
     </head>
         <div  class="main-content">
            
             <!--########################## Profile Starts Here ############################# -->
-            {% if not user.user.signup_confirmation %}
-            <div class="col-lg-8 col-xl-5 toastDiv mt-5">
-                <!-- Then put toasts within -->
-            <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto">
-              <div class="toast-body text-white m-2">
-                <p class="text-center">Confirm your email address to have innovator's privilege. Go to your 
-                    <a href="{% url 'accounts:profile' %}" class="text-white text-decoration-underline">profile </a>
-                    page to do that.</p>
-            </div>
-            </div>
-          </div>
-          {% endif %}
+            <ul class="">
+                <li>
+                    {% if not user.user.signup_confirmation %}
+                        <div class="col-lg-8 col-xl-5 toastDiv mt-5 mx-auto">
+                            <!-- Then put toasts within -->
+                        <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto">
+                        <div class="toast-body text-white m-2">
+                            <p class="text-center">Confirm your email address to have innovator's privilege. Go to your 
+                                <a href="{% url 'accounts:profile' %}" class="text-white text-decoration-underline">profile </a>
+                                page to do that.</p>
+                        </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </li>
+                <li>
+                    {% if not user.user.is_verified %}
+                    <div class="col-lg-8 col-xl-5 account-errors mt-5">
+                        <!-- Then put toasts within -->
+                        <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto">
+                        <div class="toast-body text-white m-2">
+                            <p class="text-center">Provide your details in the 
+                                <a href="accounts:edit_profile" class="text-white text-decoration-underline">edit profile page</a>
+                                to get verified</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </li>
+            </ul>
+
             <div class="profile-head">
                <div class="row vh-100 profile-top mt-1">
                    <div class="col-xl-6 text-center mx-auto align-self-center ">
@@ -454,9 +487,9 @@
       $('.toast').toast('show');
     });
   
-    // setTimeout(function() {
-    //   $('.toast').toast('hide')
-    // }, 5000)
+    setTimeout(function() {
+      $('.toast').toast('hide')
+    }, 5000)
     </script>
 
 <script src="{% static 'accounts/js/jquery-3.2.1.min.js' %}"></script>
