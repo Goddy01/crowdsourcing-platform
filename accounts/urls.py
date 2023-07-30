@@ -3,15 +3,15 @@ from . import views
 
 app_name = 'accounts'
 urlpatterns = [
-    path('innovators/login', views.innovator_login, name='innovator_login'),
-    path('innovators/sign-up', views.innovator_sign_up, name='innovator_sign_up'),
+    path('innovator/login', views.innovator_login, name='innovator_login'),
+    path('innovator/sign-up', views.innovator_sign_up, name='innovator_sign_up'),
     path('sent', views.activation_sent_view, name='activation_sent'),
     path('activate-account/<slug:uidb64>/<slug:token>', views.activate_account, name='activate'),
     path('sign-out', views.sign_out, name='sign_out'),
     path('social-auth', include('social_django.urls', namespace='social')),
     # path('generate-link/', views.send_moderator_details, name='send_mod_details'),
     path('account-details-sent', views.moderation_account_setup_done, name='moderator_account_setup_sent'),
-    path('moderators/sign-up', views.moderator_sign_up, name='moderator_sign_up'),
-    path('moderators/login', views.moderator_login, name='moderator_login'),
+    path('moderator/sign-up', views.moderator_sign_up, name='moderator_sign_up'),
+    path('moderator/login', views.moderator_login, name='moderator_login'),
     path('profile', views.profile, name='profile'),
 ]

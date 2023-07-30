@@ -1,5 +1,5 @@
 from datetime import datetime
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.sites.shortcuts import get_current_site
@@ -185,7 +185,12 @@ def sign_out(request):
 def profile(request):
     if not request.user.is_authenticated:
         return redirect('accounts:innovator_login')
-    user = Innovator.objects.get(user__username=request.user.username)
+    try:
+        user = Innovator.objects.get(user__username=request.user.username)
+    except Innovator.DoesNotExist:
+        return HttpResponse('User Not Found!')
+    else:
+        user = BaseUser.objects.get(username=request.user.username)
     return render(request, 'accounts/profile.html', {
         'user': user
     })
