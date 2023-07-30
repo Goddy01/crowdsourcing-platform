@@ -8,28 +8,60 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>Profile</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"> -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    
+        <!-- Animate.css  -->
+        <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+      />
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
+    
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
         <link rel="shortcut icon" href="{% static 'accounts/images/fav.png' %}" type="image/x-icon">
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
         <link rel="shortcut icon" href="{% static 'accounts/images/fav.jpg' %}">
         <link rel="stylesheet" href="{% static 'accounts/css/bootstrap.min.css' %}">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
         <link rel="stylesheet" type="text/css" href="{% static 'accounts/css/style.css' %}" />
+        <style>
+            @media (max-width:1999px) {
+                .profile-top {
+                    margin-top: -150px;
+                }
+            }
+            @media (min-width: 1200px) {
+                .toastDiv{
+                position: absolute;
+                right: 2px;
+                top: 3rem;
+                z-index: 5
+                }
+            }
+        </style>
     </head>
         <div  class="main-content">
            
             <!--########################## Profile Starts Here ############################# -->
             {% if not user.user.signup_confirmation %}
-            <div class="col-lg-8 col-xl-3 toastDiv">
+            <div class="col-lg-8 col-xl-5 toastDiv mt-5">
                 <!-- Then put toasts within -->
             <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto">
               <div class="toast-body text-white m-2">
-                Confirm your email address to have innovator's privilege. Go to your profile page to do that.
+                <p class="text-center">Confirm your email address to have innovator's privilege. Go to your 
+                    <a href="{% url 'accounts:profile' %}" class="text-white text-decoration-underline">profile </a>
+                    page to do that.</p>
             </div>
             </div>
           </div>
           {% endif %}
             <div class="profile-head">
-               <div class="row vh-100">
+               <div class="row vh-100 profile-top mt-1">
                    <div class="col-xl-6 text-center mx-auto align-self-center ">
                         <div class="imgcover mb-4">
                             <img src="{% static 'accounts/images/square.jpg' %}" class="rounded-pill bg-white p-2 shadow" alt="">
@@ -417,6 +449,15 @@
         </div>
     <body>
 </body>
+<script>
+    $(document).ready(function(){
+      $('.toast').toast('show');
+    });
+  
+    // setTimeout(function() {
+    //   $('.toast').toast('hide')
+    // }, 5000)
+    </script>
 
 <script src="{% static 'accounts/js/jquery-3.2.1.min.js' %}"></script>
 <script src="{% static 'accounts/js/popper.min.js' %}"></script>
