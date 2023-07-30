@@ -12,6 +12,7 @@ from django.shortcuts import redirect
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 import datetime
+from django.contrib.auth.models import PermissionsMixin
 # Create your models here.
 
 
@@ -64,7 +65,7 @@ def upload_location_pfp(instance, filename):
 def upload_location_id_card(instance, filename):
     return f'id_cards/{str(instance.username)}/-{filename}'
 
-class BaseUser(AbstractBaseUser):
+class BaseUser(AbstractBaseUser, PermissionsMixin):
     last_name =                     models.CharField(max_length=256, null=True, blank=False)
     first_name =                    models.CharField(max_length=256, null=True, blank=False)
     middle_name =                   models.CharField(max_length=256, null=True, blank=False)

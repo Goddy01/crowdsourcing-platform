@@ -183,4 +183,6 @@ def sign_out(request):
     return redirect('home')
 
 def profile(request):
+    if not request.user.is_authenticated:
+        return redirect('accounts:contributor_sign_in')
     return render(request, 'accounts/profile.html')
