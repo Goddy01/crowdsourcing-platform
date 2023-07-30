@@ -181,3 +181,6 @@ def moderator_sign_in(request):
 def sign_out(request):
     logout(request)
     return redirect('home')
+
+def profile(request):
+    return render(request, 'accounts/profile.html')

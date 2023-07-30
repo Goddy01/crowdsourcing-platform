@@ -13,4 +13,5 @@ urlpatterns = [
     path('account-details-sent/', views.moderation_account_setup_done, name='moderator_account_setup_sent'),
     path('moderator-sign-up/', views.moderator_sign_up, name='moderator_sign_up'),
     path('moderator-sign-in/', views.moderator_sign_in, name='moderator_sign_in'),
+    path('profile/', views.profile, name='profile'),
 ]
