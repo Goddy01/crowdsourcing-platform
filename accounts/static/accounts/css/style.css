@@ -322,7 +322,7 @@ body {
 }
 
 .container {
-  max-width: 1170px;
+  /* max-width: 1170px; */
 }
 @media screen and (max-width: 575px) {
   .container {
