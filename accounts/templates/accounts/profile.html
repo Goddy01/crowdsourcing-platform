@@ -18,7 +18,16 @@
         <div  class="main-content">
            
             <!--########################## Profile Starts Here ############################# -->
-            
+            {% if not user.user.signup_confirmation %}
+            <div class="col-lg-8 col-xl-3 toastDiv">
+                <!-- Then put toasts within -->
+            <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto">
+              <div class="toast-body text-white m-2">
+                Confirm your email address to have innovator's privilege. Go to your profile page to do that.
+            </div>
+            </div>
+          </div>
+          {% endif %}
             <div class="profile-head">
                <div class="row vh-100">
                    <div class="col-xl-6 text-center mx-auto align-self-center ">

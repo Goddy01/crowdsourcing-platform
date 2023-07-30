@@ -189,8 +189,8 @@ def profile(request):
         user = Innovator.objects.get(user__username=request.user.username)
     except Innovator.DoesNotExist:
         return HttpResponse('User Not Found!')
-    else:
-        user = BaseUser.objects.get(username=request.user.username)
+    # else:
+    #     user = BaseUser.objects.get(username=request.user.username)
     return render(request, 'accounts/profile.html', {
         'user': user
     })
