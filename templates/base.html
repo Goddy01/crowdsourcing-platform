@@ -20,7 +20,7 @@
 	<a href="#content" class="skip-link screen-reader-text">Skip to the content</a>
 	<header id="top-header" class="site-header">
 		<div class="container">
-			<div class="site-identity">
+			<div class="site-identity p-0">
 				<a href="index.html" class="site-title"><img src="{% static 'images/logo.png' %}" class="custom-logo" width="209" height="18" alt="CrowdsourceIt"></a>
 				<p class="site-description screen-reader-text">Business crowdfunding platform</p>
 			</div>
@@ -37,7 +37,7 @@
 				</ul>
 			</nav>
 			<nav class="main-navigation">
-				<ul id="menu-main" class="menu">
+				<ul id="menu-main" class="menu px-3">
 					<li><a href="projects.html">Invest</a></li>
 					<li class="menu-item-has-children">
 						<a href="about.html">About<em class="mdi mdi-chevron-down"></em></a>
@@ -93,7 +93,7 @@
 						</ul>
 					</li>
                     {% if request.user.is_authenticated %}
-                    <li class="account-logout">
+                    <li class="account-logout" style="margin-left: 20px;">
                         <a href="{% url 'accounts:sign_out' %}">
                             <i style="font-size: 24px;" class="fa-solid fa-right-from-bracket"></i>
                             Logout
@@ -111,7 +111,7 @@
 		</div>
 	</header>
 
-    <main class="site-section section-main dotted-pattern dotted-pattern-top-left">
+    <main class="site-section section-main dottedd-pattern dotted-pattern-top-lefdt">
         {% block content %}
 
 
