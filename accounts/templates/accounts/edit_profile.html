@@ -125,14 +125,14 @@
 <hr>
 </div>
 
-<form class="file-upload">
+<!-- <form class="file-upload"> -->
 <div class="row mb-5 gx-5">
 
 <div class="col-xxl-12 mb-5 mb-xxl-0">
 <div class="bg-secondary-soft px-4 py-5 rounded">
 <div class="row g-3 d-flex justify-content-center mb-5">
     <h4 class="mb-4 mt-0 text-success">Personal Information</h4>
-    <form method="post" action="" enctype="multipart/form-data">
+    <form method="post" action="" enctype="multipart/form-data" class="file-upload row g-3">
     <!-- <div class="col-xxl-4"> -->
         <!-- <div class="d-flex justify-content-center"> -->
         <!-- <div class="row g-3"> -->
@@ -210,9 +210,9 @@
 
 </div>
 <div class="bg-secondary-soft px-4 py-5 rounded mt-5">
-    <form class="row g-3">
+    <!-- <form class="row g-3"> -->
     <h4 class="mb-4 mt-0 text-success">Residential Information</h4>
-    <form method="post" action="" enctype="multipart/form-data">
+    <form method="post" action="" enctype="multipart/form-data" class="row g-3">
         <div class="col-md-6">
         <label class="form-label">City 
             <span class="text-danger">*</span>
@@ -242,7 +242,7 @@
         </div>
         <button type="submit" class="btn btn-success btn-lg">Save Changes</button>
     </form>
-    </div> 
+    <!-- </form>  -->
     
     
     </div>
@@ -253,39 +253,41 @@
 <div class="row mb-5 gx-5">
 <div class="col-xxl-6 mb-5 mb-xxl-0">
 <div class="bg-secondary-soft px-4 py-5 rounded">
-<div class="row g-3">
+<!-- <div class="row g-3 form-div"> -->
 <h4 class="mb-4 mt-0 text-success">Socials</h4>
 
-<div class="col-md-6">
-<label class="form-label"><i class="fab fa-fw fa-facebook me-2 text-facebook"></i>Facebook 
-    <span class="text-danger">*</span>
-</label>
-<input type="text" class="form-control" placeholder="" aria-label="Facebook" value="{{ user.user.facebook }}">
-</div>
+<form method="post" action="" enctype="multipart/form-data" class="row g-3">
+    <div class="col-md-6">
+    <label class="form-label"><i class="fab fa-fw fa-facebook me-2 text-facebook"></i>Facebook 
+        <span class="text-danger">*</span>
+    </label>
+    <input type="text" class="form-control" placeholder="" aria-label="Facebook" value="{{ user.user.facebook }}">
+    </div>
 
-<div class="col-md-6">
-<label class="form-label"><i class="fab fa-fw fa-twitter text-twitter me-2"></i>Twitter 
-    <span class="text-danger">*</span>
-</label>
-<input type="text" class="form-control" placeholder="" aria-label="Twitter" value="{{ user.user.twitter }}">
-</div>
+    <div class="col-md-6">
+    <label class="form-label"><i class="fab fa-fw fa-twitter text-twitter me-2"></i>Twitter 
+        <span class="text-danger">*</span>
+    </label>
+    <input type="text" class="form-control" placeholder="" aria-label="Twitter" value="{{ user.user.twitter }}">
+    </div>
 
-<div class="col-md-6">
-<label class="form-label"><i class="fab fa-fw fa-linkedin-in text-linkedin me-2"></i>Linkedin 
-    <span class="text-danger">*</span>
-</label>
-<input type="text" class="form-control" placeholder="" aria-label="Linkedin" value="{{ user.user.linkedin }}">
-</div>
+    <div class="col-md-6">
+    <label class="form-label"><i class="fab fa-fw fa-linkedin-in text-linkedin me-2"></i>Linkedin 
+        <span class="text-danger">*</span>
+    </label>
+    <input type="text" class="form-control" placeholder="" aria-label="Linkedin" value="{{ user.user.linkedin }}">
+    </div>
 
-<div class="col-md-6">
-<label class="form-label"><i class="fab fa-fw fa-instagram text-instagram me-2"></i>Instagram 
-    <span class="text-danger">*</span>
-</label>
-<input type="text" class="form-control" placeholder="" aria-label="Instragram" value="{{ user.user.instagram }}">
-</div>
+    <div class="col-md-6">
+    <label class="form-label"><i class="fab fa-fw fa-instagram text-instagram me-2"></i>Instagram 
+        <span class="text-danger">*</span>
+    </label>
+    <input type="text" class="form-control" placeholder="" aria-label="Instragram" value="{{ user.user.instagram }}">
+    </div>
+</form>
 
 </div> 
-</div>
+<!-- </div> -->
 </div>
 
 <div class="col-xxl-6">
@@ -322,7 +324,7 @@
 <button type="button" class="btn btn-danger btn-lg">Delete profile</button>
 <button type="button" class="btn btn-success btn-lg">Update profile</button>
 </div>
-</form> 
+<!-- </form>  -->
 </div>
 </div>
 
