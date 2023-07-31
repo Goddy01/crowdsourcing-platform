@@ -7,6 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from social_django.models import UserSocialAuth
 from django.db import transaction
 from phonenumber_field.formfields import PhoneNumberField
+from django_countries
 
 
 class BaseUserSignUpForm(UserCreationForm):
@@ -327,7 +328,11 @@ class UpdateUserForm(forms.ModelForm):
                 'required': 'Please enter your phone.'
             }, required=True
         )
-
     class Meta:
         model = BaseUser
         fields = ['username', 'email', 'last_name', 'first_name', 'middle_name', 'date_of_birth', 'phone_num']
+
+class UpdateUserResidentialInfo(forms.ModelForm):
+    class Meta:
+        model = BaseUser
+        fields = ['city', 'state', 'country', 'address', ]
