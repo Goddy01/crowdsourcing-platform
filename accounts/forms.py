@@ -324,3 +324,28 @@ class CustomPasswordResetForm(PasswordResetForm):
         print('COOL NIGGA')
         password_validation.validate_password(password2, self.user)
         return password2
+class UpdateUserForm(forms.ModelForm):
+    username = forms.CharField(max_length=100,
+                               required=True,
+                               widget=forms.TextInput())
+    email = forms.EmailField(required=True,
+                             widget=forms.TextInput())
+    first_name = forms.CharField(max_length=100,
+                               required=True,
+                               widget=forms.TextInput())
+    last_name = forms.EmailField(required=True,
+                             widget=forms.TextInput())
+    middle_name = forms.CharField(max_length=100,
+                               required=False,
+                               widget=forms.TextInput())
+    date_of_birth = forms.EmailField(required=False,
+                             widget=forms.TextInput())
+    pfp = forms.CharField(max_length=100,
+                               required=False,
+                               widget=forms.TextInput())
+    phone_num = forms.EmailField(required=True,
+                             widget=forms.TextInput())
+
+    class Meta:
+        model = BaseUser
+        fields = ['username', 'email', 'last_name', 'first_name', 'middle_name', 'date_of_birth', 'pfp', 'phone_num']
