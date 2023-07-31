@@ -208,3 +208,20 @@ def edit_profile(request):
     return render(request, 'accounts/edit_profile.html', {
         'user': user
     })
+
+def resend_email_activation(request):
+    context = {}
+    user = BaseUser.objects.get(username=request.user.username)
+    current_site = get_current_site(request)
+    subject = 'Activate your account'
+    message = render_to_string('accounts/activation_request.html', {
+        'user': user,
+        'domain': current_site.domain,
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        'token': account_activation_token.make_token(user),
+    })
+    to_email = [request.user.user.email]
+    context['firstname'] = request.user.user.first_name
+    from_email = settings.EMAIL_HOST_USER
+    send_mail(subject, message, from_email, to_email, fail_silently=True)
+    return redirect('accounts:activation_sent')

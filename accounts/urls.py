@@ -15,4 +15,5 @@ urlpatterns = [
     path('moderator/login', views.moderator_login, name='moderator_login'),
     path('profile', views.profile, name='profile'),
     path('innovator/edit-profile', views.edit_profile, name='edit_profile'),
+    path('resend-email-activation-link', views.resend_email_activation, name='resend_email_activation'),
 ]

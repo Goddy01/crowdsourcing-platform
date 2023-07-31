@@ -7,9 +7,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
+<!-- <link rel="stylesheet" href="{% static 'css/style.css' %}"> -->
 <style type="text/css">
 .bg-secondary-soft {
     background-color: rgba(208, 212, 217, 0.1) !important;
@@ -93,6 +92,7 @@
 </head>
 <body>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous" />
+
 <div class="container">
     <ul class="errors-list">
         <li>
@@ -102,8 +102,8 @@
                 <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto">
                 <div class="toast-body text-white m-2">
                     <p class="text-center">Confirm your email address to have innovator's privilege. Go to your 
-                        <a href="{% url 'accounts:profile' %}" class="text-white text-decoration-underline">profile </a>
-                        page to do that.
+                        <a href="{% url 'accounts:profile' %}" class="text-white text-decoration-underline">profile page </a>
+                         to do that.
                     </p>
                 </div>
                 </div>
@@ -117,8 +117,8 @@
                 <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto">
                 <div class="toast-body text-white m-2">
                     <p class="text-center">Provide your details in the 
-                        <a href="accounts:edit_profile" class="text-white text-decoration-underline">edit profile page</a>
-                        to get verified</p>
+                        <a href="{% url 'accounts:edit_profile' %}" class="text-white text-decoration-underline">edit profile page</a>
+                        to get verified.</p>
                     </div>
                 </div>
             </div>
