@@ -6,7 +6,7 @@ from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 from django.utils.translation import gettext_lazy as _
 from social_django.models import UserSocialAuth
 from django.db import transaction
-from phonenumber_field.modelfields import PhoneNumberField
+from phonenumber_field.formfields import PhoneNumberField
 
 
 class BaseUserSignUpForm(UserCreationForm):
@@ -30,7 +30,7 @@ class BaseUserSignUpForm(UserCreationForm):
                 'required': 'Please enter your email.'
             }
         )
-    phone_num = forms.PhoneNumberField(widget=forms.TextInput(), error_messages={
+    phone_num = PhoneNumberField(widget=forms.TextInput(), error_messages={
                 'required': 'Please enter your phone.'
             }, required=True
         )
@@ -92,7 +92,7 @@ class InnovatorSignUpForm(UserCreationForm):
                 'required': 'Please enter your email.'
             }
         )
-    phone_num = forms.PhoneNumberField(widget=forms.TextInput(), error_messages={
+    phone_num = PhoneNumberField(widget=forms.TextInput(), error_messages={
                 'required': 'Please enter your phone.'
             }, required=True
         )
@@ -164,7 +164,7 @@ class ModeratorSignUpForm(UserCreationForm):
                 'required': 'Please enter your email.'
             }
         )
-    phone_num = forms.PhoneNumberField(widget=forms.TextInput(), error_messages={
+    phone_num = PhoneNumberField(widget=forms.TextInput(), error_messages={
                 'required': 'Please enter your phone.'
             }, required=True
         )
@@ -323,7 +323,7 @@ class CustomPasswordResetForm(PasswordResetForm):
         password_validation.validate_password(password2, self.user)
         return password2
 class UpdateUserForm(forms.ModelForm):
-    phone_num = forms.PhoneNumberField(widget=forms.TextInput(), error_messages={
+    phone_num = PhoneNumberField(widget=forms.TextInput(), error_messages={
                 'required': 'Please enter your phone.'
             }, required=True
         )
