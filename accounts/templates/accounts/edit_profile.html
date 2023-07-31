@@ -132,8 +132,9 @@
 <div class="bg-secondary-soft px-4 py-5 rounded">
 <div class="row g-3 d-flex justify-content-center mb-5">
     <h4 class="mb-4 mt-0 text-success">Personal Information</h4>
-    <form method="post" action="" enctype="multipart/form-data" class="file-upload row g-3">
-    <!-- <div class="col-xxl-4"> -->
+    <form method="post" action="{% url 'accounts:edit_profile' %}" enctype="multipart/form-data" class="file-upload row g-3">
+    {% csrf_token %}
+        <!-- <div class="col-xxl-4"> -->
         <!-- <div class="d-flex justify-content-center"> -->
         <!-- <div class="row g-3"> -->
         <h5 class="text-center mt-0">Upload your profile photo</h5>
@@ -212,7 +213,8 @@
 <div class="bg-secondary-soft px-4 py-5 rounded mt-5">
     <!-- <form class="row g-3"> -->
     <h4 class="mb-4 mt-0 text-success">Residential Information</h4>
-    <form method="post" action="" enctype="multipart/form-data" class="row g-3">
+    <form method="post" action="{% url 'accounts:edit_profile' %}" class="row g-3">
+        {% csrf_token %}
         <div class="col-md-6">
         <label class="form-label">City 
             <span class="text-danger">*</span>
@@ -256,7 +258,8 @@
 <!-- <div class="row g-3 form-div"> -->
 <h4 class="mdb-4 mt-0 text-success">Socials</h4>
 
-<form method="post" action="" enctype="multipart/form-data" class="row g-3">
+<form method="post" action="{% url 'accounts:edit_profile' %}" class="row g-3">
+    {% csrf_token %}
     <div class="col-md-6">
     <label class="form-label"><i class="fab fa-fw fa-facebook me-2 text-facebook"></i>Facebook 
         <span class="text-danger">*</span>
@@ -294,7 +297,7 @@
 <div class="col-xxl-6">
 <div class="bg-secondary-soft px-4 py-5 rounded">
 <h4 class="mt-0 text-success">Change Password</h4>
-<form method="post" action="" enctype="multipart/form-data" class="row g-3">
+<form method="post" action="" class="row g-3">
     <div class="col-md-6">
     <label for="exampleInputPassword1" class="form-label">Old password 
         <span class="text-danger">*</span>

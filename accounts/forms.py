@@ -323,20 +323,52 @@ class CustomPasswordResetForm(PasswordResetForm):
         password_validation.validate_password(password2, self.user)
         return password2
 class UpdatePersonalProfileForm(forms.ModelForm):
+    username = forms.CharField(
+                               required=False,
+                               widget=forms.TextInput())
+    email = forms.EmailField(required=False,
+                             widget=forms.TextInput())
+    first_name = forms.CharField(
+                               required=False,
+                               widget=forms.TextInput())
+    last_name = forms.CharField(required=False,
+                             widget=forms.TextInput())
+    middle_name = forms.CharField(
+                               required=False,
+                               widget=forms.TextInput())
+    pfp = forms.ImageField(required=False)
+    date_of_birth = forms.CharField(required=False,
+                             widget=forms.TextInput())
     phone_num = PhoneNumberField(widget=forms.TextInput(), error_messages={
                 'required': 'Please enter your phone.'
-            }, required=True
+            }, required=False
         )
     class Meta:
         model = BaseUser
         fields = ['username', 'email', 'last_name', 'first_name', 'middle_name', 'date_of_birth', 'phone_num']
 
 class UpdateUserResidentialInfoForm(forms.ModelForm):
+    city = forms.CharField(
+                               required=False,
+                               widget=forms.TextInput())
+    state = forms.CharField(required=False,
+                             widget=forms.TextInput())
+    country = forms.CharField(
+                               required=False,
+                               widget=forms.TextInput())
+    address = forms.CharField(required=False,
+                             widget=forms.TextInput())
+    zipcode = forms.IntegerField(required=False)
     class Meta:
         model = BaseUser
         fields = ['city', 'state', 'country', 'address', 'zipcode']
 
 class UpdateUserSocialsForm(forms.ModelForm):
+    facebook = forms.URLField(required=False)
+    twitter = forms.URLField(required=False)
+    instagram = forms.URLField(required=False)
+    linkedin = forms.URLField(required=False)
+    website = forms.URLField(required=False)
     class Meta:
         model = BaseUser
         fields = ['facebook', 'twitter', 'instagram', 'linkedin', 'website']

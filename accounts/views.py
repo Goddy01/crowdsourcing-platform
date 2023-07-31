@@ -216,6 +216,10 @@ def edit_profile(request):
             user_r_info.save()
             user_s_info.save()
             return redirect('accounts:profile')
+        else:
+            print('USER_P_INFO ERRORS: ', user_p_info.errors.as_data())
+            print('USER_R_INFO ERRORS: ', user_r_info.errors.as_data())
+            print('USER_S_INFO ERRORS: ', user_s_info.errors.as_data())
     else:
         user_p_info = UpdatePersonalProfileForm()
         user_r_info = UpdateUserResidentialInfoForm()
