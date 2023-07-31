@@ -128,7 +128,7 @@
 <!-- <form class="file-upload"> -->
 <div class="row mb-5 gx-5">
 
-<div class="col-xxl-12 mb-5 mb-xxl-0">
+<div class="col-xxl-12 mb-3 mb-xxl-0">
 <div class="bg-secondary-soft px-4 py-5 rounded">
 <div class="row g-3 d-flex justify-content-center mb-5">
     <h4 class="mb-4 mt-0 text-success">Personal Information</h4>
@@ -254,7 +254,7 @@
 <div class="col-xxl-6 mb-5 mb-xxl-0">
 <div class="bg-secondary-soft px-4 py-5 rounded">
 <!-- <div class="row g-3 form-div"> -->
-<h4 class="mb-4 mt-0 text-success">Socials</h4>
+<h4 class="mdb-4 mt-0 text-success">Socials</h4>
 
 <form method="post" action="" enctype="multipart/form-data" class="row g-3">
     <div class="col-md-6">
@@ -284,6 +284,7 @@
     </label>
     <input type="text" class="form-control" placeholder="" aria-label="Instragram" value="{{ user.user.instagram }}">
     </div>
+    <button type="submit" class="btn btn-success btn-lg">Save Changes</button>
 </form>
 
 </div> 
@@ -292,37 +293,38 @@
 
 <div class="col-xxl-6">
 <div class="bg-secondary-soft px-4 py-5 rounded">
-<div class="row g-3">
-<h4 class="my-4">Change Password</h4>
+<h4 class="mt-0 text-success">Change Password</h4>
+<form method="post" action="" enctype="multipart/form-data" class="row g-3">
+    <div class="col-md-6">
+    <label for="exampleInputPassword1" class="form-label">Old password 
+        <span class="text-danger">*</span>
+    </label>
+    <input type="password" class="form-control" id="exampleInputPassword1">
+    </div>
 
-<div class="col-md-6">
-<label for="exampleInputPassword1" class="form-label">Old password 
-    <span class="text-danger">*</span>
-</label>
-<input type="password" class="form-control" id="exampleInputPassword1">
-</div>
+    <div class="col-md-6">
+    <label for="exampleInputPassword2" class="form-label">New password 
+        <span class="text-danger">*</span>
+    </label>
+    <input type="password" class="form-control" id="exampleInputPassword2">
+    </div>
 
-<div class="col-md-6">
-<label for="exampleInputPassword2" class="form-label">New password 
-    <span class="text-danger">*</span>
-</label>
-<input type="password" class="form-control" id="exampleInputPassword2">
-</div>
-
-<div class="col-md-12">
-<label for="exampleInputPassword3" class="form-label">Confirm Password 
-    <span class="text-danger">*</span>
-</label>
-<input type="password" class="form-control" id="exampleInputPassword3">
-</div>
+    <div class="col-md-12">
+    <label for="exampleInputPassword3" class="form-label">Confirm Password 
+        <span class="text-danger">*</span>
+    </label>
+    <input type="password" class="form-control" id="exampleInputPassword3">
+    </div>
+    <button type="submit" class="btn btn-success btn-lg">Save Changes</button>
+</form>
 </div>
 </div>
 </div>
 </div> 
 
-<div class="gap-3 d-md-flex justify-content-md-end text-center">
+<div class="gap-3 d-md-flex justify-content-md-end text-center mb-3">
 <button type="button" class="btn btn-danger btn-lg">Delete profile</button>
-<button type="button" class="btn btn-success btn-lg">Update profile</button>
+<!-- <button type="button" class="btn btn-success btn-lg">Update profile</button> -->
 </div>
 <!-- </form>  -->
 </div>
