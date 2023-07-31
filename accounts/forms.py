@@ -331,12 +331,12 @@ class UpdateUserForm(forms.ModelForm):
         model = BaseUser
         fields = ['username', 'email', 'last_name', 'first_name', 'middle_name', 'date_of_birth', 'phone_num']
 
-class UpdateUserResidentialInfo(forms.ModelForm):
+class UpdateUserResidentialInfoForm(forms.ModelForm):
     class Meta:
         model = BaseUser
         fields = ['city', 'state', 'country', 'address', 'zipcode']
 
-class UpdateUserSocials(forms.ModelForm):
+class UpdateUserSocialsForm(forms.ModelForm):
     class Meta:
         model = BaseUser
         fields = ['facebook', 'twitter', 'instagram', 'linkedin', 'website']

@@ -128,9 +128,28 @@
 <form class="file-upload">
 <div class="row mb-5 gx-5">
 
-<div class="col-xxl-8 mb-5 mb-xxl-0">
+<div class="col-xxl-12 mb-5 mb-xxl-0">
 <div class="bg-secondary-soft px-4 py-5 rounded">
-<div class="row g-3">
+<div class="row g-3 d-flex justify-content-center">
+    <div class="col-xxl-4">
+        <!-- <div class="d-flex justify-content-center"> -->
+        <!-- <div class="row g-3"> -->
+        <h5 class="text-center mt-0">Upload your profile photo</h5>
+        <div class="text-center">
+        
+        <div class="square position-relative display-2 mb-3">
+        <i class="fas fa-fw fa-user position-absolute top-50 start-50 translate-middle text-secondary"></i>
+        </div>
+        
+        <input type="file" id="customFile" name="file" hidden="">
+        <label class="btn btn-success-soft btn-block" for="customFile">Upload</label>
+        <button type="button" class="btn btn-danger-soft">Remove</button>
+        
+        <p class="text-muted mt-3 mb-0"><span class="me-1">Note:</span>Minimum size 300px x 300px</p>
+        </div>
+        <!-- </div> -->
+        </div>
+        </div>
 <h4 class="mb-4 mt-0 text-success">Personal Information</h4>
 
 <div class="col-md-6">
@@ -219,32 +238,12 @@
     <input type="text" class="form-control" placeholder="" aria-label="Address" value={% if user.user.address %} "{{ user.user.address }}" {% else %} "" {% endif %}>
     </div>
     
-    
     </div> 
     
     
     </div>
 </div>
 
-<div class="col-xxl-4">
-<div class="bg-secondary-soft px-4 py-5 rounded">
-<div class="row g-3">
-<h4 class="mb-4 mt-0">Upload your profile photo</h4>
-<div class="text-center">
-
-<div class="square position-relative display-2 mb-3">
-<i class="fas fa-fw fa-user position-absolute top-50 start-50 translate-middle text-secondary"></i>
-</div>
-
-<input type="file" id="customFile" name="file" hidden="">
-<label class="btn btn-success-soft btn-block" for="customFile">Upload</label>
-<button type="button" class="btn btn-danger-soft">Remove</button>
-
-<p class="text-muted mt-3 mb-0"><span class="me-1">Note:</span>Minimum size 300px x 300px</p>
-</div>
-</div>
-</div>
-</div>
 </div> 
 
 <div class="row mb-5 gx-5">
