@@ -38,9 +38,9 @@
 			</nav>
 			<nav class="main-navigation">
 				<ul id="menu-main" class="menu px-3">
-					<li><a href="projects.html" class="text-success" style="font-weight: 600;">Invest</a></li>
+					<li><a href="projects.html"  style="font-weight: 600;">Invest</a></li>
 					<li class="menu-item-has-children">
-						<a href="about.html" class="text-success" style="font-weight: 600;">About<em class="mdi mdi-chevron-down"></em></a>
+						<a href="about.html"  style="font-weight: 600;">About<em class="mdi mdi-chevron-down"></em></a>
 						<ul class="sub-menu">
 							<li><a href="about.html">About Us</a></li>
 							<li><a href="careers.html">Careers</a></li>
@@ -48,10 +48,10 @@
 							<li><a href="affiliate.html">Affiliate Program</a></li>
 						</ul>
 					</li>
-					<li><a href="news.html" class="text-success" style="font-weight: 600;">News</a></li>
+					<li><a href="news.html"  style="font-weight: 600;">News</a></li>
 					<!-- <li><a href="styleguide.html">Styleguide</a></li> -->
 					<li class="menu-item-has-children">
-						<a href="help.html" class="text-success" style="font-weight: 600;">Help<em class="mdi mdi-chevron-down"></em></a>
+						<a href="help.html"  style="font-weight: 600;">Help<em class="mdi mdi-chevron-down"></em></a>
 						<ul class="sub-menu">
 							<li><a href="help.html">Help &amp; Support</a></li>
 							<li><a href="contact.html">Contact Details</a></li>
@@ -59,7 +59,7 @@
 					</li>
                     {% if not request.user.is_authenticated %}
                     <li class="menu-item-has-children">
-						<a class="text-success" style="font-weight: 600;">Login<em class="mdi mdi-chevron-down"></em></a>
+						<a  style="font-weight: 600;">Login<em class="mdi mdi-chevron-down"></em></a>
 						<ul class="sub-menu">
 							<li><a href="{% url 'accounts:innovator_login' %}">Login as an Innovator</a></li>
 							<li><a href="{% url 'accounts:moderator_login' %}">Login as a Moderator</a></li>
@@ -70,7 +70,7 @@
 						<a href="account-overview.html">
                             <em class="mdi mdi-account-outline"></em> 
                             <span class="account-details">
-                                <span class="account-name text-success" style="font-weight: 600;">
+                                <span class="account-name" style="font-weight: 600;">
                                     {% if request.user.is_authenticated %}
                                     {{ request.user.username }}
                                     {% else %}
@@ -94,7 +94,7 @@
 					</li>
                     {% if request.user.is_authenticated %}
                     <li class="account-logout" style="margin-left: 20px;">
-                        <a href="{% url 'accounts:sign_out' %}" class="text-success" style="font-weight: 600;">
+                        <a href="{% url 'accounts:sign_out' %}"  style="font-weight: 600;">
                             <i style="font-size: 24px;" class="fa-solid fa-right-from-bracket"></i>
                             Logout
                         </a>
