@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
-from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdateUserForm
+from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -191,8 +191,8 @@ def profile(request):
     if not request.user.is_authenticated:
         return redirect('accounts:innovator_login')
     try:
-        user = Innovator.objects.get(user__username=request.user.username)
-    except Innovator.DoesNotExist:
+        user = BaseUser.objects.get(username=request.user.username)
+    except BaseUser.DoesNotExist:
         return HttpResponse('User Not Found!')
     # else:
     #     user = BaseUser.objects.get(username=request.user.username)
@@ -204,11 +204,9 @@ def edit_profile(request):
     if not request.user.is_authenticated:
         return redirect('accounts:innovator_login')
     try:
-        user = Innovator.objects.get(user__username=request.user.username)
-    except Innovator.DoesNotExist:
+        user = BaseUser.objects.get(username=request.user.username)
+    except BaseUser.DoesNotExist:
         return HttpResponse('User Not Found!')
-    if request.method == 'POST':
-        user_profile = UpdateUserForm(request.POST, request.FILES, instance=request.user)
     return render(request, 'accounts/edit_profile.html', {
         'user': user
     })
@@ -229,3 +227,16 @@ def resend_email_activation(request):
     from_email = settings.EMAIL_HOST_USER
     send_mail(subject, message, from_email, to_email, fail_silently=True)
     return redirect('accounts:activation_sent')
+
+def edit_personal_info(request):
+    if request.method == 'POST':
+        user_p_info = UpdatePersonalProfileForm(request.POST, request.FILES, instance=request.user)
+        if user_p_info.is_valid():
+            user_p_info.save()
+            return redirect('accounts:profile')
+    else:
+        user_p_info = UpdatePersonalProfileForm()
+    return render(request, 'accounts/edit_profile.html', {
+        'user': BaseUser.objects.get(user__username=request.user.username),
+        'user_p_info': user_p_info
+    })

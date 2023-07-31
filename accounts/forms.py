@@ -322,7 +322,7 @@ class CustomPasswordResetForm(PasswordResetForm):
         print('COOL NIGGA')
         password_validation.validate_password(password2, self.user)
         return password2
-class UpdateUserForm(forms.ModelForm):
+class UpdatePersonalProfileForm(forms.ModelForm):
     phone_num = PhoneNumberField(widget=forms.TextInput(), error_messages={
                 'required': 'Please enter your phone.'
             }, required=True
