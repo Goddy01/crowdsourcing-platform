@@ -220,8 +220,8 @@ def resend_email_activation(request):
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
         'token': account_activation_token.make_token(user),
     })
-    to_email = [request.user.user.email]
-    context['firstname'] = request.user.user.first_name
+    to_email = [request.user.email]
+    context['firstname'] = request.user.first_name
     from_email = settings.EMAIL_HOST_USER
     send_mail(subject, message, from_email, to_email, fail_silently=True)
     return redirect('accounts:activation_sent')

@@ -119,7 +119,7 @@
                         <a href="{% url 'accounts:edit_profile' %}" class="btn btn-outline-success fw-bolder fs-7 px-4 py-2 mt-3 rounded-pill">Edit Profile</a>
                         {% if not user.user.signup_confirmation %}
                         <div class="mb-5">
-                            <a href="{% url 'accounts:edit_profile' %}" class="request-email-btn btn fw-bolder fs-7 py-2 mt-3 bg-success text-white">Resend email confirmation</a>
+                            <a href="{% url 'accounts:resend_email_activation' %}" class="request-email-btn btn fw-bolder fs-7 py-2 mt-3 bg-success text-white">Resend email confirmation</a>
                         </div>
             {% endif %}
                     </div>
