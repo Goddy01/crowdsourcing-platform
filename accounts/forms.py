@@ -6,6 +6,7 @@ from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 from django.utils.translation import gettext_lazy as _
 from social_django.models import UserSocialAuth
 from django.db import transaction
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class BaseUserSignUpForm(UserCreationForm):
@@ -29,10 +30,9 @@ class BaseUserSignUpForm(UserCreationForm):
                 'required': 'Please enter your email.'
             }
         )
-    phone_num = forms.CharField(
-            error_messages={
+    phone_num = forms.PhoneNumberField(widget=forms.TextInput(), error_messages={
                 'required': 'Please enter your phone.'
-            }
+            }, required=True
         )
     
     password1 = forms.CharField(
@@ -92,10 +92,9 @@ class InnovatorSignUpForm(UserCreationForm):
                 'required': 'Please enter your email.'
             }
         )
-    phone_num = forms.CharField(
-            error_messages={
+    phone_num = forms.PhoneNumberField(widget=forms.TextInput(), error_messages={
                 'required': 'Please enter your phone.'
-            }
+            }, required=True
         )
     password1 = forms.CharField(
         widget=forms.PasswordInput,
@@ -165,10 +164,9 @@ class ModeratorSignUpForm(UserCreationForm):
                 'required': 'Please enter your email.'
             }
         )
-    phone_num = forms.CharField(
-            error_messages={
+    phone_num = forms.PhoneNumberField(widget=forms.TextInput(), error_messages={
                 'required': 'Please enter your phone.'
-            }
+            }, required=True
         )
     password1 = forms.CharField(
         widget=forms.PasswordInput,
@@ -325,26 +323,10 @@ class CustomPasswordResetForm(PasswordResetForm):
         password_validation.validate_password(password2, self.user)
         return password2
 class UpdateUserForm(forms.ModelForm):
-    username = forms.CharField(max_length=100,
-                               required=True,
-                               widget=forms.TextInput())
-    email = forms.EmailField(required=True,
-                             widget=forms.TextInput())
-    first_name = forms.CharField(max_length=100,
-                               required=True,
-                               widget=forms.TextInput())
-    last_name = forms.CharField(required=True,
-                             widget=forms.TextInput())
-    middle_name = forms.CharField(max_length=100,
-                               required=False,
-                               widget=forms.TextInput())
-    date_of_birth = forms.CharField(required=False,
-                             widget=forms.TextInput())
-    # pfp = forms.ImageField(max_length=100,
-    #                            required=False,
-    #                            widget=forms.TextInput())
-    phone_num = forms.EmailField(required=True,
-                             widget=forms.TextInput())
+    phone_num = forms.PhoneNumberField(widget=forms.TextInput(), error_messages={
+                'required': 'Please enter your phone.'
+            }, required=True
+        )
 
     class Meta:
         model = BaseUser
