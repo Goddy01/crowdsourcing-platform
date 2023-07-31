@@ -226,9 +226,9 @@ def edit_profile(request):
         user_s_info = UpdateUserSocialsForm()
     return render(request, 'accounts/edit_profile.html', {
         'user': user,
-        'user_p_info': user_p_info,
-        'user_r_info': user_r_info,
-        'user_s_info': user_s_info
+        'user_p_info_form': user_p_info,
+        'user_r_info_form': user_r_info,
+        'user_s_info_form': user_s_info
     })
 
 def resend_email_activation(request):
