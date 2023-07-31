@@ -25,7 +25,7 @@ def get_username(strategy, details, backend, user=None, *args, **kwargs):
 
 def save_profile(backend, user, response, *args, **kwargs):
     # if Innovator.objects.filter(user_id=user.id).count() == 0 :
-    innovator = Innovator.objects.create(
+    innovator = Innovator.objects.get_or_create(
         is_project_mgr=True, 
         user=user, 
         # user__signup_confirmation=True

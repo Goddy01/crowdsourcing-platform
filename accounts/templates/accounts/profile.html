@@ -52,56 +52,40 @@
                 .account-errors {
                 position: absolute;
                 right: -110px;
-                top: 11rem;
+                top: 10rem;
                 z-index: 5
                 }
                 
             }
-
-            .request-email-btn {
-                /* position: absolute;
-                right: 100px;
-                top: 5rem;
-                z-index: 5 */
-            }
-            /* .account-errors li {
-                margin-top: 100px;
-            } */
         </style>
     </head>
         <div  class="main-content">
             <!--########################## Profile Starts Here ############################# -->
-            <ul class="">
-                <li>
-                    {% if not user.user.signup_confirmation %}
+            <!-- <ul class=""> -->
+                <ul>
+                    {% if not user.user.signup_confirmation or not user.user.is_verified %}
                         <div class="col-lg-8 col-xl-5 toastDiv mt-5 mx-auto">
                             <!-- Then put toasts within -->
                         <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto">
                         <div class="toast-body text-white m-2">
-                            <p class="text-center">You have not clicked on your confirmation email. Go to your 
+                            {% if not user.user.signup_confirmation %}
+                            <li class="" style="list-style: disc;">You have not clicked on your confirmation email. Go to your 
                                 <a href="{% url 'accounts:profile' %}" class="text-white text-decoration-underline">profile page</a>
                                  to request for a new one.
-                            </p>
-                        </div>
-                        </div>
-                    </div>
-                    {% endif %}
-                </li>
-                <li>
-                    {% if not user.user.is_verified %}
-                    <div class="col-lg-8 col-xl-5 account-errors mt-5">
-                        <!-- Then put toasts within -->
-                        <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto">
-                        <div class="toast-body text-white m-2">
-                            <p class="text-center">Provide your details in the 
+                            </li>
+                            {% endif %}
+                            {% if not user.user.is_verified %}
+                            <li class="" style="list-style: disc;">Provide your details in the 
                                 <a href="{% url 'accounts:edit_profile' %}" class="text-white text-decoration-underline">edit profile page</a>
-                                to get verified and have innovators' privileges.</p>
-                            </div>
+                                to get verified and have innovators' privileges.
+                            </li>
+                            {% endif %}
+                        </div>
                         </div>
                     </div>
                     {% endif %}
-                </li>
-            </ul>
+                </ul>
+            <!-- </ul> -->
             
 
             <div class="profile-head">
@@ -505,7 +489,7 @@
   
     setTimeout(function() {
       $('.toast').toast('hide')
-    }, 5000)
+    }, 8000)
 </script>
 
 <script src="{% static 'accounts/js/jquery-3.2.1.min.js' %}"></script>
