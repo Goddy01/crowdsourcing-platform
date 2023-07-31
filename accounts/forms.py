@@ -334,4 +334,4 @@ class UpdateUserForm(forms.ModelForm):
 class UpdateUserResidentialInfo(forms.ModelForm):
     class Meta:
         model = BaseUser
-        fields = ['city', 'state', 'country', 'address', ]
+        fields = ['city', 'state', 'country', 'address', 'zipcode']
