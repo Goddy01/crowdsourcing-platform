@@ -89,7 +89,7 @@
 							<li><a href="account-investments.html">Investments</a></li>
 							<li><a href="account-statement.html">Statement</a></li>
 							<li><a href="account-funding.html">Funding</a></li>
-							<li><a href="account-profile.html">Profile</a></li>
+							<li><a href="{% url 'accounts:profile' %}">Profile</a></li>
 						</ul>
 					</li>
                     {% if request.user.is_authenticated %}

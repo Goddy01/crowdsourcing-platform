@@ -94,36 +94,28 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous" />
 
 <div class="container">
-    <ul class="errors-list">
-        <li>
-            {% if not user.user.signup_confirmation %}
-                <div class="col-lg-8 col-xl-5 toastDiv mt-5 mx-auto">
-                    <!-- Then put toasts within -->
-                <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto">
-                <div class="toast-body text-white m-2">
-                    <p class="text-center">Confirm your email address to have innovator's privilege. Go to your 
-                        <a href="{% url 'accounts:profile' %}" class="text-white text-decoration-underline">profile page </a>
-                         to do that.
-                    </p>
-                </div>
-                </div>
-            </div>
-            {% endif %}
-        </li>
-        <li>
-            {% if not user.user.is_verified %}
-            <div class="col-lg-8 col-xl-5 account-errors mt-5">
+    <ul>
+        {% if not user.user.signup_confirmation or not user.user.is_verified %}
+            <div class="col-lg-8 col-xl-5 toastDiv mt-5 mx-auto">
                 <!-- Then put toasts within -->
-                <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto">
-                <div class="toast-body text-white m-2">
-                    <p class="text-center">Provide your details in the 
-                        <a href="{% url 'accounts:edit_profile' %}" class="text-white text-decoration-underline">edit profile page</a>
-                        to get verified.</p>
-                    </div>
-                </div>
+            <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto">
+            <div class="toast-body text-white m-2">
+                {% if not user.user.signup_confirmation %}
+                <li class="" style="list-style: disc;">You have not clicked on your confirmation email. Go to your 
+                    <a href="{% url 'accounts:profile' %}" class="text-white text-decoration-underline">profile page</a>
+                     to request for a new one.
+                </li>
+                {% endif %}
+                {% if not user.user.is_verified %}
+                <li class="" style="list-style: disc;">Provide your details in the 
+                    <a href="{% url 'accounts:edit_profile' %}" class="text-white text-decoration-underline">edit profile page</a>
+                    to get verified and have innovators' privileges.
+                </li>
+                {% endif %}
             </div>
-            {% endif %}
-        </li>
+            </div>
+        </div>
+        {% endif %}
     </ul>
 <div class="row">
 <div class="col-12">
@@ -180,7 +172,7 @@
 <label class="form-label">Phone number 
     <span class="text-danger">*</span>
 </label>
-<input type="tel" class="form-control" placeholder="" aria-label="Phone number" value="(333) 000 555">
+<input type="tel" class="form-control" placeholder="" aria-label="Phone number" value= {% if user.user.phone_num %}"{{ user.user.phone_num }}" {% else %} "" {% endif %}>
 </div>
 
 <div class="col-md-6">
