@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
-from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm
+from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm, UpdateUserResidentialInfoForm, UpdateUserSocialsForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -207,8 +207,24 @@ def edit_profile(request):
         user = BaseUser.objects.get(username=request.user.username)
     except BaseUser.DoesNotExist:
         return HttpResponse('User Not Found!')
+    if request.method == 'POST':
+        user_p_info = UpdatePersonalProfileForm(request.POST, request.FILES, instance=request.user)
+        user_r_info = UpdateUserResidentialInfoForm(request.POST)
+        user_s_info = UpdateUserSocialsForm(request.POST)
+        if user_p_info.is_valid() and user_r_info.is_valid() and user_s_info.is_valid():
+            user_p_info.save()
+            user_r_info.save()
+            user_s_info.save()
+            return redirect('accounts:profile')
+    else:
+        user_p_info = UpdatePersonalProfileForm()
+        user_r_info = UpdateUserResidentialInfoForm()
+        user_s_info = UpdateUserSocialsForm()
     return render(request, 'accounts/edit_profile.html', {
-        'user': user
+        'user': user,
+        'user_p_info': user_p_info,
+        'user_r_info': user_r_info,
+        'user_s_info': user_s_info
     })
 
 def resend_email_activation(request):
@@ -227,16 +243,3 @@ def resend_email_activation(request):
     from_email = settings.EMAIL_HOST_USER
     send_mail(subject, message, from_email, to_email, fail_silently=True)
     return redirect('accounts:activation_sent')
-
-def edit_personal_info(request):
-    if request.method == 'POST':
-        user_p_info = UpdatePersonalProfileForm(request.POST, request.FILES, instance=request.user)
-        if user_p_info.is_valid():
-            user_p_info.save()
-            return redirect('accounts:profile')
-    else:
-        user_p_info = UpdatePersonalProfileForm()
-    return render(request, 'accounts/edit_profile.html', {
-        'user': BaseUser.objects.get(user__username=request.user.username),
-        'user_p_info': user_p_info
-    })
