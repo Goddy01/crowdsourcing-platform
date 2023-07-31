@@ -156,28 +156,28 @@
         <label class="form-label">First Name 
             <span class="text-danger">*</span>
         </label>
-        <input type="text" class="form-control" placeholder="" aria-label="First name" value="{{ user.user.first_name }}">
+        <input type="text" class="form-control" placeholder="" aria-label="First name" value="{{ user.first_name }}">
         </div>
 
         <div class="col-md-6">
         <label class="form-label">Last Name 
             <span class="text-danger">*</span>
         </label>
-        <input type="text" class="form-control" placeholder="" aria-label="Last name" value="{{ user.user.last_name }}">
+        <input type="text" class="form-control" placeholder="" aria-label="Last name" value="{{ user.last_name }}">
         </div>
 
         <div class="col-md-6">
         <label class="form-label">Middle Name 
             <span class="text-danger">*</span>
         </label>
-        <input type="text" class="form-control" placeholder="" aria-label="Middle name" value={% if user.user.middle_name %} "{{ user.user.middle_name }}" {% else %} "" {% endif %}>
+        <input type="text" class="form-control" placeholder="" aria-label="Middle name" value={% if user.middle_name %} "{{ user.middle_name }}" {% else %} "" {% endif %}>
         </div>
 
         <div class="col-md-6">
         <label class="form-label">Username 
             <span class="text-danger">*</span>
         </label>
-        <input type="text" class="form-control" placeholder="" aria-label="Username" value="{{ user.user.username }}">
+        <input type="text" class="form-control" placeholder="" aria-label="Username" value="{{ user.username }}">
         </div>
 
         <div class="col-md-6">
@@ -191,7 +191,7 @@
         <label class="form-label">Phone number 
             <span class="text-danger">*</span>
         </label>
-        <input type="tel" class="form-control" placeholder="" aria-label="Phone number" value= {% if user.user.phone_num %}"{{ user.user.phone_num }}" {% else %} "" {% endif %}>
+        <input type="tel" class="form-control" placeholder="" aria-label="Phone number" value= {% if user.phone_num %}"{{ user.phone_num }}" {% else %} "" {% endif %}>
         </div>
 
         <div class="d-flex justify-content-start">
@@ -199,7 +199,7 @@
                 <label for="inputEmail4" class="form-label">Email 
                     <span class="text-danger">*</span>
                 </label>
-                <input type="email" class="form-control" id="inputEmail4" value="{{ user.user.email }}">
+                <input type="email" class="form-control" id="inputEmail4" value="{{ user.email }}">
                 </div>    
         </div>
         <button type="submit" class="btn btn-success btn-lg">Save Changes</button>
@@ -217,28 +217,28 @@
         <label class="form-label">City 
             <span class="text-danger">*</span>
         </label>
-        <input type="text" class="form-control" placeholder="" aria-label="City" value={% if user.user.city %} "{{ user.user.city }}" {% else %} "" {% endif %}>
+        <input type="text" class="form-control" placeholder="" aria-label="City" value={% if user.city %} "{{ user.city }}" {% else %} "" {% endif %}>
         </div>
         
         <div class="col-md-6">
         <label class="form-label">State 
             <span class="text-danger">*</span>
         </label>
-        <input type="text" class="form-control" placeholder="" aria-label="State" value={% if user.user.state %} "{{ user.user.state }}" {% else %} "" {% endif %}>
+        <input type="text" class="form-control" placeholder="" aria-label="State" value={% if user.state %} "{{ user.state }}" {% else %} "" {% endif %}>
         </div>
         
         <div class="col-md-6">
         <label class="form-label">Country 
             <span class="text-danger">*</span>
         </label>
-        <input type="text" class="form-control" placeholder="" aria-label="Country" value={% if user.user.country %} "{{ user.user.country }}" {% else %} "" {% endif %}>
+        <input type="text" class="form-control" placeholder="" aria-label="Country" value={% if user.country %} "{{ user.country }}" {% else %} "" {% endif %}>
         </div>
         
         <div class="col-md-6">
         <label class="form-label">Address 
             <span class="text-danger">*</span>
         </label>
-        <input type="text" class="form-control" placeholder="" aria-label="Address" value={% if user.user.address %} "{{ user.user.address }}" {% else %} "" {% endif %}>
+        <input type="text" class="form-control" placeholder="" aria-label="Address" value={% if user.address %} "{{ user.address }}" {% else %} "" {% endif %}>
         </div>
         <button type="submit" class="btn btn-success btn-lg">Save Changes</button>
     </form>
@@ -261,28 +261,28 @@
     <label class="form-label"><i class="fab fa-fw fa-facebook me-2 text-facebook"></i>Facebook 
         <span class="text-danger">*</span>
     </label>
-    <input type="text" class="form-control" placeholder="" aria-label="Facebook" value="{{ user.user.facebook }}">
+    <input type="text" class="form-control" placeholder="" aria-label="Facebook" value="{{ user.facebook }}">
     </div>
 
     <div class="col-md-6">
     <label class="form-label"><i class="fab fa-fw fa-twitter text-twitter me-2"></i>Twitter 
         <span class="text-danger">*</span>
     </label>
-    <input type="text" class="form-control" placeholder="" aria-label="Twitter" value="{{ user.user.twitter }}">
+    <input type="text" class="form-control" placeholder="" aria-label="Twitter" value="{{ user.twitter }}">
     </div>
 
     <div class="col-md-6">
     <label class="form-label"><i class="fab fa-fw fa-linkedin-in text-linkedin me-2"></i>Linkedin 
         <span class="text-danger">*</span>
     </label>
-    <input type="text" class="form-control" placeholder="" aria-label="Linkedin" value="{{ user.user.linkedin }}">
+    <input type="text" class="form-control" placeholder="" aria-label="Linkedin" value="{{ user.linkedin }}">
     </div>
 
     <div class="col-md-6">
     <label class="form-label"><i class="fab fa-fw fa-instagram text-instagram me-2"></i>Instagram 
         <span class="text-danger">*</span>
     </label>
-    <input type="text" class="form-control" placeholder="" aria-label="Instragram" value="{{ user.user.instagram }}">
+    <input type="text" class="form-control" placeholder="" aria-label="Instragram" value="{{ user.instagram }}">
     </div>
     <button type="submit" class="btn btn-success btn-lg">Save Changes</button>
 </form>
