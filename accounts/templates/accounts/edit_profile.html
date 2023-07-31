@@ -95,18 +95,18 @@
 
 <div class="container">
     <ul>
-        {% if not user.user.signup_confirmation or not user.user.is_verified %}
+        {% if not user.signup_confirmation or not user.is_verified %}
             <div class="col-lg-8 col-xl-5 toastDiv mt-5 mx-auto">
                 <!-- Then put toasts within -->
             <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto">
             <div class="toast-body text-white m-2">
-                {% if not user.user.signup_confirmation %}
+                {% if not user.signup_confirmation %}
                 <li class="" style="list-style: disc;">You have not clicked on your confirmation email. Go to your 
                     <a href="{% url 'accounts:profile' %}" class="text-white text-decoration-underline">profile page</a>
                      to request for a new one.
                 </li>
                 {% endif %}
-                {% if not user.user.is_verified %}
+                {% if not user.is_verified %}
                 <li class="" style="list-style: disc;">Provide your details in the 
                     <a href="{% url 'accounts:edit_profile' %}" class="text-white text-decoration-underline">edit profile page</a>
                     to get verified and have innovators' privileges.
