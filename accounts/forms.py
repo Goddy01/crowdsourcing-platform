@@ -7,7 +7,6 @@ from django.utils.translation import gettext_lazy as _
 from social_django.models import UserSocialAuth
 from django.db import transaction
 from phonenumber_field.formfields import PhoneNumberField
-from django_countries
 
 
 class BaseUserSignUpForm(UserCreationForm):

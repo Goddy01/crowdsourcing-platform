@@ -81,6 +81,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     country =                       CountryField(max_length=255, null=True, blank=True)
     address =                       models.CharField(max_length=128, blank=True, null=True)
     phone_num =                     PhoneNumberField(null=True, blank=True, verbose_name="Phone Number", unique=True)
+    zipcode =                       models.IntegerField(null=True, blank=True)
     date_joined =                   models.DateTimeField(auto_now_add=True)
     last_login =                    models.DateTimeField(auto_now=True)
     updated_at =                    models.DateTimeField(auto_now=True)
