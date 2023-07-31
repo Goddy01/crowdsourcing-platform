@@ -130,8 +130,9 @@
 
 <div class="col-xxl-12 mb-5 mb-xxl-0">
 <div class="bg-secondary-soft px-4 py-5 rounded">
-<div class="row g-3 d-flex justify-content-center">
+<div class="row g-3 d-flex justify-content-center mb-5">
     <h4 class="mb-4 mt-0 text-success">Personal Information</h4>
+    <form method="post" action="" enctype="multipart/form-data">
     <!-- <div class="col-xxl-4"> -->
         <!-- <div class="d-flex justify-content-center"> -->
         <!-- <div class="row g-3"> -->
@@ -201,45 +202,46 @@
                 <input type="email" class="form-control" id="inputEmail4" value="{{ user.user.email }}">
                 </div>    
         </div>
-
-
+        <button type="submit" class="btn btn-success btn-lg">Save Changes</button>
+        </form>
 
 </div> 
 
 
 </div>
 <div class="bg-secondary-soft px-4 py-5 rounded mt-5">
-    <div class="row g-3">
+    <form class="row g-3">
     <h4 class="mb-4 mt-0 text-success">Residential Information</h4>
-    
-    <div class="col-md-6">
-    <label class="form-label">City 
-        <span class="text-danger">*</span>
-    </label>
-    <input type="text" class="form-control" placeholder="" aria-label="City" value={% if user.user.city %} "{{ user.user.city }}" {% else %} "" {% endif %}>
-    </div>
-    
-    <div class="col-md-6">
-    <label class="form-label">State 
-        <span class="text-danger">*</span>
-    </label>
-    <input type="text" class="form-control" placeholder="" aria-label="State" value={% if user.user.state %} "{{ user.user.state }}" {% else %} "" {% endif %}>
-    </div>
-    
-    <div class="col-md-6">
-    <label class="form-label">Country 
-        <span class="text-danger">*</span>
-    </label>
-    <input type="text" class="form-control" placeholder="" aria-label="Country" value={% if user.user.country %} "{{ user.user.country }}" {% else %} "" {% endif %}>
-    </div>
-    
-    <div class="col-md-6">
-    <label class="form-label">Address 
-        <span class="text-danger">*</span>
-    </label>
-    <input type="text" class="form-control" placeholder="" aria-label="Address" value={% if user.user.address %} "{{ user.user.address }}" {% else %} "" {% endif %}>
-    </div>
-    
+    <form method="post" action="" enctype="multipart/form-data">
+        <div class="col-md-6">
+        <label class="form-label">City 
+            <span class="text-danger">*</span>
+        </label>
+        <input type="text" class="form-control" placeholder="" aria-label="City" value={% if user.user.city %} "{{ user.user.city }}" {% else %} "" {% endif %}>
+        </div>
+        
+        <div class="col-md-6">
+        <label class="form-label">State 
+            <span class="text-danger">*</span>
+        </label>
+        <input type="text" class="form-control" placeholder="" aria-label="State" value={% if user.user.state %} "{{ user.user.state }}" {% else %} "" {% endif %}>
+        </div>
+        
+        <div class="col-md-6">
+        <label class="form-label">Country 
+            <span class="text-danger">*</span>
+        </label>
+        <input type="text" class="form-control" placeholder="" aria-label="Country" value={% if user.user.country %} "{{ user.user.country }}" {% else %} "" {% endif %}>
+        </div>
+        
+        <div class="col-md-6">
+        <label class="form-label">Address 
+            <span class="text-danger">*</span>
+        </label>
+        <input type="text" class="form-control" placeholder="" aria-label="Address" value={% if user.user.address %} "{{ user.user.address }}" {% else %} "" {% endif %}>
+        </div>
+        <button type="submit" class="btn btn-success btn-lg">Save Changes</button>
+    </form>
     </div> 
     
     
