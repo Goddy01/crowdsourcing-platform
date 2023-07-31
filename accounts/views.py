@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
-from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm
+from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdateUserForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -207,6 +207,8 @@ def edit_profile(request):
         user = Innovator.objects.get(user__username=request.user.username)
     except Innovator.DoesNotExist:
         return HttpResponse('User Not Found!')
+    if request.method == 'POST':
+        user_profile = UpdateUserForm(request.POST, request.FILES, instance=request.user)
     return render(request, 'accounts/edit_profile.html', {
         'user': user
     })

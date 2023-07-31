@@ -333,19 +333,19 @@ class UpdateUserForm(forms.ModelForm):
     first_name = forms.CharField(max_length=100,
                                required=True,
                                widget=forms.TextInput())
-    last_name = forms.EmailField(required=True,
+    last_name = forms.CharField(required=True,
                              widget=forms.TextInput())
     middle_name = forms.CharField(max_length=100,
                                required=False,
                                widget=forms.TextInput())
-    date_of_birth = forms.EmailField(required=False,
+    date_of_birth = forms.CharField(required=False,
                              widget=forms.TextInput())
-    pfp = forms.CharField(max_length=100,
-                               required=False,
-                               widget=forms.TextInput())
+    # pfp = forms.ImageField(max_length=100,
+    #                            required=False,
+    #                            widget=forms.TextInput())
     phone_num = forms.EmailField(required=True,
                              widget=forms.TextInput())
 
     class Meta:
         model = BaseUser
-        fields = ['username', 'email', 'last_name', 'first_name', 'middle_name', 'date_of_birth', 'pfp', 'phone_num']
+        fields = ['username', 'email', 'last_name', 'first_name', 'middle_name', 'date_of_birth', 'phone_num']
