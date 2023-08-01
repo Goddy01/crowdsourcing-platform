@@ -217,6 +217,7 @@ def edit_profile(request):
             'middle_name': request.POST.get('middle_name'),
             'pfp': request.POST.get('pfp'),
             'phone_num': request.POST.get('phone_num'),
+            'date_of_birth': request.POST.get('date_of_birth')
         }
         user_r_data = {
             'city': request.POST.get('city'),
