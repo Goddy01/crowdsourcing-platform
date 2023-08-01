@@ -75,7 +75,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     date_of_birth =                 models.DateField(null=True, blank=True)
     email =                         models.EmailField(max_length=128, unique=True, blank=True)
     bio =                           models.CharField(max_length=100, null=True, blank=True)
-    pfp =                           models.ImageField(upload_to=upload_location_pfp, blank=True, null=True, default='/static/images/default_profile_image.jpg')
+    pfp =                           models.ImageField(upload_to=upload_location_pfp, blank=True, null=True, default='static/images/default_profile_image.jpg')
     # id_card =                       models.ImageField(upload_to=upload_location_id_card, blank=True, null=True)
     city =                          models.CharField(max_length=128, blank=True, null=True)
     state =                         models.CharField(max_length=128, blank=True, null=True)
@@ -108,21 +108,21 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.username
     
-    # @property
-    # def get_photo_url(self):
-    #     if self.pfp and hasattr(self.pfp, 'url'):
-    #         return self.pfp.url
-    #     else:
-    #         return "/static/images/default_profile_image.jpg"
+    @property
+    def get_photo_url(self):
+        if self.pfp and hasattr(self.pfp, 'url'):
+            return self.pfp.url
+        else:
+            return "static/images/default_profile_image.jpg"
     
     def save(self, *args, **kwargs):
         """Overwrites the base save method"""
         super().save(*args, **kwargs)
-        img = Image.open(self.pfp)
+        img = Image.open(self.get_photo_url)
         if img.height > 300 or img.width > 300:
             output_size = (300, 300) # height, width
             img.thumbnail(output_size)
-            img.save(self.pfp.path)
+            img.save(self.get_photo_url.path)
     
     def get_full_name(self):
         '''Returns the first_name plus the last_name, with a space in between.'''
