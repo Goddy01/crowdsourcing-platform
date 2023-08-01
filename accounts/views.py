@@ -239,11 +239,28 @@ def edit_profile(request):
             print('USER_R_INFO ERRORS: ', user_r_info.errors.as_data())
             print('USER_S_INFO ERRORS: ', user_s_info.errors.as_data())
     else:
-        user_p_info = UpdatePersonalProfileForm(instance=request.user)
-        user_r_info = UpdateUserResidentialInfoForm(instance=request.user)
+        user_p_info = BaseUser.objects.get(username=request.user.username)
+        user_p_info = UpdatePersonalProfileForm(instance=request.user, initial= {
+            'username': user_p_info.username,
+            'email': request.POST.get('email'),
+            'first_name': request.POST.get('first_name'),
+            'last_name': request.POST.get('last_name'),
+            'middle_name': request.POST.get('middle_name'),
+            'pfp': request.POST.get('pfp'),
+            'phone_num': request.POST.get('phone_num'),
+            'date_of_birth': request.POST.get('date_of_birth')
+        })
+        user_r_info = UpdateUserResidentialInfoForm(instance=request.user, initial= {
+            'city': request.POST.get('city'),
+            'state': request.POST.get('state'),
+            'country': request.POST.get('country'),
+            'address': request.POST.get('address'),
+            'zipcode': request.POST.get('zipcode')
+        })
         user_s_info = UpdateUserSocialsForm(instance=request.user)
     return render(request, 'accounts/edit_profile.html', {
-        'user': user,
+        'user_form': user,
+        'user1': BaseUser.objects.get(username=request.user.username),
         'user_p_info_form': user_p_info,
         'user_r_info_form': user_r_info,
         'user_s_info_form': user_s_info

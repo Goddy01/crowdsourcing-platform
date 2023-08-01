@@ -257,35 +257,30 @@
         
         <div class="col-md-6">
         <label class="form-label">First Name 
-            <span class="text-danger">*</span>
         </label>
-        <input type="text" class="form-control" placeholder="" aria-label="First name" value="{{ user.first_name }}" name="first_name" id="first_name">
+        <input type="text" class="form-control" placeholder="" aria-label="First name" value="{{ user_form.first_name }}" name="first_name" id="first_name">
         </div>
 
         <div class="col-md-6">
         <label class="form-label">Last Name 
-            <span class="text-danger">*</span>
         </label>
         <input type="text" class="form-control" placeholder="" aria-label="Last name" value="{{ user.last_name }}" name="last_name" id="last_name">
         </div>
 
         <div class="col-md-6">
         <label class="form-label">Middle Name 
-            <span class="text-danger">*</span>
         </label>
         <input type="text" class="form-control" placeholder="" aria-label="Middle name" value={% if user.middle_name %} "{{ user.middle_name }}" {% else %} "" {% endif %} name="middle_name" id="middle_name">
         </div>
 
         <div class="col-md-6">
         <label class="form-label">Username 
-            <span class="text-danger">*</span>
         </label>
         <input type="text" class="form-control" placeholder="" aria-label="Username" value="{{ user.username }}" name="username" id="username">
         </div>
 
         <div class="col-md-6">
         <label class="form-label">Date of Birth 
-            <span class="text-danger">*</span>
         </label>
         <small>({{ user.date_of_birth }})</small>
         <input type="date" class="form-control" placeholder="" aria-label="DOB" name="date_of_birth" id="date_of_birth" value="{{ user.date_of_birth }}">
@@ -293,7 +288,6 @@
 
         <div class="col-md-6">
         <label class="form-label">Phone number 
-            <span class="text-danger">*</span>
         </label>
         <input type="tel" class="form-control" placeholder="" aria-label="Phone number" value= {% if user.phone_num %}"{{ user.phone_num }}" {% else %} "" {% endif %} name="phone_num" id="phone_num">
         </div>
@@ -301,7 +295,6 @@
         <div class="d-flex justify-content-start">
             <div class="col-md-6">
                 <label for="inputEmail4" class="form-label">Email 
-                    <span class="text-danger">*</span>
                 </label>
                 <input type="email" class="form-control" value="{{ user.email }}" name="email" id="email">
                 </div>    
@@ -317,38 +310,32 @@
     <!-- <form class="row g-3"> -->
     <h4 class="mb-4 mt-0 text-success">Residential Information</h4>
     <form method="post" action="{% url 'accounts:edit_profile' %}" class="row g-3">
-        {% csrf_token %}
         <div class="col-md-6">
         <label class="form-label">City 
-            <span class="text-danger">*</span>
         </label>
         <input type="text" class="form-control" placeholder="" aria-label="City" value={% if user.city %} "{{ user.city }}" {% else %} "" {% endif %} name="city" id="city">
         </div>
         
         <div class="col-md-6">
         <label class="form-label">State 
-            <span class="text-danger">*</span>
         </label>
         <input type="text" class="form-control" placeholder="" aria-label="State" value={% if user.state %} "{{ user.state }}" {% else %} "" {% endif %} name="state" id="state">
         </div>
         
         <div class="col-md-6">
         <label class="form-label">Country 
-            <span class="text-danger">*</span>
         </label>
         <input type="text" class="form-control" placeholder="" aria-label="Country" value={% if user.country %} "{{ user.country }}" {% else %} "" {% endif %} name="country" id="country">
         </div>
         
         <div class="col-md-6">
         <label class="form-label">Address 
-            <span class="text-danger">*</span>
         </label>
         <input type="text" class="form-control" placeholder="" aria-label="Address" value={% if user.address %} "{{ user.address }}" {% else %} "" {% endif %} name="address" id="address">
         </div>
         
         <div class="col-md-6">
         <label class="form-label">Zipcode 
-            <span class="text-danger">*</span>
         </label>
         <input type="text" class="form-control" placeholder="" aria-label="Address" value={% if user.zipcode %} "{{ user.zipcode }}" {% else %} "" {% endif %} name="zipcode" id="zipcode">
         </div>
@@ -372,28 +359,24 @@
     {% csrf_token %}
     <div class="col-md-6">
     <label class="form-label"><i class="fab fa-fw fa-facebook me-2 text-facebook"></i>Facebook 
-        <span class="text-danger">*</span>
     </label>
     <input type="text" class="form-control" placeholder="" aria-label="Facebook" value="{{ user.facebook }}" name="facebook" id="facebook">
     </div>
 
     <div class="col-md-6">
     <label class="form-label"><i class="fab fa-fw fa-twitter text-twitter me-2"></i>Twitter 
-        <span class="text-danger">*</span>
     </label>
     <input type="text" class="form-control" placeholder="" aria-label="Twitter" value="{{ user.twitter }}" name="twitter" id="twitter">
     </div>
 
     <div class="col-md-6">
     <label class="form-label"><i class="fab fa-fw fa-linkedin-in text-linkedin me-2"></i>Linkedin 
-        <span class="text-danger">*</span>
     </label>
     <input type="text" class="form-control" placeholder="" aria-label="Linkedin" value="{{ user.linkedin }}" name="linkedin" id="linkedin">
     </div>
 
     <div class="col-md-6">
     <label class="form-label"><i class="fab fa-fw fa-instagram text-instagram me-2"></i>Instagram 
-        <span class="text-danger">*</span>
     </label>
     <input type="text" class="form-control" placeholder="" aria-label="Instragram" value="{{ user.instagram }}" name="instagram" id="instagram">
     </div>
@@ -410,21 +393,18 @@
 <form method="post" action="" class="row g-3">
     <div class="col-md-6">
     <label for="exampleInputPassword1" class="form-label">Old password 
-        <span class="text-danger">*</span>
     </label>
     <input type="password" class="form-control" id="exampleInputPassword1">
     </div>
 
     <div class="col-md-6">
     <label for="exampleInputPassword2" class="form-label">New password 
-        <span class="text-danger">*</span>
     </label>
     <input type="password" class="form-control" id="exampleInputPassword2">
     </div>
 
     <div class="col-md-12">
     <label for="exampleInputPassword3" class="form-label">Confirm Password 
-        <span class="text-danger">*</span>
     </label>
     <input type="password" class="form-control" id="exampleInputPassword3">
     </div>
