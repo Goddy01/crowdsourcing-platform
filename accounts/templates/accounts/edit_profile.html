@@ -344,6 +344,13 @@
         </label>
         <input type="text" class="form-control" placeholder="" aria-label="Address" value={% if user.address %} "{{ user.address }}" {% else %} "" {% endif %} name="address" id="address">
         </div>
+        
+        <div class="col-md-6">
+        <label class="form-label">Zipcode 
+            <span class="text-danger">*</span>
+        </label>
+        <input type="text" class="form-control" placeholder="" aria-label="Address" value={% if user.zipcode %} "{{ user.zipcode }}" {% else %} "" {% endif %} name="zipcode" id="zipcode">
+        </div>
         <button type="submit" class="btn btn-success btn-lg">Save Changes</button>
     </form>
     <!-- </form>  -->

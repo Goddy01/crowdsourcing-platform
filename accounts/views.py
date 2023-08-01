@@ -218,8 +218,15 @@ def edit_profile(request):
             'pfp': request.POST.get('pfp'),
             'phone_num': request.POST.get('phone_num'),
         }
+        user_r_data = {
+            'city': request.POST.get('city'),
+            'state': request.POST.get('state'),
+            'country': request.POST.get('country'),
+            'address': request.POST.get('address'),
+            'zipcode': request.POST.get('zipcode')
+        }
         user_p_info = UpdatePersonalProfileForm(user_p_data, request.FILES, instance=request.user)
-        user_r_info = UpdateUserResidentialInfoForm(request.POST)
+        user_r_info = UpdateUserResidentialInfoForm(user_r_data)
         user_s_info = UpdateUserSocialsForm(request.POST)
         if user_p_info.is_valid() and user_r_info.is_valid() and user_s_info.is_valid():
             user_p_info.save()
