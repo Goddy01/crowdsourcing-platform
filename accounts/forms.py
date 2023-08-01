@@ -347,6 +347,12 @@ class UpdatePersonalProfileForm(forms.ModelForm):
         model = BaseUser
         fields = ['username', 'email', 'last_name', 'first_name', 'middle_name', 'date_of_birth', 'phone_num']
 
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if BaseUser.objects.filter(email=email):
+            raise forms.ValidationError('An email address this taken.')
+        return email
+
 class UpdateUserResidentialInfoForm(forms.ModelForm):
     city = forms.CharField(
                                required=False,
