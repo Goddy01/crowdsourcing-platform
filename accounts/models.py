@@ -14,6 +14,7 @@ from django.dispatch import receiver
 import datetime
 from django.contrib.auth.models import PermissionsMixin
 from django_countries.fields import CountryField
+from PIL import Image
 # Create your models here.
 
 
@@ -74,7 +75,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     date_of_birth =                 models.DateField(null=True, blank=True)
     email =                         models.EmailField(max_length=128, unique=True, blank=True)
     bio =                           models.CharField(max_length=100, null=True, blank=True)
-    pfp =                           models.ImageField(upload_to=upload_location_pfp, blank=True, null=True)
+    pfp =                           models.ImageField(upload_to=upload_location_pfp, blank=True, null=True, default="default_profile_image.jpg")
     id_card =                       models.ImageField(upload_to=upload_location_id_card, blank=True, null=True)
     city =                          models.CharField(max_length=128, blank=True, null=True)
     state =                         models.CharField(max_length=128, blank=True, null=True)
@@ -110,11 +111,11 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     def save(self, *args, **kwargs):
         """Overwrites the base save method"""
         super().save(*args, **kwargs)
-        # img = Image.open(self.image.path)
-        # if img.height > 300 or img.width > 300:
-        #     output_size = (300, 300) # height, width
-        #     img.thumbnail(output_size)
-        #     img.save(self.image.path)
+        img = Image.open(self.pfp.path)
+        if img.height > 300 or img.width > 300:
+            output_size = (300, 300) # height, width
+            img.thumbnail(output_size)
+            img.save(self.pfp.path)
     
     def get_full_name(self):
         '''Returns the first_name plus the last_name, with a space in between.'''
@@ -128,6 +129,13 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     def has_module_perms(self, app_label):
         """Checks if the user has permission to view the app 'app_label'"""
         return True
+    
+    @property
+    def get_photo_url(self):
+        if self.pfp and hasattr(self.pfp, 'url'):
+            return self.pfp.url
+        else:
+            return "/static/images/default_profile_image.jpg"
 
 
 # CONTRIBUTOR Model

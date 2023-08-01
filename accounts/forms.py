@@ -337,8 +337,8 @@ class UpdatePersonalProfileForm(forms.ModelForm):
                                required=False,
                                widget=forms.TextInput())
     pfp = forms.ImageField(required=False)
-    date_of_birth = forms.CharField(required=False,
-                             widget=forms.TextInput())
+    # date_of_birth = forms.CharField(required=False,
+    #                          widget=forms.TextInput())
     phone_num = PhoneNumberField(widget=forms.TextInput(), error_messages={
                 'required': 'Please enter your phone.'
             }, required=False
