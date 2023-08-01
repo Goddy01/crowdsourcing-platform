@@ -226,8 +226,8 @@ def edit_profile(request):
             'zipcode': request.POST.get('zipcode')
         }
         user_p_info = UpdatePersonalProfileForm(user_p_data, request.FILES, instance=request.user)
-        user_r_info = UpdateUserResidentialInfoForm(user_r_data)
-        user_s_info = UpdateUserSocialsForm(request.POST)
+        user_r_info = UpdateUserResidentialInfoForm(user_r_data, instance=request.user)
+        user_s_info = UpdateUserSocialsForm(request.POST, instance=request.user)
         if user_p_info.is_valid() and user_r_info.is_valid() and user_s_info.is_valid():
             user_p_info.save()
             user_r_info.save()
@@ -238,9 +238,9 @@ def edit_profile(request):
             print('USER_R_INFO ERRORS: ', user_r_info.errors.as_data())
             print('USER_S_INFO ERRORS: ', user_s_info.errors.as_data())
     else:
-        user_p_info = UpdatePersonalProfileForm()
-        user_r_info = UpdateUserResidentialInfoForm()
-        user_s_info = UpdateUserSocialsForm()
+        user_p_info = UpdatePersonalProfileForm(instance=request.user)
+        user_r_info = UpdateUserResidentialInfoForm(instance=request.user)
+        user_s_info = UpdateUserSocialsForm(instance=request.user)
     return render(request, 'accounts/edit_profile.html', {
         'user': user,
         'user_p_info_form': user_p_info,

@@ -350,7 +350,7 @@ class UpdatePersonalProfileForm(forms.ModelForm):
     def clean_email(self):
         email = self.cleaned_data.get('email')
         username = self.cleaned_data.get('username')
-        if BaseUser.objects.filter(email=email) and not BaseUser.objects.get(username=username):
+        if len(BaseUser.objects.filter(email=email)) > 1:
             raise forms.ValidationError('An email address this taken.')
         return email
 
