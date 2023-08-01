@@ -113,7 +113,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
         if self.pfp and hasattr(self.pfp, 'url'):
             return self.pfp.url
         else:
-            return "static/images/default_profile_image.jpg"
+            return "/static/images/default_profile_image.jpg"
     
     def save(self, *args, **kwargs):
         """Overwrites the base save method"""
