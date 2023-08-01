@@ -208,13 +208,17 @@ def edit_profile(request):
     except BaseUser.DoesNotExist:
         return HttpResponse('User Not Found!')
     if request.method == 'POST':
-        email = request.POST.get('email')
-        if BaseUser.objects.filter(email=email).exists()
+        # email = request.POST.get('email')
         user_p_data = {
             'username': request.POST.get('username'),
-            'email': request.POST.get('email')
+            'email': request.POST.get('email'),
+            'first_name': request.POST.get('first_name'),
+            'last_name': request.POST.get('last_name'),
+            'middle_name': request.POST.get('middle_name'),
+            'pfp': request.POST.get('pfp'),
+            'phone_num': request.POST.get('phone_num'),
         }
-        user_p_info = UpdatePersonalProfileForm(request.POST, request.FILES, instance=request.user)
+        user_p_info = UpdatePersonalProfileForm(user_p_data, request.FILES, instance=request.user)
         user_r_info = UpdateUserResidentialInfoForm(request.POST)
         user_s_info = UpdateUserSocialsForm(request.POST)
         if user_p_info.is_valid() and user_r_info.is_valid() and user_s_info.is_valid():
