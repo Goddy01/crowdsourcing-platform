@@ -226,12 +226,19 @@ def edit_profile(request):
             user_obj = user_p_info.save(commit=False)
             print('PIC: ', user_p_info.cleaned_data['pfp'])
             print('PIC: ', request.POST.get('pfp'))
-            user_obj.pfp = user_p_info.cleaned_data['pfp']
+            if user_p_info.cleaned_data['pfp']:
+                user_obj.pfp = user_p_info.cleaned_data['pfp']
+            if user_p_info.cleaned_data['date_of_birth']:
+                user_obj.date_of_birth = user_p_info.cleaned_data['date_of_birth']
             print('YESSIRRR')
             user_obj.save()
             return redirect('accounts:profile')
         else:
             print(user_p_info.errors.as_data())
+    else:
+        user_p_info = UpdatePersonalProfileForm()
+
+    
     if request.method == 'POST' and 'user_r_form' in request.POST:
         user_r_data = {
             'city': request.POST.get('city'),
@@ -246,6 +253,10 @@ def edit_profile(request):
             return redirect('accounts:profile')
         else:
             print(user_r_info.errors.as_data())
+    else:
+        user_r_info = UpdateUserResidentialInfoForm()
+    
+    
     if request.method == 'POST' and 'user_s_form' in request.POST:
         user_s_data = {
             'facebook': request.POST.get('facebook'),
@@ -260,35 +271,9 @@ def edit_profile(request):
             return redirect('accounts:profile')
         else:
             print(user_s_info.errors.as_data())
-        # else:
-        #     print('USER_P_INFO ERRORS: ', user_p_info.errors.as_data())
-        #     print('USER_R_INFO ERRORS: ', user_r_info.errors.as_data())
-        #     print('USER_S_INFO ERRORS: ', user_s_info.errors.as_data())
     else:
-        user_p_info = UpdatePersonalProfileForm(instance=request.user, initial= {
-            'username': user_info.username,
-            'email': user_info.email,
-            'first_name': user_info.first_name,
-            'last_name': user_info.last_name,
-            'middle_name': user_info.middle_name,
-            'pfp': user_info.pfp,
-            'phone_num': user_info.phone_num,
-            'date_of_birth': user_info.date_of_birth
-        })
-        user_r_info = UpdateUserResidentialInfoForm(instance=request.user, initial= {
-            'city': user_info.city,
-            'state': user_info.state,
-            'country': user_info.country,
-            'address': user_info.address,
-            'zipcode': user_info.zipcode
-        })
-        user_s_info = UpdateUserSocialsForm(instance=request.user, initial={
-            'facebook': user_info.facebook,
-            'twitter': user_info.twitter,
-            'instagram': user_info.instagram,
-            'linkedin': user_info.linkedin,
-            'website': user_info.website
-        })
+        user_s_info = UpdateUserSocialsForm()
+        
     return render(request, 'accounts/edit_profile.html', {
         'user_form': user,
         'user': user,
