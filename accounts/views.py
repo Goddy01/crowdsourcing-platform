@@ -228,7 +228,7 @@ def edit_profile(request):
             return redirect('accounts:profile')
         else:
             print(user_p_info.errors.as_data())
-    if request.method == 'POSTi' and 'user_r_form' in request.POST:
+    if request.method == 'POST' and 'user_r_form' in request.POST:
         user_r_data = {
             'city': request.POST.get('city'),
             'state': request.POST.get('state'),
@@ -240,6 +240,8 @@ def edit_profile(request):
         if user_r_info.is_valid():
             user_r_info.save()
             return redirect('accounts:profile')
+        else:
+            print(user_r_info.errors.as_data())
     if request.method == 'POST' and 'user_s_form' in request.POST:
         user_s_data = {
             'facebook': request.POST.get('facebook'),
@@ -252,6 +254,8 @@ def edit_profile(request):
         if user_s_info.is_valid():
             user_s_info.save()
             return redirect('accounts:profile')
+        else:
+            print(user_s_info.errors.as_data())
         # else:
         #     print('USER_P_INFO ERRORS: ', user_p_info.errors.as_data())
         #     print('USER_R_INFO ERRORS: ', user_r_info.errors.as_data())

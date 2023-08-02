@@ -7,6 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from social_django.models import UserSocialAuth
 from django.db import transaction
 from phonenumber_field.formfields import PhoneNumberField
+from django_countries.fields import CountryField
 
 
 class BaseUserSignUpForm(UserCreationForm):
@@ -391,9 +392,7 @@ class UpdateUserResidentialInfoForm(forms.ModelForm):
                                widget=forms.TextInput())
     state = forms.CharField(required=False,
                              widget=forms.TextInput())
-    country = forms.CharField(
-                               required=False,
-                               widget=forms.TextInput())
+    country = CountryField(blank=True)
     address = forms.CharField(required=False,
                              widget=forms.TextInput())
     zipcode = forms.IntegerField(required=False)
