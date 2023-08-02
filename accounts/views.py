@@ -315,5 +315,6 @@ def resend_email_activation(request):
     return redirect('accounts:activation_sent')
 
 def remove_pfp(request):
-
+    user = BaseUser.objects.get(username=request.user.username)
+    user.pfp.delete()
     return render(request, 'accounts/edit_profile.html')
