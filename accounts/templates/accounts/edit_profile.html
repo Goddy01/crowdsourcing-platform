@@ -249,6 +249,9 @@
             {% else %}
             <img id="pfpImg" src="{% static 'images/default_profile_image.jpg' %}" class="img-responsive thumbnail" style="height: 250px;width: 250px;">
             {% endif %}
+            <div style="display: flex;justify-content: center;" class="">
+                <button type="submit" class="my-2 btn btn-success" name="user_p_form" id="hiddenSbtBtn" style="display: none;">Upload</button>
+            </div>
             <!-- <img id="display-img" style="height: 250px;width: 250px;"/> -->
         </div>
         <!-- <p class="btn btn-block" style="width: 115px;height: 40px;">{{ user_p_info_form.pfp }}</p> -->
@@ -306,7 +309,7 @@
                 <input type="email" class="form-control" value="{{ user.email }}" name="email" id="email">
                 </div>    
         </div>
-        <button type="submit" class="btn btn-success btn-lg" name="user_p_form">Save Changes</button>
+        <button type="submit" class="btn btn-success btn-lg" name="user_p_form" id="user_p_form">Save Changes</button>
         </form>
 
 </div> 
@@ -452,12 +455,18 @@
 </script>
 
 <script>
-    const imgInput = document.querySelector("#pfp")
+const imgInput = document.querySelector("#pfp")
 const displayImg = document.querySelector("#pfpImg")
+const submitBtn = document.querySelector('#hiddenSbtBtn')
 imgInput.addEventListener('change',
 (event)=>{
    const imgObject = event.target.files[0]
-   displayImg.src = URL.createObjectURL(imgObject)})
+   displayImg.src = URL.createObjectURL(imgObject)
+   submitBtn.style.display = 'block';
+   })
+   submitBtn.addEventListener('click', (event)=> {
+    document.querySelector('#user_p_form').click();
+   })
 </script>
 
 </html>
