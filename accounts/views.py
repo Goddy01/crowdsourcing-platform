@@ -201,6 +201,8 @@ def profile(request):
     })
 
 def edit_profile(request):
+    user = BaseUser.objects.get(username=request.user.username)
+    print('USER: ', user)
     if not request.user.is_authenticated:
         return redirect('accounts:innovator_login')
     try:
@@ -229,38 +231,48 @@ def edit_profile(request):
         user_p_info = UpdatePersonalProfileForm(user_p_data, request.FILES, instance=request.user)
         user_r_info = UpdateUserResidentialInfoForm(user_r_data, instance=request.user)
         user_s_info = UpdateUserSocialsForm(request.POST, instance=request.user)
-        if user_p_info.is_valid() and user_r_info.is_valid() and user_s_info.is_valid():
+        if user_p_info.is_valid():
             user_p_info.save()
+            return redirect('accounts:profile')
+        if user_r_info.is_valid():
             user_r_info.save()
+            return redirect('accounts:profile')
+        if user_s_info.is_valid():
             user_s_info.save()
             return redirect('accounts:profile')
-        else:
-            print('USER_P_INFO ERRORS: ', user_p_info.errors.as_data())
-            print('USER_R_INFO ERRORS: ', user_r_info.errors.as_data())
-            print('USER_S_INFO ERRORS: ', user_s_info.errors.as_data())
+        # else:
+        #     print('USER_P_INFO ERRORS: ', user_p_info.errors.as_data())
+        #     print('USER_R_INFO ERRORS: ', user_r_info.errors.as_data())
+        #     print('USER_S_INFO ERRORS: ', user_s_info.errors.as_data())
     else:
         user_p_info = BaseUser.objects.get(username=request.user.username)
         user_p_info = UpdatePersonalProfileForm(instance=request.user, initial= {
             'username': user_p_info.username,
-            'email': request.POST.get('email'),
-            'first_name': request.POST.get('first_name'),
-            'last_name': request.POST.get('last_name'),
-            'middle_name': request.POST.get('middle_name'),
-            'pfp': request.POST.get('pfp'),
-            'phone_num': request.POST.get('phone_num'),
-            'date_of_birth': request.POST.get('date_of_birth')
+            'email': user_p_info.email,
+            'first_name': user_p_info.first_name,
+            'last_name': user_p_info.last_name,
+            'middle_name': user_p_info.middle_name,
+            'pfp': user_p_info.pfp,
+            'phone_num': user_p_info.phone_num,
+            'date_of_birth': user_p_info.date_of_birth
         })
         user_r_info = UpdateUserResidentialInfoForm(instance=request.user, initial= {
-            'city': request.POST.get('city'),
-            'state': request.POST.get('state'),
-            'country': request.POST.get('country'),
-            'address': request.POST.get('address'),
-            'zipcode': request.POST.get('zipcode')
+            'city': user_p_info.city,
+            'state': user_p_info.state,
+            'country': user_p_info.country,
+            'address': user_p_info.address,
+            'zipcode': user_p_info.zipcode
         })
-        user_s_info = UpdateUserSocialsForm(instance=request.user)
+        user_s_info = UpdateUserSocialsForm(instance=request.user, initial={
+            'facebook': user_p_info.facebook,
+            'twitter': user_p_info.twitter,
+            'instagram': user_p_info.instagram,
+            'linkedin': user_p_info.linkedin,
+            'website': user_p_info.website
+        })
     return render(request, 'accounts/edit_profile.html', {
         'user_form': user,
-        'user1': BaseUser.objects.get(username=request.user.username),
+        'user': user,
         'user_p_info_form': user_p_info,
         'user_r_info_form': user_r_info,
         'user_s_info_form': user_s_info

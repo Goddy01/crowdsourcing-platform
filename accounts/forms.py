@@ -346,19 +346,19 @@ class UpdatePersonalProfileForm(forms.ModelForm):
         model = BaseUser
         fields = ['username', 'email', 'last_name', 'first_name', 'middle_name', 'date_of_birth', 'phone_num']
 
-    def save(self, commit=True):
-        user_p_info = self.instance
-        user_p_info.username = self.cleaned_data.get('username')
-        user_p_info.email = self.cleaned_data.get('email')
-        user_p_info.last_name = self.cleaned_data.get('last_name')
-        user_p_info.first_name = self.cleaned_data.get('first_name')
-        user_p_info.middle_name = self.cleaned_data.get('middle_name')
-        user_p_info.date_of_birth = self.cleaned_data.get('date_of_birth')
-        user_p_info.phone_num = self.cleaned_data.get('phone_num')
+    # def save(self, commit=True):
+    #     user_p_info = self.instance
+    #     user_p_info.username = self.cleaned_data.get('username')
+    #     user_p_info.email = self.cleaned_data.get('email')
+    #     user_p_info.last_name = self.cleaned_data.get('last_name')
+    #     user_p_info.first_name = self.cleaned_data.get('first_name')
+    #     user_p_info.middle_name = self.cleaned_data.get('middle_name')
+    #     user_p_info.date_of_birth = self.cleaned_data.get('date_of_birth')
+    #     user_p_info.phone_num = self.cleaned_data.get('phone_num')
 
-        if commit:
-            user_p_info.save()
-        return user_p_info
+    #     if commit:
+    #         user_p_info.save()
+    #     return user_p_info
 
     
     def clean_email(self):

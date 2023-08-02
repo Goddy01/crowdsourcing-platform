@@ -259,6 +259,7 @@
         <label class="form-label">First Name 
         </label>
         <input type="text" class="form-control" placeholder="" aria-label="First name" value="{{ user_form.first_name }}" name="first_name" id="first_name">
+        {{ user.username }}
         </div>
 
         <div class="col-md-6">
@@ -310,6 +311,7 @@
     <!-- <form class="row g-3"> -->
     <h4 class="mb-4 mt-0 text-success">Residential Information</h4>
     <form method="post" action="{% url 'accounts:edit_profile' %}" class="row g-3">
+        {% csrf_token %}
         <div class="col-md-6">
         <label class="form-label">City 
         </label>
