@@ -91,8 +91,12 @@
             <div class="profile-head">
                <div class="row vh-100 profile-top mt-1">
                    <div class="col-xl-6 text-center mx-auto align-self-center mb-2">
-                        <div class="imgcover mb-4">
-                            <img src="{% static 'accounts/images/square.jpg' %}" class="rounded-pill bg-white p-2 shadow" alt="">
+                        <div class="imgcover mb-4 display-2">
+                            {% if user.pfp %}
+                            <img id="pfpimg" src="{{ user.pfp.url }}" class="img-responsive thumbnail rounded-pill bg-white p-2 shadow" alt="">
+                            {% else %}
+                            <img id="pfpImg" src="{% static 'images/default_profile_image.jpg' %}" class="img-responsive thumbnail rounded-pill bg-white p-2 shadow" style="height: 250px;width: 250px;">
+                            {% endif %}
                         </div>
                         <b class="fs-6">Hello I am, {{user.first_name}} {{user.last_name}}</b>
                         <h1 class="fw-bold mb-4 fs-1">Full Stack Develper</h1>

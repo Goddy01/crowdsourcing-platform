@@ -242,12 +242,12 @@
         <h5 class="text-center mt-0">Upload your profile photo</h5>
         <div class="text-center mb-5">
         
-        <div class="square position-relative display-2 mb-3">
+        <div class="position-relative display-2 mb-3">
             
             {% if user.pfp %}
-            <img id="pfpImg" src="{{ user.pfp.url }}" class="img-responsive thumbnail" style="height: 250px;width: 250px;">
+            <img id="pfpImg" src="{{ user.pfp.url }}" class="img-responsive thumbnail rounded-pill bg-white p-2 shadow" style="height: 250px;width: 250px;">
             {% else %}
-            <img id="pfpImg" src="{% static 'images/default_profile_image.jpg' %}" class="img-responsive thumbnail" style="height: 250px;width: 250px;">
+            <img id="pfpImg" src="{% static 'images/default_profile_image.jpg' %}" class="img-responsive thumbnail rounded-pill bg-white p-2 shadow" style="height: 250px;width: 250px;">
             {% endif %}
             <div style="display: flex;justify-content: center;" class="">
                 <button type="submit" class="my-2 btn btn-success" name="user_p_form" id="hiddenSbtBtn" style="display: none;">Upload</button>
