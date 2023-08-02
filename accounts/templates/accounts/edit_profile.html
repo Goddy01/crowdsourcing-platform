@@ -300,7 +300,7 @@
                 <input type="email" class="form-control" value="{{ user.email }}" name="email" id="email">
                 </div>    
         </div>
-        <button type="submit" class="btn btn-success btn-lg">Save Changes</button>
+        <button type="submit" class="btn btn-success btn-lg" name="user_p_form">Save Changes</button>
         </form>
 
 </div> 
@@ -341,7 +341,7 @@
         </label>
         <input type="text" class="form-control" placeholder="" aria-label="Address" value={% if user.zipcode %} "{{ user.zipcode }}" {% else %} "" {% endif %} name="zipcode" id="zipcode">
         </div>
-        <button type="submit" class="btn btn-success btn-lg">Save Changes</button>
+        <button name="user_r_form" type="submit" class="btn btn-success btn-lg">Save Changes</button>
     </form>
     <!-- </form>  -->
     
@@ -382,7 +382,7 @@
     </label>
     <input type="text" class="form-control" placeholder="" aria-label="Instragram" value="{{ user.instagram }}" name="instagram" id="instagram">
     </div>
-    <button type="submit" class="btn btn-success btn-lg">Save Changes</button>
+    <button type="submit" class="btn btn-success btn-lg" name="user_s_data">Save Changes</button>
 </form>
 
 </div> 

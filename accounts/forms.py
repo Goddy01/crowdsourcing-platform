@@ -363,17 +363,27 @@ class UpdatePersonalProfileForm(forms.ModelForm):
     
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        username = self.cleaned_data.get('username')
-        if not BaseUser.objects.get(email=email) == BaseUser.objects.get(username=self.instance.username):
-            raise forms.ValidationError('This email address is taken.')
-        return email
+        try:
+            user = BaseUser.objects.exclude(pk=self.instance.pk).get(email=email)
+        except BaseUser.DoesNotExist:
+            return email
+        raise forms.ValidationError('This email address is taken.')
 
     def clean_phone_num(self):
         phone_num = self.cleaned_data.get('phone_num')
+        try:
+            user = BaseUser.objects.exclude(pk=self.instance.pk).get(phone_num=phone_num)
+        except BaseUser.DoesNotExist:
+            return phone_num
+        raise forms.ValidationError('This phone number is taken.')
+    
+    def clean_username(self):
         username = self.cleaned_data.get('username')
-        if not BaseUser.objects.filter(phone_num=phone_num) == BaseUser.objects.get(username=self.instance.username):
-            raise forms.ValidationError('This phone number email address this taken.')
-        return phone_num
+        try:
+            user = BaseUser.objects.exclude(pk=self.instance.pk).get(username=username)
+        except BaseUser.DoesNotExist:
+            return username
+        raise forms.ValidationError('This username is taken.')
 
 class UpdateUserResidentialInfoForm(forms.ModelForm):
     city = forms.CharField(

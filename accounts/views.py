@@ -202,15 +202,15 @@ def profile(request):
 
 def edit_profile(request):
     user = BaseUser.objects.get(username=request.user.username)
+    user_info = BaseUser.objects.get(username=request.user.username)
     print('USER: ', user)
     if not request.user.is_authenticated:
         return redirect('accounts:innovator_login')
-    try:
-        user = BaseUser.objects.get(username=request.user.username)
-    except BaseUser.DoesNotExist:
-        return HttpResponse('User Not Found!')
-    if request.method == 'POST':
-        # email = request.POST.get('email')
+    # try:
+    #     user = BaseUser.objects.get(username=request.user.username)
+    # except BaseUser.DoesNotExist:
+    #     return HttpResponse('User Not Found!')
+    if request.method == 'POST' and 'user_p_form' in request.POST:
         user_p_data = {
             'username': request.POST.get('username'),
             'email': request.POST.get('email'),
@@ -221,6 +221,14 @@ def edit_profile(request):
             'phone_num': request.POST.get('phone_num'),
             'date_of_birth': request.POST.get('date_of_birth')
         }
+        user_p_info = UpdatePersonalProfileForm(user_p_data, request.FILES, instance=request.user)
+        if user_p_info.is_valid():
+            print('YESSIRRR')
+            user_p_info.save()
+            return redirect('accounts:profile')
+        else:
+            print(user_p_info.errors.as_data())
+    if request.method == 'POSTi' and 'user_r_form' in request.POST:
         user_r_data = {
             'city': request.POST.get('city'),
             'state': request.POST.get('state'),
@@ -228,15 +236,19 @@ def edit_profile(request):
             'address': request.POST.get('address'),
             'zipcode': request.POST.get('zipcode')
         }
-        user_p_info = UpdatePersonalProfileForm(user_p_data, request.FILES, instance=request.user)
         user_r_info = UpdateUserResidentialInfoForm(user_r_data, instance=request.user)
-        user_s_info = UpdateUserSocialsForm(request.POST, instance=request.user)
-        if user_p_info.is_valid():
-            user_p_info.save()
-            return redirect('accounts:profile')
         if user_r_info.is_valid():
             user_r_info.save()
             return redirect('accounts:profile')
+    if request.method == 'POST' and 'user_s_form' in request.POST:
+        user_s_data = {
+            'facebook': request.POST.get('facebook'),
+            'linkedin': request.POST.get('linkedin'),
+            'twitter': request.POST.get('twitter'),
+            'instagram': request.POST.get('instagram'),
+            'website': request.POST.get('website')
+        }
+        user_s_info = UpdateUserSocialsForm(request.POST, instance=request.user)
         if user_s_info.is_valid():
             user_s_info.save()
             return redirect('accounts:profile')
@@ -245,7 +257,6 @@ def edit_profile(request):
         #     print('USER_R_INFO ERRORS: ', user_r_info.errors.as_data())
         #     print('USER_S_INFO ERRORS: ', user_s_info.errors.as_data())
     else:
-        user_info = BaseUser.objects.get(username=request.user.username)
         user_p_info = UpdatePersonalProfileForm(instance=request.user, initial= {
             'username': user_info.username,
             'email': user_info.email,
