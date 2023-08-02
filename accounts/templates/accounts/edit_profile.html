@@ -259,7 +259,7 @@
         <!-- <input type="hidden" id="submitBtn" type="submit"> -->
         <!-- <input type="file" id="pfp" name="pfp" hidden=""> -->
         <!-- <label class="btn btn-success-soft btn-block" for="customFile">Upload</label> -->
-        <a href="{% url 'accounts:remove_pfp' %}" type="button" class="btn btn-danger-soft px-3" style="height: 45px;">Remove</a>
+        <button type="button" class="btn btn-danger-soft px-3" style="height: 45px;" id="removePfpBtn">Remove</button>
         
         <!-- <p class="text-muted mt-3 mb-0"><span class="me-1">Note:</span>Minimum size 300px x 300px</p> -->
         </div>
@@ -467,6 +467,20 @@ imgInput.addEventListener('change',
    submitBtn.addEventListener('click', (event)=> {
     document.querySelector('#user_p_form').click();
    })
+</script>
+
+<script>
+    document.getElementById('removePfpBtn').addEventListener('click', function() {
+        // AJAX request to call the Django view
+        $.ajax ({
+                url: "{% url 'accounts:remove_pfp' %}",
+                dataType: 'json',
+                success: function(res) {
+                    // alert('Profile picture removed successfully.');
+                    window.location.href = "/accounts/profile"
+                }
+            })
+    });
 </script>
 
 </html>
