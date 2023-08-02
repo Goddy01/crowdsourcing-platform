@@ -203,7 +203,7 @@ def profile(request):
 def edit_profile(request):
     user = BaseUser.objects.get(username=request.user.username)
     user_info = BaseUser.objects.get(username=request.user.username)
-    print('USER: ', user)
+    # print('USER: ', user)
     if not request.user.is_authenticated:
         return redirect('accounts:innovator_login')
     # try:
@@ -250,7 +250,7 @@ def edit_profile(request):
             'instagram': request.POST.get('instagram'),
             'website': request.POST.get('website')
         }
-        user_s_info = UpdateUserSocialsForm(request.POST, instance=request.user)
+        user_s_info = UpdateUserSocialsForm(user_s_data, instance=request.user)
         if user_s_info.is_valid():
             user_s_info.save()
             return redirect('accounts:profile')
