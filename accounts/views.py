@@ -316,5 +316,5 @@ def resend_email_activation(request):
 
 def remove_pfp(request):
     user = BaseUser.objects.get(username=request.user.username)
-    user.pfp.delete()
-    return JsonResponse({'status': 1})
+    user.pfp.delete(save=True)
+    return JsonResponse({'status': 'Success'})
