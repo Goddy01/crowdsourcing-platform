@@ -364,14 +364,14 @@ class UpdatePersonalProfileForm(forms.ModelForm):
     def clean_email(self):
         email = self.cleaned_data.get('email')
         username = self.cleaned_data.get('username')
-        if len(BaseUser.objects.filter(email=email)) > 1:
+        if not BaseUser.objects.get(email=email) == BaseUser.objects.get(username=self.instance.username):
             raise forms.ValidationError('This email address is taken.')
         return email
 
     def clean_phone_num(self):
         phone_num = self.cleaned_data.get('phone_num')
         username = self.cleaned_data.get('username')
-        if len(BaseUser.objects.filter(phone_num=phone_num)) > 1:
+        if not BaseUser.objects.filter(phone_num=phone_num) == BaseUser.objects.get(username=self.instance.username):
             raise forms.ValidationError('This phone number email address this taken.')
         return phone_num
 
