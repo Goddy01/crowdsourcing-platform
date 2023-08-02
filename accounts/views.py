@@ -223,8 +223,11 @@ def edit_profile(request):
         }
         user_p_info = UpdatePersonalProfileForm(user_p_data, request.FILES, instance=request.user)
         if user_p_info.is_valid():
+            user_obj = user_p_info.save(commit=False)
+            print('PIC: ', user_p_info.cleaned_data['pfp'])
+            user_obj.pfp = user_p_info.cleaned_data['pfp']
             print('YESSIRRR')
-            user_p_info.save()
+            user_obj.save()
             return redirect('accounts:profile')
         else:
             print(user_p_info.errors.as_data())
