@@ -245,30 +245,30 @@ def edit_profile(request):
         #     print('USER_R_INFO ERRORS: ', user_r_info.errors.as_data())
         #     print('USER_S_INFO ERRORS: ', user_s_info.errors.as_data())
     else:
-        user_p_info = BaseUser.objects.get(username=request.user.username)
+        user_info = BaseUser.objects.get(username=request.user.username)
         user_p_info = UpdatePersonalProfileForm(instance=request.user, initial= {
-            'username': user_p_info.username,
-            'email': user_p_info.email,
-            'first_name': user_p_info.first_name,
-            'last_name': user_p_info.last_name,
-            'middle_name': user_p_info.middle_name,
-            'pfp': user_p_info.pfp,
-            'phone_num': user_p_info.phone_num,
-            'date_of_birth': user_p_info.date_of_birth
+            'username': user_info.username,
+            'email': user_info.email,
+            'first_name': user_info.first_name,
+            'last_name': user_info.last_name,
+            'middle_name': user_info.middle_name,
+            'pfp': user_info.pfp,
+            'phone_num': user_info.phone_num,
+            'date_of_birth': user_info.date_of_birth
         })
         user_r_info = UpdateUserResidentialInfoForm(instance=request.user, initial= {
-            'city': user_p_info.city,
-            'state': user_p_info.state,
-            'country': user_p_info.country,
-            'address': user_p_info.address,
-            'zipcode': user_p_info.zipcode
+            'city': user_info.city,
+            'state': user_info.state,
+            'country': user_info.country,
+            'address': user_info.address,
+            'zipcode': user_info.zipcode
         })
         user_s_info = UpdateUserSocialsForm(instance=request.user, initial={
-            'facebook': user_p_info.facebook,
-            'twitter': user_p_info.twitter,
-            'instagram': user_p_info.instagram,
-            'linkedin': user_p_info.linkedin,
-            'website': user_p_info.website
+            'facebook': user_info.facebook,
+            'twitter': user_info.twitter,
+            'instagram': user_info.instagram,
+            'linkedin': user_info.linkedin,
+            'website': user_info.website
         })
     return render(request, 'accounts/edit_profile.html', {
         'user_form': user,
