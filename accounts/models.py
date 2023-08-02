@@ -108,14 +108,14 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.username
     
-    # def save(self, *args, **kwargs):
-    #     """Overwrites the base save method"""
-    #     super().save(*args, **kwargs)
-    #     img = Image.open(self.pfp)
-    #     if img.height > 300 or img.width > 300:
-    #         output_size = (300, 300) # height, width
-    #         img.thumbnail(output_size)
-    #         img.save(self.pfp)
+    def save(self, *args, **kwargs):
+        """Overwrites the base save method"""
+        super().save(*args, **kwargs)
+        img = Image.open(self.pfp.path)
+        if img.height > 300 or img.width > 300:
+            output_size = (300, 300) # height, width
+            img.thumbnail(output_size)
+            img.save(self.pfp.path)
     
     def get_full_name(self):
         '''Returns the first_name plus the last_name, with a space in between.'''

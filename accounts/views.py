@@ -225,6 +225,7 @@ def edit_profile(request):
         if user_p_info.is_valid():
             user_obj = user_p_info.save(commit=False)
             print('PIC: ', user_p_info.cleaned_data['pfp'])
+            print('PIC: ', request.POST.get('pfp'))
             user_obj.pfp = user_p_info.cleaned_data['pfp']
             print('YESSIRRR')
             user_obj.save()
