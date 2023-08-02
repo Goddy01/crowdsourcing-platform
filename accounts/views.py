@@ -16,7 +16,7 @@ import random
 from django.forms import ValidationError
 from django.core.exceptions import ValidationError
 from django.db import transaction
-
+from django.http import JsonResponse
 
 # Create your views here.
 def activation_sent_view(request):
@@ -317,4 +317,4 @@ def resend_email_activation(request):
 def remove_pfp(request):
     user = BaseUser.objects.get(username=request.user.username)
     user.pfp.delete()
-    return render(request, 'accounts/edit_profile.html')
+    return JsonResponse({'status': 1})
