@@ -34,6 +34,7 @@ DEBUG = True
 # Application definition
 
 INSTALLED_APPS = [
+    'django_cleanup.apps.CleanupConfig',
     'jazzmin',
     'django_countries',
     'core',

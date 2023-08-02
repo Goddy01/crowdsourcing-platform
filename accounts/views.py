@@ -313,3 +313,7 @@ def resend_email_activation(request):
     from_email = settings.EMAIL_HOST_USER
     send_mail(subject, message, from_email, to_email, fail_silently=True)
     return redirect('accounts:activation_sent')
+
+def remove_pfp(request):
+
+    return render(request, 'accounts/edit_profile.html')
