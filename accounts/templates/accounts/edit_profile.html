@@ -401,23 +401,17 @@
 <div class="col-xxl-6">
 <div class="bg-secondary-soft px-4 py-5 rounded">
 <h4 class="mt-0 text-success">Change Password</h4>
-<form method="post" action="" class="row g-3">
-    <div class="col-md-6">
-    <label for="exampleInputPassword1" class="form-label">Old password 
-    </label>
-    <input type="password" class="form-control" id="exampleInputPassword1">
-    </div>
-
-    <div class="col-md-6">
+<form method="post" action="{% url 'accounts:change_password' %}" class="row g-3">
+    <div class="col-md-12">
     <label for="exampleInputPassword2" class="form-label">New password 
     </label>
-    <input type="password" class="form-control" id="exampleInputPassword2">
+    <input type="password" class="form-control" id="new_password1" name="new_password1">
     </div>
 
     <div class="col-md-12">
     <label for="exampleInputPassword3" class="form-label">Confirm Password 
     </label>
-    <input type="password" class="form-control" id="exampleInputPassword3">
+    <input type="password" class="form-control" id="new_password2" name="new_password2">
     </div>
     <button type="submit" class="btn btn-success btn-lg">Save Changes</button>
 </form>
