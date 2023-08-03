@@ -2,7 +2,7 @@ from django.contrib import messages
 from django import forms
 from .models import Innovator, Moderator, BaseUser
 from django.contrib.auth import authenticate, password_validation
-from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
+from django.contrib.auth.forms import UserCreationForm, PasswordResetForm, SetPasswordForm
 from django.utils.translation import gettext_lazy as _
 from social_django.models import UserSocialAuth
 from django.db import transaction
@@ -409,3 +409,8 @@ class UpdateUserSocialsForm(forms.ModelForm):
     class Meta:
         model = BaseUser
         fields = ['facebook', 'twitter', 'instagram', 'linkedin', 'website']
+
+class ChangePasswordForm(SetPasswordForm):
+    class Meta:
+        model = BaseUser
+        fields = ['new_password1', 'new_password2']
