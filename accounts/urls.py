@@ -17,5 +17,5 @@ urlpatterns = [
     path('innovator/edit-profile', views.edit_profile, name='edit_profile'),
     path('resend-email-activation-link', views.resend_email_activation, name='resend_email_activation'),
     path('profile/delete-pfp', views.remove_pfp, name='remove_pfp'),
-    path('password-change', views.change_password, name='change_password'),
+    # path('password-change', views.change_password, name='change_password'),
 ]

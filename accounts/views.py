@@ -273,13 +273,25 @@ def edit_profile(request):
             print(user_s_info.errors.as_data())
     else:
         user_s_info = UpdateUserSocialsForm()
-        
+
+    user = request.user
+    if request.method == 'POST' and 'password_change' in request.POST:
+        change_password_form = ChangePasswordForm(user, request.POST)
+        if change_password_form.is_valid():
+            change_password_form.save()
+            return redirect('accounts:edit_profile')
+        else:
+            print('ERRORS: ', change_password_form.errors.as_data())
+    else:
+        change_password_form = ChangePasswordForm(user)
+
     return render(request, 'accounts/edit_profile.html', {
         'user_form': user,
         'user': user,
         'user_p_info_form': user_p_info,
         'user_r_info_form': user_r_info,
-        'user_s_info_form': user_s_info
+        'user_s_info_form': user_s_info,
+        'change_password_form': change_password_form
     })
 
 def resend_email_activation(request):
@@ -308,13 +320,15 @@ def remove_pfp(request):
         bool = False
     return JsonResponse(bool, safe=False)
 
-def change_password(request):
-    user = request.user
-    if request.method == 'POST':
-        change_password_form = ChangePasswordForm(user, request.POST)
-        if change_password_form.is_valid():
-            change_password_form.save()
-
-    else:
-        change_password_form = ChangePasswordForm(user)
-    return render(request, 'accounts/edit_profile.html', {'change_passsword_form': change_password_form})
+# def change_password(request):
+#     user = request.user
+#     if request.method == 'POST' and 'password_change' in request.POST:
+#         change_password_form = ChangePasswordForm(user, request.POST)
+#         if change_password_form.is_valid():
+#             change_password_form.save()
+#             return redirect('accounts:edit_profile')
+#         else:
+#             print('ERRORS: ', change_password_form.errors.as_data())
+#     else:
+#         change_password_form = ChangePasswordForm(user)
+#     return render(request, 'accounts/edit_profile.html', {'change_passsword_form': change_password_form})

@@ -85,9 +85,9 @@
     }
     
 }
-.errors-list li {
+/* .errorlist {
     list-style: none;
-}
+} */
     </style>
 </head>
 <body>
@@ -117,6 +117,42 @@
         </div>
         {% endif %}
     </ul>
+    {% if change_password_form.errors %}
+    ewe
+                  <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto;">
+                    <div class="toast-body text-white">
+                    <ul>
+                        {% for field in change_password_form %}
+                        {% for error in field.errors %}
+                        {% if field.errors|length != 1 %}
+                        <li style="list-style: disc;">{{ error }}</li>
+                        {% else %}
+                        <li style="list-style: none;">{{ error }}</li>
+                        {% endif %}
+                        {% endfor %}
+                        {% endfor %}
+                    </ul>        
+                    </div>
+                </div>
+    {% endif %}
+    {% if change_password_form.non_field_errors %}
+    ewe2
+            <!-- <div class="row justify-content-center mb-2"> -->
+            <div class="col-lg-8 col-xl-3 toastDiv">
+              <!-- Then put toasts within -->
+          <div class="card toast m-auto bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin-bottom: 1rem !important;">
+            <!-- <div class="toast-header d-flex justify-content-end"> -->
+              <!-- <button type="button" class="ml-2 mb-1 close d-flex justify-content-end" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button> -->
+            <!-- </div> -->
+            <div class="toast-body text-white"">
+              {{change_password_form.non_field_errors}}
+            </div>
+          </div>
+    {% endif %}
+
+
     {% if user_p_info_form.errors %}
                   <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto;">
                 <!-- <div class="toast-header d-flex justify-content-end">
@@ -401,7 +437,8 @@
 <div class="col-xxl-6">
 <div class="bg-secondary-soft px-4 py-5 rounded">
 <h4 class="mt-0 text-success">Change Password</h4>
-<form method="post" action="{% url 'accounts:change_password' %}" class="row g-3">
+<form method="post" action="{% url 'accounts:edit_profile' %}" class="row g-3">
+    {% csrf_token %}
     <div class="col-md-12">
     <label for="exampleInputPassword2" class="form-label">New password 
     </label>
@@ -413,7 +450,7 @@
     </label>
     <input type="password" class="form-control" id="new_password2" name="new_password2">
     </div>
-    <button type="submit" class="btn btn-success btn-lg">Save Changes</button>
+    <button type="submit" class="btn btn-success btn-lg" name="password_change">Change Password</button>
 </form>
 </div>
 </div>
