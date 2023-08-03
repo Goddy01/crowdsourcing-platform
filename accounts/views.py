@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
-from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm, UpdateUserResidentialInfoForm, UpdateUserSocialsForm
+from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm, UpdateUserResidentialInfoForm, UpdateUserSocialsForm, ChangePasswordForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -307,3 +307,14 @@ def remove_pfp(request):
     else:
         bool = False
     return JsonResponse(bool, safe=False)
+
+def change_password(request):
+    user = request.user
+    if request.method == 'POST':
+        change_password_form = ChangePasswordForm(user, request.POST)
+        if change_password_form.is_valid():
+            change_password_form.save()
+
+    else:
+        change_password_form = ChangePasswordForm(user)
+    return render(request, 'accounts/edit_profile.html', {'change_passsword_form': change_password_form})
