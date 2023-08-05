@@ -389,11 +389,6 @@ class UpdateUserSocialsForm(forms.ModelForm):
         model = BaseUser
         fields = ['facebook', 'twitter', 'instagram', 'linkedin', 'website']
 
-class SkillsForm(forms.ModelForm):
-    class Meta:
-        model = Skill
-        fields = ['name']
-
 class ChangePasswordForm(SetPasswordForm):
     class Meta:
         model = BaseUser
