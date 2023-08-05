@@ -399,6 +399,7 @@
     <h4 class="mb-4 mt-0 text-success">Skills</h4>
     <small class="">(You can add up to 10 skills)</small>
     <form method="post" action="{% url 'accounts:edit_profile' %}" class="row g-3 form-container" id="myForm">
+      {% csrf_token %}
         <div class="col-md-12">
           <label class="form-label">
           </label>

@@ -253,7 +253,7 @@ def edit_profile(request):
         user_skill_data = {}
 
 #       Creates a loop to go through the form fields 'skill_1' to 'skill_10' and adds them to the user_skill_data
-        for i in len(1, 11):
+        for i in len(range(1, 11)):
             if request.POST.get(f'skill_{i}'):
                 user_skill_data[f'skill_{i}'] = request.POST.get(f'skill_{i}')
 
