@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
-from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm, UpdateUserResidentialInfoForm, UpdateUserSocialsForm, ChangePasswordForm
+from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm, UpdateUserResidentialInfoForm, UpdateUserSocialsForm, ChangePasswordForm, SkillsForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -9,11 +9,11 @@ from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token
 from django.conf import settings
 from django.core.mail import send_mail
-from .models import BaseUser, Innovator, Moderator
+from .models import BaseUser, Innovator, Moderator, Skill
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import random
-from django.forms import ValidationError
+from django.forms import ValidationError, modelformset_factory
 from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.http import JsonResponse
@@ -203,13 +203,8 @@ def profile(request):
 def edit_profile(request):
     user = BaseUser.objects.get(username=request.user.username)
     user_info = BaseUser.objects.get(username=request.user.username)
-    # print('USER: ', user)
     if not request.user.is_authenticated:
         return redirect('accounts:innovator_login')
-    # try:
-    #     user = BaseUser.objects.get(username=request.user.username)
-    # except BaseUser.DoesNotExist:
-    #     return HttpResponse('User Not Found!')
     if request.method == 'POST' and 'user_p_form' in request.POST:
         user_p_data = {
             'username': request.POST.get('username'),
@@ -224,8 +219,6 @@ def edit_profile(request):
         user_p_info = UpdatePersonalProfileForm(user_p_data, request.FILES, instance=request.user)
         if user_p_info.is_valid():
             user_obj = user_p_info.save(commit=False)
-            print('PIC: ', user_p_info.cleaned_data['pfp'])
-            print('PIC: ', request.POST.get('pfp'))
             if user_p_info.cleaned_data['pfp']:
                 user_obj.pfp = user_p_info.cleaned_data['pfp']
             if user_p_info.cleaned_data['date_of_birth']:
@@ -256,7 +249,25 @@ def edit_profile(request):
     else:
         user_r_info = UpdateUserResidentialInfoForm()
     
-    
+    SkillFormSet = modelformset_factory(Skill, form=SkillsForm, extra=1)
+    if request.method == 'POST' and 'skills_form' in request.POST:
+        print('IT DEY')
+        skill_form_data = {
+            'name': request.POST.get('name'),
+        }
+        skill_formset = SkillFormSet(skill_form_data, instance=request.user)
+        if skill_formset.is_valid():
+            print('O VALID PAA')
+            skill_formset.save()
+            return redirect('accounts:profile')
+        else:
+            print('NAH. IT AINT')
+            print('ERRORS: ', skill_formset.errors.as_data())
+        
+    else:
+        skill_formset = SkillFormSet()
+
+
     if request.method == 'POST' and 'user_s_form' in request.POST:
         user_s_data = {
             'facebook': request.POST.get('facebook'),
@@ -285,13 +296,15 @@ def edit_profile(request):
     else:
         change_password_form = ChangePasswordForm(user)
 
+
     return render(request, 'accounts/edit_profile.html', {
         'user_form': user,
         'user': user,
         'user_p_info_form': user_p_info,
         'user_r_info_form': user_r_info,
         'user_s_info_form': user_s_info,
-        'change_password_form': change_password_form
+        'change_password_form': change_password_form,
+        'skill_formset': skill_formset
     })
 
 def resend_email_activation(request):

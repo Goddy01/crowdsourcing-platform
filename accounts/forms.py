@@ -389,7 +389,7 @@ class UpdateUserSocialsForm(forms.ModelForm):
         model = BaseUser
         fields = ['facebook', 'twitter', 'instagram', 'linkedin', 'website']
 
-class Skills(forms.ModelForm):
+class SkillsForm(forms.ModelForm):
     class Meta:
         model = Skill
         fields = ['name']
