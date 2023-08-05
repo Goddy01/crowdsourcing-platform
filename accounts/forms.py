@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django import forms
-from .models import Innovator, Moderator, BaseUser, Skill
+from .models import Innovator, Moderator, BaseUser
 from django.contrib.auth import authenticate, password_validation
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm, SetPasswordForm
 from django.utils.translation import gettext_lazy as _
