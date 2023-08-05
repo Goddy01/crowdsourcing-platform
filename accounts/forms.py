@@ -379,6 +379,11 @@ class UpdateUserResidentialInfoForm(forms.ModelForm):
         model = BaseUser
         fields = ['city', 'state', 'country', 'address', 'zipcode']
 
+class UpdateUserSkills(forms.ModelForm):
+    class Meta:
+        model = BaseUser
+        fields  = ['skill_1', 'skill_2', 'skill_3', 'skill_4', 'skill_5', 'skill_6', 'skill_7', 'skill_8', 'skill_9', 'skill_10']
+
 class UpdateUserSocialsForm(forms.ModelForm):
     facebook = forms.URLField(required=False)
     twitter = forms.URLField(required=False)
