@@ -70,6 +70,9 @@ def upload_location_id_card(instance, filename):
 class Skill(models.Model):
     name = models.CharField(max_length=50)
 
+    def __str__(self):
+        return self.name
+
 class BaseUser(AbstractBaseUser, PermissionsMixin):
     last_name =                     models.CharField(max_length=256, null=True, blank=True)
     first_name =                    models.CharField(max_length=256, null=True, blank=True)

@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django import forms
-from .models import Innovator, Moderator, BaseUser
+from .models import Innovator, Moderator, BaseUser, Skill
 from django.contrib.auth import authenticate, password_validation
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm, SetPasswordForm
 from django.utils.translation import gettext_lazy as _
@@ -283,16 +283,9 @@ class ModeratorSignInForm(forms.ModelForm):
                 raise forms.ValidationError("Invalid login details. Please try again.")
     
     def clean_remember_me(self):
-        # Custom validation for the remember_me field if needed
-        # For example, you might enforce that it is checked for certain users.
         remember_me = self.cleaned_data.get('remember_me')
-        # Your validation logic here
         return remember_me
     
-# class GenModSignUpLinkForm(forms.ModelForm):
-#     class Meta:
-#         model = GenModSignUpLink
-#         fields = ['mod_email']
 class CustomPasswordResetForm(PasswordResetForm):
     error_messages = {
         'password_mismatch': _("The two password fields didn't match."),
@@ -337,9 +330,6 @@ class UpdatePersonalProfileForm(forms.ModelForm):
     middle_name = forms.CharField(
                                required=False,
                                widget=forms.TextInput())
-    skills = forms.CharField(
-                               required=False,
-                               widget=forms.TextInput())
     pfp = forms.ImageField(required=False, widget=forms.FileInput)
     date_of_birth = forms.DateField(required=False)
     phone_num = PhoneNumberField(widget=forms.TextInput(), error_messages={
@@ -348,21 +338,7 @@ class UpdatePersonalProfileForm(forms.ModelForm):
         )
     class Meta:
         model = BaseUser
-        fields = ['username', 'email', 'last_name', 'first_name', 'middle_name', 'date_of_birth', 'phone_num', 'skills']
-
-    # def save(self, commit=True):
-    #     user_p_info = self.instance
-    #     user_p_info.username = self.cleaned_data.get('username')
-    #     user_p_info.email = self.cleaned_data.get('email')
-    #     user_p_info.last_name = self.cleaned_data.get('last_name')
-    #     user_p_info.first_name = self.cleaned_data.get('first_name')
-    #     user_p_info.middle_name = self.cleaned_data.get('middle_name')
-    #     user_p_info.date_of_birth = self.cleaned_data.get('date_of_birth')
-    #     user_p_info.phone_num = self.cleaned_data.get('phone_num')
-
-    #     if commit:
-    #         user_p_info.save()
-    #     return user_p_info
+        fields = ['username', 'email', 'last_name', 'first_name', 'middle_name', 'date_of_birth', 'phone_num']
 
     
     def clean_email(self):
@@ -412,6 +388,11 @@ class UpdateUserSocialsForm(forms.ModelForm):
     class Meta:
         model = BaseUser
         fields = ['facebook', 'twitter', 'instagram', 'linkedin', 'website']
+
+class Skills(forms.ModelForm):
+    class Meta:
+        model = Skill
+        fields = ['name']
 
 class ChangePasswordForm(SetPasswordForm):
     class Meta:
