@@ -67,12 +67,6 @@ def upload_location_pfp(instance, filename):
 def upload_location_id_card(instance, filename):
     return f'id_cards/{str(instance.username)}/-{filename}'
 
-class Skill(models.Model):
-    name = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.name
-
 class BaseUser(AbstractBaseUser, PermissionsMixin):
     last_name =                     models.CharField(max_length=256, null=True, blank=True)
     first_name =                    models.CharField(max_length=256, null=True, blank=True)
@@ -89,7 +83,6 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     address =                       models.CharField(max_length=128, blank=True, null=True)
     phone_num =                     PhoneNumberField(null=True, blank=True, verbose_name="Phone Number", unique=True)
     zipcode =                       models.IntegerField(null=True, blank=True)
-    skills =                        models.ManyToManyField(Skill, blank=True, null=True)
     date_joined =                   models.DateTimeField(auto_now_add=True)
     last_login =                    models.DateTimeField(auto_now=True)
     updated_at =                    models.DateTimeField(auto_now=True)
