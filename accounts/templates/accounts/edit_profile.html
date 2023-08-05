@@ -370,8 +370,10 @@
         <div class="col-md-6">
         <label class="form-label">Country 
         </label>
-        <input type="text" class="form-control" placeholder="" aria-label="Country" value={% if user.country %} "{{ user.country }}" {% else %} "" {% endif %} name="country" id="country">
-        <!-- {{ user_r_info_form.country }} -->
+        <!-- <input type="text" class="form-control" placeholder="" aria-label="Country" value={% if user.country %} "{{ user.country }}" {% else %} "" {% endif %} name="country" id="country"> -->
+      
+        <small>({{ user.country.name }})</small>
+        {{ user_r_info_form.country }}
         </div>
         
         <div class="col-md-6">
@@ -407,7 +409,7 @@
           </div>
         <!-- <div class="d-flex justify-content-center"> -->
           <button type="button" onclick="addField()" class="btn btn-success btn-lg col-md-2">Add New Skill</button>
-          <button name="skills_form" type="submit" class="btn btn-success btn-lg mt-2">Save Changes</button>
+          <button name="user_skill_form" type="submit" class="btn btn-success btn-lg mt-2">Save Changes</button>
         <!-- </div> -->
       <!-- </div> -->
     </form>
