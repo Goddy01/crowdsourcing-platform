@@ -249,23 +249,7 @@ def edit_profile(request):
     else:
         user_r_info = UpdateUserResidentialInfoForm()
     
-    SkillFormSet = modelformset_factory(Skill, form=SkillsForm, extra=1)
-    if request.method == 'POST' and 'skills_form' in request.POST:
-        print('IT DEY')
-        skill_form_data = {
-            'name': request.POST.get('name'),
-        }
-        skill_formset = SkillFormSet(skill_form_data, instance=request.user)
-        if skill_formset.is_valid():
-            print('O VALID PAA')
-            skill_formset.save()
-            return redirect('accounts:profile')
-        else:
-            print('NAH. IT AINT')
-            print('ERRORS: ', skill_formset.errors.as_data())
-        
-    else:
-        skill_formset = SkillFormSet()
+    
 
 
     if request.method == 'POST' and 'user_s_form' in request.POST:
@@ -303,8 +287,7 @@ def edit_profile(request):
         'user_p_info_form': user_p_info,
         'user_r_info_form': user_r_info,
         'user_s_info_form': user_s_info,
-        'change_password_form': change_password_form,
-        'skill_formset': skill_formset
+        'change_password_form': change_password_form
     })
 
 def resend_email_activation(request):
