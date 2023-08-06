@@ -330,6 +330,9 @@ class UpdatePersonalProfileForm(forms.ModelForm):
     middle_name = forms.CharField(
                                required=False,
                                widget=forms.TextInput())
+    bio = forms.CharField(
+                               required=False,
+                               widget=forms.TextInput())
     pfp = forms.ImageField(required=False, widget=forms.FileInput)
     date_of_birth = forms.DateField(required=False)
     phone_num = PhoneNumberField(widget=forms.TextInput(), error_messages={
@@ -338,7 +341,7 @@ class UpdatePersonalProfileForm(forms.ModelForm):
         )
     class Meta:
         model = BaseUser
-        fields = ['username', 'email', 'last_name', 'first_name', 'middle_name', 'date_of_birth', 'phone_num']
+        fields = ['username', 'email', 'last_name', 'first_name', 'middle_name', 'date_of_birth', 'phone_num', 'bio']
 
     
     def clean_email(self):
