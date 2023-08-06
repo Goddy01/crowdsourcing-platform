@@ -87,8 +87,6 @@ def activate_account(request, uidb64, token):
         user = BaseUser.objects.get(pk=uid)
     except(TypeError, ValueError, OverflowError, BaseUser.DoesNotExist):
         user = None
-    print('USER_WITHOUT_EMAIL: ', user)
-    print('USER_WITH_EMAIL: ', BaseUser.objects.get(email=request.user.email))
     # checking if the user exists, if the token is valid.
     if user is not None and account_activation_token.check_token(user, token):
         # if valid set active true 
@@ -222,9 +220,8 @@ def edit_profile(request):
             user_obj = user_p_info.save(commit=False)
             if user_p_info.cleaned_data['pfp']:
                 user_obj.pfp = user_p_info.cleaned_data['pfp']
-            if user_p_info.cleaned_data['date_of_birth']:
-                user_obj.date_of_birth = user_p_info.cleaned_data['date_of_birth']
-            print('YESSIRRR')
+            if user.date_of_birth:
+                user_obj.date_of_birth = user.date_of_birth
             user_obj.save()
             return redirect('accounts:profile')
         else:
@@ -252,18 +249,10 @@ def edit_profile(request):
     
     if request.method == 'POST' and 'user_skill_form' in request.POST:
         user_skill_data = {}
-
 #       Creates a loop to go through the form fields 'skill_1' to 'skill_10' and adds them to the user_skill_data
-        
-        if request.POST.get('skill_2'):
-            print('E DEY BOSS')
-        else:
-            print('E NO DEY BOSS')
         for i in range(1, 11):
             if request.POST.get(f'skill_{i}'):
                 user_skill_data[f'skill_{i}'] = request.POST.get(f'skill_{i}')
-
-        print('USER_SKILL_DATA: ', user_skill_data)
 
         user_skills_form = UpdateUserSkills(user_skill_data, instance=request.user)
         if user_skills_form.is_valid():
@@ -343,16 +332,3 @@ def remove_pfp(request):
     else:
         bool = False
     return JsonResponse(bool, safe=False)
-
-# def change_password(request):
-#     user = request.user
-#     if request.method == 'POST' and 'password_change' in request.POST:
-#         change_password_form = ChangePasswordForm(user, request.POST)
-#         if change_password_form.is_valid():
-#             change_password_form.save()
-#             return redirect('accounts:edit_profile')
-#         else:
-#             print('ERRORS: ', change_password_form.errors.as_data())
-#     else:
-#         change_password_form = ChangePasswordForm(user)
-#     return render(request, 'accounts/edit_profile.html', {'change_passsword_form': change_password_form})

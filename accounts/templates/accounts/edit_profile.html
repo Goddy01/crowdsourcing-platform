@@ -302,13 +302,13 @@
         <div class="col-md-6">
         <label class="form-label">First Name 
         </label>
-        <input type="text" class="form-control" placeholder="Enter your firstname" aria-label="First name" value="{{ user_form.first_name }}" name="first_name" id="first_name">
+        <input type="text" class="form-control" placeholder="Enter your firstname" aria-label="First name" value="{% if user.first_name %}{{ user.first_name }}{% endif %}" name="first_name" id="first_name">
         </div>
 
         <div class="col-md-6">
         <label class="form-label">Last Name 
         </label>
-        <input type="text" class="form-control" placeholder="Enter your lastname" aria-label="Last name" value="{{ user.last_name }}" name="last_name" id="last_name">
+        <input type="text" class="form-control" placeholder="Enter your lastname" aria-label="Last name" value="{% if user.last_name %}{{ user.last_name }}{% endif %}" name="last_name" id="last_name">
         </div>
 
         <div class="col-md-6">
@@ -320,20 +320,24 @@
         <div class="col-md-6">
         <label class="form-label">Username 
         </label>
-        <input type="text" class="form-control" placeholder="Enter your username" aria-label="Username" value="{% if user.username %} {{ user.username }} {% endif %} " name="username" id="username">
+        <input type="text" class="form-control" placeholder="Enter your username" aria-label="Username" value="{% if user.username %}{{ user.username }}{% endif %}" name="username" id="username">
         </div>
 
         <div class="col-md-6">
         <label class="form-label">Bio 
         </label>
-        <input type="text" class="form-control" placeholder="Enter your bio" aria-label="bio" name="bio" id="bio" value="{% if user.bio %} {{ user.bio }} {% endif %} ">
+        <input type="text" class="form-control" placeholder="Enter your bio" aria-label="bio" name="bio" id="bio" value="{% if user.bio %}{{ user.bio }}{% endif %}">
         </div>
 
         <div class="col-md-6">
         <label class="form-label">Date of Birth 
         </label>
-        <small>({{ user.date_of_birth }})</small>
-        <input type="date" class="form-control" placeholder="Enter your DOB" aria-label="DOB" name="date_of_birth" id="date_of_birth" value="{{ user.date_of_birth }}">
+        <small>
+          {% if user.date_of_birth %}
+          ({{ user.date_of_birth }})
+          {% endif %}
+        </small>
+        <input type="date" class="form-control" aria-label="DOB" name="date_of_birth" id="date_of_birth" value="{% if user.date_of_birth %}{{ user.date_of_birth }}{% endif %}">
         </div>
 
         <div class="col-md-6">
