@@ -214,7 +214,8 @@ def edit_profile(request):
             'middle_name': request.POST.get('middle_name'),
             'pfp': request.POST.get('pfp'),
             'phone_num': request.POST.get('phone_num'),
-            'date_of_birth': request.POST.get('date_of_birth')
+            'date_of_birth': request.POST.get('date_of_birth'),
+            'bio': request.POST.get('bio')
         }
         user_p_info = UpdatePersonalProfileForm(user_p_data, request.FILES, instance=request.user)
         if user_p_info.is_valid():

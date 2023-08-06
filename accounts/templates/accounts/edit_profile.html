@@ -302,47 +302,53 @@
         <div class="col-md-6">
         <label class="form-label">First Name 
         </label>
-        <input type="text" class="form-control" placeholder="" aria-label="First name" value="{{ user_form.first_name }}" name="first_name" id="first_name">
+        <input type="text" class="form-control" placeholder="Enter your firstname" aria-label="First name" value="{{ user_form.first_name }}" name="first_name" id="first_name">
         </div>
 
         <div class="col-md-6">
         <label class="form-label">Last Name 
         </label>
-        <input type="text" class="form-control" placeholder="" aria-label="Last name" value="{{ user.last_name }}" name="last_name" id="last_name">
+        <input type="text" class="form-control" placeholder="Enter your lastname" aria-label="Last name" value="{{ user.last_name }}" name="last_name" id="last_name">
         </div>
 
         <div class="col-md-6">
         <label class="form-label">Middle Name 
         </label>
-        <input type="text" class="form-control" placeholder="" aria-label="Middle name" value={% if user.middle_name %} "{{ user.middle_name }}" {% else %} "" {% endif %} name="middle_name" id="middle_name">
+        <input type="text" class="form-control" placeholder="Enter your middlename" aria-label="Middle name" value={% if user.middle_name %} "{{ user.middle_name }}" {% else %} "" {% endif %} name="middle_name" id="middle_name">
         </div>
 
         <div class="col-md-6">
         <label class="form-label">Username 
         </label>
-        <input type="text" class="form-control" placeholder="" aria-label="Username" value="{{ user.username }}" name="username" id="username">
+        <input type="text" class="form-control" placeholder="Enter your username" aria-label="Username" value="{% if user.username %} {{ user.username }} {% endif %} " name="username" id="username">
+        </div>
+
+        <div class="col-md-6">
+        <label class="form-label">Bio 
+        </label>
+        <input type="text" class="form-control" placeholder="Enter your bio" aria-label="bio" name="bio" id="bio" value="{% if user.bio %} {{ user.bio }} {% endif %} ">
         </div>
 
         <div class="col-md-6">
         <label class="form-label">Date of Birth 
         </label>
         <small>({{ user.date_of_birth }})</small>
-        <input type="date" class="form-control" placeholder="" aria-label="DOB" name="date_of_birth" id="date_of_birth" value="{{ user.date_of_birth }}">
+        <input type="date" class="form-control" placeholder="Enter your DOB" aria-label="DOB" name="date_of_birth" id="date_of_birth" value="{{ user.date_of_birth }}">
         </div>
 
         <div class="col-md-6">
         <label class="form-label">Phone number 
         </label>
-        <input type="tel" class="form-control" placeholder="" aria-label="Phone number" value= {% if user.phone_num %}"{{ user.phone_num }}" {% else %} "" {% endif %} name="phone_num" id="phone_num">
+        <input type="tel" class="form-control" placeholder="Enter your phone number" aria-label="Phone number" value= {% if user.phone_num %}"{{ user.phone_num }}" {% else %} "" {% endif %} name="phone_num" id="phone_num">
         </div>
 
-        <div class="d-flex justify-content-start">
+        <!-- <div class="d-flex justify-content-start"> -->
             <div class="col-md-6">
                 <label for="inputEmail4" class="form-label">Email 
                 </label>
-                <input type="email" class="form-control" value="{{ user.email }}" name="email" id="email">
+                <input type="email" placeholder="Enter your email address" class="form-control" value="{{ user.email }}" name="email" id="email">
                 </div>    
-        </div>
+        <!-- </div> -->
         <button type="submit" class="btn btn-success btn-lg" name="user_p_form" id="user_p_form">Save Changes</button>
         </form>
 
