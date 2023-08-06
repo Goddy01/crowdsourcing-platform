@@ -253,7 +253,12 @@ def edit_profile(request):
         user_skill_data = {}
 
 #       Creates a loop to go through the form fields 'skill_1' to 'skill_10' and adds them to the user_skill_data
-        for i in len(range(1, 11)):
+        
+        if request.POST.get('skill_2'):
+            print('E DEY BOSS')
+        else:
+            print('E NO DEY BOSS')
+        for i in range(1, 11):
             if request.POST.get(f'skill_{i}'):
                 user_skill_data[f'skill_{i}'] = request.POST.get(f'skill_{i}')
 
@@ -261,7 +266,12 @@ def edit_profile(request):
 
         user_skills_form = UpdateUserSkills(user_skill_data, instance=request.user)
         if user_skills_form.is_valid():
-            user_skills_form.save()
+            skills_obj = user_skills_form.save(commit=False)
+            for i in range(1, 11):
+                if user_skills_form.cleaned_data[f'skill_{i}']:
+                    # skills_obj.skill_+ f'{i}' = user_skills_form.cleaned_data[f'skill_{i}']
+                    setattr(skills_obj, f'skill_{i}', user_skills_form.cleaned_data[f'skill_{i}'])
+            skills_obj.save()
             return redirect('accounts:profile')
         else:
             print('SKILLS ERRORS: ', user_skills_form.errors.as_data())
