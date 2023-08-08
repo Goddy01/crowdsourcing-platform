@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
-from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm, UpdateUserResidentialInfoForm, UpdateUserSocialsForm, ChangePasswordForm, UpdateUserSkills
+from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm, UpdateUserResidentialInfoForm, UpdateUserSocialsForm, ChangePasswordForm, UpdateUserSkills, UpdateUserServicesForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -203,6 +203,8 @@ def edit_profile(request):
     user_info = BaseUser.objects.get(username=request.user.username)
     if not request.user.is_authenticated:
         return redirect('accounts:innovator_login')
+    
+    # USER PERSONAL DATA
     if request.method == 'POST' and 'user_p_form' in request.POST:
         user_p_data = {
             'username': request.POST.get('username'),
@@ -229,7 +231,7 @@ def edit_profile(request):
     else:
         user_p_info = UpdatePersonalProfileForm()
 
-    
+#   USER RESIDENTIAL DATA
     if request.method == 'POST' and 'user_r_form' in request.POST:
         user_r_data = {
             'city': request.POST.get('city'),
@@ -247,6 +249,7 @@ def edit_profile(request):
     else:
         user_r_info = UpdateUserResidentialInfoForm()
     
+#   USER SKILS DATA
     if request.method == 'POST' and 'user_skill_form' in request.POST:
         user_skill_data = {}
 #       Creates a loop to go through the form fields 'skill_1' to 'skill_10' and adds them to the user_skill_data
@@ -268,6 +271,7 @@ def edit_profile(request):
     else:
         user_skills_form = UpdateUserSkills()
 
+#   USER SOCIALS DATA
     if request.method == 'POST' and 'user_s_form' in request.POST:
         user_s_data = {
             'facebook': request.POST.get('facebook'),
@@ -285,6 +289,7 @@ def edit_profile(request):
     else:
         user_s_info = UpdateUserSocialsForm()
 
+#   USER CHANGE PASSWORD DATA
     user = request.user
     if request.method == 'POST' and 'password_change' in request.POST:
         change_password_form = ChangePasswordForm(user, request.POST)
@@ -296,6 +301,21 @@ def edit_profile(request):
     else:
         change_password_form = ChangePasswordForm(user)
 
+#   USER SERVICES DATA
+    if request.method == 'POST' and 'services_form' in request.POST:
+        services_data = {
+            'service_1': request.POST.get('service_1'),
+            'service_2': request.POST.get('service_2'),
+            'service_3': request.POST.get('service_3'),
+            'service_4': request.POST.get('service_4'),
+            'service_5': request.POST.get('service_5')
+        }
+        services_form = UpdateUserServicesForm(services_data, instance=request.user)
+        if services_form.is_valid():
+            services_form.save()
+            return redirect('accounts:profile')
+        else:
+            print('SERVICES FORM ERRORS: ', services_form.errors.as_data())
 
     return render(request, 'accounts/edit_profile.html', {
         'user_form': user,
@@ -304,7 +324,8 @@ def edit_profile(request):
         'user_r_info_form': user_r_info,
         'user_s_info_form': user_s_info,
         'change_password_form': change_password_form,
-        'user_skills_form': user_skills_form
+        'user_skills_form': user_skills_form,
+        'user_services_form': services_form
     })
 
 def resend_email_activation(request):
