@@ -328,15 +328,15 @@ def edit_profile(request):
             service_5 = request.POST.get('service_5')
             
             if service_1:
-                innovator.user.services.service_1 = service_1
+                innovator.services.service_1 = service_1
             if service_2:
-                innovator.user.services.service_2 = service_2
+                innovator.services.service_2 = service_2
             if service_3:
-                innovator.user.services.service_3 = service_3
+                innovator.services.service_3 = service_3
             if service_4:
-                innovator.user.services.service_4 = service_4
+                innovator.services.service_4 = service_4
             if service_5:
-                innovator.user.services.service_5 = service_5
+                innovator.services.service_5 = service_5
             services_form.save()
             return redirect('accounts:profile')
         else:
