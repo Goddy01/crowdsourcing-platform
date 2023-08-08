@@ -316,6 +316,8 @@ def edit_profile(request):
             return redirect('accounts:profile')
         else:
             print('SERVICES FORM ERRORS: ', services_form.errors.as_data())
+    else:
+        services_form = UpdateUserServicesForm()
 
     return render(request, 'accounts/edit_profile.html', {
         'user_form': user,
