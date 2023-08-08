@@ -67,7 +67,7 @@ def upload_location_pfp(instance, filename):
 def upload_location_id_card(instance, filename):
     return f'id_cards/{str(instance.username)}/-{filename}'
 
-class Services(models.Model):
+class Service(models.Model):
     service_1 = models.CharField(max_length=254, null=True, blank=True)
     service_2 = models.CharField(max_length=254, null=True, blank=True)
     service_3 = models.CharField(max_length=254, null=True, blank=True)
@@ -100,7 +100,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     skill_8 =                       models.CharField(null=True, blank=True, max_length=128)
     skill_9 =                       models.CharField(null=True, blank=True, max_length=128)
     skill_10 =                      models.CharField(null=True, blank=True, max_length=128)
-    services =                      models.ForeignKey(Services, on_delete=models.CASCADE, null=True, blank=True)
+    services =                      models.ForeignKey(Service, on_delete=models.CASCADE, null=True, blank=True)
     date_joined =                   models.DateTimeField(auto_now_add=True)
     last_login =                    models.DateTimeField(auto_now=True)
     updated_at =                    models.DateTimeField(auto_now=True)

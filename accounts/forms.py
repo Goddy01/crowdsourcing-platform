@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django import forms
-from .models import Innovator, Moderator, BaseUser, Services
+from .models import Innovator, Moderator, BaseUser, Service
 from django.contrib.auth import authenticate, password_validation
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm, SetPasswordForm
 from django.utils.translation import gettext_lazy as _
@@ -405,5 +405,5 @@ class ChangePasswordForm(SetPasswordForm):
 
 class UpdateUserServicesForm(forms.Form)        :
     class Meta:
-        model = Services
+        model = Service
         fields = ('service_1', 'service_2', 'service_3', 'service_4', 'service_5')
