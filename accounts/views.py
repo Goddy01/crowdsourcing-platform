@@ -199,6 +199,10 @@ def profile(request):
     })
 
 def edit_profile(request):
+    try:
+        innovator = Innovator.objects.get(user__username=request.user.username)
+    except Innovator.DoesNotExist:
+        return HttpResponse('You are unable to access this page because you are not an innovator.')
     user = BaseUser.objects.get(username=request.user.username)
     user_info = BaseUser.objects.get(username=request.user.username)
     if not request.user.is_authenticated:
@@ -312,6 +316,27 @@ def edit_profile(request):
         }
         services_form = UpdateUserServicesForm(services_data, instance=request.user)
         if services_form.is_valid():
+            try:
+                innovator = Innovator.objects.get(user__username=request.user.username)
+            except Innovator.DoesNotExist:
+                return HttpResponse('Sorry you are not an innovator.')
+            
+            service_1 = request.POST.get('service_1')
+            service_2 = request.POST.get('service_2')
+            service_3 = request.POST.get('service_3')
+            service_4 = request.POST.get('service_4')
+            service_5 = request.POST.get('service_5')
+            
+            if service_1:
+                innovator.user.services.service_1 = service_1
+            if service_2:
+                innovator.user.services.service_2 = service_2
+            if service_3:
+                innovator.user.services.service_3 = service_3
+            if service_4:
+                innovator.user.services.service_4 = service_4
+            if service_5:
+                innovator.user.services.service_5 = service_5
             services_form.save()
             return redirect('accounts:profile')
         else:
