@@ -403,7 +403,7 @@ class ChangePasswordForm(SetPasswordForm):
         model = BaseUser
         fields = ['new_password1', 'new_password2']
 
-class UpdateUserServicesForm(forms.Form)        :
+class UpdateUserServicesForm(forms.ModelForm)        :
     service_1 = forms.CharField(required=False)
     service_2 = forms.CharField(required=False)
     service_3 = forms.CharField(required=False)
