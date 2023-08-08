@@ -100,7 +100,7 @@
                         </div>
                         <b class="fs-6">Hello I am, {{user.first_name}} {{user.last_name}}</b>
                         <h1 class="fw-bold mb-4 fs-1">Full Stack Develper</h1>
-                        <p>Mauris cursus libero eu gravida malesuada. Vivamus efficitur sollicitudin tincidunt. Vivamus iaculis, est et posuere facilisis, sem nisi volutpat enim, eget hendrerit libero ligula quis lacus</p>
+                        <p>{{ user.bio }}</p>
                         <ul>
                             <li></li>
                         </ul>
@@ -129,59 +129,14 @@
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ipsum sit nibh amet egestas tellus.</p>
                         
                         <div class="row skill-set">
+                            {% if user.skill_1 %}
                             <div class="col-md-6 py-3">
-                               <h6 class="fw-bold">React.Js</h6>
+                               <h6 class="fw-bold">{{ user.skill_1 }}</h6>
                                 <div class="progress">
-                                  <div class="progress-bar bg-success" role="progressbar" aria-label="Example with label" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>
+                                  <div class="progress-bar bg-success" role="progressbar" aria-label="Example with label" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
                             </div>
-                             <div class="col-md-6 py-3">
-                                <h6 class="fw-bold">Vue.Js</h6>
-                                <div class="progress">
-                                  <div class="progress-bar bg-success" role="progressbar" aria-label="Example with label" style="width: 65%;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">60%</div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 py-3">
-                                <h6 class="fw-bold">Angular.Js</h6>
-                                <div class="progress">
-                                  <div class="progress-bar bg-success" role="progressbar" aria-label="Example with label" style="width: 90%;" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100">90%</div>
-                                </div>
-                            </div>
-                            
-                             <div class="col-md-6 py-3">
-                                <h6 class="fw-bold">Laravel</h6>
-                                <div class="progress">
-                                  <div class="progress-bar bg-success" role="progressbar" aria-label="Example with label" style="width: 85%;" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100">85%</div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-6 py-3">
-                                <h6 class="fw-bold">Django</h6>
-                                <div class="progress">
-                                  <div class="progress-bar bg-success" role="progressbar" aria-label="Example with label" style="width: 55%;" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100">55%</div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-6 py-3">
-                                <h6 class="fw-bold">Next Js</h6>
-                                <div class="progress">
-                                  <div class="progress-bar bg-success" role="progressbar" aria-label="Example with label" style="width: 66%;" aria-valuenow="66" aria-valuemin="0" aria-valuemax="100">66%</div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-6 py-3">
-                                <h6 class="fw-bold">Phoptoshop</h6>
-                                <div class="progress">
-                                  <div class="progress-bar bg-success" role="progressbar" aria-label="Example with label" style="width: 82%;" aria-valuenow="82" aria-valuemin="0" aria-valuemax="100">82%</div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-6 py-3">
-                                <h6 class="fw-bold">Sketch</h6>
-                                <div class="progress">
-                                  <div class="progress-bar bg-success" role="progressbar" aria-label="Example with label" style="width: 45%;" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100">45%</div>
-                                </div>
-                            </div>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="col-md-5">
