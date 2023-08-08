@@ -68,11 +68,11 @@ def upload_location_id_card(instance, filename):
     return f'id_cards/{str(instance.username)}/-{filename}'
 
 class Services(models.Model):
-    service_1 = models.CharField(max_length=254, null=True, blank=False)
-    service_2 = models.CharField(max_length=254, null=True, blank=False)
-    service_3 = models.CharField(max_length=254, null=True, blank=False)
-    service_4 = models.CharField(max_length=254, null=True, blank=False)
-    service_5 = models.CharField(max_length=254, null=True, blank=False)
+    service_1 = models.CharField(max_length=254, null=True, blank=True)
+    service_2 = models.CharField(max_length=254, null=True, blank=True)
+    service_3 = models.CharField(max_length=254, null=True, blank=True)
+    service_4 = models.CharField(max_length=254, null=True, blank=True)
+    service_5 = models.CharField(max_length=254, null=True, blank=True)
 
 class BaseUser(AbstractBaseUser, PermissionsMixin):
     last_name =                     models.CharField(max_length=256, null=True, blank=True)
