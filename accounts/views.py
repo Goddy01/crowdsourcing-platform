@@ -314,7 +314,7 @@ def edit_profile(request):
             'service_4': request.POST.get('service_4'),
             'service_5': request.POST.get('service_5')
         }
-        services_form = UpdateUserServicesForm(services_data, instance=request.user)
+        services_form = UpdateUserServicesForm(services_data)
         if services_form.is_valid():
             try:
                 innovator = Innovator.objects.get(user__username=request.user.username)
@@ -327,8 +327,10 @@ def edit_profile(request):
             service_4 = request.POST.get('service_4')
             service_5 = request.POST.get('service_5')
             
-            if service_1:
-                innovator.services.service_1 = service_1
+            print('SERVICE 1: ', request.POST.get('service_1'))
+            innovator = Innovator.objects.get(user__username=request.user.username)
+            if service_1 is not None:
+                innovator.services.service_1 = request.POST.get('service_1')
             if service_2:
                 innovator.services.service_2 = service_2
             if service_3:
