@@ -67,12 +67,7 @@ def upload_location_pfp(instance, filename):
 def upload_location_id_card(instance, filename):
     return f'id_cards/{str(instance.username)}/-{filename}'
 
-class Service(models.Model):
-    service_1 = models.CharField(max_length=254, null=True, blank=True)
-    service_2 = models.CharField(max_length=254, null=True, blank=True)
-    service_3 = models.CharField(max_length=254, null=True, blank=True)
-    service_4 = models.CharField(max_length=254, null=True, blank=True)
-    service_5 = models.CharField(max_length=254, null=True, blank=True)
+
 
 class BaseUser(AbstractBaseUser, PermissionsMixin):
     last_name =                     models.CharField(max_length=256, null=True, blank=True)
@@ -100,7 +95,6 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     skill_8 =                       models.CharField(null=True, blank=True, max_length=128)
     skill_9 =                       models.CharField(null=True, blank=True, max_length=128)
     skill_10 =                      models.CharField(null=True, blank=True, max_length=128)
-    services =                      models.ForeignKey(Service, on_delete=models.CASCADE, null=True, blank=True)
     date_joined =                   models.DateTimeField(auto_now_add=True)
     last_login =                    models.DateTimeField(auto_now=True)
     updated_at =                    models.DateTimeField(auto_now=True)
@@ -149,6 +143,13 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
         """Checks if the user has permission to view the app 'app_label'"""
         return True
 
+class Service(models.Model):
+    service_1 = models.CharField(max_length=254, null=True, blank=True)
+    service_2 = models.CharField(max_length=254, null=True, blank=True)
+    service_3 = models.CharField(max_length=254, null=True, blank=True)
+    service_4 = models.CharField(max_length=254, null=True, blank=True)
+    service_5 = models.CharField(max_length=254, null=True, blank=True)
+
 # CONTRIBUTOR Model
 class Innovator(models.Model):
     user =                          models.OneToOneField(BaseUser, on_delete=models.CASCADE)
@@ -158,6 +159,7 @@ class Innovator(models.Model):
     reputation_score =              models.IntegerField(default=0)
     is_project_mgr =                models.BooleanField(default=False)
     is_investor =                   models.BooleanField(default=False)
+    services =                      models.ForeignKey(Service, on_delete=models.CASCADE, null=True, blank=True)
     
     USERNAME_FIELD = "email"
     # REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'middle_name', 'phone_num']
