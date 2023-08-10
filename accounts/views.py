@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
-from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm, UpdateUserResidentialInfoForm, UpdateUserSocialsForm, ChangePasswordForm, UpdateUserSkills, UpdateUserServicesForm, UpdateInnovatorServicesForm
+from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm, UpdateUserResidentialInfoForm, UpdateUserSocialsForm, ChangePasswordForm, UpdateUserSkills, UpdateInnovatorServicesForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -314,10 +314,9 @@ def edit_profile(request):
             'service_4': request.POST.get('service_4'),
             'service_5': request.POST.get('service_5')
         }
-        innovator_form = UpdateUserServicesForm(services_data)
-        innovator_service_form = UpdateInnovatorServicesForm()
-        if innovator_form.is_valid() and innovator_service_form.is_valid:
-            service_obj = innovator_form.save(commit=False)
+        innovator_service_form = UpdateInnovatorServicesForm(services_data)
+        if innovator_service_form.is_valid:
+            service_obj = innovator_service_form.save(commit=False)
             service_1 = request.POST.get('service_1')
             service_2 = request.POST.get('service_2')
             service_3 = request.POST.get('service_3')
@@ -336,8 +335,6 @@ def edit_profile(request):
                 service_obj.service_5 = service_5
 
             service_obj.save()
-            innovator_service_form.services = service_obj
-            innovator_service_form.save()
             return redirect('accounts:profile')
         else:
             print('SERVICES FORM ERRORS: ', innovator_form.errors.as_data())
