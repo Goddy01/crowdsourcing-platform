@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
-from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm, UpdateUserResidentialInfoForm, UpdateUserSocialsForm, ChangePasswordForm, UpdateUserSkills, UpdateUserServicesForm
+from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm, UpdateUserResidentialInfoForm, UpdateUserSocialsForm, ChangePasswordForm, UpdateUserSkills, UpdateUserServicesForm, UpdateInnovatorServicesForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -315,8 +315,9 @@ def edit_profile(request):
             'service_5': request.POST.get('service_5')
         }
         innovator_form = UpdateUserServicesForm(services_data)
-        if innovator_form.is_valid():
-            innovator_obj = innovator_form.save(commit=False)
+        innovator_service_form = UpdateInnovatorServicesForm()
+        if innovator_form.is_valid() and innovator_service_form.is_valid:
+            service_obj = innovator_form.save(commit=False)
             service_1 = request.POST.get('service_1')
             service_2 = request.POST.get('service_2')
             service_3 = request.POST.get('service_3')
@@ -324,17 +325,19 @@ def edit_profile(request):
             service_5 = request.POST.get('service_5')
             
             if service_1 is not None:
-                innovator_obj.services.service_1 = service_1
+                service_obj.service_1 = service_1
             if service_2:
-                innovator_obj.services.service_2 = service_2
+                service_obj.service_2 = service_2
             if service_3:
-                innovator_obj.services.service_3 = service_3
+                service_obj.service_3 = service_3
             if service_4:
-                innovator_obj.services.service_4 = service_4
+                service_obj.service_4 = service_4
             if service_5:
-                innovator_obj.services.service_5 = service_5
-            print('OBJECT: ', innovator_obj)
-            innovator_obj.save()
+                service_obj.service_5 = service_5
+
+            service_obj.save()
+            innovator_service_form.services = service_obj
+            innovator_service_form.save()
             return redirect('accounts:profile')
         else:
             print('SERVICES FORM ERRORS: ', innovator_form.errors.as_data())

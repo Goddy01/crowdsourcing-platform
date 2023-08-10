@@ -144,11 +144,6 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
         return True
 
 class Service(models.Model):
-    service_1 = models.CharField(max_length=254, null=True, blank=True)
-    service_2 = models.CharField(max_length=254, null=True, blank=True)
-    service_3 = models.CharField(max_length=254, null=True, blank=True)
-    service_4 = models.CharField(max_length=254, null=True, blank=True)
-    service_5 = models.CharField(max_length=254, null=True, blank=True)
 
     def __str__(self):
         return "services"
@@ -162,7 +157,11 @@ class Innovator(models.Model):
     reputation_score =              models.IntegerField(default=0)
     is_project_mgr =                models.BooleanField(default=False, null=True, blank=True)
     is_investor =                   models.BooleanField(default=False)
-    services =                      models.ForeignKey(Service, on_delete=models.CASCADE, null=True, blank=True)
+    service_1 =                     models.CharField(max_length=254, null=True, blank=True)
+    service_2 =                     models.CharField(max_length=254, null=True, blank=True)
+    service_3 =                     models.CharField(max_length=254, null=True, blank=True)
+    service_4 =                     models.CharField(max_length=254, null=True, blank=True)
+    service_5 =                     models.CharField(max_length=254, null=True, blank=True)
     
     USERNAME_FIELD = "email"
     # REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'middle_name', 'phone_num']
