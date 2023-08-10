@@ -150,14 +150,17 @@ class Service(models.Model):
     service_4 = models.CharField(max_length=254, null=True, blank=True)
     service_5 = models.CharField(max_length=254, null=True, blank=True)
 
+    def __str__(self):
+        return "services"
+
 # CONTRIBUTOR Model
 class Innovator(models.Model):
     user =                          models.OneToOneField(BaseUser, on_delete=models.CASCADE)
-    innovations_count =             models.IntegerField(default=0)
-    upvotes_received =              models.IntegerField(default=0)
-    downvotes_received =            models.IntegerField(default=0)
+    innovations_count =             models.IntegerField(default=0, null=True, blank=True)
+    upvotes_received =              models.IntegerField(default=0, null=True, blank=True)
+    downvotes_received =            models.IntegerField(default=0, null=True, blank=True)
     reputation_score =              models.IntegerField(default=0)
-    is_project_mgr =                models.BooleanField(default=False)
+    is_project_mgr =                models.BooleanField(default=False, null=True, blank=True)
     is_investor =                   models.BooleanField(default=False)
     services =                      models.ForeignKey(Service, on_delete=models.CASCADE, null=True, blank=True)
     
