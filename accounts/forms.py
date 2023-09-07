@@ -383,6 +383,8 @@ class UpdateUserResidentialInfoForm(forms.ModelForm):
         fields = ['city', 'state', 'country', 'address', 'zipcode']
 
 class UpdateUserSkillsForm(forms.ModelForm):
+    skill = forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Enter skill'}))
+    skill_value = forms.IntegerField(required=False, widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Skill proficiency value out of 100'}))
     class Meta:
         model = InnovatorSkill
         fields  = ['skill', 'skill_value']

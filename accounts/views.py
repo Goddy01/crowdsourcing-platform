@@ -17,6 +17,8 @@ from django.forms import ValidationError, modelformset_factory
 from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.http import JsonResponse
+from django.forms import formset_factory
+
 
 # Create your views here.
 def activation_sent_view(request):
@@ -254,20 +256,21 @@ def edit_profile(request):
 #   USER SKILS DATA
     if request.method == 'POST' and 'user_skill_form' in request.POST:
         user_skill_data = {}
+        skill_formset = formset_factory(UpdateUserSkillsForm, extra=10)
+        formset = skill_formset()
 #       Creates a loop to go through the form fields 'skill_1' to 'skill_10' and adds them to the user_skill_data
         for i in range(1, 11):
             if request.POST.get(f'skill_{i}'):
                 user_skill_data[f'skill_{i}'] = request.POST.get(f'skill_{i}')
             if request.POST.get(f'skill_{i}_value'):
                 user_skill_data[f'skill_{i}_value'] = request.POST.get(f'skill_{i}_value')
-        print('DATA: ', user_skill_data)
         # for skill_dict in user_skill_data:
         user_skill_form = UpdateUserSkillsForm(user_skill_data, instance=request.user)
-        print(0)
         if user_skill_form.is_valid():
-            print(1)
-            user_skill_form.save()
-            print('RESULT: ', user_skill_form)
+            user_skills_obj = user_skill_form.save(commit=False)
+            user_skills_obj.innovator = Innovator.objects.get(user__username=request.user.username)
+            # user_skills_obj.skill = user_skill_form.cleaned_data['']
+            print('yessirr')
             # for i in range(1, 11):
             #     if user_skill_form.cleaned_data[f'skill_{i}']:
             #         # skills_obj.skill_+ f'{i}' = user_skill_form.cleaned_data[f'skill_{i}']
@@ -342,7 +345,7 @@ def edit_profile(request):
         'user_r_info_form': user_r_info,
         'user_s_info_form': user_s_info,
         'change_password_form': change_password_form,
-        # 'user_skill_form': user_skill_form,
+        'user_skill_formset': formset,
         'user_skills': Innovator.objects.get(user__username=request.user).innovatorskill_set.all(),
         'user_innovator_form': innovator_form,
         'innovator': Innovator.objects.get(user__username=request.user.username)
