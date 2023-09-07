@@ -84,7 +84,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     country =                       CountryField(max_length=255, null=True, blank=True)
     address =                       models.CharField(max_length=128, blank=True, null=True)
     phone_num =                     PhoneNumberField(null=True, blank=True, verbose_name="Phone Number", unique=True)
-    zipcode =                       models.IntegerField(null=True, blank=True)
+    zipcode =                       models.CharField(null=True, blank=True, max_length=255)
     skill_1 =                       models.CharField(null=True, blank=True, max_length=128)
     skill_2 =                       models.CharField(null=True, blank=True, max_length=128)
     skill_3 =                       models.CharField(null=True, blank=True, max_length=128)

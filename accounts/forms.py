@@ -377,7 +377,7 @@ class UpdateUserResidentialInfoForm(forms.ModelForm):
     country = CountryField(blank=True)
     address = forms.CharField(required=False,
                              widget=forms.TextInput())
-    zipcode = forms.IntegerField(required=False)
+    zipcode = forms.CharField(required=False)
     class Meta:
         model = BaseUser
         fields = ['city', 'state', 'country', 'address', 'zipcode']

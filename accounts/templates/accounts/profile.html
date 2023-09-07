@@ -100,7 +100,11 @@
                         </div>
                         <b class="fs-6">Hello I am, {{user.first_name}} {{user.last_name}}</b>
                         <h1 class="fw-bold mb-4 fs-1">Full Stack Develper</h1>
-                        <p>{{ user.bio }}</p>
+                        <p>
+                            {% if user.bio %}
+                            {{ user.bio }}
+                            {% endif %}
+                        </p>
                         <ul>
                             <li></li>
                         </ul>
@@ -121,12 +125,9 @@
                     <h2 class="fw-bolder text-success">About Me</h2>
                 </div>
                 <div class="row">
-                    <div class="col-md-7">
+                    <div class="col-md-12">
                         <p><b>I am, {{user.first_name}} {{user.last_name}}</b></p>
                         <p class="pt-2 fs-6 text-justify">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus pulvinar magna ut bibendum imperdiet. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum id tempor libero. Praesent vel magna eget purus dignissim interdum. Sed efficitur malesuada dui, ac interdum ante scelerisque non. Curabitur quis euismod lorem, vel rutrum ante. Sed non vestibulum turpis. Phasellus sit amet nisl in diam congue tristique. Nullam convallis lectus ac nisl iaculis, non posuere ipsum interdum. Vivamus nec justo ac sapien convallis maximus.</p>
-                        
-                        <h4 class=" fs-5 my-3 mt-4 fw-bolder">What is my skill level ?</h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ipsum sit nibh amet egestas tellus.</p>
                         
                         <div class="row skill-set">
                             {% if user.skill_1 %}
@@ -139,9 +140,32 @@
                             {% endif %}
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <!-- <div class="col-md-5">
                         <img src="{% static 'accounts/images/profile.jpg' %}" alt="">
+                    </div> -->
+                </div>
+            </div>
+
+            <div id="about" class="skills px-4 bg-white py-5">
+                <div class="titie-row row mb-3">
+                    <h2 class="fw-bolder text-success">Skills</h2>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row skill-set">
+                            {% if user.skill_1 %}
+                            <div class="col-md-6 py-3">
+                               <h6 class="fw-bold">{{ user.skill_1 }}</h6>
+                                <div class="progress">
+                                  <div class="progress-bar bg-success" role="progressbar" aria-label="Example with label" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
                     </div>
+                    <!-- <div class="col-md-5">
+                        <img src="{% static 'accounts/images/profile.jpg' %}" alt="">
+                    </div> -->
                 </div>
             </div>
             
