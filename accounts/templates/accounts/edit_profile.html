@@ -491,36 +491,36 @@
       <!-- <form class="row g-3"> -->
       <h4 class="mb-4 mt-0 text-success">Services</h4>
       <small class="">(You can add up to 5 services)</small>
-      <form method="post" action="{% url 'accounts:edit_profile' %}" class="row g-3 form-container">
+      <form method="post" action="{% url 'accounts:edit_profile' %}" class="row g-3">
         {% csrf_token %}
         <div class="col-md-6">
             <label class="form-label">
             </label>
-            <input type="text" class="form-control" placeholder="Enter Service 1" aria-label="Service" value={% if user.services.service_1 %} "{{ user.services.service_1 }}" {% else %} "" {% endif %} id="service_1" name="service_1">
+            <input type="text" class="form-control" placeholder="Enter Service 1" aria-label="Service" value={% if innovator.service_1 %} "{{ innovator.service_1 }}" {% else %} "" {% endif %} id="service_1" name="service_1">
           </div>
           
           <div class="col-md-6">
             <label class="form-label">
             </label>
-            <input type="text" class="form-control" placeholder="Enter Service 2" aria-label="Service" value="{% if user.services.service_2 %} {{ user.services.service_2 }} {% endif %}" id="service_2" name="service_2">
+            <input type="text" class="form-control" placeholder="Enter Service 2" aria-label="Service" value="{% if innovator.service_2 %} {{ innovator.service_2 }} {% endif %}" id="service_2" name="service_2">
           </div>
   
           <div class="col-md-6">
             <label class="form-label">
             </label>
-            <input type="text" class="form-control" placeholder="Enter Service 3" aria-label="Service" value="{% if user.services.service_3 %} {{ user.services.service_3 }} {% endif %}" id="service_3" name="service_3">
+            <input type="text" class="form-control" placeholder="Enter Service 3" aria-label="Service" value="{% if innovator.service_3 %} {{ innovator.service_3 }} {% endif %}" id="service_3" name="service_3">
           </div>
   
           <div class="col-md-6">
             <label class="form-label">
             </label>
-            <input type="text" class="form-control" placeholder="Enter Service 4" aria-label="Service" value="{% if user.services.service_4 %} {{ user.services.service_4 }} {% endif %}" id="service_4" name="service_4">
+            <input type="text" class="form-control" placeholder="Enter Service 4" aria-label="Service" value="{% if innovator.service_4 %} {{ innovator.service_4 }} {% endif %}" id="service_4" name="service_4">
           </div>
   
           <div class="col-md-6">
             <label class="form-label">
             </label>
-            <input type="text" class="form-control" placeholder="Enter Service 5" aria-label="Service" value="{% if user.services.service_5 %} {{ user.services.service_5 }} {% endif %}" id="service_5" name="service_5">
+            <input type="text" class="form-control" placeholder="Enter Service 5" aria-label="Service" value="{% if innovator.service_5 %} {{ innovator.service_5 }} {% endif %}" id="service_5" name="service_5">
           </div>
           <div id="form" class="form"></div>
           <!-- <div class="d-flex justify-content-center"> -->

@@ -143,32 +143,29 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
         """Checks if the user has permission to view the app 'app_label'"""
         return True
 
-class Service(models.Model):
-
-    def __str__(self):
-        return "services"
-
 # CONTRIBUTOR Model
 class Innovator(models.Model):
-    user =                          models.OneToOneField(BaseUser, on_delete=models.CASCADE)
+    user =                          models.ForeignKey(BaseUser, on_delete=models.CASCADE, null=True, blank=True)
     innovations_count =             models.IntegerField(default=0, null=True, blank=True)
     upvotes_received =              models.IntegerField(default=0, null=True, blank=True)
     downvotes_received =            models.IntegerField(default=0, null=True, blank=True)
-    reputation_score =              models.IntegerField(default=0)
-    is_project_mgr =                models.BooleanField(default=False, null=True, blank=True)
+    service_1 =                     models.CharField(max_length=128, null=True, blank=True)
+    service_2 =                     models.CharField(max_length=128, null=True, blank=True)
+    service_3 =                     models.CharField(max_length=128, null=True, blank=True)
+    service_4 =                     models.CharField(max_length=128, null=True, blank=True)
+    service_5 =                     models.CharField(max_length=128, null=True, blank=True)
+    reputation_score =              models.IntegerField(default=0)   
     is_investor =                   models.BooleanField(default=False)
-    service_1 =                     models.CharField(max_length=254, null=True, blank=True)
-    service_2 =                     models.CharField(max_length=254, null=True, blank=True)
-    service_3 =                     models.CharField(max_length=254, null=True, blank=True)
-    service_4 =                     models.CharField(max_length=254, null=True, blank=True)
-    service_5 =                     models.CharField(max_length=254, null=True, blank=True)
     
     USERNAME_FIELD = "email"
     # REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'middle_name', 'phone_num']
     REQUIRED_FIELDS = ['username', ]
 
     def __str__(self):
-        return f"Innovator: {self.user.username}"
+        if self.user:
+            return f"Innovator: {self.user.username}"
+        
+        return "Innovator"
 
     
 # MODERATOR Model
@@ -178,6 +175,9 @@ class Moderator(models.Model):
     area_of_expertise = models.CharField(max_length=200)
 
     def __str__(self):
+        if not self.user.username:
+            return "Moderator"
+        
         return f"Moderator: {self.user.username}"
     
     USERNAME_FIELD = "email"

@@ -54,14 +54,14 @@
                     {% for field in innovator_signup_form %}
                     {% if field.name != 'password2' %}
                     {% for error in field.errors %}
-                    <li class="ml-2">{{ error }}</li>
+                    <li class="ml-2 1">{{ error }}</li>
                     {% endfor %}
                     {% endif %}
                     {% if field.name == 'password2' and password1 and not password2 %}
-                    <li class="ml-2">{{ field.errors }}</li>
+                    <li class="ml-2 2">{{ field.errors }}</li>
                     {% endif %}
-                    {% if field.name == 'password2' and password1 and password2 %}
-                    <li class="ml-2">{{ field.errors }}</li>
+                    {% if field.name == 'password2' and password1 and password2 and field.errors %}
+                    <li class="ml-2 3">{{ field.errors }}</li>
                     {% endif %}
                     {% endfor %}
                   </ul>        

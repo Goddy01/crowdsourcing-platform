@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import BaseUser, Innovator, Moderator, Service
+from .models import BaseUser, Innovator, Moderator
 from django.contrib.auth.admin import UserAdmin
 # Register your models here.
 class AccountAdmin(UserAdmin):
@@ -16,4 +16,3 @@ admin.site.register(BaseUser, AccountAdmin)
 #     fieldsets = ()
 admin.site.register(Innovator)
 admin.site.register(Moderator)
-admin.site.register(Service)

@@ -307,39 +307,29 @@ def edit_profile(request):
 
 #   USER SERVICES DATA
     if request.method == 'POST' and 'innovator_form' in request.POST:
-        services_data = {
+        user_services_data = {
             'service_1': request.POST.get('service_1'),
             'service_2': request.POST.get('service_2'),
             'service_3': request.POST.get('service_3'),
             'service_4': request.POST.get('service_4'),
             'service_5': request.POST.get('service_5')
         }
-        innovator_service_form = UpdateInnovatorServicesForm(services_data)
-        if innovator_service_form.is_valid:
-            service_obj = innovator_service_form.save(commit=False)
-            service_1 = request.POST.get('service_1')
-            service_2 = request.POST.get('service_2')
-            service_3 = request.POST.get('service_3')
-            service_4 = request.POST.get('service_4')
-            service_5 = request.POST.get('service_5')
-            
-            if service_1 is not None:
-                service_obj.service_1 = service_1
-            if service_2:
-                service_obj.service_2 = service_2
-            if service_3:
-                service_obj.service_3 = service_3
-            if service_4:
-                service_obj.service_4 = service_4
-            if service_5:
-                service_obj.service_5 = service_5
-
-            service_obj.save()
+        innovator_service_form = UpdateInnovatorServicesForm(user_services_data)
+        if innovator_service_form.is_valid():
+            # service_obj = innovator_service_form.save(commit=False)
+            # service_1 = service_obj.service_1
+            # service_2 = service_obj.service_2
+            # service_3 = service_obj.service_3
+            # service_4 = service_obj.service_4
+            # service_5 = service_obj.service_5
+            print('SERVICE: ', innovator_service_form['service_1'])
+            innovator_service_form.save()
+            # service_obj.save()
             return redirect('accounts:profile')
         else:
             print('SERVICES FORM ERRORS: ', innovator_form.errors.as_data())
     else:
-        innovator_form = UpdateUserServicesForm()
+        innovator_form = UpdateInnovatorServicesForm()
 
     return render(request, 'accounts/edit_profile.html', {
         'user_form': user,
@@ -349,7 +339,8 @@ def edit_profile(request):
         'user_s_info_form': user_s_info,
         'change_password_form': change_password_form,
         'user_skills_form': user_skills_form,
-        'user_innovator_form': innovator_form
+        'user_innovator_form': innovator_form,
+        'innovator': Innovator.objects.get(user__username=request.user.username)
     })
 
 def resend_email_activation(request):
