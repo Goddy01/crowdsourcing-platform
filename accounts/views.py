@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
-from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm, UpdateUserResidentialInfoForm, UpdateUserSocialsForm, ChangePasswordForm, UpdateUserSkills, UpdateInnovatorServicesForm
+from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm, UpdateUserResidentialInfoForm, UpdateUserSocialsForm, ChangePasswordForm, UpdateUserSkillsForm, UpdateInnovatorServicesForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -256,22 +256,25 @@ def edit_profile(request):
         user_skill_data = {}
 #       Creates a loop to go through the form fields 'skill_1' to 'skill_10' and adds them to the user_skill_data
         for i in range(1, 11):
-            if request.POST.get(f'skill_{i}'):
-                user_skill_data[f'skill_{i}'] = request.POST.get(f'skill_{i}')
+            if request.POST.get(f'skill_{i}') and request.POST.get(f'skill_{i}_value'):
+                user_skill_data[f'skill_{i}'].append({'skill': request.POST.get(f'skill_{i}'),
+                                                  'skill_value': request.POST.get(f'skill_{i}_value')
+                                                 })
+        for skill_dict in user_skill_data:
+            user_skill_form = UpdateUserSkillsForm(skill_dict, instance=request.user)
 
-        user_skills_form = UpdateUserSkills(user_skill_data, instance=request.user)
-        if user_skills_form.is_valid():
-            skills_obj = user_skills_form.save(commit=False)
-            for i in range(1, 11):
-                if user_skills_form.cleaned_data[f'skill_{i}']:
-                    # skills_obj.skill_+ f'{i}' = user_skills_form.cleaned_data[f'skill_{i}']
-                    setattr(skills_obj, f'skill_{i}', user_skills_form.cleaned_data[f'skill_{i}'])
-            skills_obj.save()
-            return redirect('accounts:profile')
-        else:
-            print('SKILLS ERRORS: ', user_skills_form.errors.as_data())
+            if user_skill_form.is_valid():
+                skills_obj = user_skill_form.save()
+                # for i in range(1, 11):
+                #     if user_skill_form.cleaned_data[f'skill_{i}']:
+                #         # skills_obj.skill_+ f'{i}' = user_skill_form.cleaned_data[f'skill_{i}']
+                #         setattr(skills_obj, f'skill_{i}', user_skill_form.cleaned_data[f'skill_{i}'])
+                # skills_obj.save()
+                # return redirect('accounts:profile')
+            else:
+                print('SKILLS ERRORS: ', user_skill_form.errors.as_data())
     else:
-        user_skills_form = UpdateUserSkills()
+        user_skill_form = UpdateUserSkillsForm()
 
 #   USER SOCIALS DATA
     if request.method == 'POST' and 'user_s_form' in request.POST:
@@ -336,7 +339,8 @@ def edit_profile(request):
         'user_r_info_form': user_r_info,
         'user_s_info_form': user_s_info,
         'change_password_form': change_password_form,
-        'user_skills_form': user_skills_form,
+        'user_skill_form': user_skill_form,
+        'user_skills': Innovator.objects.get(user__username=request.user).innovatorskill_set.all(),
         'user_innovator_form': innovator_form,
         'innovator': Innovator.objects.get(user__username=request.user.username)
     })

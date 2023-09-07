@@ -167,7 +167,7 @@ class Innovator(models.Model):
         
         return "Innovator"
 
-class InnovatorSkills(models.Model):
+class InnovatorSkill(models.Model):
     skill_id = models.IntegerField(primary_key=True)
     innovator = models.ForeignKey(Innovator, null=True, on_delete=models.CASCADE)
     skill = models.CharField(max_length=255, null=True, blank=True)

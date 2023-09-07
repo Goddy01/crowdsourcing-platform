@@ -410,6 +410,7 @@
     <div class="d-inline">
         <h4 class="mb-4 mt-0 text-success d-inline">
         Skills
+        {{ user_skills }}
       </h4>
       <small class="d-inline">(You can add up to 10 skills)</small>
     </div>
@@ -418,7 +419,7 @@
         <div class="col-md-6">
           <label class="form-label">
           </label>
-          <input type="text" class="form-control" placeholder="Enter Skill 1" aria-label="Skill" value={% if user.skill_1 %} "{{ user.skill_1 }}" {% else %} "" {% endif %} id="skill_1" name="skill_1">
+          <input type="text" class="form-control" placeholder="Enter Skill 1" aria-label="Skill" value={% if user_skills.0 %} "{{ user_skills.0.skill }}" {% else %} "" {% endif %} id="skill_1" name="skill_1">
           <div class="col-md-6">
             <input type="number" name="skill_1_value" id="skill_1_value" placeholder="Your skill value out of 100" value="">
           </div>
@@ -427,7 +428,7 @@
         <div class="col-md-6">
           <label class="form-label">
           </label>
-          <input type="text" class="form-control" placeholder="Enter Skill 2" aria-label="Skill" value="{% if user.skill_2 %} {{ user.skill_2 }} {% endif %}" id="skill_2" name="skill_2">
+          <input type="text" class="form-control" placeholder="Enter Skill 2" aria-label="Skill" value="{% if user_skills.1 %} {{ user.skill.1.skill }} {% endif %}" id="skill_2" name="skill_2">
           <div class="col-md-6">
             <input type="number" name="skill_2_value" id="skill_2_value" placeholder="Your skill value out of 100" value="">
           </div>
@@ -436,7 +437,7 @@
         <div class="col-md-6">
           <label class="form-label">
           </label>
-          <input type="text" class="form-control" placeholder="Enter Skill 3" aria-label="Skill" value="{% if user.skill_3 %} {{ user.skill_3 }} {% endif %}" id="skill_3" name="skill_3">
+          <input type="text" class="form-control" placeholder="Enter Skill 3" aria-label="Skill" value="{% if user_skills.2 %} {{ user_skills.2.skill }} {% endif %}" id="skill_3" name="skill_3">
           <div class="col-md-6">
             <input type="number" name="skill_3_value" id="skill_3_value" placeholder="Your skill value out of 100" value="">
           </div>
@@ -445,7 +446,7 @@
         <div class="col-md-6">
           <label class="form-label">
           </label>
-          <input type="text" class="form-control" placeholder="Enter Skill 4" aria-label="Skill" value="{% if user.skill_4 %} {{ user.skill_4 }} {% endif %}" id="skill_4" name="skill_4">
+          <input type="text" class="form-control" placeholder="Enter Skill 4" aria-label="Skill" value="{% if user_skills.3 %} {{ user_skills.3.skill }} {% endif %}" id="skill_4" name="skill_4">
           <div class="col-md-6">
             <input type="number" name="skill_4_value" id="skill_4_value" placeholder="Your skill value out of 100" value="">
           </div>
@@ -454,7 +455,7 @@
         <div class="col-md-6">
           <label class="form-label">
           </label>
-          <input type="text" class="form-control" placeholder="Enter Skill 5" aria-label="Skill" value="{% if user.skill_5 %} {{ user.skill_5 }} {% endif %}" id="skill_5" name="skill_5">
+          <input type="text" class="form-control" placeholder="Enter Skill 5" aria-label="Skill" value="{% if user_skills.4 %} {{ user_skills.4.skill }} {% endif %}" id="skill_5" name="skill_5">
           <div class="col-md-6">
             <input type="number" name="skill_5_value" id="skill_5_value" placeholder="Your skill value out of 100" value="">
           </div>
@@ -463,7 +464,7 @@
         <div class="col-md-6">
           <label class="form-label">
           </label>
-          <input type="text" class="form-control" placeholder="Enter Skill 6" placeholder="Enter Skill 6" aria-label="Skill" value="{% if user.skill_6 %} {{ user.skill_6 }} {% endif %}" id="skill_6" name="skill_6">
+          <input type="text" class="form-control" placeholder="Enter Skill 6" placeholder="Enter Skill 6" aria-label="Skill" value="{% if user_skills.5 %} {{ user_skills.5.skill }} {% endif %}" id="skill_6" name="skill_6">
           <div class="col-md-6">
             <input type="number" name="skill_6_value" id="skill_6_value" placeholder="Your skill value out of 100" value="">
           </div>
@@ -473,7 +474,7 @@
         <div class="col-md-6">
           <label class="form-label">
           </label>
-          <input type="text" class="form-control" placeholder="Enter Skill 7" aria-label="Skill" value="{% if user.skill_7 %} {{ user.skill_7 }} {% endif %}" id="skill_7" name="skill_7">
+          <input type="text" class="form-control" placeholder="Enter Skill 7" aria-label="Skill" value="{% if user_skills.6 %} {{ user_skills.6.skill }} {% endif %}" id="skill_7" name="skill_7">
           <div class="col-md-6">
             <input type="number" name="skill_7_value" id="skill_7_value" placeholder="Your skill value out of 100" value="">
           </div>
@@ -482,7 +483,7 @@
         <div class="col-md-6">
           <label class="form-label">
           </label>
-          <input type="text" class="form-control" placeholder="Enter Skill 8" aria-label="Skill" value="{% if user.skill_8 %} {{ user.skill_8 }} {% endif %}" id="skill_8" name="skill_8">
+          <input type="text" class="form-control" placeholder="Enter Skill 8" aria-label="Skill" value="{% if user_skills.7 %} {{ user_skills.7.skill }} {% endif %}" id="skill_8" name="skill_8">
           <div class="col-md-6">
             <input type="number" name="skill_8_value" id="skill_8_value" placeholder="Your skill value out of 100" value="">
           </div>
@@ -491,7 +492,7 @@
         <div class="col-md-6">
           <label class="form-label">
           </label>
-          <input type="text" class="form-control" placeholder="Enter Skill 9" aria-label="Skill" value="{% if user.skill_9 %} {{ user.skill_9 }} {% endif %}" id="skill_9" name="skill_9">
+          <input type="text" class="form-control" placeholder="Enter Skill 9" aria-label="Skill" value="{% if user_skills.8 %} {{ user_skills.8.skill }} {% endif %}" id="skill_9" name="skill_9">
           <div class="col-md-6">
             <input type="number" name="skill_9_value" id="skill_9_value" placeholder="Your skill value out of 100" value="">
           </div>
@@ -500,7 +501,7 @@
         <div class="col-md-6">
           <label class="form-label">
           </label>
-          <input type="text" class="form-control" placeholder="Enter Skill 10" aria-label="Skill" value="{% if user.skill_10 %} {{ user.skill_10 }} {% endif %}" id="skill_10" name="skill_10">
+          <input type="text" class="form-control" placeholder="Enter Skill 10" aria-label="Skill" value="{% if user_skills.9 %} {{ user_skills.9.skill }} {% endif %}" id="skill_10" name="skill_10">
           <div class="col-md-6">
             <input type="number" name="skill_10_value" id="skill_10_value" placeholder="Your skill value out of 100" value="">
           </div>

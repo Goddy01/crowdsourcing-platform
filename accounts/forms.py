@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django import forms
-from .models import Innovator, Moderator, BaseUser, InnovatorSkills
+from .models import Innovator, Moderator, BaseUser, InnovatorSkill
 from django.contrib.auth import authenticate, password_validation
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm, SetPasswordForm
 from django.utils.translation import gettext_lazy as _
@@ -384,7 +384,7 @@ class UpdateUserResidentialInfoForm(forms.ModelForm):
 
 class UpdateUserSkillsForm(forms.ModelForm):
     class Meta:
-        model = InnovatorSkills
+        model = InnovatorSkill
         fields  = ['skill', 'skill_value']
 
 
