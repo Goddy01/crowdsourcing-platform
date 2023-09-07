@@ -36,8 +36,6 @@ def innovator_sign_up(request):
                 # user.signup_confirmation = True
                 # user.is_staff = True
                 # user.is_verified = True
-                # user.is_project_mgr = form.cleaned_data['is_project_mgr']
-                # user.is_project_mgr = form.cleaned_data['is_investor']
                 user.save()
                 current_site = get_current_site(request)
                 subject = 'Activate your account'
