@@ -167,7 +167,16 @@ class Innovator(models.Model):
         
         return "Innovator"
 
-    
+class InnovatorSkills(models.Model):
+    skill_id = models.IntegerField(primary_key=True)
+    innovator = models.ForeignKey(Innovator, null=True, on_delete=models.CASCADE)
+    skill = models.CharField(max_length=255, null=True, blank=True)
+    skill_value = models.IntegerField()
+
+    def __str__(self):
+        return f"Innovator-{self.innovator.user.username}-skill_{self.skill_id}"
+
+
 # MODERATOR Model
 class Moderator(models.Model):
     user = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
