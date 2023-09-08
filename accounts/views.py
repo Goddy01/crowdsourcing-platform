@@ -264,11 +264,12 @@ def edit_profile(request):
         if skill_form.is_valid():
             if not InnovatorSkill.objects.filter(skill=skill_form.cleaned_data.get('skill')).exists():
                 if skill_form.cleaned_data.get('skill'):
-                    if Innovator.objects.get(user__username=request.user.username).innovatorskill_set.all().count() == 5:
-                         messages.error(request, 'You can only add a maximum of 5 skills')
-                    skill_obj = skill_form.save(commit=False)
-                    skill_obj.innovator = Innovator.objects.get(user__username=request.user.username)
-                    skill_obj.save()
+                    if Innovator.objects.get(user__username=request.user.username).innovatorskill_set.all().count() < 5:
+                        skill_obj = skill_form.save(commit=False)
+                        skill_obj.innovator = Innovator.objects.get(user__username=request.user.username)
+                        skill_obj.save()
+                    else:
+                        messages.error(request, 'You can only add a maximum of 5 skills')
             else:
                 skill_form.add_error('skill', 'This skill already exists.')
         else:
