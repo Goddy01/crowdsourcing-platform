@@ -19,9 +19,8 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.forms import formset_factory
 from django.forms.models import modelformset_factory
-from .forms import SkillSet
 from .models import InnovatorSkill
-
+from django import forms
 
 # Create your views here.
 def activation_sent_view(request):
@@ -258,15 +257,19 @@ def edit_profile(request):
     
 #   USER SKILS DATA
     if request.method == 'POST' and 'user_skill_form' in request.POST:
-        formset = SkillFormset(request.POST or None)
-        print('BREV')
-        if formset.is_valid():
-            
-
+        skill_form = UpdateUserSkillsForm(request.POST)
+        if skill_form.is_valid():
+            if not InnovatorSkill.objects.filter(skill=skill_form.cleaned_data.get('skill')).exists():
+                if skill_form.cleaned_data.get('skill'):
+                    skill_obj = skill_form.save(commit=False)
+                    skill_obj.innovator = Innovator.objects.get(user__username=request.user.username)
+                    skill_obj.save()
+            else:
+                skill_form.add_error('skill', 'This skill already exists.')
         else:
-            print('SKILLS ERRORS: ', formset.errors)
+            print('SKILLS ERRORS: ', skill_form.errors)
     else:
-        formset = 
+        skill_form = UpdateUserSkillsForm()
 
 #   USER SOCIALS DATA
     if request.method == 'POST' and 'user_s_form' in request.POST:
@@ -331,7 +334,7 @@ def edit_profile(request):
         'user_r_info_form': user_r_info,
         'user_s_info_form': user_s_info,
         'change_password_form': change_password_form,
-        'user_skill_formset': formset,
+        'user_skill_form': skill_form,
         'user_skills': Innovator.objects.get(user__username=request.user).innovatorskill_set.all(),
         'user_innovator_form': innovator_form,
         'innovator': Innovator.objects.get(user__username=request.user.username)
