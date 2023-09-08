@@ -365,3 +365,8 @@ def remove_pfp(request):
     else:
         bool = False
     return JsonResponse(bool, safe=False)
+
+def remove_skill(request, skill_id):
+    skill = InnovatorSkill.objects.get(skill_id=skill_id)
+    skill.delete()
+    return redirect('accounts:edit_profile')
