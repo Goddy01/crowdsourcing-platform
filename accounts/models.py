@@ -85,16 +85,6 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     address =                       models.CharField(max_length=128, blank=True, null=True)
     phone_num =                     PhoneNumberField(null=True, blank=True, verbose_name="Phone Number", unique=True)
     zipcode =                       models.CharField(null=True, blank=True, max_length=255)
-    skill_1 =                       models.CharField(null=True, blank=True, max_length=128)
-    skill_2 =                       models.CharField(null=True, blank=True, max_length=128)
-    skill_3 =                       models.CharField(null=True, blank=True, max_length=128)
-    skill_4 =                       models.CharField(null=True, blank=True, max_length=128)
-    skill_5 =                       models.CharField(null=True, blank=True, max_length=128)
-    skill_6 =                       models.CharField(null=True, blank=True, max_length=128)
-    skill_7 =                       models.CharField(null=True, blank=True, max_length=128)
-    skill_8 =                       models.CharField(null=True, blank=True, max_length=128)
-    skill_9 =                       models.CharField(null=True, blank=True, max_length=128)
-    skill_10 =                      models.CharField(null=True, blank=True, max_length=128)
     date_joined =                   models.DateTimeField(auto_now_add=True)
     last_login =                    models.DateTimeField(auto_now=True)
     updated_at =                    models.DateTimeField(auto_now=True)
@@ -109,6 +99,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     is_superuser =                  models.BooleanField(default=False)
     is_verified =                   models.BooleanField(default=False)
     signup_confirmation =           models.BooleanField(default=False)
+    signup_with_google =            models.BooleanField(default=False)
 
 
     USERNAME_FIELD = "email"
