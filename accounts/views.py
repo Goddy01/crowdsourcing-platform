@@ -21,6 +21,8 @@ from django.forms import formset_factory
 from django.forms.models import modelformset_factory
 from .models import InnovatorSkill
 from django import forms
+from django.contrib import messages
+
 
 # Create your views here.
 def activation_sent_view(request):
@@ -257,10 +259,13 @@ def edit_profile(request):
     
 #   USER SKILS DATA
     if request.method == 'POST' and 'user_skill_form' in request.POST:
+        context = {}
         skill_form = UpdateUserSkillsForm(request.POST)
         if skill_form.is_valid():
             if not InnovatorSkill.objects.filter(skill=skill_form.cleaned_data.get('skill')).exists():
                 if skill_form.cleaned_data.get('skill'):
+                    if Innovator.objects.get(user__username=request.user.username).innovatorskill_set.all().count() == 5:
+                         messages.error(request, 'You can only add a maximum of 5 skills')
                     skill_obj = skill_form.save(commit=False)
                     skill_obj.innovator = Innovator.objects.get(user__username=request.user.username)
                     skill_obj.save()
