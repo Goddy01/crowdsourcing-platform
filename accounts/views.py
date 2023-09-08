@@ -257,25 +257,16 @@ def edit_profile(request):
         user_r_info = UpdateUserResidentialInfoForm()
     
 #   USER SKILS DATA
-    SkillFormset = formset_factory(form=UpdateUserSkillsForm, extra=10)
     if request.method == 'POST' and 'user_skill_form' in request.POST:
         formset = SkillFormset(request.POST or None)
         print('BREV')
         if formset.is_valid():
-            for form in formset:
-                innovator = Innovator.objects.get(user__username=request.user.username)
-                if not InnovatorSkill.objects.filter(innovator=innovator, skill=form.cleaned_data.get('skill')).exists() and form.cleaned_data.get('skill'):
-                    obj = form.save(commit=False)
-                    obj.innovator = Innovator.objects.get(user__username=request.user.username)
-                    obj.save()
-                if InnovatorSkill.objects.filter(innovator=innovator, skill=form.cleaned_data.get('skill')).exists():
-                    skill = InnovatorSkill.objects.get(innovator=innovator, skill=form.cleaned_data.get('skill'))
-                    skill.skill_value = form.cleaned_data.get('skill_value')
-                    skill.save()
+            
+
         else:
             print('SKILLS ERRORS: ', formset.errors)
     else:
-        formset = SkillFormset()
+        formset = 
 
 #   USER SOCIALS DATA
     if request.method == 'POST' and 'user_s_form' in request.POST:

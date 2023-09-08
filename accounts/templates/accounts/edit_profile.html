@@ -415,6 +415,7 @@
     </div>
     <form method="post" action="{% url 'accounts:edit_profile' %}" class="row g-3 form-container mt-3" id="myForm">
       {% csrf_token %}
+      {{ user_skills }}
       {{ user_skill_formset.management_form }}
       {% for skill in user_skill_formset %}
         <div class="col-md-6">

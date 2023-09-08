@@ -389,7 +389,6 @@ class UpdateUserSkillsForm(forms.ModelForm):
     class Meta:
         model = InnovatorSkill
         fields  = ['skill', 'skill_value']
-SkillSet = formset_factory(UpdateUserSkillsForm, extra=10)
 
 
 class UpdateUserSocialsForm(forms.ModelForm):
