@@ -171,10 +171,11 @@ class InnovatorSkill(models.Model):
     skill_id = models.IntegerField(primary_key=True)
     innovator = models.ForeignKey(Innovator, null=True, on_delete=models.CASCADE)
     skill = models.CharField(max_length=255, null=True, blank=True)
-    skill_value = models.IntegerField()
+    skill_value = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
-        return f"Innovator-{self.innovator.user.username}-skill_{self.skill_id}"
+        # if self.innovator.user is not None:
+        return f"Innovator-skill_{self.skill_id}"
 
 
 # MODERATOR Model

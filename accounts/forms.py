@@ -8,6 +8,7 @@ from social_django.models import UserSocialAuth
 from django.db import transaction
 from phonenumber_field.formfields import PhoneNumberField
 from django_countries.fields import CountryField
+from django.forms import formset_factory
 
 
 class BaseUserSignUpForm(UserCreationForm):
@@ -388,6 +389,7 @@ class UpdateUserSkillsForm(forms.ModelForm):
     class Meta:
         model = InnovatorSkill
         fields  = ['skill', 'skill_value']
+SkillSet = formset_factory(UpdateUserSkillsForm, extra=10)
 
 
 class UpdateUserSocialsForm(forms.ModelForm):
