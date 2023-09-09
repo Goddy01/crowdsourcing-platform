@@ -519,10 +519,7 @@
         {% for service in user_services %}
         <button type="button" class="btn btn-success position-relative mx-3" id="element-to-hover">
           <span id="skill-field">{{ service.service }}</span>
-          <span class="position-absolute bottom-50 start-0 translate-middle badge rounded-pill bg-danger" id="cancel">
-            <!-- <span class="skill_btn" onmouseover="Cancel()" data-skill-id="{{ service.pk }}">{{ skill.skill_value }}</span> -->
-            <span class="visually-hidden">unread messages</span>
-          </span>
+          
           <a class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger skill_btn"
          data-skill-id="{{ service.pk }}"
          href="{% url 'accounts:remove_service' service.pk %}" style="text-decoration: none;color: white;">

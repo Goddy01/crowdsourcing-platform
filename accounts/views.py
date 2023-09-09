@@ -320,7 +320,7 @@ def edit_profile(request):
                     else:
                         messages.error(request, 'You can only add a maximum of 5 services')
             else:
-                skill_form.add_error('skill', 'This skill already exists.')
+                service_form.add_error('service', 'This skill already exists.')
         else:
             print('SERVICES FORM ERRORS: ', service_form.errors.as_data())
     else:
@@ -372,6 +372,6 @@ def remove_skill(request, skill_id):
     return redirect('accounts:edit_profile')
 
 def remove_service(request, pk):
-    service = InnovatorSkill.objects.get(pk=pk)
+    service = Service.objects.get(pk=pk)
     service.delete()
     return redirect('accounts:edit_profile')
