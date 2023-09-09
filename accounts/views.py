@@ -200,7 +200,9 @@ def profile(request):
     #     user = BaseUser.objects.get(username=request.user.username)
     return render(request, 'accounts/profile.html', {
         'user': user,
-        'user_skills': Innovator.objects.get(user__username=request.user.username).innovatorskill_set.all()
+        'user_skills': Innovator.objects.get(user__username=request.user.username).innovatorskill_set.all(),
+        'user_services': Innovator.objects.get(user__username=request.user.username).service_set.all()
+        
     })
 
 def edit_profile(request):

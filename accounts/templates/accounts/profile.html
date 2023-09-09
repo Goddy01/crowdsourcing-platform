@@ -176,53 +176,73 @@
                     <h2 class="fw-bolder text-success">Services</h2>
                 </div>
                 <div class="row">
-                    <div class="col-lg-4 col-md-6 mb-4">
+                    {% if user_services.count == 1 %}
+                    {% for service in user_services %}
+                    <div class="col-lg-12 col-md-12 mb-4">
                        <div class="serv-cove shadow-md rounded bg-white text-center p-4">
                             <i class="bi fs-1 bi-boxes"></i>
-                            <h5 class="mt-3 fs-6 fw-bold">Website Design</h5>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus pulvinar magna ut bibendum imperdiet</p>
+                            <h5 class="mt-3 fs-6 fw-bold">{{ service.service }}</h5>
+                            
                        </div>
                     </div>
+                    {% endfor %}
+                    {% endif %}
                     
-                     <div class="col-lg-4 col-md-6 mb-4">
+                    {% if user_services.count == 2 %}
+                    {% for service in user_services %}
+                    <div class="col-lg-6 col-md-6 mb-4">
                        <div class="serv-cove shadow-md rounded bg-white text-center p-4">
                             <i class="bi fs-1 bi-boxes"></i>
-                            <h5 class="mt-3 fs-6 fw-bold">UI/UX Development</h5>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus pulvinar magna ut bibendum imperdiet</p>
+                            <h5 class="mt-3 fs-6 fw-bold">{{ service.service }}</h5>
+                            
                        </div>
                     </div>
+                    {% endfor %}
+                    {% endif %}
                     
-                     <div class="col-lg-4 col-md-6 mb-4">
+                    {% if user_services.count == 3 %}
+                    {% for service in user_services %}
+                    <div class="col-lg-4 col-md-4 mb-4">
                        <div class="serv-cove shadow-md rounded bg-white text-center p-4">
                             <i class="bi fs-1 bi-boxes"></i>
-                            <h5 class="mt-3 fs-6 fw-bold">Web Development</h5>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus pulvinar magna ut bibendum imperdiet</p>
+                            <h5 class="mt-3 fs-6 fw-bold">{{ service.service }}</h5>
+                            
                        </div>
                     </div>
-                    
-                     <div class="col-lg-4 col-md-6 mb-4">
+                    {% endfor %}
+                    {% endif %}
+
+                    {% if user_services.count == 4 %}
+                    {% for service in user_services %}
+                    {% if forloop.counter < 3 %}
+                    <div class="col-lg-6 col-md-6 mb-4">
+                    {% else %}
+                    <div class="col-lg-6 col-md-6 mb-4">
+                    {% endif %}
                        <div class="serv-cove shadow-md rounded bg-white text-center p-4">
                             <i class="bi fs-1 bi-boxes"></i>
-                            <h5 class="mt-3 fs-6 fw-bold">Android Development</h5>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus pulvinar magna ut bibendum imperdiet</p>
+                            <h5 class="mt-3 fs-6 fw-bold">{{ service.service }}</h5>
+                            
                        </div>
                     </div>
-                    
-                     <div class="col-lg-4 col-md-6 mb-4">
+                    {% endfor %}
+                    {% endif %}
+
+                    {% if user_services.count == 5 %}
+                    {% for service in user_services %}
+                    {% if forloop.counter < 4 %}
+                    <div class="col-lg-4 col-md-4 mb-4">
+                    {% else %}
+                    <div class="col-lg-6 col-md-6 mb-4">
+                    {% endif %}
                        <div class="serv-cove shadow-md rounded bg-white text-center p-4">
                             <i class="bi fs-1 bi-boxes"></i>
-                            <h5 class="mt-3 fs-6 fw-bold">IOS Developement</h5>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus pulvinar magna ut bibendum imperdiet</p>
+                            <h5 class="mt-3 fs-6 fw-bold">{{ service.service }}</h5>
+                            
                        </div>
                     </div>
-                    
-                     <div class="col-lg-4 col-md-6 mb-4">
-                       <div class="serv-cove shadow-md rounded bg-white text-center p-4">
-                            <i class="bi fs-1 bi-boxes"></i>
-                            <h5 class="mt-3 fs-6 fw-bold">Digital Marketing</h5>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus pulvinar magna ut bibendum imperdiet</p>
-                       </div>
-                    </div>
+                    {% endfor %}
+                    {% endif %}
                 </div>
             </div>
             
