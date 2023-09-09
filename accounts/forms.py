@@ -319,7 +319,7 @@ class CustomPasswordResetForm(PasswordResetForm):
         return password2
 
 class UpdateAboutMeForm(forms.ModelForm):
-    about_me = forms.CharField(widgets = {
+    about_me = forms.CharField(widget = {
             'about_me': forms.Textarea(attrs={'rows': 10, 'cols': 30}),
         })
     class Meta:

@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
-from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm, UpdateUserResidentialInfoForm, UpdateUserSocialsForm, ChangePasswordForm, UpdateUserSkillsForm, UpdateInnovatorServicesForm, UpdateUserServiceForm
+from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm, UpdateUserResidentialInfoForm, UpdateUserSocialsForm, ChangePasswordForm, UpdateUserSkillsForm, UpdateInnovatorServicesForm, UpdateUserServiceForm, UpdateAboutMeForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -211,7 +211,21 @@ def edit_profile(request):
     user_info = BaseUser.objects.get(username=request.user.username)
     if not request.user.is_authenticated:
         return redirect('accounts:innovator_login')
-        
+    
+    # USER ABOUT ME
+    if request.method == 'POST' and 'user_about_me' in request.POST:
+        about_me_form = UpdateAboutMeForm(request.POST, instance=request.user)
+        if about_me_form.is_valid():
+            obj = about_me_form.save(commit=False)
+            if about_me_form.cleaned_data.get('about_me'):
+                obj.about_me = about_me_form.cleaned_data.get('about_me')
+                obj.save()
+            return redirect('accounts:profile')
+        else:
+            print(about_me_form.errors.as_data())
+    else:
+        about_me_form = UpdateAboutMeForm()
+
     
     # USER PERSONAL DATA
     if request.method == 'POST' and 'user_p_form' in request.POST:
