@@ -18,5 +18,6 @@ urlpatterns = [
     path('resend-email-activation-link', views.resend_email_activation, name='resend_email_activation'),
     path('profile/delete-pfp', views.remove_pfp, name='remove_pfp'),
     path('remove-skill/<skill_id>', views.remove_skill, name='remove_skill'),
+    path('remove-service/<pk>', views.remove_service, name='remove_service'),
     # path('password-change', views.change_password, name='change_password'),
 ]
