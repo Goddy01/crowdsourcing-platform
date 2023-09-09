@@ -457,8 +457,6 @@
     </a>
       </button>
       {% endfor %}
-
-            
   </div>
     <form method="post" action="{% url 'accounts:edit_profile' %}" class="row g-3 form-container" id="myForm">
       {% csrf_token %}
@@ -517,6 +515,22 @@
         <h4 class="d-inline mt-0 text-success">Services</h4>
       <small class="d-inline">(You can add up to 5 services)</small>
       </div>
+      <div class="mt-5">
+        {% for service in user_services %}
+        <button type="button" class="btn btn-success position-relative mx-3" id="element-to-hover">
+          <span id="skill-field">{{ service.service }}</span>
+          <span class="position-absolute bottom-50 start-0 translate-middle badge rounded-pill bg-danger" id="cancel">
+            <!-- <span class="skill_btn" onmouseover="Cancel()" data-skill-id="{{ service.pk }}">{{ skill.skill_value }}</span> -->
+            <span class="visually-hidden">unread messages</span>
+          </span>
+          <a class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger skill_btn"
+         data-skill-id="{{ skill.skill_id }}"
+         href="{% url 'accounts:remove_service' service.pk %}" style="text-decoration: none;color: white;">
+        X
+      </a>
+        </button>
+        {% endfor %}
+    </div>
       <form method="post" action="{% url 'accounts:edit_profile' %}" class="row g-3">
         {% csrf_token %}
         <div class="col-md-6">
