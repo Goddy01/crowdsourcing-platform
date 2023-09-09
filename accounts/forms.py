@@ -317,6 +317,15 @@ class CustomPasswordResetForm(PasswordResetForm):
         print('COOL NIGGA')
         password_validation.validate_password(password2, self.user)
         return password2
+
+class UpdateAboutMeForm(forms.ModelForm):
+    about_me = forms.CharField(widgets = {
+            'about_me': forms.Textarea(attrs={'rows': 10, 'cols': 30}),
+        })
+    class Meta:
+        model = Innovator
+        fields = ['about_me']
+
 class UpdatePersonalProfileForm(forms.ModelForm):
     username = forms.CharField(
                                required=False,
