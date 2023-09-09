@@ -77,6 +77,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     date_of_birth =                 models.DateField(null=True, blank=True)
     email =                         models.EmailField(max_length=128, unique=True, blank=True)
     bio =                           models.CharField(max_length=100, null=True, blank=True)
+    about_me =                      models.TextField(null=True, blank=True, max_length=1000)
     pfp =                           models.ImageField(upload_to=upload_location_pfp, blank=True, null=True)
     # id_card =                       models.ImageField(upload_to=upload_location_id_card, blank=True, null=True)
     city =                          models.CharField(max_length=128, blank=True, null=True)
@@ -137,7 +138,6 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
 # CONTRIBUTOR Model
 class Innovator(models.Model):
     user =                          models.ForeignKey(BaseUser, on_delete=models.CASCADE, null=True, blank=True)
-    about_me =                      models.TextField(null=True, blank=True, max_length=1000)
     innovations_count =             models.IntegerField(default=0, null=True, blank=True)
     upvotes_received =              models.IntegerField(default=0, null=True, blank=True)
     downvotes_received =            models.IntegerField(default=0, null=True, blank=True)
