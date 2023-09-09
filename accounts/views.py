@@ -370,3 +370,8 @@ def remove_skill(request, skill_id):
     skill = InnovatorSkill.objects.get(skill_id=skill_id)
     skill.delete()
     return redirect('accounts:edit_profile')
+
+def remove_service(request, pk):
+    service = InnovatorSkill.objects.get(pk=pk)
+    service.delete()
+    return redirect('accounts:edit_profile')

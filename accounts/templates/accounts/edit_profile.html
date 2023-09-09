@@ -524,7 +524,7 @@
             <span class="visually-hidden">unread messages</span>
           </span>
           <a class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger skill_btn"
-         data-skill-id="{{ skill.skill_id }}"
+         data-skill-id="{{ service.pk }}"
          href="{% url 'accounts:remove_service' service.pk %}" style="text-decoration: none;color: white;">
         X
       </a>
