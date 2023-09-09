@@ -335,6 +335,7 @@ def edit_profile(request):
         'change_password_form': change_password_form,
         'user_skill_form': skill_form,
         'user_skills': Innovator.objects.get(user__username=request.user).innovatorskill_set.all(),
+        'user_services': Innovator.objects.get(user__username=request.user).service_set.all(),
         'user_service_form': service_form,
         'innovator': Innovator.objects.get(user__username=request.user.username)
     })

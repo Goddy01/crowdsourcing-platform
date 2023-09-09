@@ -483,6 +483,36 @@
 
     <div class="bg-secondary-soft px-4 py-5 rounded mt-5">
       <!-- <form class="row g-3"> -->
+        <div class="d-inline">
+          <span class="float-end">
+            {% include 'messages.html' %}
+          </span>
+          <div>
+            {% if user_service_form.errors %}
+                        <ul>
+                          {% for field in user_service_form %}
+                          {% for error in field.errors %}
+                          <div class="toast align-items-center bg-danger border-0 float-end" role="alert" aria-live="assertive" aria-atomic="true">
+                            <div class="d-flex">
+                              <div class="toast-body">
+                                <li class="ml-2 text-danger text-white" style="list-style: none;">{{ error }}</li>
+                             </div>
+                              <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                          </div>
+                          {% endfor %}
+                          {% endfor %}
+                        </ul>
+          {% endif %}
+          {% if user_service_form.non_field_errors %}
+                  <div class="col-lg-8 col-xl-3 toastDiv">
+                <div class="card toast m-auto bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin-bottom: 1rem !important;">
+                  <div class="toast-body text-white"">
+                    {{user_service_form.non_field_errors}}
+                  </div>
+                </div>
+          {% endif %}
+        </div>
       <div class="d-inline">
         <h4 class="d-inline mt-0 text-success">Services</h4>
       <small class="d-inline">(You can add up to 5 services)</small>
