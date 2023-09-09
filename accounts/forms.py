@@ -318,13 +318,6 @@ class CustomPasswordResetForm(PasswordResetForm):
         password_validation.validate_password(password2, self.user)
         return password2
 
-class UpdateAboutMeForm(forms.ModelForm):
-    about_me = forms.CharField(widget = {
-            'about_me': forms.Textarea(attrs={'rows': 10, 'cols': 30}),
-        })
-    class Meta:
-        model = Innovator
-        fields = ['about_me']
 
 class UpdatePersonalProfileForm(forms.ModelForm):
     username = forms.CharField(
@@ -349,9 +342,10 @@ class UpdatePersonalProfileForm(forms.ModelForm):
                 'required': 'Please enter your phone.'
             }, required=False
         )
+    about_me = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 10, 'cols': 30}))
     class Meta:
         model = BaseUser
-        fields = ['username', 'email', 'last_name', 'first_name', 'middle_name', 'date_of_birth', 'phone_num', 'bio']
+        fields = ['username', 'email', 'last_name', 'first_name', 'middle_name', 'date_of_birth', 'phone_num', 'bio', 'about_me']
 
     
     def clean_email(self):

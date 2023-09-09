@@ -262,24 +262,6 @@
 <hr>
 </div>
 
-<div class="row mb-5 gx-5"></div>
-<div class="col-xxl-12 mb-3 mb-xxl-0">
-  <div class="bg-secondary-soft px-4 py-5 rounded">
-    <div class="row g-3 d-flex justify-content-center mb-5">
-      <form method="post" action="{% url 'accounts:edit_profile' %}" enctype="multipart/form-data" class="file-upload row g-3" id="myForm">
-        {% csrf_token %}
-        <div class="col-md-12">
-          <label class="form-label  d-flex justify-content-center">About Me
-          </label>
-          <textarea class="form-control" name="about_me" id="about_me" cols="30" rows="10" value="{% if innovator.about_me %}{{ innovator.about_me }}{% endif %}"></textarea>
-          </div>
-          <button type="submit" class="btn btn-success btn-lg" name="user_about_me" id="user_about_me">Save Changes</button>
-        </form>
-    </div>
-  </div>
-</div>
-</div>
-
 <!-- <form class="file-upload"> -->
 <div class="row mb-5 gx-5 mt-5">
 
@@ -317,6 +299,10 @@
         <!-- <p class="text-muted mt-3 mb-0"><span class="me-1">Note:</span>Minimum size 300px x 300px</p> -->
         </div>
         
+        <div class="col-md-12  d-flex justify-content-center">
+          <label class="form-label">About Me
+          <textarea class="form-control" name="about_me" id="about_me" cols="170" rows="10"></textarea>
+        </div>
         <div class="col-md-6">
         <label class="form-label">First Name 
         </label>

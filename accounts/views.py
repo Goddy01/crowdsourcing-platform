@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
-from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm, UpdateUserResidentialInfoForm, UpdateUserSocialsForm, ChangePasswordForm, UpdateUserSkillsForm, UpdateInnovatorServicesForm, UpdateUserServiceForm, UpdateAboutMeForm
+from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm, UpdateUserResidentialInfoForm, UpdateUserSocialsForm, ChangePasswordForm, UpdateUserSkillsForm, UpdateInnovatorServicesForm, UpdateUserServiceForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -213,23 +213,27 @@ def edit_profile(request):
         return redirect('accounts:innovator_login')
     
     # USER ABOUT ME
-    if request.method == 'POST' and 'user_about_me' in request.POST:
-        about_me_form = UpdateAboutMeForm(request.POST, instance=request.user)
-        if about_me_form.is_valid():
-            obj = about_me_form.save(commit=False)
-            if about_me_form.cleaned_data.get('about_me'):
-                obj.about_me = about_me_form.cleaned_data.get('about_me')
-                obj.save()
-            return redirect('accounts:profile')
-        else:
-            print(about_me_form.errors.as_data())
-    else:
-        about_me_form = UpdateAboutMeForm()
+    # if request.method == 'POST' and 'user_about_me' in request.POST:
+    #     about_me_form = UpdateAboutMeForm(request.POST, instance=request.user)
+    #     if about_me_form.is_valid():
+    #         obj = about_me_form.save(commit=False)
+    #         if about_me_form.cleaned_data['about_me']:
+    #             obj.about_me = about_me_form.cleaned_data['about_me']
+    #         obj.save()
+    #         print('OBJ: ', obj.about_me)
+    #         return redirect('accounts:profile')
+    #     else:
+    #         print(about_me_form.errors.as_data())
+    # else:
+    #     about_me_form = UpdateAboutMeForm(instance=request.user, initial={
+    #         "about_me": Innovator.objects.get(user__username=request.user.username).about_me
+    #     })
 
     
     # USER PERSONAL DATA
     if request.method == 'POST' and 'user_p_form' in request.POST:
         user_p_data = {
+            'about_me': request.POST.get('about_me'),
             'username': request.POST.get('username'),
             'email': request.POST.get('email'),
             'first_name': request.POST.get('first_name'),
@@ -247,7 +251,10 @@ def edit_profile(request):
                 user_obj.pfp = user_p_info.cleaned_data['pfp']
             if user.date_of_birth:
                 user_obj.date_of_birth = user.date_of_birth
+            if user_p_info.cleaned_data['about_me']:
+                user_obj.about_me = user_p_info.cleaned_data['about_me']
             user_obj.save()
+            print('ABOUT: ', user_obj.about_me)
             return redirect('accounts:profile')
         else:
             print(user_p_info.errors.as_data())
