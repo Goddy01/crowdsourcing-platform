@@ -29,7 +29,7 @@ def save_profile(backend, user, response, *args, **kwargs):
     innovator = Innovator.objects.get_or_create(
         user=user
         )
-    user = BaseUser.objects.get(email=user)
+    user = BaseUser.objects.get(email=user.email)
     user.signup_confirmation = True
     user.signup_with_google = True
     user.save()

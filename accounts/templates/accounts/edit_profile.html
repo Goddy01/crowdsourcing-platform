@@ -549,8 +549,10 @@
 
 </div> 
 
+{% if not request.user.signup_with_google%}
 <div class="row mb-5 gx-5">
 <div class="col-xxl-6 mb-5 mb-xxl-0">
+{% endif %}
 <div class="bg-secondary-soft px-4 py-5 rounded">
 <!-- <div class="row g-3 form-div"> -->
 <h4 class="mdb-4 mt-0 text-success">Socials</h4>
@@ -587,7 +589,7 @@
 <!-- </div> -->
 </div>
 
-
+{% if not request.user.signup_with_google %}
 <div class="col-xxl-6">
 <div class="bg-secondary-soft px-4 py-5 rounded">
 <h4 class="mt-0 text-success">Change Password</h4>
@@ -608,6 +610,7 @@
 </form>
 </div>
 </div>
+{% endif %}
 </div>
 </div> 
 
