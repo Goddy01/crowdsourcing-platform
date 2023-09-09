@@ -212,6 +212,7 @@ def edit_profile(request):
     if not request.user.is_authenticated:
         return redirect('accounts:innovator_login')
     
+    
     # USER PERSONAL DATA
     if request.method == 'POST' and 'user_p_form' in request.POST:
         user_p_data = {

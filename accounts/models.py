@@ -137,6 +137,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
 # CONTRIBUTOR Model
 class Innovator(models.Model):
     user =                          models.ForeignKey(BaseUser, on_delete=models.CASCADE, null=True, blank=True)
+    about_me =                      models.TextField(null=True, blank=True)
     innovations_count =             models.IntegerField(default=0, null=True, blank=True)
     upvotes_received =              models.IntegerField(default=0, null=True, blank=True)
     downvotes_received =            models.IntegerField(default=0, null=True, blank=True)

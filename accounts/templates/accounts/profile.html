@@ -88,7 +88,7 @@
             <!-- </ul> -->
             
 
-            <div class="profile-head">
+            <div class="profile-head bg-light">
                <div class="row vh-100 profile-top mt-1">
                    <div class="col-xl-6 text-center mx-auto align-self-center mb-2">
                         <div class="imgcover mb-4 display-2">
@@ -102,7 +102,7 @@
                         <h1 class="fw-bold mb-4 fs-1">Full Stack Develper</h1>
                         <p>
                             {% if user.bio %}
-                            {{ user.bio }}
+                            <b>{{ user.bio }}</b>
                             {% endif %}
                         </p>
                         <ul>
