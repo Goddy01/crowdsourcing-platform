@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
-from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm, UpdateUserResidentialInfoForm, UpdateUserSocialsForm, ChangePasswordForm, UpdateUserSkillsForm, UpdateInnovatorServicesForm
+from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm, UpdateUserResidentialInfoForm, UpdateUserSocialsForm, ChangePasswordForm, UpdateUserSkillsForm, UpdateInnovatorServicesForm, UpdateUserServiceForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -19,7 +19,7 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.forms import formset_factory
 from django.forms.models import modelformset_factory
-from .models import InnovatorSkill
+from .models import InnovatorSkill, Service
 from django import forms
 from django.contrib import messages
 
@@ -308,30 +308,23 @@ def edit_profile(request):
         change_password_form = ChangePasswordForm(user)
 
 #   USER SERVICES DATA
-    if request.method == 'POST' and 'innovator_form' in request.POST:
-        user_services_data = {
-            'service_1': request.POST.get('service_1'),
-            'service_2': request.POST.get('service_2'),
-            'service_3': request.POST.get('service_3'),
-            'service_4': request.POST.get('service_4'),
-            'service_5': request.POST.get('service_5')
-        }
-        innovator_service_form = UpdateInnovatorServicesForm(user_services_data)
-        if innovator_service_form.is_valid():
-            # service_obj = innovator_service_form.save(commit=False)
-            # service_1 = service_obj.service_1
-            # service_2 = service_obj.service_2
-            # service_3 = service_obj.service_3
-            # service_4 = service_obj.service_4
-            # service_5 = service_obj.service_5
-            print('SERVICE: ', innovator_service_form['service_1'])
-            innovator_service_form.save()
-            # service_obj.save()
-            return redirect('accounts:profile')
+    if request.method == 'POST' and 'service_form' in request.POST:
+        service_form = UpdateUserServiceForm(request.POST)
+        if service_form.is_valid():
+            if not Service.objects.filter(service=service_form.cleaned_data.get('service')).exists():
+                if service_form.cleaned_data.get('service'):
+                    if Innovator.objects.get(user__username=request.user.username).service_set.all().count() < 5:
+                        service_obj = service_form.save(commit=False)
+                        service_obj.innovator = Innovator.objects.get(user__username=request.user.username)
+                        service_obj.save()
+                    else:
+                        messages.error(request, 'You can only add a maximum of 5 services')
+            else:
+                skill_form.add_error('skill', 'This skill already exists.')
         else:
-            print('SERVICES FORM ERRORS: ', innovator_form.errors.as_data())
+            print('SERVICES FORM ERRORS: ', service_form.errors.as_data())
     else:
-        innovator_form = UpdateInnovatorServicesForm()
+        service_form = UpdateInnovatorServicesForm()
 
     return render(request, 'accounts/edit_profile.html', {
         'user_form': user,
@@ -342,7 +335,7 @@ def edit_profile(request):
         'change_password_form': change_password_form,
         'user_skill_form': skill_form,
         'user_skills': Innovator.objects.get(user__username=request.user).innovatorskill_set.all(),
-        'user_innovator_form': innovator_form,
+        'user_service_form': service_form,
         'innovator': Innovator.objects.get(user__username=request.user.username)
     })
 
