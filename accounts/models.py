@@ -167,6 +167,13 @@ class InnovatorSkill(models.Model):
     def __str__(self):
         # if self.innovator.user is not None:
         return f"Innovator-skill_{self.skill_id}"
+    
+class Services(models.Model):
+    innovator = models.ForeignKey(Innovator, null=True, on_delete=models.CASCADE)
+    service = models.CharField(max_length=255, null=True, blank=True, unique=True)
+
+    def __str__(self):
+        return f"{self.innovator.user.username}-{self.service}"
 
 
 # MODERATOR Model
