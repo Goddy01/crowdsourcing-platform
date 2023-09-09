@@ -77,7 +77,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     date_of_birth =                 models.DateField(null=True, blank=True)
     email =                         models.EmailField(max_length=128, unique=True, blank=True)
     bio =                           models.CharField(max_length=100, null=True, blank=True)
-    about_me =                      models.TextField(null=True, blank=True, max_length=1000)
+    about_me =                      models.TextField(null=True, blank=True, max_length=2000)
     pfp =                           models.ImageField(upload_to=upload_location_pfp, blank=True, null=True)
     # id_card =                       models.ImageField(upload_to=upload_location_id_card, blank=True, null=True)
     city =                          models.CharField(max_length=128, blank=True, null=True)

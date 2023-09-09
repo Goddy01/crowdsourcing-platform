@@ -290,7 +290,7 @@
             <!-- <img id="display-img" style="height: 250px;width: 250px;"/> -->
         </div>
         <!-- <p class="btn btn-block" style="width: 115px;height: 40px;">{{ user_p_info_form.pfp }}</p> -->
-        <input class="mt-3 bg-success btn btn-block" type="file" name="pfp" id="pfp" accept="image/*" style="width: 115px;height: 15px;padding-right: 85px;padding-bottom: 35px;">
+        <input class="mt-3 bg-success btn btn-block" type="file" name="pfp" id="pfp" accept="image/*" style="width: 100px;height: 15px;padding-right: 85px;padding-bottom: 35px;">
         <!-- <input type="hidden" id="submitBtn" type="submit"> -->
         <!-- <input type="file" id="pfp" name="pfp" hidden=""> -->
         <!-- <label class="btn btn-success-soft btn-block" for="customFile">Upload</label> -->
@@ -301,7 +301,7 @@
         
         <div class="col-md-12  d-flex justify-content-center">
           <label class="form-label">About Me
-          <textarea class="form-control" name="about_me" id="about_me" cols="170" rows="10"></textarea>
+          <p cols="170" rows="10" style="font-weight: normal;">{{ user_p_info_form.about_me }}</p>
         </div>
         <div class="col-md-6">
         <label class="form-label">First Name 

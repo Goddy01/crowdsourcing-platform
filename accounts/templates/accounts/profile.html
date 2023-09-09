@@ -98,7 +98,7 @@
                             <img id="pfpImg" src="{% static 'images/default_profile_image.jpg' %}" class="img-responsive thumbnail rounded-pill bg-white p-2 shadow" style="height: 250px;width: 250px;">
                             {% endif %}
                         </div>
-                        <b class="fs-6">Hello I am, {{user.first_name}} {{user.last_name}}</b>
+                        <b class="fs-6">Hello I am, {{user.last_name}} {{user.first_name}}</b>
                         <h1 class="fw-bold mb-4 fs-1">Full Stack Develper</h1>
                         <p>
                             {% if user.bio %}
@@ -126,8 +126,8 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <p><b>I am, {{user.first_name}} {{user.last_name}}</b></p>
-                        <p class="pt-2 fs-6 text-justify">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus pulvinar magna ut bibendum imperdiet. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum id tempor libero. Praesent vel magna eget purus dignissim interdum. Sed efficitur malesuada dui, ac interdum ante scelerisque non. Curabitur quis euismod lorem, vel rutrum ante. Sed non vestibulum turpis. Phasellus sit amet nisl in diam congue tristique. Nullam convallis lectus ac nisl iaculis, non posuere ipsum interdum. Vivamus nec justo ac sapien convallis maximus.</p>
+                        <!-- <p><b>I am, {{user.first_name}} {{user.last_name}}</b></p> -->
+                        <p class="pt-2 fs-6 text-justify">{{ user.about_me }}</p>
                         
                         <div class="row skill-set">
                             {% if user.skill_1 %}
@@ -153,14 +153,14 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="row skill-set">
-                            {% if user.skill_1 %}
+                            {% for skill in user_skills %}
                             <div class="col-md-6 py-3">
-                               <h6 class="fw-bold">{{ user.skill_1 }}</h6>
+                               <h6 class="fw-bold">{{ skill.skill }}</h6>
                                 <div class="progress">
-                                  <div class="progress-bar bg-success" role="progressbar" aria-label="Example with label" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                  <div class="progress-bar bg-success" role="progressbar" aria-label="Example with label" style="width: {{ skill.skill_value}}%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">{{ skill.skill_value }}%</div>
                                 </div>
                             </div>
-                            {% endif %}
+                            {% endfor %}
                         </div>
                     </div>
                     <!-- <div class="col-md-5">

@@ -342,7 +342,7 @@ class UpdatePersonalProfileForm(forms.ModelForm):
                 'required': 'Please enter your phone.'
             }, required=False
         )
-    # about_me = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 10, 'cols': 30}))
+    about_me = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 10, 'cols': 170}))
     class Meta:
         model = BaseUser
         fields = ['username', 'email', 'last_name', 'first_name', 'middle_name', 'date_of_birth', 'phone_num', 'bio', 'about_me']

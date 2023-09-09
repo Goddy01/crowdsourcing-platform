@@ -199,10 +199,12 @@ def profile(request):
     # else:
     #     user = BaseUser.objects.get(username=request.user.username)
     return render(request, 'accounts/profile.html', {
-        'user': user
+        'user': user,
+        'user_skills': Innovator.objects.get(user__username=request.user.username).innovatorskill_set.all()
     })
 
 def edit_profile(request):
+    user = BaseUser.objects.get(username=request.user.username)
     try:
         innovator = Innovator.objects.get(user__username=request.user.username)
     except Innovator.DoesNotExist:
@@ -259,7 +261,21 @@ def edit_profile(request):
         else:
             print(user_p_info.errors.as_data())
     else:
-        user_p_info = UpdatePersonalProfileForm()
+        user_p_info = UpdatePersonalProfileForm(
+            instance=request.user,
+            initial= {
+                'about_me': user.about_me,
+                'username': user.username,
+                'email': user.email,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'middle_name': user.middle_name,
+                'pfp': user.pfp,
+                'phone_num': user.phone_num,
+                'date_of_birth': user.date_of_birth,
+                'bio': user.bio
+            }
+        )
 
 #   USER RESIDENTIAL DATA
     if request.method == 'POST' and 'user_r_form' in request.POST:
