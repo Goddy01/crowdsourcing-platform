@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django import forms
-from .models import Innovator, Moderator, BaseUser, InnovatorSkill
+from .models import Innovator, Moderator, BaseUser, InnovatorSkill, Service
 from django.contrib.auth import authenticate, password_validation
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm, SetPasswordForm
 from django.utils.translation import gettext_lazy as _
@@ -396,6 +396,12 @@ class UpdateUserSkillsForm(forms.ModelForm):
     class Meta:
         model = InnovatorSkill
         fields  = ['skill', 'skill_value']
+
+class UpdateUserServiceForm(forms.ModelForm):
+    service = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Service'}))
+    class Meta:
+        model = Service
+        fields = ['service']
 
 class UpdateUserSocialsForm(forms.ModelForm):
     facebook = forms.URLField(required=False)

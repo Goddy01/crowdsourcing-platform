@@ -168,7 +168,7 @@ class InnovatorSkill(models.Model):
         # if self.innovator.user is not None:
         return f"Innovator-skill_{self.skill_id}"
     
-class Services(models.Model):
+class Service(models.Model):
     innovator = models.ForeignKey(Innovator, null=True, on_delete=models.CASCADE)
     service = models.CharField(max_length=255, null=True, blank=True, unique=True)
 
