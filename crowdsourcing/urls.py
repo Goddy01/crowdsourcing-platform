@@ -25,6 +25,12 @@ urlpatterns = [
     path('accounts/', include('accounts.urls', 'accounts')), # For social-auth
     path('social-auth/', include('social_django.urls', namespace='social')),
     path('', views.home, name='home'),
+
+
+
+
+
+    
     path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(template_name="password/password_change_done.html"), name="password_change_done"),
 
     # path('password_change/', auth_views.PasswordChangeView.as_view(template_name='password/password_change.html'), name='password_change'),
