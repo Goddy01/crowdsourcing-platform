@@ -19,3 +19,5 @@ class ExpectedReturnField(models.DecimalField):
         super().__init__(*args, **kwargs)
 
 
+def upload_project_gallery(instance, filename):
+    return f'project_gallery/{instance.innovator.user.last_name} {instance.innovator.user.first_name} {instance.innovator.user.middle_name}/project-{instance.name}/-{filename}'
