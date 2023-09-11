@@ -187,18 +187,3 @@ class Moderator(models.Model):
     USERNAME_FIELD = "email"
     # REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'middle_name', 'phone_num']
     REQUIRED_FIELDS = ['username', ]
-
-
-
-# @receiver(post_save, sender=Contributor)
-# def create_contributor_profile(sender, instance, created, **kwargs):
-#     if created:
-#         # print('INSTANCE: ', instance.is_staff)
-#         # print('THIS', instance.request. META['HTTP_REFERER'])
-#         if not instance.is_staff:
-#             Contributor.objects.create(
-#             user=instance
-#             )
-
-# post_save.connect(create_contributor_profile, sender=BaseUser)
-# post_save.connect(save_contributor_profile, sender=BaseUser)
