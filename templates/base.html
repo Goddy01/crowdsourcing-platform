@@ -90,6 +90,7 @@
 							<li><a href="account-statement.html">Statement</a></li>
 							<li><a href="account-funding.html">Funding</a></li>
 							<li><a href="{% url 'accounts:profile' %}">Profile</a></li>
+                            {% if request.user %}
 						</ul>
 					</li>
                     {% if request.user.is_authenticated %}
