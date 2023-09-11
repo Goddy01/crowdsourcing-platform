@@ -21,13 +21,13 @@
 	<header id="top-header" class="site-header">
 		<div class="container">
 			<div class="site-identity p-0">
-				<a href="index.html" class="site-title"><img src="{% static 'images/logo.png' %}" class="custom-logo" width="209" height="18" alt="CrowdsourceIt"></a>
+				<a href="{% url 'home' %}" class="site-title"><img src="{% static 'images/logo.png' %}" class="custom-logo" width="209" height="18" alt="CrowdsourceIt"></a>
 				<p class="site-description screen-reader-text">Business crowdfunding platform</p>
 			</div>
 			<nav class="language-navigation">
 				<ul id="language-menu" class="menu">
 					<li class="menu-item-has-children">
-						<a href="index.html"><img src="{% static 'images/en.svg' %}" width="17" alt=""><span>En<em class="mdi mdi-chevron-down"></em></span></a>
+						<a href="{% url 'home' %}"><img src="{% static 'images/en.svg' %}" width="17" alt=""><span>En<em class="mdi mdi-chevron-down"></em></span></a>
 						<ul class="sub-menu">
 							<li class="current-menu-item"><a href="index.html">English</a></li>
 							<li><a href="index.html">German</a></li>
@@ -89,8 +89,11 @@
 							<li><a href="account-investments.html">Investments</a></li>
 							<li><a href="account-statement.html">Statement</a></li>
 							<li><a href="account-funding.html">Funding</a></li>
-							<li><a href="{% url 'accounts:profile' %}">Profile</a></li>
-                            {% if request.user %}
+							{% if is_innovator %}
+                            <li><a href="{% url 'add_project' %}">Add Investment Project</a></li>
+                            {% endif %}
+                            brev
+                            <li><a href="{% url 'accounts:profile' %}">Profile</a></li>
 						</ul>
 					</li>
                     {% if request.user.is_authenticated %}
