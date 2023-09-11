@@ -37,6 +37,7 @@ class Project(models.Model):
     date_created = models.DateTimeField(auto_now_add=True, null=False, blank=False)
     investment_deadline = models.DateField()
     completed = models.BooleanField(default=False)
+    innovator_user_agreement = models.BooleanField(default=False, null=True, blank=True)
     
     # PROJECT GALLERY
     image_1 = models.ImageField(upload_to=upload_project_gallery, blank=False, null=False)
