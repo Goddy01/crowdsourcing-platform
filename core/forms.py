@@ -20,7 +20,7 @@ class CreateProjectForm(forms.ModelForm):
         ("ENVIRONMENTAL_AND_SUSTAINABILITY", "Environmental and Sustainability"),
         ("EDUCATION_AND_EDTECH", "Education and Edtech"),
         )
-    business_type = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=BUSINESS_CHOICES)
+    business_type = forms.ChoiceField(widget=forms.RadioSelect, choices=BUSINESS_CHOICES)
     class Meta:
         model = Project
         fields = ['name', 'motto', 'description', 'target', 'expected_return', 'term_months', 'country', 'investment_deadline', 'image_1', 'image_2', 'image_3', 'video', 'business_type', 'innovator_user_agreement']

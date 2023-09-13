@@ -30,7 +30,7 @@ class Project(models.Model):
     motto = models.CharField(max_length=255, null=False, blank=False)
     description = models.TextField(null=True, blank=True, max_length=10000)
     target = models.DecimalField(max_digits=255, decimal_places=2, null=False, blank=False)
-    fund_raised = models.DecimalField(max_digits=255, decimal_places=2, null=False, blank=False)
+    fund_raised = models.DecimalField(max_digits=255, decimal_places=2, null=True)
     expected_return = ExpectedReturnField(blank=False, null=False)
     term_months = models.IntegerField(null=False, blank=False)
     country = CountryField(max_length=255, null=True, blank=True)

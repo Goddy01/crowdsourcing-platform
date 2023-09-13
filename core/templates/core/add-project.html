@@ -54,17 +54,20 @@
                             <label for="name">Country</label>
                             <select id="country" name="country" class="underline">
                                 {% for c in countries %}
+                                {% if c.1 == 'Nigeria' %}
                                 <option value="{{ c.code }}">{{ c.1 }}</option>
+                                {% endif %}
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="mb-5">
                             <label for="name">Business Category</label>
-                            <select id="business_type" name="business_type" class="underline">
+                            {{ create_project_form.business_type}}
+                            <!-- <select id="business_type" name="business_type" class="underline">
                                 {% for b in create_project_form.business_type %}
                                 <option value="{{ b }}"></option>
                                 {% endfor %}
-                            </select>
+                            </select> -->
                         </div>
                         <div class="mb-5">
                             <label for="motto">Investment Deadline</label>
@@ -97,7 +100,7 @@
                                 Your browser does not support HTML5 video.
                             </video>
 
-                            <input type="file" name="file[]" class="file_multi_video mt-1" accept="video/*" style="width: 600px;height: 15px;padding-right: 85px;padding-bottom: 35px;">
+                            <input type="file" name="video" class="file_multi_video mt-1" accept="video/*" style="width: 600px;height: 15px;padding-right: 85px;padding-bottom: 35px;">
                         </div>
 					</div>
                     <!-- <div> -->
