@@ -38,7 +38,7 @@ class Project(models.Model):
     investment_deadline = models.DateField()
     completed = models.BooleanField(default=False)
     innovator_user_agreement = models.BooleanField(default=False, null=True, blank=True)
-    
+    certified_by = models.ForeignKey(account_models.Moderator, on_delete=models.CASCADE, null=True)
     # PROJECT GALLERY
     image_1 = models.ImageField(upload_to=upload_project_gallery, blank=False, null=False)
     image_2 = models.ImageField(upload_to=upload_project_gallery, blank=False, null=False)
