@@ -64,7 +64,7 @@
                     {% for project in projects %}
 					<div class="entry-project project-status-active">
 						<div class="project-media">
-							<a href="single-project.html">
+							<a href="{% url 'project_details' project.pk %}">
 								<img src="{{ project.image_1.url }}" width="800" height="600" alt="">
 								<span class="project-industry" title="Investment type"><em class="mdi mdi-information"></em> Business &mdash; {{ project.business_type|remove_chars|title }}</span>
 								<span class="project-country" title="Estonia"><img class="office-country" src="assets/images/ee.svg" width="24" alt=""> <em class="screen-reader-text">{{ project.country }}</em></span>
@@ -72,7 +72,7 @@
 							<span class="project-status"><em class="mdi mdi-plus"></em> Active</span>
 						</div>
 						<div class="project-details">
-							<h3 class="project-title"><a href="single-project.html">{{ project.name|title }}</a></h3>
+							<h3 class="project-title"><a href="{% url 'project_details' project.pk %}">{{ project.name|title }}</a></h3>
 							<p class="project-summary">{{ project.description }}</p>
 							<div class="project-specs">
 								<div class="project-total-invested">
@@ -108,7 +108,7 @@
 								</div>
 							</div>
 							<div class="project-actions">
-								<a href="single-project.html" class="button button-primary">Details</a>
+								<a href="{% url 'project_details' project.pk %}" class="button button-primary">Details</a>
 							</div>
 						</div>
 					</div>
