@@ -21,7 +21,7 @@
 				<div class="row">
 					<div class="col-12 mb-5 d-inline">
 						<h4 class="d-inline">Seller of Shares: </h4>
-						<span>{{ project.innovator.user.last_name }}, {{ project.innovator.user.first_name }} {{ project.innovator.user.middle_name }}</span>
+						<a href="{% url 'accounts:profile_with_arg' project.innovator.pk %}" class="text-decoration-none text-dark">{{ project.innovator.user.last_name }}, {{ project.innovator.user.first_name }} {{ project.innovator.user.middle_name }}</a>
 					</div>
 					<div class="col-12">
 						<h3>Project description</h3>

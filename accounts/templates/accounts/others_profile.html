@@ -1,0 +1,421 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Profile{% endblock title %}
+{% block content %}
+<!doctype html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Profile</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"> -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    
+        <!-- Animate.css  -->
+        <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
+    
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+        <link rel="shortcut icon" href="{% static 'accounts/images/fav.png' %}" type="image/x-icon">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+        <link rel="shortcut icon" href="{% static 'accounts/images/fav.jpg' %}">
+        <link rel="stylesheet" href="{% static 'accounts/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+        <link rel="stylesheet" type="text/css" href="{% static 'accounts/css/style.css' %}" />
+        <link rel="stylesheet" href="{% static 'css/materialdesignicons.css' %}">
+	<link rel="stylesheet" href="{% static 'css/bootstrap-grid.css' %}">
+	<link rel="stylesheet" href="{% static 'css/fancybox.css' %}">
+	<link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <style>
+            @media (max-width:1999px) {
+                .profile-top {
+                    margin-top: -150px;
+                }
+            }
+            @media (min-width: 1200px) {
+                .toastDiv {
+                position: absolute;
+                right: -110px;
+                top: 3rem;
+                z-index: 5
+                }
+                
+            }
+            
+            @media (min-width: 1200px) {
+                .account-errors {
+                position: absolute;
+                right: -110px;
+                top: 10rem;
+                z-index: 5
+                }
+                
+            }
+            @import url('//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css');
+
+        a, a:hover {
+            text-decoration: none;
+        }
+
+        .socialbtns, .socialbtns ul, .socialbtns li {
+        margin: 0;
+        padding: 5px;
+        }
+
+        .socialbtns li {
+            list-style: none outside none;
+            display: inline-block;
+        }
+
+        .socialbtns .fa {
+            width: 40px;
+            height: 40px;
+            color: #000;
+            background-color: #FFF;
+            border: 1px solid #000;
+            padding-top: 12px;
+            border-radius: 50%;
+            /* border-radius: 22px;
+            -moz-border-radius: 22px;
+            -webkit-border-radius: 22px;
+            -o-border-radius: 22px; */
+        }
+
+        .socialbtns .fa:hover {
+            color: #FFF;
+            background-color: #000;
+            border: 1px solid #000;
+        }
+
+        </style>
+    </head>
+        <div  class="main-content">
+            <!--########################## Profile Starts Here ############################# -->
+            <!-- <ul class=""> -->
+            <!-- </ul> -->
+            
+
+            <div class="profile-head bg-light">
+               <div class="row vh-100 profile-top mt-1">
+                   <div class="col-xl-6 text-center mx-auto align-self-center mb-2">
+                        <div class="imgcover mb-4 display-2">
+                            {% if user.pfp %}
+                            <img id="pfpimg" src="{{ user.pfp.url }}" class="img-responsive thumbnail rounded-pill bg-white p-2 shadow" alt="">
+                            {% else %}
+                            <img id="pfpImg" src="{% static 'images/default_profile_image.jpg' %}" class="img-responsive thumbnail rounded-pill bg-white p-2 shadow" style="height: 250px;width: 250px;">
+                            {% endif %}
+                        </div>
+                        <b class="fs-6">Hello I am, {{user.last_name}} {{user.first_name}}</b>
+                        <h1 class="fw-bold mb-4 fs-1">Full Stack Develper</h1>
+                        <p>
+                            {% if user.bio %}
+                            <b>{{ user.bio }}</b>
+                            {% endif %}
+                        </p>
+                        <ul>
+                            <li></li>
+                        </ul>
+            {% endif %}
+                    </div>
+               </div>
+            </div>
+            
+            <!--########################## About Us Starts Here ############################# -->
+            
+            <div id="about" class="about px-4 bg-white py-5">
+                <div class="titie-row row mb-3">
+                    <h2 class="fw-bolder text-success">About Me</h2>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <!-- <p><b>I am, {{user.first_name}} {{user.last_name}}</b></p> -->
+                        <p class="pt-2 fs-6 text-justify">{{ user.about_me }}</p>
+                        
+                        <div class="row skill-set">
+                            {% if user.skill_1 %}
+                            <div class="col-md-6 py-3">
+                               <h6 class="fw-bold">{{ user.skill_1 }}</h6>
+                                <div class="progress">
+                                  <div class="progress-bar bg-success" role="progressbar" aria-label="Example with label" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <!-- <div class="col-md-5">
+                        <img src="{% static 'accounts/images/profile.jpg' %}" alt="">
+                    </div> -->
+                </div>
+            </div>
+
+            <div id="about" class="skills px-4 bg-white py-5">
+                <div class="titie-row row mb-3">
+                    <h2 class="fw-bolder text-success">Skills</h2>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row skill-set">
+                            {% for skill in user_skills %}
+                            <div class="col-md-6 py-3">
+                               <h6 class="fw-bold">{{ skill.skill }}</h6>
+                                <div class="progress">
+                                  <div class="progress-bar bg-success" role="progressbar" aria-label="Example with label" style="width: {{ skill.skill_value}}%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">{{ skill.skill_value }}%</div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <!-- <div class="col-md-5">
+                        <img src="{% static 'accounts/images/profile.jpg' %}" alt="">
+                    </div> -->
+                </div>
+            </div>
+            
+            <!--########################## Services Starts Here ############################# -->
+            
+            <div id="service" class="service px-4 py-5">
+                 <div class="titie-row row mb-2">
+                    <h2 class="fw-bolder text-success">Services</h2>
+                </div>
+                <div class="row">
+                    {% if user_services.count == 1 %}
+                    {% for service in user_services %}
+                    <div class="col-lg-12 col-md-12 mb-4">
+                       <div class="serv-cove shadow-md rounded bg-white text-center p-4">
+                            <i class="bi fs-1 bi-boxes"></i>
+                            <h5 class="mt-3 fs-6 fw-bold">{{ service.service }}</h5>
+                            
+                       </div>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    
+                    {% if user_services.count == 2 %}
+                    {% for service in user_services %}
+                    <div class="col-lg-6 col-md-6 mb-4">
+                       <div class="serv-cove shadow-md rounded bg-white text-center p-4">
+                            <i class="bi fs-1 bi-boxes"></i>
+                            <h5 class="mt-3 fs-6 fw-bold">{{ service.service }}</h5>
+                            
+                       </div>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    
+                    {% if user_services.count == 3 %}
+                    {% for service in user_services %}
+                    <div class="col-lg-4 col-md-4 mb-4">
+                       <div class="serv-cove shadow-md rounded bg-white text-center p-4">
+                            <i class="bi fs-1 bi-boxes"></i>
+                            <h5 class="mt-3 fs-6 fw-bold">{{ service.service }}</h5>
+                            
+                       </div>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+
+                    {% if user_services.count == 4 %}
+                    {% for service in user_services %}
+                    {% if forloop.counter < 3 %}
+                    <div class="col-lg-6 col-md-6 mb-4">
+                    {% else %}
+                    <div class="col-lg-6 col-md-6 mb-4">
+                    {% endif %}
+                       <div class="serv-cove shadow-md rounded bg-white text-center p-4">
+                            <i class="bi fs-1 bi-boxes"></i>
+                            <h5 class="mt-3 fs-6 fw-bold">{{ service.service }}</h5>
+                            
+                       </div>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+
+                    {% if user_services.count == 5 %}
+                    {% for service in user_services %}
+                    {% if forloop.counter < 4 %}
+                    <div class="col-lg-4 col-md-4 mb-4">
+                    {% else %}
+                    <div class="col-lg-6 col-md-6 mb-4">
+                    {% endif %}
+                       <div class="serv-cove shadow-md rounded bg-white text-center p-4">
+                            <i class="bi fs-1 bi-boxes"></i>
+                            <h5 class="mt-3 fs-6 fw-bold">{{ service.service }}</h5>
+                            
+                       </div>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            
+             <!--########################## Portfolio Starts Here ############################# -->
+            
+            
+            
+             <!--########################## Portfolio Starts Here ############################# -->
+             
+             <div id="testimonial" class="service px-4 py-5">
+                 <div class="titie-row row mb-2">
+                    <h2 class="fw-bolder text-success">Testimonials</h2>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 mb-4">
+                       <div class="serv-cove shadow-md rounded bg-white p-3">
+                            <div class="prf row mb-3">
+                                <div class="col-md-3">
+                                    <img class="rounded-pill" src="{% static 'accounts/images/testimonial/member-01.jpg' %}" alt="">
+                                </div>
+                                <div class="col-md-9 align-self-center">
+                                    <h6 class="mb-0 fw-bolder">Vinoth Parkash</h6>
+                                    <span>CEO Fabric Nation</span>
+                                </div>
+                            </div>
+                            <div class="det text-center">
+                                <p class="fs-7 fst-italic">Sed lectus ante, pharetra in lacus sed, efficitur luctus elit. Suspendisse commodo felis dictum, tempor tortor a, dapibus tellus. Nam ornare felis ut arcu tristique luctus. Curabitur </p>
+                            </div>
+                       </div>
+                    </div>
+                    
+                    <div class="col-lg-4 col-md-6 mb-4">
+                       <div class="serv-cove shadow-md rounded bg-white p-3">
+                            <div class="prf row mb-3">
+                                <div class="col-md-3">
+                                    <img class="rounded-pill" src="{% static 'accounts/images/testimonial/member-03.jpg' %}" alt="">
+                                </div>
+                                <div class="col-md-9 align-self-center">
+                                    <h6 class="mb-0 fw-bolder">Jackson Daniel</h6>
+                                    <span>CEO Notitech</span>
+                                </div>
+                            </div>
+                            <div class="det text-center">
+                                <p class="fs-7 fst-italic">Sed lectus ante, pharetra in lacus sed, efficitur luctus elit. Suspendisse commodo felis dictum, tempor tortor a, dapibus tellus. Nam ornare felis ut arcu tristique luctus. Curabitur </p>
+                            </div>
+                       </div>
+                    </div>
+                    
+                    <div class="col-lg-4 col-md-6 mb-4">
+                       <div class="serv-cove shadow-md rounded bg-white p-3">
+                            <div class="prf row mb-3">
+                                <div class="col-md-3">
+                                    <img class="rounded-pill" src="{% static 'accounts/images/testimonial/member-02.jpg' %}" alt="">
+                                </div>
+                                <div class="col-md-9 align-self-center">
+                                    <h6 class="mb-0 fw-bolder">Praveen Thaney</h6>
+                                    <span>Admin Vintech</span>
+                                </div>
+                            </div>
+                            <div class="det text-center">
+                                <p class="fs-7 fst-italic">Sed lectus ante, pharetra in lacus sed, efficitur luctus elit. Suspendisse commodo felis dictum, tempor tortor a, dapibus tellus. Nam ornare felis ut arcu tristique luctus. Curabitur </p>
+                            </div>
+                       </div>
+                    </div>
+                     
+                </div>
+            </div>
+            
+             <!--########################## Blog Starts Here ############################# -->
+            
+            <div id="blog" class="service px-4 bg-white py-5">
+                 <div class="titie-row row mb-2">
+                    <h2 class="fw-bolder text-success">Projects</h2>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 mb-4">
+                       <div class="serv-cove rounded bg-white p-2">
+                            <img src="{% static 'accounts/images/blog/1.jpg' %}" alt="">
+                            <div class="p-2">
+                                <h5 class="mt-3 fs-7 fw-bold">Top 10 Trends in  Webdesign sit nibh amet  Mauris ipsum sit nibh</h5>
+                                <span class="fs-8">22 May 2015</span>
+                                <span class="float-end fs-8"><i class="bi bi-person"></i> Sam Anderson</span>
+                            </div>
+                       </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                       <div class="serv-cove rounded bg-white p-2">
+                            <img src="{% static 'accounts/images/blog/2.jpg' %}" alt="">
+                            <div class="p-2">
+                                <h5 class="mt-3 fs-7 fw-bold">Top 10 Trends in  Webdesign sit nibh amet  Mauris ipsum sit nibh</h5>
+                                <span class="fs-8">22 May 2015</span>
+                                <span class="float-end fs-8"><i class="bi bi-person"></i> Sam Anderson</span>
+                            </div>
+                       </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                       <div class="serv-cove rounded bg-white p-2">
+                            <img src="{% static 'accounts/images/blog/3.jpg' %}" alt="">
+                            <div class="p-2">
+                                <h5 class="mt-3 fs-7 fw-bold">Top 10 Trends in  Webdesign sit nibh amet  Mauris ipsum sit nibh</h5>
+                                <span class="fs-8">22 May 2015</span>
+                                <span class="float-end fs-8"><i class="bi bi-person"></i> Sam Anderson</span>
+                            </div>
+                       </div>
+                    </div>
+                     
+                </div>
+            </div>
+            
+              <!--########################## Contact Us Starts Here ############################# -->
+            
+            <div class="service px-4 py-5">
+                 <div class="titie-row row mb-2">
+                    <h2 class="fw-bolder text-success">Contact</h2>
+                </div>
+                <br/>
+            <div align="center" class="socialbtns">
+            <ul>
+            {% if user.facebook|length > 21 %}
+            <li><a href="{{ user.facebook }}" class="fa fa-lg fa-facebook"></a></li>
+            {% endif %}
+
+            {% if user.twitter|length > 20 %}
+            <li><a href="{{ user.twitter }}" class="fa fa-lg fa-twitter"></a></li>
+            {% endif %}
+
+            <li><a href="mailto:{{ user.email }}" class="fa fa-lg fa-envelope"></a></li>
+            
+            {% if user.phone_num %}
+            <li><a href="tel:{{ user.phone_num }}" class="fa fa-lg fa-phone"></a></li>
+            {% endif %}
+
+            {% if user.instagram|length > 22 %}
+            <li><a href="{{ user.instagram }}" class="fa fa-lg fa-instagram"></a></li>
+            {% endif %}
+            
+            {% if user.linkedin|length > 21 %}
+            <li><a href="{{ user.linkedin }}" class="fa fa-lg fa-linkedin"></a></li>
+            {% endif %}
+            </ul>
+            </div>
+                </div>
+            </div>
+            
+            
+            
+        </div>
+    <body>
+</body>
+<script>
+    $(document).ready(function(){
+      $('.toast').toast('show');
+    });
+  
+    setTimeout(function() {
+      $('.toast').toast('hide')
+    }, 8000)
+</script>
+
+<script src="{% static 'accounts/js/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'accounts/js/popper.min.js' %}"></script>
+<script src="{% static 'accounts/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'accounts/plugins/scroll-fixed/jquery-scrolltofixed-min.js' %}"></script>
+<script src="{% static 'accounts/plugins/testimonial/js/owl.carousel.min.js' %}"></script>
+<script src="{% static 'accounts/js/script.js' %}"></script>
+</html>
+
+{% endblock content %}

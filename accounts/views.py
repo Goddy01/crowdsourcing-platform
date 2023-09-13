@@ -189,24 +189,19 @@ def sign_out(request):
     logout(request)
     return redirect('home')
 
-def profile(request, innovator_pk=None):
-    innovator = ''
-    if innovator_pk is not None:
-        innovator = Innovator.objects.get(pk=innovator_pk)
-    else:
-        if not request.user.is_authenticated:
-            return redirect('accounts:innovator_login')
-        try:
-            user = BaseUser.objects.get(username=request.user.username)
-        except BaseUser.DoesNotExist:
-            return HttpResponse('User Not Found!')
-        # else:
-        #     user = BaseUser.objects.get(username=request.user.username)
+def profile(request):
+    if not request.user.is_authenticated:
+        return redirect('accounts:innovator_login')
+    try:
+        user = BaseUser.objects.get(username=request.user.username)
+    except BaseUser.DoesNotExist:
+        return HttpResponse('User Not Found!')
+    # else:
+    #     user = BaseUser.objects.get(username=request.user.username)
     return render(request, 'accounts/profile.html', {
         'user': user,
         'user_skills': Innovator.objects.get(user__username=request.user.username).innovatorskill_set.all(),
-        'user_services': Innovator.objects.get(user__username=request.user.username).service_set.all(),
-        'innovator': innovator
+        'user_services': Innovator.objects.get(user__username=request.user.username).service_set.all()
         
     })
 
