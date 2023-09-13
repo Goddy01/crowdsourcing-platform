@@ -14,11 +14,6 @@
 			<img src="tmp/sample-header.jpg" alt="">
 		</div>
 	</header>
-    {% for project in projects %}
-    niga
-    {{ project.image_1.url }}
-    <img src="{{ project.image_1 }}" alt="">
-    {% endfor %}
 
 	<div id="content" class="site-content">
 		<main class="site-section section-main">
@@ -70,14 +65,12 @@
 					<div class="entry-project project-status-active">
 						<div class="project-media">
 							<a href="single-project.html">
-                                <img src="{{ project.image_1.url }}" alt="">
 								<img src="{{ project.image_1.url }}" width="800" height="600" alt="">
 								<span class="project-industry" title="Investment type"><em class="mdi mdi-information"></em> Business &mdash; {{ project.business_type|remove_chars|title }}</span>
 								<span class="project-country" title="Estonia"><img class="office-country" src="assets/images/ee.svg" width="24" alt=""> <em class="screen-reader-text">{{ project.country }}</em></span>
 							</a>
 							<span class="project-status"><em class="mdi mdi-plus"></em> Active</span>
 						</div>
-                        <img src="{{ project.image_2.url }}" alt="">
 						<div class="project-details">
 							<h3 class="project-title"><a href="single-project.html">{{ project.name|title }}</a></h3>
 							<p class="project-summary">{{ project.description }}</p>

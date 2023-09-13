@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load business_type_filter %}
+{% block title %}CrowdSourceIt - Projects{% endblock title %}
+{% block content %}
+	<header id="featured" class="site-featured">
+		<div id="featured-media" class="featured-media has-media">
+			<div class="featured-text">
+				<div class="container">
+					<h2 class="entry-title">Apartment building renovation</h2>
+					<div class="tagline">Funds for increasing the efficency class rating</div>
+				</div>
+			</div>
+			<img src="tmp/sample-header.jpg" alt="">
+		</div>
+	</header>
+
+	<div id="content" class="site-content">
+		<main class="site-section section-main">
+			<div class="container">
+				<div class="row">
+					<div class="col-12">
+						<h3>Project description</h3>
+						<p>The current investment opportunity offers CrowdInvest investors to make a secured loan to Developer of project Barilla Apartments with with a 16% ROI. The term of investment is 23 months and the offer includes a buyback guarantee.</p>
+						<p>Funds will be used to reconstruct the object which is a 5 storey building located in old town of Vilnius. Total area of the building is 681 square metres and after reconstruction there will be 16 apartments.</p>
+						<p>As there is a limited offer of reconstructed apartments with modern and thoughtful plans, it is expected to exit from Project by end of 2023 by selling apartments to local residents and real estate agencies.</p>
+					</div>
+					<div class="col-6 col-lg-3">
+						<div class="featured-box">
+							<h5 class="featured-box-title">€225 000</h5>
+							<p class="featured-box-content">Target</p>
+						</div>
+					</div>
+					<div class="col-6 col-lg-3">
+						<div class="featured-box">
+							<h5 class="featured-box-title">16%</h5>
+							<p class="featured-box-content">Expected return</p>
+						</div>
+					</div>
+					<div class="col-6 col-lg-3">
+						<div class="featured-box">
+							<h5 class="featured-box-title">23 months</h5>
+							<p class="featured-box-content">Term</p>
+						</div>
+					</div>
+					<div class="col-6 col-lg-3">
+						<div class="featured-box">
+							<h5 class="featured-box-title">30 days</h5>
+							<p class="featured-box-content">To invest</p>
+						</div>
+					</div>
+				</div>
+				<div class="row align-items-center">
+					<div class="col-12 col-lg-6">
+						<div class="row align-items-center">
+							<div class="col-6">
+								<div class="project-progress-chart">
+									<svg viewBox="0 0 36 36">
+										<path class="circle-total" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+										<path class="circle-current" stroke-dasharray="8.275, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+									</svg>
+									<div class="percentage-text">8.275%</div>
+								</div>
+							</div>
+							<div class="col-6">
+								<div class="project-progress-numbers">
+									<h3>€206 380</h3>
+									<p>Available for investment</p>
+									<hr>
+									<h3 class="status-funded">€18 620</h3>
+									<p class="status-funded">Already funded</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-12 col-lg-6">
+						<div class="data-box">
+							<div class="data-property">Loan type</div>
+							<div class="data-value">Real estate</div>
+							<div class="data-property">Country</div>
+							<div class="data-value">Lithuania</div>
+							<div class="data-property">Date of issue</div>
+							<div class="data-value">2022-01-26</div>
+							<div class="data-property">Closing date</div>
+							<div class="data-value">2024-01-26</div>
+							<div class="data-property">Initial term</div>
+							<div class="data-value">23 months</div>
+							<div class="data-property">Collateral</div>
+							<div class="data-value">Pledge of all rights</div>
+							<div class="data-property">Collateral value</div>
+							<div class="data-value">€450000</div>
+							<div class="data-property">Loan to value (LTV)</div>
+							<div class="data-value">50%</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12">
+						<h3>Project gallery</h3>
+						<div class="video-wrapper status-pause">
+							<video id="sample-video" src="tmp/sample-video.mp4" poster="tmp/sample-video.jpg"></video>
+							<a href="#sample-video" class="video-playback"><span class="progress"></span><em class="mdi mdi-play"></em><em class="mdi mdi-pause"></em></a>
+						</div>
+						<div class="gallery gallery-columns-3">
+							<figure class="gallery-item">
+								<div class="gallery-icon">
+									<a href="tmp/sample-location.jpg" data-fancybox="test-gallery"><img src="tmp/sample-location.jpg" alt=""></a>
+								</div>
+							</figure><figure class="gallery-item">
+								<div class="gallery-icon">
+									<a href="tmp/sample-location.jpg" data-fancybox="test-gallery"><img src="tmp/sample-location.jpg" alt=""></a>
+								</div>
+							</figure><figure class="gallery-item">
+								<div class="gallery-icon">
+									<a href="tmp/sample-location.jpg" data-fancybox="test-gallery"><img src="tmp/sample-location.jpg" alt=""></a>
+								</div>
+							</figure>
+						</div>
+						<div class="project-submit-investment">
+							<h3>Start investing</h3>
+							<p class="text-faded"><span class="mdi mdi-check-bold"></span> Buyback guarantee</p>
+							<p>Your available funds <strong>€215.50</strong></p>
+							<form action="single-project.html">
+								<label for="amount" class="sr-only">Amount:</label>
+								<input type="number" id="amount" name="amount" placeholder="Enter the amount">
+								<label for="confirm"><input type="checkbox" id="confirm" name="confirm"> I confirm that I have read and agree with <a href="#">Investment Agreement</a></label>
+								<button type="submit">Invest</button>
+								<div class="clear"></div>
+							</form>
+						</div>
+
+						<h3>Project schedule</h3>
+						<table>
+							<thead>
+								<tr>
+									<th>Date</th>
+									<th>Principal</th>
+									<th>Interest</th>
+									<th>Total</th>
+									<th>Status</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>2022-02-26</td>
+									<td>€0.00</td>
+									<td>€1565.2</td>
+									<td>€1565.2</td>
+									<td><span class="project-status status-paid">Paid</span></td>
+								</tr>
+								<tr>
+									<td>2022-03-26</td>
+									<td>€0.00</td>
+									<td>€1565.2</td>
+									<td>€1565.2</td>
+									<td><span class="project-status status-paid">Paid</span></td>
+								</tr>
+								<tr>
+									<td>2022-04-26</td>
+									<td>€0.00</td>
+									<td>€1565.2</td>
+									<td>€1565.2</td>
+									<td><span class="project-status status-scheduled">Scheduled</span></td>
+								</tr>
+								<tr>
+									<td>2022-05-26</td>
+									<td>€0.00</td>
+									<td>€1565.2</td>
+									<td>€1565.2</td>
+									<td><span class="project-status status-scheduled">Scheduled</span></td>
+								</tr>
+								<tr>
+									<td>2022-06-26</td>
+									<td>€0.00</td>
+									<td>€1565.2</td>
+									<td>€1565.2</td>
+									<td><span class="project-status status-scheduled">Scheduled</span></td>
+								</tr>
+								<tr>
+									<td>2022-07-26</td>
+									<td>€0.00</td>
+									<td>€1565.2</td>
+									<td>€1565.2</td>
+									<td><span class="project-status status-scheduled">Scheduled</span></td>
+								</tr>
+								<tr>
+									<td>2024-01-26</td>
+									<td>€225000</td>
+									<td>€1565.2</td>
+									<td>€226565.2</td>
+									<td><span class="project-status status-final">Final payment</span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</main>
+	</div>
+
+{% endblock content %}
