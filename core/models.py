@@ -26,7 +26,7 @@ def upload_project_gallery(instance, filename):
 # PROJECT
 class Project(models.Model):
     innovator = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255, null=False, blank=False)
+    name = models.CharField(max_length=255, null=False, blank=False, unique=True)
     motto = models.CharField(max_length=255, null=False, blank=False)
     description = models.TextField(null=True, blank=True, max_length=10000)
     target = models.DecimalField(max_digits=255, decimal_places=2, null=False, blank=False)
@@ -45,3 +45,6 @@ class Project(models.Model):
     image_3 = models.ImageField(upload_to=upload_project_gallery, blank=False, null=False)
     video = models.FileField(upload_to=upload_project_gallery,null=True, validators=[FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv'])])    
     business_type = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"Project: {self.name} by {self.innovator.user.username}"
