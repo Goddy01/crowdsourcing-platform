@@ -26,6 +26,7 @@ urlpatterns = [
     path('social-auth/', include('social_django.urls', namespace='social')),
     path('', views.home, name='home'),
     path('add-project', views.add_project, name='add_project'),
+    path('projects', views.projects_list, name='projects'),
 
 
 
