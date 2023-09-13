@@ -34,7 +34,7 @@ class Project(models.Model):
     expected_return = ExpectedReturnField(blank=False, null=False)
     term_months = models.IntegerField(null=False, blank=False)
     country = CountryField(max_length=255, null=True, blank=True)
-    date_created = models.DateTimeField(auto_now_add=True, null=False, blank=False)
+    date_created = models.DateTimeField(auto_now_add=True, null=True)
     investment_deadline = models.DateField()
     completed = models.BooleanField(default=False)
     innovator_user_agreement = models.BooleanField(default=False, null=True, blank=True)

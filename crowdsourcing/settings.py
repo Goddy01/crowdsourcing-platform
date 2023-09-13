@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'jazzmin',
     'django_countries',
+    'import_export',
     'core',
     'accounts',
     'django.contrib.admin',
