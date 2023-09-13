@@ -31,4 +31,4 @@ def add_project(request):
 
 def projects_list(request):
     projects = Project.objects.all()
-    return render(request, 'core.projects.html', {'projects': projects})
+    return render(request, 'core/projects.html', {'projects': projects})
