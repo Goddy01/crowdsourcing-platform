@@ -15,7 +15,7 @@ class CreateProjectForm(forms.ModelForm):
         'required': 'Please enter the target amount of the project'
     })
     expected_return = forms.DecimalField(error_messages={
-        'required': 'Please enter the expected_return of the project'
+        'required': 'Please enter the expected return of the project'
     })
     term_months = forms.IntegerField(error_messages={
         'required': 'Please enter the term of the project in months'
@@ -42,10 +42,10 @@ class CreateProjectForm(forms.ModelForm):
         'required': 'Please select a category where the project belongs'
     })
     innovator_user_agreement = forms.BooleanField(error_messages={
-        'required': 'Please check the box'
+        'required': 'Please check the innovator user agreement box'
     })
     BUSINESS_CHOICES = (
-        ("REAL_ESTATE", "Real Estate"),
+        ("REAL ESTATE", "Real Estate"),
         ("TRANSPORTATION", "Transportation"),
         ("FORESTRY", "Forestry"),
         ("AGRICULTURE", "Agriculture"),
@@ -53,16 +53,16 @@ class CreateProjectForm(forms.ModelForm):
         ("ENERGY", "Energy"),
         ("TECHNOLOGY", "Technology"),
         ("HEALTHCARE", "Healthcare"),
-        ("CONSUMER_GOODS", "Consumer Goods"),
-        ("FINANCE_AND_BANKING", "Finance and Banking"),
-        ("HOSPITALITY_AND_TOURISM", "Hospitality and Tourism"),
-        ("ENTERTAINMENT_AND_MEDIA", "Entertainment and Media"),
+        ("CONSUMER GOODS", "Consumer Goods"),
+        ("FINANCE AND BANKING", "Finance and Banking"),
+        ("HOSPITALITY AND TOURISM", "Hospitality and Tourism"),
+        ("ENTERTAINMENT AND MEDIA", "Entertainment and Media"),
         ("MANUFACTURING", "Manufacturing"),
-        ("MINING_AND_NATURAL_RESOURCES", "Mining and Natural Resources"),
-        ("ENVIRONMENTAL_AND_SUSTAINABILITY", "Environmental and Sustainability"),
-        ("EDUCATION_AND_EDTECH", "Education and Edtech"),
+        ("MINING AND NATURAL RESOURCES", "Mining and Natural Resources"),
+        ("ENVIRONMENTAL AND SUSTAINABILITY", "Environmental and Sustainability"),
+        ("EDUCATION AND EDTECH", "Education and Edtech"),
         )
-    business_type = forms.ChoiceField(widget=forms.RadioSelect, choices=BUSINESS_CHOICES)
+    business_type = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=BUSINESS_CHOICES)
     class Meta:
         model = Project
         fields = ['name', 'motto', 'description', 'target', 'expected_return', 'term_months', 'country', 'investment_deadline', 'image_1', 'image_2', 'image_3', 'video', 'business_type', 'innovator_user_agreement']
