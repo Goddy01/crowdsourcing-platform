@@ -43,25 +43,5 @@ class Project(models.Model):
     image_1 = models.ImageField(upload_to=upload_project_gallery, blank=False, null=False)
     image_2 = models.ImageField(upload_to=upload_project_gallery, blank=False, null=False)
     image_3 = models.ImageField(upload_to=upload_project_gallery, blank=False, null=False)
-    video = models.FileField(upload_to=upload_project_gallery,null=True, validators=[FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv'])])
-    
-    
-    class Investment_type(models.TextChoices):
-        REAL_ESTATE = "REAL ESTATE", "Real Estate"
-        TRANSPORTATION = "TRANSPORTATION", "Transportation"
-        FORESTRY = "FORESTRY", "Forestry"
-        AGRICULTURE = "AGRICULTURE", "Agriculture"
-        CONSTRUCTION = "CONSTRUCTION", "Construction"
-        ENERGY = "ENERGY", "Energy"
-        TECHNOLOGY = "TECHNOLOGY", "Technology"
-        HEALTHCARE = "HEALTHCARE", "Healthcare"
-        CONSUMER_GOODS = "CONSUMER GOODS", "Consumer Goods"
-        FINANCE_AND_BANKING = "FINANCE AND BANKING", "Finance and Banking"
-        HOSPITALITY_AND_TOURISM = "HOSPITALITY AND TOURISM", "Hospitality and Tourism"
-        ENTERTAINMENT_AND_MEDIA = "ENTERTAINMENT AND MEDIA", "Entertainment and Media"
-        MANUFACTURING = "MANUFACTURING", "Manufacturing"
-        MINING_AND_NATURAL_RESOURCES = "MINING AND NATURAL RESOURCES", "Mining and Natural Resources"
-        ENVIRONMENTAL_AND_SUSTAINABILITY = "ENVIRONMENTAL AND SUSTAINABILITY", "Environmental and Sustainability"
-        EDUCATION_AND_EDTECH = "EDUCATION AND EDTECH", "Education and Edtech"
-    
-    business_type = models.CharField(max_length=255, choices=Investment_type.choices, default=Investment_type.REAL_ESTATE)
+    video = models.FileField(upload_to=upload_project_gallery,null=True, validators=[FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv'])])    
+    business_type = models.CharField(max_length=255)
