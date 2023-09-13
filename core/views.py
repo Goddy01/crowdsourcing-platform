@@ -28,3 +28,7 @@ def add_project(request):
     else:
         create_project_form = CreateProjectForm()
     return render(request, 'core/add-project.html', {'countries': countries, 'create_project_form': create_project_form, 'project_creation_request': project_creation_request})
+
+def projects_list(request):
+    projects = Project.objects.all()
+    return render(request, 'core.projects.html', {'projects': projects})
