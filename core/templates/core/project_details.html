@@ -7,11 +7,11 @@
 		<div id="featured-media" class="featured-media has-media">
 			<div class="featured-text">
 				<div class="container">
-					<h2 class="entry-title">Apartment building renovation</h2>
-					<div class="tagline">Funds for increasing the efficency class rating</div>
+					<h2 class="entry-title">{{ project.name }}</h2>
+					<div class="tagline">{{ project.motto }}</div>
 				</div>
 			</div>
-			<img src="tmp/sample-header.jpg" alt="">
+			<img src="{% static 'tmp/sample-header.jpg' %}" alt="">
 		</div>
 	</header>
 
@@ -19,38 +19,40 @@
 		<main class="site-section section-main">
 			<div class="container">
 				<div class="row">
+					<div class="col-12 mb-5 d-inline">
+						<h4 class="d-inline">Seller of Shares: </h4>
+						<span>{{ project.innovator.user.last_name }}, {{ project.innovator.user.first_name }} {{ project.innovator.user.middle_name }}</span>
+					</div>
 					<div class="col-12">
 						<h3>Project description</h3>
-						<p>The current investment opportunity offers CrowdInvest investors to make a secured loan to Developer of project Barilla Apartments with with a 16% ROI. The term of investment is 23 months and the offer includes a buyback guarantee.</p>
-						<p>Funds will be used to reconstruct the object which is a 5 storey building located in old town of Vilnius. Total area of the building is 681 square metres and after reconstruction there will be 16 apartments.</p>
-						<p>As there is a limited offer of reconstructed apartments with modern and thoughtful plans, it is expected to exit from Project by end of 2023 by selling apartments to local residents and real estate agencies.</p>
+						<p>{{ project.description }}</p>
 					</div>
 					<div class="col-6 col-lg-3">
 						<div class="featured-box">
-							<h5 class="featured-box-title">€225 000</h5>
+							<h5 class="featured-box-title">₦{{ project.target }}</h5>
 							<p class="featured-box-content">Target</p>
 						</div>
 					</div>
 					<div class="col-6 col-lg-3">
 						<div class="featured-box">
-							<h5 class="featured-box-title">16%</h5>
+							<h5 class="featured-box-title">{{ project.expected_return }}%</h5>
 							<p class="featured-box-content">Expected return</p>
 						</div>
 					</div>
 					<div class="col-6 col-lg-3">
 						<div class="featured-box">
-							<h5 class="featured-box-title">23 months</h5>
+							<h5 class="featured-box-title">{{ project.term_months }} months</h5>
 							<p class="featured-box-content">Term</p>
 						</div>
 					</div>
 					<div class="col-6 col-lg-3">
 						<div class="featured-box">
-							<h5 class="featured-box-title">30 days</h5>
-							<p class="featured-box-content">To invest</p>
+							<h5 class="featured-box-title">{{ project.investment_deadline }}</h5>
+							<p class="featured-box-content">Investment Deadline</p>
 						</div>
 					</div>
 				</div>
-				<div class="row align-items-center">
+				<!-- <div class="row align-items-center">
 					<div class="col-12 col-lg-6">
 						<div class="row align-items-center">
 							<div class="col-6">
@@ -64,10 +66,10 @@
 							</div>
 							<div class="col-6">
 								<div class="project-progress-numbers">
-									<h3>€206 380</h3>
+									<h3>₦206 380</h3>
 									<p>Available for investment</p>
 									<hr>
-									<h3 class="status-funded">€18 620</h3>
+									<h3 class="status-funded">₦18 620</h3>
 									<p class="status-funded">Already funded</p>
 								</div>
 							</div>
@@ -88,38 +90,38 @@
 							<div class="data-property">Collateral</div>
 							<div class="data-value">Pledge of all rights</div>
 							<div class="data-property">Collateral value</div>
-							<div class="data-value">€450000</div>
+							<div class="data-value">₦450000</div>
 							<div class="data-property">Loan to value (LTV)</div>
 							<div class="data-value">50%</div>
 						</div>
 					</div>
-				</div>
+				</div> -->
 				<div class="row">
 					<div class="col-12">
 						<h3>Project gallery</h3>
 						<div class="video-wrapper status-pause">
-							<video id="sample-video" src="tmp/sample-video.mp4" poster="tmp/sample-video.jpg"></video>
+							<video id="sample-video" src="{{ project.video.url }}" poster="{{ project.video.url }}"></video>
 							<a href="#sample-video" class="video-playback"><span class="progress"></span><em class="mdi mdi-play"></em><em class="mdi mdi-pause"></em></a>
 						</div>
 						<div class="gallery gallery-columns-3">
 							<figure class="gallery-item">
 								<div class="gallery-icon">
-									<a href="tmp/sample-location.jpg" data-fancybox="test-gallery"><img src="tmp/sample-location.jpg" alt=""></a>
+									<a href="{{ project.image_1.url }}" data-fancybox="test-gallery"><img src="{{ project.image_1.url }}" alt="" style="width: 900px;height: 400px;"></a>
 								</div>
 							</figure><figure class="gallery-item">
 								<div class="gallery-icon">
-									<a href="tmp/sample-location.jpg" data-fancybox="test-gallery"><img src="tmp/sample-location.jpg" alt=""></a>
+									<a href="{{ project.image_2.url }}" data-fancybox="test-gallery"><img src="{{ project.image_2.url }}" alt="" style="width: 900px;height: 400px;"></a>
 								</div>
 							</figure><figure class="gallery-item">
 								<div class="gallery-icon">
-									<a href="tmp/sample-location.jpg" data-fancybox="test-gallery"><img src="tmp/sample-location.jpg" alt=""></a>
+									<a href="{{ project.image_3.url }}" data-fancybox="test-gallery"><img src="{{ project.image_3.url }}" alt="" style="width: 900px;height: 400px;"></a>
 								</div>
 							</figure>
 						</div>
 						<div class="project-submit-investment">
 							<h3>Start investing</h3>
 							<p class="text-faded"><span class="mdi mdi-check-bold"></span> Buyback guarantee</p>
-							<p>Your available funds <strong>€215.50</strong></p>
+							<p>Your available funds <strong>₦215.50</strong></p>
 							<form action="single-project.html">
 								<label for="amount" class="sr-only">Amount:</label>
 								<input type="number" id="amount" name="amount" placeholder="Enter the amount">
@@ -129,7 +131,7 @@
 							</form>
 						</div>
 
-						<h3>Project schedule</h3>
+						<!-- <h3>Project schedule</h3>
 						<table>
 							<thead>
 								<tr>
@@ -143,55 +145,55 @@
 							<tbody>
 								<tr>
 									<td>2022-02-26</td>
-									<td>€0.00</td>
-									<td>€1565.2</td>
-									<td>€1565.2</td>
+									<td>₦0.00</td>
+									<td>₦1565.2</td>
+									<td>₦1565.2</td>
 									<td><span class="project-status status-paid">Paid</span></td>
 								</tr>
 								<tr>
 									<td>2022-03-26</td>
-									<td>€0.00</td>
-									<td>€1565.2</td>
-									<td>€1565.2</td>
+									<td>₦0.00</td>
+									<td>₦1565.2</td>
+									<td>₦1565.2</td>
 									<td><span class="project-status status-paid">Paid</span></td>
 								</tr>
 								<tr>
 									<td>2022-04-26</td>
-									<td>€0.00</td>
-									<td>€1565.2</td>
-									<td>€1565.2</td>
+									<td>₦0.00</td>
+									<td>₦1565.2</td>
+									<td>₦1565.2</td>
 									<td><span class="project-status status-scheduled">Scheduled</span></td>
 								</tr>
 								<tr>
 									<td>2022-05-26</td>
-									<td>€0.00</td>
-									<td>€1565.2</td>
-									<td>€1565.2</td>
+									<td>₦0.00</td>
+									<td>₦1565.2</td>
+									<td>₦1565.2</td>
 									<td><span class="project-status status-scheduled">Scheduled</span></td>
 								</tr>
 								<tr>
 									<td>2022-06-26</td>
-									<td>€0.00</td>
-									<td>€1565.2</td>
-									<td>€1565.2</td>
+									<td>₦0.00</td>
+									<td>₦1565.2</td>
+									<td>₦1565.2</td>
 									<td><span class="project-status status-scheduled">Scheduled</span></td>
 								</tr>
 								<tr>
 									<td>2022-07-26</td>
-									<td>€0.00</td>
-									<td>€1565.2</td>
-									<td>€1565.2</td>
+									<td>₦0.00</td>
+									<td>₦1565.2</td>
+									<td>₦1565.2</td>
 									<td><span class="project-status status-scheduled">Scheduled</span></td>
 								</tr>
 								<tr>
 									<td>2024-01-26</td>
-									<td>€225000</td>
-									<td>€1565.2</td>
-									<td>€226565.2</td>
+									<td>₦225000</td>
+									<td>₦1565.2</td>
+									<td>₦226565.2</td>
 									<td><span class="project-status status-final">Final payment</span></td>
 								</tr>
 							</tbody>
-						</table>
+						</table> -->
 					</div>
 				</div>
 			</div>
