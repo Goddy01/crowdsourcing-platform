@@ -205,6 +205,10 @@ def profile(request):
         
     })
 
+def others_profile(request, innovator_pk):
+    innovator = Innovator.objects.get(pk=innovator_pk)
+    return render(request, 'accounts/others_profile.html', {'innovator': innovator})
+
 def edit_profile(request):
     user = BaseUser.objects.get(username=request.user.username)
     try:
