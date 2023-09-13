@@ -59,6 +59,14 @@
                             </select>
                         </div>
                         <div class="mb-5">
+                            <label for="name">Business Category</label>
+                            <select id="business_type" name="business_type" class="underline">
+                                {% for b in create_project_form.business_type %}
+                                <option value="{{ b }}"></option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-5">
                             <label for="motto">Investment Deadline</label>
                             <input type="text" id="investment_deadline" name="investment_deadline" class="underline">
                         </div>
@@ -98,7 +106,7 @@
 						<h5 class="d-inline">User agreement: </h5>
                         <a class="d-inline" href="#">InnovatorUserAgreement.pdf</a>
 					</div>
-                        <p class="input-checkbox"><input type="checkbox" id="latest-news" name="latest-news" checked> <label for="latest-news" style="font-weight: 300;">I have read and agree to the Innovator User Agreement.</label></p>
+                        <p class="input-checkbox"><input type="checkbox" id="innovator_user_agreement" name="innovator_user_agreement" checked> <label for="innovator_user_agreement" style="font-weight: 300;">I have read and agree to the Innovator User Agreement.</label></p>
                     <!-- </div> -->
 					<div class="w100 spacing1 mt-2"></div>
 					<!-- <div class="col-12 col-md-4 col-lg-3">

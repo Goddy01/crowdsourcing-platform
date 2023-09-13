@@ -52,7 +52,7 @@ class Project(models.Model):
         FORESTRY = "FORESTRY", "Forestry"
         AGRICULTURE = "AGRICULTURE", "Agriculture"
         CONSTRUCTION = "CONSTRUCTION", "Construction"
-        ENERGY = "ENERGY", "Enerygy"
+        ENERGY = "ENERGY", "Energy"
         TECHNOLOGY = "TECHNOLOGY", "Technology"
         HEALTHCARE = "HEALTHCARE", "Healthcare"
         CONSUMER_GOODS = "CONSUMER GOODS", "Consumer Goods"
@@ -64,4 +64,4 @@ class Project(models.Model):
         ENVIRONMENTAL_AND_SUSTAINABILITY = "ENVIRONMENTAL AND SUSTAINABILITY", "Environmental and Sustainability"
         EDUCATION_AND_EDTECH = "EDUCATION AND EDTECH", "Education and Edtech"
     
-    business_type = models.CharField(max_length=255, choices=Investment_type.choices)
+    business_type = models.CharField(max_length=255, choices=Investment_type.choices, default=Investment_type.REAL_ESTATE)
