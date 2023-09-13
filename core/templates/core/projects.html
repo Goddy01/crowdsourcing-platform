@@ -1,0 +1,324 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}CrowdSourceIt - Projects{% endblock title %}
+{% block content %}
+	<header id="featured" class="site-featured">
+		<div id="featured-media" class="featured-media has-media">
+			<div class="featured-text">
+				<div class="container">
+					<h2 class="entry-title">Projects</h2>
+					<div class="tagline">We make investing in loans easy.</div>
+				</div>
+			</div>
+			<img src="tmp/sample-header.jpg" alt="">
+		</div>
+	</header>
+
+	<div id="content" class="site-content">
+		<main class="site-section section-main">
+			<div class="container">
+				<form action="projects.html" class="project-filters">
+					<div class="filter-props">
+						<p class="project-filter filter-status">
+							<label>Status</label>
+							<select name="status" id="status">
+								<option value="new" selected="selected">New</option>
+								<option value="coming-soon">Coming soon</option>
+								<option value="funded">Funded</option>
+								<option value="repaid">Repaid</option>
+							</select>
+						</p>
+						<p class="project-filter filter-return">
+							<label>Interest rate</label>
+							<input class="minReturn" type="text" placeholder="From">
+							<input class="maxReturn" type="text" placeholder="To">
+						</p>
+						<p class="project-filter filter-country">
+							<label>Country</label>
+							<select name="country" id="country">
+								<option value="">All</option>
+								<option value="es">Estonia</option>
+								<option value="lv">Latvia</option>
+								<option value="lt">Lithuania</option>
+								<option value="world">Worldwide</option>
+							</select>
+						</p>
+						<p class="project-filter filter-type">
+							<label>Loan type</label>
+							<select name="type" id="type">
+								<option value="">All</option>
+								<option value="business">Business</option>
+								<option value="sme">SME</option>
+								<option value="leasing">Leasing</option>
+								<option value="realestate">Real estate</option>
+							</select>
+						</p>
+					</div>
+					<div class="filter-actions">
+						<button type="submit" class="button-primary"><em class="mdi mdi-filter"></em> Filter projects</button>
+						<button type="reset"><em class="mdi mdi-restart"></em> Reset filters</button>
+					</div>
+				</form>
+				<div class="project-listing">
+					<div class="entry-project project-status-active">
+						<div class="project-media">
+							<a href="single-project.html">
+								<img src="tmp/sample-project.jpg" width="800" height="600" alt="">
+								<span class="project-industry" title="Investment type"><em class="mdi mdi-information"></em> Business &mdash; Transportation</span>
+								<span class="project-country" title="Estonia"><img class="office-country" src="assets/images/ee.svg" width="24" alt=""> <em class="screen-reader-text">Estonia</em></span>
+							</a>
+							<span class="project-status"><em class="mdi mdi-plus"></em> Active</span>
+						</div>
+						<div class="project-details">
+							<h3 class="project-title"><a href="single-project.html">Road freight transport</a></h3>
+							<p class="project-summary">Capital for buying and transporting goods accessible in your investor account as soon as the project repayment is completed.</p>
+							<div class="project-specs">
+								<div class="project-total-invested">
+									<strong><span class="currency-sign">€</span>40 000</strong>
+									<span>Target</span>
+								</div>
+								<div class="project-return">
+									<strong>14%</strong>
+									<span>Expected return</span>
+								</div>
+								<div class="project-term">
+									<strong>8 months</strong>
+									<span>Term</span>
+								</div>
+								<div class="project-countdown">
+									<strong>21 days</strong>
+									<span>To invest</span>
+								</div>
+							</div>
+							<div class="project-progress">
+								<div class="progress-bar">
+									<div class="progress-current" style="width:48.665%"></div>
+									<div class="progress-minimum" style="width:62.5%">
+										<div class="progress-minimum-pointer">
+											<span class="project-minimum-goal-info">Min<span class="screen-reader-text">imum</span> goal</span>
+											<span class="project-minimum-goal-amount"><span class="currency-sign">€</span>25 000</span>
+										</div>
+									</div>
+								</div>
+								<div class="progress-info">
+									<div class="progress-current-amount"><strong><span class="currency-sign">€</span>19 466</strong> invested</div>
+									<div class="progress-amount-left"><strong><span class="currency-sign">€</span>20 534</strong> left</div>
+								</div>
+							</div>
+							<div class="project-actions">
+								<a href="single-project.html" class="button button-primary">Details</a>
+							</div>
+						</div>
+					</div>
+					<div class="entry-project project-status-active">
+						<div class="project-media">
+							<a href="single-project.html">
+								<img src="tmp/sample-project.jpg" width="800" height="600" alt="">
+								<span class="project-industry" title="Investment type"><em class="mdi mdi-information"></em> Business &mdash; Construction</span>
+								<span class="project-country" title="Latvia"><img class="office-country" src="assets/images/lv.svg" width="24" alt=""> <em class="screen-reader-text">Estonia</em></span>
+							</a>
+							<span class="project-status"><em class="mdi mdi-plus"></em> Active</span>
+						</div>
+						<div class="project-details">
+							<h3 class="project-title"><a href="single-project.html">Construction company capital</a></h3>
+							<p class="project-summary">Cover remaining 30% hotel construction costs growth of your investments daily and track your portfolio and returns.</p>
+							<div class="project-specs">
+								<div class="project-total-invested">
+									<strong><span class="currency-sign">€</span>83 000</strong>
+									<span>Target</span>
+								</div>
+								<div class="project-return">
+									<strong>13%</strong>
+									<span>Expected return</span>
+								</div>
+								<div class="project-term">
+									<strong>20 months</strong>
+									<span>Term</span>
+								</div>
+								<div class="project-countdown">
+									<strong>27 days</strong>
+									<span>To invest</span>
+								</div>
+							</div>
+							<div class="project-progress">
+								<div class="progress-bar">
+									<div class="progress-current" style="width:57.5614458%"></div>
+									<div class="progress-minimum" style="width:36.1445783%">
+										<div class="progress-minimum-pointer">
+											<span class="project-minimum-goal-info">Min<span class="screen-reader-text">imum</span> goal</span>
+											<span class="project-minimum-goal-amount"><span class="currency-sign">€</span>30 000</span>
+										</div>
+									</div>
+								</div>
+								<div class="progress-info">
+									<div class="progress-current-amount"><strong><span class="currency-sign">€</span>47 776</strong> invested</div>
+									<div class="progress-amount-left"><strong><span class="currency-sign">€</span>35 224</strong> left</div>
+								</div>
+							</div>
+							<div class="project-actions">
+								<a href="single-project.html" class="button button-primary">Details</a>
+							</div>
+						</div>
+					</div>
+					<div class="entry-project project-status-active">
+						<div class="project-media">
+							<a href="single-project.html">
+								<img src="tmp/sample-project.jpg" width="800" height="600" alt="">
+								<span class="project-industry" title="Investment type"><em class="mdi mdi-information"></em> Business - Forestry</span>
+								<span class="project-country" title="Lithuania"><img class="office-country" src="assets/images/lt.svg" width="33" alt=""> <em class="screen-reader-text">Lithuania</em></span>
+							</a>
+							<span class="project-status"><em class="mdi mdi-plus"></em> Active</span>
+						</div>
+						<div class="project-details">
+							<h3 class="project-title"><a href="single-project.html">Forestry land management</a></h3>
+							<p class="project-summary">Purchase land for sustainable forestry that we only accept deposits from credit, payment or electronic money institutions within the European Union.</p>
+							<div class="project-specs">
+								<div class="project-total-invested">
+									<strong><span class="currency-sign">€</span>300 000</strong>
+									<span>Target</span>
+								</div>
+								<div class="project-return">
+									<strong>13%</strong>
+									<span>Expected return</span>
+								</div>
+								<div class="project-term">
+									<strong>12 months</strong>
+									<span>Term</span>
+								</div>
+								<div class="project-countdown">
+									<strong>29 days</strong>
+									<span>To invest</span>
+								</div>
+							</div>
+							<div class="project-progress">
+								<div class="progress-bar">
+									<div class="progress-current" style="width:27.5%"></div>
+									<div class="progress-minimum" style="width:33.3%">
+										<div class="progress-minimum-pointer">
+											<span class="project-minimum-goal-info">Min<span class="screen-reader-text">imum</span> goal</span>
+											<span class="project-minimum-goal-amount"><span class="currency-sign">€</span>100 000</span>
+										</div>
+									</div>
+								</div>
+								<div class="progress-info">
+									<div class="progress-current-amount"><strong><span class="currency-sign">€</span>82 550</strong> invested</div>
+									<div class="progress-amount-left"><strong><span class="currency-sign">€</span>217 450</strong> left</div>
+								</div>
+							</div>
+							<div class="project-actions">
+								<a href="single-project.html" class="button button-primary">Details</a>
+							</div>
+						</div>
+					</div>
+					<div class="entry-project project-status-active">
+						<div class="project-media">
+							<a href="single-project.html">
+								<img src="tmp/sample-project.jpg" width="800" height="600" alt="">
+								<span class="project-industry" title="Investment type"><em class="mdi mdi-information"></em> Real Estate</span>
+								<span class="project-country" title="Latvia"><img class="office-country" src="assets/images/lv.svg" width="33" alt=""> <em class="screen-reader-text">Latvia</em></span>
+							</a>
+							<span class="project-status"><em class="mdi mdi-plus"></em> Active</span>
+						</div>
+						<div class="project-details">
+							<h3 class="project-title"><a>Apartment building renovation</a></h3>
+							<p class="project-summary">Funds for increasing the efficency class rating during the morning to copy out the contract, these gentlemen are still sitting there eating their breakfasts.</p>
+							<div class="project-specs">
+								<div class="project-total-invested">
+									<strong><span class="currency-sign">€</span>225 000</strong>
+									<span>Target</span>
+								</div>
+								<div class="project-return">
+									<strong>16%</strong>
+									<span>Expected return</span>
+								</div>
+								<div class="project-term">
+									<strong>23 months</strong>
+									<span>Term</span>
+								</div>
+								<div class="project-countdown">
+									<strong>30 days</strong>
+									<span>To invest</span>
+								</div>
+							</div>
+							<div class="project-progress">
+								<div class="progress-bar">
+									<div class="progress-current" style="width:8.275%"></div>
+									<div class="progress-minimum" style="width:57.7%">
+										<div class="progress-minimum-pointer">
+											<span class="project-minimum-goal-info">Min<span class="screen-reader-text">imum</span> goal</span>
+											<span class="project-minimum-goal-amount"><span class="currency-sign">€</span>130 000</span>
+										</div>
+									</div>
+								</div>
+								<div class="progress-info">
+									<div class="progress-current-amount"><strong><span class="currency-sign">€</span>18 620</strong> invested</div>
+									<div class="progress-amount-left"><strong><span class="currency-sign">€</span>206 380</strong> left</div>
+								</div>
+							</div>
+							<div class="project-actions">
+								<a href="single-project.html" class="button button-primary">Details</a>
+							</div>
+						</div>
+					</div>
+					<div class="entry-project project-status-active">
+						<div class="project-media">
+							<a href="single-project.html">
+								<img src="tmp/sample-project.jpg" width="800" height="600" alt="">
+								<span class="project-industry" title="Investment type"><em class="mdi mdi-information"></em> Business &mdash; Agriculture</span>
+								<span class="project-country" title="Latvia"><img class="office-country" src="assets/images/lv.svg" width="33" alt=""> <em class="screen-reader-text">Latvia</em></span>
+							</a>
+							<span class="project-status"><em class="mdi mdi-plus"></em> Active</span>
+						</div>
+						<div class="project-details">
+							<h3 class="project-title"><a>Agriculture company equipment rental</a></h3>
+							<p class="project-summary">Additional equipment for this season hard return creates too much space between content in the context of a paragraph</p>
+							<div class="project-specs">
+								<div class="project-total-invested">
+									<strong><span class="currency-sign">€</span>65 000</strong>
+									<span>Target</span>
+								</div>
+								<div class="project-return">
+									<strong>15%</strong>
+									<span>Expected return</span>
+								</div>
+								<div class="project-term">
+									<strong>3 months</strong>
+									<span>Term</span>
+								</div>
+								<div class="project-countdown">
+									<strong>31 days</strong>
+									<span>To invest</span>
+								</div>
+							</div>
+							<div class="project-progress">
+								<div class="progress-bar">
+									<div class="progress-current" style="width:5.26%"></div>
+									<div class="progress-minimum" style="width:83.3%">
+										<div class="progress-minimum-pointer">
+											<span class="project-minimum-goal-info">Min<span class="screen-reader-text">imum</span> goal</span>
+											<span class="project-minimum-goal-amount"><span class="currency-sign">€</span>50 000</span>
+										</div>
+									</div>
+								</div>
+								<div class="progress-info">
+									<div class="progress-current-amount"><strong><span class="currency-sign">€</span>3 424</strong> invested</div>
+									<div class="progress-amount-left"><strong><span class="currency-sign">€</span>61 576</strong> left</div>
+								</div>
+							</div>
+							<div class="project-actions">
+								<a href="single-project.html" class="button button-primary">Details</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="pagination">
+					<span class="page-numbers current">1</span>
+					<a href="projects.html" class="page-numbers">2</a>
+					<span class="page-numbers dots">…</span>
+					<a href="projects.html" class="page-numbers">5</a>
+					<a href="projects.html" class="page-numbers">Next page<span class="mdi mdi-chevron-right"></span></a>
+				</div>
+			</div>
+		</main>
+	</div>
+{% endblock content %}
