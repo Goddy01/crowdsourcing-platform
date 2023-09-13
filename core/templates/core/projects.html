@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load business_type_filter %}
 {% block title %}CrowdSourceIt - Projects{% endblock title %}
 {% block content %}
 	<header id="featured" class="site-featured">
@@ -64,31 +65,33 @@
 					<div class="entry-project project-status-active">
 						<div class="project-media">
 							<a href="single-project.html">
-								<img src="tmp/sample-project.jpg" width="800" height="600" alt="">
-								<span class="project-industry" title="Investment type"><em class="mdi mdi-information"></em> Business &mdash; {{ project.business_type.selected_choice }}</span>
-								<span class="project-country" title="Estonia"><img class="office-country" src="assets/images/ee.svg" width="24" alt=""> <em class="screen-reader-text">Estonia</em></span>
+                                <img src="{{ project.image_1.url }}" alt="">
+								<img src="{{ project.image_1.url }}" width="800" height="600" alt="">
+								<span class="project-industry" title="Investment type"><em class="mdi mdi-information"></em> Business &mdash; {{ project.business_type|remove_chars|title }}</span>
+								<span class="project-country" title="Estonia"><img class="office-country" src="assets/images/ee.svg" width="24" alt=""> <em class="screen-reader-text">{{ project.country }}</em></span>
 							</a>
 							<span class="project-status"><em class="mdi mdi-plus"></em> Active</span>
 						</div>
+                        <img src="{{ project.image_2.url }}" alt="">
 						<div class="project-details">
-							<h3 class="project-title"><a href="single-project.html">Road freight transport</a></h3>
-							<p class="project-summary">Capital for buying and transporting goods accessible in your investor account as soon as the project repayment is completed.</p>
+							<h3 class="project-title"><a href="single-project.html">{{ project.name|title }}</a></h3>
+							<p class="project-summary">{{ project.description }}</p>
 							<div class="project-specs">
 								<div class="project-total-invested">
-									<strong><span class="currency-sign">€</span>40 000</strong>
+									<strong><span class="currency-sign">₦</span>{{ project.target }}</strong>
 									<span>Target</span>
 								</div>
 								<div class="project-return">
-									<strong>14%</strong>
+									<strong>{{ project.expected_return }}%</strong>
 									<span>Expected return</span>
 								</div>
 								<div class="project-term">
-									<strong>8 months</strong>
+									<strong>{{ project.term_months }} months</strong>
 									<span>Term</span>
 								</div>
 								<div class="project-countdown">
-									<strong>21 days</strong>
-									<span>To invest</span>
+									<strong>{{ project.investment_deadline }}</strong>
+									<span>Investment Deadline</span>
 								</div>
 							</div>
 							<div class="project-progress">
@@ -97,13 +100,13 @@
 									<div class="progress-minimum" style="width:62.5%">
 										<div class="progress-minimum-pointer">
 											<span class="project-minimum-goal-info">Min<span class="screen-reader-text">imum</span> goal</span>
-											<span class="project-minimum-goal-amount"><span class="currency-sign">€</span>25 000</span>
+											<span class="project-minimum-goal-amount"><span class="currency-sign">₦</span>25 000</span>
 										</div>
 									</div>
 								</div>
 								<div class="progress-info">
-									<div class="progress-current-amount"><strong><span class="currency-sign">€</span>19 466</strong> invested</div>
-									<div class="progress-amount-left"><strong><span class="currency-sign">€</span>20 534</strong> left</div>
+									<div class="progress-current-amount"><strong><span class="currency-sign">₦</span>19 466</strong> invested</div>
+									<div class="progress-amount-left"><strong><span class="currency-sign">₦</span>20 534</strong> left</div>
 								</div>
 							</div>
 							<div class="project-actions">

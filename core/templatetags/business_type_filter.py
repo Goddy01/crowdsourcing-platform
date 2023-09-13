@@ -7,7 +7,7 @@ register = template.Library()
 def remove_chars(value):
     if value:
         # Remove quotes, commas, and square brackets using str.replace
-        cleaned_value = value.replace('"', '').replace(',', '').replace('[', '').replace(']', '')
+        cleaned_value = value.replace('"', '').replace(',', '').replace('[', '').replace(']', '').replace("'", '')
         return cleaned_value
     else:
         return value
