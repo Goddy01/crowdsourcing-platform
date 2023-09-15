@@ -26,6 +26,7 @@ def upload_project_gallery(instance, filename):
 # PROJECT
 class Project(models.Model):
     innovator = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE)
+    status = models.CharField(max_length=255, null=True, blank=False)
     name = models.CharField(max_length=255, null=False, blank=False, unique=True)
     motto = models.CharField(max_length=255, null=False, blank=False)
     description = models.TextField(null=True, blank=True, max_length=10000)

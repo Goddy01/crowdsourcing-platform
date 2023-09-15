@@ -1,9 +1,11 @@
 from django.shortcuts import render
+from django.db.models import Q
 from .models import Project
 from django_countries import countries
 from .forms import CreateProjectForm
 from accounts.models import Innovator, Moderator
 from django.utils import timezone
+from django.http import HttpResponse
 # Create your views here.
 def home(request):
     print('TIME: ', timezone.now())
@@ -31,8 +33,28 @@ def add_project(request):
 
 def projects_list(request):
     projects = Project.objects.all()
+
     return render(request, 'core/projects.html', {'projects': projects})
 
+def filter_projects(request):
+    from_expected_return = request.GET.get('from_expected_return')
+    to_expected_return = request.GET.get('to_expected_return')
+
+    if from_expected_return:
+        print('FROM: ', from_expected_return)
+        if to_expected_return:
+            print('TO: ', to_expected_return)
+            projects = Project.objects.filter(
+                Q(expected_return__range=(int(from_expected_return), int(to_expected_return)))
+            )
+        else:
+            projects = Project.objects.filter(
+                Q(expected_return__gte=int(from_expected_return))
+            )
+    else:
+        if to_expected_return:
+            return HttpResponse('Please provide a min(from) value')
+    return render(request, 'core/projects.html', {'projects': projects})
 def project_details(request, project_pk):
     project = Project.objects.get(pk=project_pk)
     return render(request, 'core/project_details.html', {'project': project})

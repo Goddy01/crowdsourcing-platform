@@ -18,9 +18,9 @@
 	<div id="content" class="site-content">
 		<main class="site-section section-main">
 			<div class="container">
-				<form action="projects.html" class="project-filters">
+				<form action="{% url 'projects_filter' %}" class="project-filters" method="GET">
 					<div class="filter-props">
-						<p class="project-filter filter-status">
+						<!-- <p class="project-filter filter-status">
 							<label>Status</label>
 							<select name="status" id="status">
 								<option value="new" selected="selected">New</option>
@@ -28,12 +28,13 @@
 								<option value="funded">Funded</option>
 								<option value="repaid">Repaid</option>
 							</select>
-						</p>
-						<p class="project-filter filter-return">
-							<label>Interest rate</label>
-							<input class="minReturn" type="text" placeholder="From">
-							<input class="maxReturn" type="text" placeholder="To">
-						</p>
+						</p> -->
+							<p class="project-filter filter-return">
+								<label>Interest rate</label>
+								<input class="minReturn" name="from_expected_return" type="text" placeholder="From" value="{{ request.GET.from_expected_return }}">
+								<input class="maxReturn" name="to_expected_return" type="text" placeholder="To" value="{{ request.GET.to_expected_return }}">
+								<button type="submit" class="button button-primary button-outline">Filter Result</button>
+							</p>
 						<!-- <p class="project-filter filter-country">
 							<label>Country</label>
 							<select name="country" id="country">

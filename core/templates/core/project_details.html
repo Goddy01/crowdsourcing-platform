@@ -11,7 +11,7 @@
 					<div class="tagline">{{ project.motto }}</div>
 				</div>
 			</div>
-			<img src="{% static 'tmp/sample-header.jpg' %}" alt="">
+			<img src="{{ project.image_1.url }}" alt="">
 		</div>
 	</header>
 
@@ -106,15 +106,15 @@
 						<div class="gallery gallery-columns-3">
 							<figure class="gallery-item">
 								<div class="gallery-icon">
-									<a href="{{ project.image_1.url }}" data-fancybox="test-gallery"><img src="{{ project.image_1.url }}" alt="" style="width: 900px;height: 400px;"></a>
+									<a href="{{ project.image_1.url }}" data-fancybox="test-gallery"><img src="{{ project.image_1.url }}" alt="" style="width: 1100px;height: 350px;"></a>
 								</div>
 							</figure><figure class="gallery-item">
 								<div class="gallery-icon">
-									<a href="{{ project.image_2.url }}" data-fancybox="test-gallery"><img src="{{ project.image_2.url }}" alt="" style="width: 900px;height: 400px;"></a>
+									<a href="{{ project.image_2.url }}" data-fancybox="test-gallery"><img src="{{ project.image_2.url }}" alt="" style="width: 1100px;height: 350px;"></a>
 								</div>
 							</figure><figure class="gallery-item">
 								<div class="gallery-icon">
-									<a href="{{ project.image_3.url }}" data-fancybox="test-gallery"><img src="{{ project.image_3.url }}" alt="" style="width: 900px;height: 400px;"></a>
+									<a href="{{ project.image_3.url }}" data-fancybox="test-gallery"><img src="{{ project.image_3.url }}" alt="" style="width: 1100px;height: 350px;"></a>
 								</div>
 							</figure>
 						</div>

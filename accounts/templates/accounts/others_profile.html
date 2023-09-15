@@ -105,23 +105,22 @@
                <div class="row vh-100 profile-top mt-1">
                    <div class="col-xl-6 text-center mx-auto align-self-center mb-2">
                         <div class="imgcover mb-4 display-2">
-                            {% if user.pfp %}
-                            <img id="pfpimg" src="{{ user.pfp.url }}" class="img-responsive thumbnail rounded-pill bg-white p-2 shadow" alt="">
+                            {% if innovator.user.pfp %}
+                            <img id="pfpimg" src="{{ innovator.user.pfp.url }}" class="img-responsive thumbnail rounded-pill bg-white p-2 shadow" alt="">
                             {% else %}
                             <img id="pfpImg" src="{% static 'images/default_profile_image.jpg' %}" class="img-responsive thumbnail rounded-pill bg-white p-2 shadow" style="height: 250px;width: 250px;">
                             {% endif %}
                         </div>
-                        <b class="fs-6">Hello I am, {{user.last_name}} {{user.first_name}}</b>
-                        <h1 class="fw-bold mb-4 fs-1">Full Stack Develper</h1>
+                        <b class="fs-6">Hello I am, {{innovator.user.last_name}} {{innovator.user.first_name}}</b>
+                        <h1 class="fw-bold mb-4 fs-1">Full Stack Developer</h1>
                         <p>
-                            {% if user.bio %}
-                            <b>{{ user.bio }}</b>
+                            {% if innovator.user.bio %}
+                            <b>{{ innovator.user.bio }}</b>
                             {% endif %}
                         </p>
                         <ul>
                             <li></li>
                         </ul>
-            {% endif %}
                     </div>
                </div>
             </div>
@@ -134,23 +133,9 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <!-- <p><b>I am, {{user.first_name}} {{user.last_name}}</b></p> -->
-                        <p class="pt-2 fs-6 text-justify">{{ user.about_me }}</p>
-                        
-                        <div class="row skill-set">
-                            {% if user.skill_1 %}
-                            <div class="col-md-6 py-3">
-                               <h6 class="fw-bold">{{ user.skill_1 }}</h6>
-                                <div class="progress">
-                                  <div class="progress-bar bg-success" role="progressbar" aria-label="Example with label" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                            {% endif %}
-                        </div>
+                        <!-- <p><b>I am, {{innovator.user.first_name}} {{innovator.user.last_name}}</b></p> -->
+                        <p class="pt-2 fs-6 text-justify">{{ innovator.user.about_me }}</p>
                     </div>
-                    <!-- <div class="col-md-5">
-                        <img src="{% static 'accounts/images/profile.jpg' %}" alt="">
-                    </div> -->
                 </div>
             </div>
 
@@ -161,7 +146,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="row skill-set">
-                            {% for skill in user_skills %}
+                            {% for skill in innovator_skills %}
                             <div class="col-md-6 py-3">
                                <h6 class="fw-bold">{{ skill.skill }}</h6>
                                 <div class="progress">
@@ -184,8 +169,8 @@
                     <h2 class="fw-bolder text-success">Services</h2>
                 </div>
                 <div class="row">
-                    {% if user_services.count == 1 %}
-                    {% for service in user_services %}
+                    {% if innovator_services.count == 1 %}
+                    {% for service in innovator_services %}
                     <div class="col-lg-12 col-md-12 mb-4">
                        <div class="serv-cove shadow-md rounded bg-white text-center p-4">
                             <i class="bi fs-1 bi-boxes"></i>
@@ -196,8 +181,8 @@
                     {% endfor %}
                     {% endif %}
                     
-                    {% if user_services.count == 2 %}
-                    {% for service in user_services %}
+                    {% if innovator_services.count == 2 %}
+                    {% for service in innovator_services %}
                     <div class="col-lg-6 col-md-6 mb-4">
                        <div class="serv-cove shadow-md rounded bg-white text-center p-4">
                             <i class="bi fs-1 bi-boxes"></i>
@@ -208,8 +193,8 @@
                     {% endfor %}
                     {% endif %}
                     
-                    {% if user_services.count == 3 %}
-                    {% for service in user_services %}
+                    {% if innovator_services.count == 3 %}
+                    {% for service in innovator_services %}
                     <div class="col-lg-4 col-md-4 mb-4">
                        <div class="serv-cove shadow-md rounded bg-white text-center p-4">
                             <i class="bi fs-1 bi-boxes"></i>
@@ -220,8 +205,8 @@
                     {% endfor %}
                     {% endif %}
 
-                    {% if user_services.count == 4 %}
-                    {% for service in user_services %}
+                    {% if innovator_services.count == 4 %}
+                    {% for service in innovator_services %}
                     {% if forloop.counter < 3 %}
                     <div class="col-lg-6 col-md-6 mb-4">
                     {% else %}
@@ -236,8 +221,8 @@
                     {% endfor %}
                     {% endif %}
 
-                    {% if user_services.count == 5 %}
-                    {% for service in user_services %}
+                    {% if innovator_services.count == 5 %}
+                    {% for service in innovator_services %}
                     {% if forloop.counter < 4 %}
                     <div class="col-lg-4 col-md-4 mb-4">
                     {% else %}
@@ -326,37 +311,24 @@
                     <h2 class="fw-bolder text-success">Projects</h2>
                 </div>
                 <div class="row">
+                    {% for project in projects %}
                     <div class="col-lg-4 col-md-6 mb-4">
                        <div class="serv-cove rounded bg-white p-2">
-                            <img src="{% static 'accounts/images/blog/1.jpg' %}" alt="">
-                            <div class="p-2">
-                                <h5 class="mt-3 fs-7 fw-bold">Top 10 Trends in  Webdesign sit nibh amet  Mauris ipsum sit nibh</h5>
-                                <span class="fs-8">22 May 2015</span>
-                                <span class="float-end fs-8"><i class="bi bi-person"></i> Sam Anderson</span>
+                        <a href="{% url 'project_details' project.pk %}">
+                            <img src="{{ project.image_1.url }}" alt="" style="width: 500px;height: 450px;border-radius: 5px;">
+                        </a>
+                            <div class="p-2 d-inline">
+                                <h4 class="mt-3 fs-7 fw-bold d-inline">
+                                    <a href="{% url 'project_details' project.pk %}" style="text-decoration: underline;">
+                                        {{ project.name }}
+                                    </a>
+                                    <span class="float-right mt-1">Target: ₦{{ project.target }}</span>
+                                </h4>
+                                
                             </div>
                        </div>
                     </div>
-                    <div class="col-lg-4 col-md-6 mb-4">
-                       <div class="serv-cove rounded bg-white p-2">
-                            <img src="{% static 'accounts/images/blog/2.jpg' %}" alt="">
-                            <div class="p-2">
-                                <h5 class="mt-3 fs-7 fw-bold">Top 10 Trends in  Webdesign sit nibh amet  Mauris ipsum sit nibh</h5>
-                                <span class="fs-8">22 May 2015</span>
-                                <span class="float-end fs-8"><i class="bi bi-person"></i> Sam Anderson</span>
-                            </div>
-                       </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 mb-4">
-                       <div class="serv-cove rounded bg-white p-2">
-                            <img src="{% static 'accounts/images/blog/3.jpg' %}" alt="">
-                            <div class="p-2">
-                                <h5 class="mt-3 fs-7 fw-bold">Top 10 Trends in  Webdesign sit nibh amet  Mauris ipsum sit nibh</h5>
-                                <span class="fs-8">22 May 2015</span>
-                                <span class="float-end fs-8"><i class="bi bi-person"></i> Sam Anderson</span>
-                            </div>
-                       </div>
-                    </div>
-                     
+                    {% endfor %}
                 </div>
             </div>
             
@@ -369,26 +341,26 @@
                 <br/>
             <div align="center" class="socialbtns">
             <ul>
-            {% if user.facebook|length > 21 %}
-            <li><a href="{{ user.facebook }}" class="fa fa-lg fa-facebook"></a></li>
+            {% if innovator.user.facebook|length > 21 %}
+            <li><a href="{{ innovator.user.facebook }}" class="fa fa-lg fa-facebook"></a></li>
             {% endif %}
 
-            {% if user.twitter|length > 20 %}
-            <li><a href="{{ user.twitter }}" class="fa fa-lg fa-twitter"></a></li>
+            {% if innovator.user.twitter|length > 20 %}
+            <li><a href="{{ innovator.user.twitter }}" class="fa fa-lg fa-twitter"></a></li>
             {% endif %}
 
-            <li><a href="mailto:{{ user.email }}" class="fa fa-lg fa-envelope"></a></li>
+            <li><a href="mailto:{{ innovator.user.email }}" class="fa fa-lg fa-envelope"></a></li>
             
-            {% if user.phone_num %}
-            <li><a href="tel:{{ user.phone_num }}" class="fa fa-lg fa-phone"></a></li>
+            {% if innovator.user.phone_num %}
+            <li><a href="tel:{{ innovator.user.phone_num }}" class="fa fa-lg fa-phone"></a></li>
             {% endif %}
 
-            {% if user.instagram|length > 22 %}
-            <li><a href="{{ user.instagram }}" class="fa fa-lg fa-instagram"></a></li>
+            {% if innovator.user.instagram|length > 22 %}
+            <li><a href="{{ innovator.user.instagram }}" class="fa fa-lg fa-instagram"></a></li>
             {% endif %}
             
-            {% if user.linkedin|length > 21 %}
-            <li><a href="{{ user.linkedin }}" class="fa fa-lg fa-linkedin"></a></li>
+            {% if innovator.user.linkedin|length > 21 %}
+            <li><a href="{{ innovator.user.linkedin }}" class="fa fa-lg fa-linkedin"></a></li>
             {% endif %}
             </ul>
             </div>
