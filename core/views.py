@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from .models import Project
 from django_countries import countries
@@ -30,6 +31,17 @@ def add_project(request):
     else:
         create_project_form = CreateProjectForm()
     return render(request, 'core/add-project.html', {'countries': countries, 'create_project_form': create_project_form, 'project_creation_request': project_creation_request})
+
+def pagination(request, items_list, num_of_pages):
+    page_number = request.GET.get('page', 1)
+    project_paginator = Paginator(items_list.order_by('-pk'), num_of_pages)
+    try:
+        projects = project_paginator.page(page_number)
+    except PageNotAnInteger:
+        projects = project_paginator.page(1)
+    except EmptyPage:
+        projects = project_paginator.page(project_paginator.num_pages)
+    return projects
 
 def projects_list(request):
     projects = Project.objects.all()
