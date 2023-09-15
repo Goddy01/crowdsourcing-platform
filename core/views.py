@@ -44,29 +44,28 @@ def pagination(request, items_list, num_of_pages):
     return projects
 
 def projects_list(request):
-    projects = Project.objects.all()
+    if request.GET.get('from_expected_return'):
+        from_expected_return = request.GET.get('from_expected_return')
+        to_expected_return = request.GET.get('to_expected_return')
 
-    return render(request, 'core/projects.html', {'projects': projects})
-
-def filter_projects(request):
-    from_expected_return = request.GET.get('from_expected_return')
-    to_expected_return = request.GET.get('to_expected_return')
-
-    if from_expected_return:
-        print('FROM: ', from_expected_return)
-        if to_expected_return:
-            print('TO: ', to_expected_return)
-            projects = Project.objects.filter(
-                Q(expected_return__range=(int(from_expected_return), int(to_expected_return)))
-            )
-        else:
-            projects = Project.objects.filter(
-                Q(expected_return__gte=int(from_expected_return))
-            )
+        if from_expected_return:
+            print('FROM: ', from_expected_return)
+            if to_expected_return:
+                print('TO: ', to_expected_return)
+                projects = Project.objects.filter(
+                    Q(expected_return__range=(int(from_expected_return), int(to_expected_return)))
+                )
+                projects = pagination(request, projects, 4)
+            else:
+                projects = Project.objects.filter(
+                    Q(expected_return__gte=int(from_expected_return))
+                )
+                projects = pagination(request, projects, 4)
     else:
-        if to_expected_return:
-            return HttpResponse('Please provide a min(from) value')
+        projects = Project.objects.all()
+        projects = pagination(request, projects, 4)
     return render(request, 'core/projects.html', {'projects': projects})
+
 def project_details(request, project_pk):
     project = Project.objects.get(pk=project_pk)
     return render(request, 'core/project_details.html', {'project': project})

@@ -18,7 +18,7 @@
 	<div id="content" class="site-content">
 		<main class="site-section section-main">
 			<div class="container">
-				<form action="{% url 'projects_filter' %}" class="project-filters" method="GET">
+				<form action="{% url 'projects' %}" class="project-filters" method="GET">
 					<div class="filter-props">
 						<!-- <p class="project-filter filter-status">
 							<label>Status</label>
@@ -115,12 +115,40 @@
 					</div>
                     {% endfor %}
 				</div>
-				<div class="pagination">
-					<span class="page-numbers current">1</span>
-					<a href="projects.html" class="page-numbers">2</a>
-					<span class="page-numbers dots">…</span>
-					<a href="projects.html" class="page-numbers">5</a>
-					<a href="projects.html" class="page-numbers">Next page<span class="mdi mdi-chevron-right"></span></a>
+				<div class="d-flex flex-column m-auto pagination mt-5">
+					<nav aria-label="Page navigation">
+					<ul class="pagination pg-grey justify-content-center" style="list-style: none;display: inline;">
+						{% if projects.has_previous %}
+							<li class="page-item" style="display: inline;">
+							  <a class="page-numbers" href="?{% if query %}query={{query}}&{% endif %}page={{projects.previous_page_number}}">Previous</a>
+							</li>
+						{% endif %}
+					
+						{% for i in projects.paginator.page_range %}
+							{% if projects.number == i %}
+								<li class="page-item active" style="display: inline;"><a class="page-link">
+									<span class="page-numbers current">
+										{{ i }}
+										<span class="sr-only">(current)</span>
+									</span>
+								</a></li>
+							{% else %}
+								<li class="page-item" style="display: inline;"><a class="page-numbers" href="?{% if query %}query={{query}}&{% endif %}page={{ i }}">{{ i }}</a></li>
+							{% endif %}
+						{% endfor %}
+						
+						{% if projects.has_next %}
+							<li class="page-item" style="display: inline;">
+							  <a class="page-numbers" href="?{% if query %}query={{query}}&{% endif %}page={{ projects.next_page_number }}">Next
+								
+							  </a>
+							</li>
+							<li class="page-item" style="display: inline;">
+							  <a class="page-numbers"  href="?{% if query %}query={{query}}&{% endif %}page={{ projects.paginator.num_pages }}">Last</a>
+							</li>
+						{% endif %}
+					</ul>
+					</nav>
 				</div>
 			</div>
 		</main>
