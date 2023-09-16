@@ -78,3 +78,6 @@ def projects_list(request):
 def project_details(request, project_pk):
     project = Project.objects.get(pk=project_pk)
     return render(request, 'core/project_details.html', {'project': project})
+
+def add_innovation(request):
+    return render(request, 'core/add-innovation.html')
