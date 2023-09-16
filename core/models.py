@@ -58,6 +58,7 @@ class Contribution(models.Model):
     upvotes = models.IntegerField(default=0)
     downvotes = models.IntegerField(default=0)
     accepted = models.BooleanField(default=False)
+    date_created = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         return f"Contribution by {self.contributor.user.username}"
