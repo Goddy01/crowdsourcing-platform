@@ -38,7 +38,13 @@
 			</nav>
 			<nav class="main-navigation">
 				<ul id="menu-main" class="menu px-3">
-					<li><a href="{% url 'projects' %}"  style="font-weight: 600;">Invest</a></li>
+                    <li class="menu-item-has-children">
+						<a href="about.html"  style="font-weight: 600;">Innovate<em class="mdi mdi-chevron-down"></em></a>
+						<ul class="sub-menu">
+							<li><a href="about.html">Innovate</a></li>
+							<li><a href="{% url 'projects' %}">Invest</a></li>
+						</ul>
+					</li>
 					<li class="menu-item-has-children">
 						<a href="about.html"  style="font-weight: 600;">About<em class="mdi mdi-chevron-down"></em></a>
 						<ul class="sub-menu">

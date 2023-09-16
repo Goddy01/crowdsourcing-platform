@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, IntegrityError
 from accounts import models as account_models
 from django_countries.fields import CountryField
 from PIL import Image
@@ -49,3 +49,11 @@ class Project(models.Model):
 
     def __str__(self):
         return f"Project: {self.name} by {self.innovator.user.username}"
+    
+
+class Contribution(models.Model):
+    contribution = models.TextField(null=True, blank=True, max_length=10000)
+    contributor = models.ForeignKey(account_models.Innovator, on_delete=models.SET_NULL, null=True)
+    upvotes = models.IntegerField(default=0)
+    downvotes = models.IntegerField(default=0)
+    accepted = models.BooleanField(default=False)
