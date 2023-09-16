@@ -6,7 +6,7 @@ from django_countries import countries
 from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm
 from accounts.models import Innovator, Moderator
 from django.utils import timezone
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 # Create your views here.
 def home(request):
     print('TIME: ', timezone.now())
@@ -117,8 +117,8 @@ def innovations_list(request):
 def innovation_detail(request, pk):
     context = {}
     innovation = Innovation.objects.get(pk=pk)
-    context['contributions'] = Innovation.objects.get(pk=pk).contributions_set.all()
-    context['innovation'] = innovation
+    context['contributions'] = Innovation.objects.get(pk=pk).contribution_set.all()
+    context['innovation'] = Innovation.objects.get(pk=pk)
 
     if request.method == 'POST' and 'contribute' in request.POST:
         contribution_form_data = {
@@ -130,6 +130,8 @@ def innovation_detail(request, pk):
             obj.innovation = Innovation.objects.get(pk=pk)
             obj.contributor = Innovator.objects.get(user__pk=request.user.pk)
             obj.save()
+            context['success'] = 'Hurray. Your comment has been posted!'
+            contribution_form = MakeContributionForm()    
     else:
         contribution_form = MakeContributionForm()
     context['contribution_form'] = contribution_form
