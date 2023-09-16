@@ -3,7 +3,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from .models import Project
 from django_countries import countries
-from .forms import CreateProjectForm
+from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm
 from accounts.models import Innovator, Moderator
 from django.utils import timezone
 from django.http import HttpResponse
@@ -80,4 +80,5 @@ def project_details(request, project_pk):
     return render(request, 'core/project_details.html', {'project': project})
 
 def add_innovation(request):
+
     return render(request, 'core/add-innovation.html')
