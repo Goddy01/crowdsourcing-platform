@@ -56,6 +56,7 @@
                         <div class="card bg-light mt-5">
                             <div class="card-body">
                                 <!-- Comment form-->
+                                <div>
                                 <form class="mb-4" method="POST">
                                     {% csrf_token %}
                                     <!-- Comment with nested comments-->
@@ -96,7 +97,7 @@
                                                     <a href="{% url 'accounts:profile_with_arg' contrib.contributor.pk %}" style="text-decoration: none;color: black;font-weight: bold;">
                                                         {{ contrib.contributor.user.last_name }} {{ contrib.contributor.user.first_name }} ({{ contrib.contributor.user.username }})
                                                     </a>
-                                                </span> <a class="col-lg-4">Reply</a>
+                                                </span> <a class="col-lg-4" style="text-decoration: none;" href="{%  %}">Reply</a>
                                             <!-- </div> -->
                                             <div>{{ contrib.contribution|safe }}</div>
                                         <!-- </div> -->
@@ -173,5 +174,24 @@
         setTimeout(hideToast, 5000);
     
     </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Handle click event on "Reply" link
+            $(".reply-link").on("click", function (event) {
+                event.preventDefault(); // Prevent the link from following its href
+                
+                // Show the reply form container
+                $("#reply-form-container").show();
+                
+                // Extract the chat message content (you may need to adjust this depending on your actual HTML structure)
+                var messageContent = $(this).prev("p").text();
+                
+                // Populate the reply form with the chat message content
+                $("#reply-form textarea").val(messageContent);
+            });
+        });
+    </script>
+    
         <!-- Core theme JS-->
 {%endblock content %}
