@@ -209,14 +209,14 @@ def profile(request):
 
 def mod_profile(request):
     if not request.user.is_authenticated:
-        return redirect('accounts:innovator_login')
+        return redirect('accounts:moderator_login')
     try:
         user = BaseUser.objects.get(username=request.user.username)
     except BaseUser.DoesNotExist:
         return HttpResponse('User Not Found!')
     # else:
     #     user = BaseUser.objects.get(username=request.user.username)
-    return render(request, 'accounts/profile.html', {
+    return render(request, 'accounts/mod_profile.html', {
         'user': user,
         # 'user_skills': Innovator.objects.get(user__username=request.user.username).innovatorskill_set.all(),
         'user_services': Moderator.objects.get(user__username=request.user.username).service_set.all()
@@ -440,7 +440,7 @@ def moderator_edit_profile(request):
                 user_obj.about_me = user_p_info.cleaned_data['about_me']
             user_obj.save()
             print('ABOUT: ', user_obj.about_me)
-            return redirect('accounts:profile')
+            return redirect('accounts:mod_profile')
         else:
             print(user_p_info.errors.as_data())
     else:
@@ -472,7 +472,7 @@ def moderator_edit_profile(request):
         user_r_info = UpdateUserResidentialInfoForm(user_r_data, instance=request.user)
         if user_r_info.is_valid():
             user_r_info.save()
-            return redirect('accounts:profile')
+            return redirect('accounts:mod_profile')
         else:
             print(user_r_info.errors.as_data())
     else:
@@ -490,7 +490,7 @@ def moderator_edit_profile(request):
         user_s_info = UpdateUserSocialsForm(user_s_data, instance=request.user)
         if user_s_info.is_valid():
             user_s_info.save()
-            return redirect('accounts:profile')
+            return redirect('accounts:mod_profile')
         else:
             print(user_s_info.errors.as_data())
     else:
@@ -527,7 +527,7 @@ def moderator_edit_profile(request):
     else:
         service_form = UpdateInnovatorServicesForm()
 
-    return render(request, 'accounts/edit_profile.html', {
+    return render(request, 'accounts/mod_edit_profile.html', {
         'user_form': user,
         'user': user,
         'user_p_info_form': user_p_info,
