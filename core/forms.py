@@ -1,4 +1,4 @@
-from .models import Project, Innovation, Contribution
+from .models import Project, Innovation, Contribution, Nested_Contribution
 from django import forms
 from ckeditor.fields import RichTextFormField
 
@@ -111,4 +111,9 @@ class MakeContributionForm(forms.ModelForm):
     contribution = RichTextFormField()
     class Meta:
         model = Contribution
+        fields = ['contribution']
+
+class MakeNestedContributionForm(forms.ModelForm):
+    class Meta:
+        model = Nested_Contribution
         fields = ['contribution']
