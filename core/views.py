@@ -110,5 +110,6 @@ def add_innovation(request):
 def innovations_list(request):
     context = {}
     innovations = Innovation.objects.all().order_by('date_created')
+    innovations = pagination(request, innovations, 4)
     context['innovations'] = innovations
     return render(request, 'core/innovations-list.html', context)
