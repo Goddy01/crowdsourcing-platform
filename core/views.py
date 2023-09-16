@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from .models import Project
@@ -80,5 +80,16 @@ def project_details(request, project_pk):
     return render(request, 'core/project_details.html', {'project': project})
 
 def add_innovation(request):
-
+    if not request.user.is_authenticated:
+        return redirect('accounts:innovator_login')
+    try:
+        innovator = Innovator.objects.get(user=request.user.pk)
+    except:
+        return HttpResponse("Sorry! You do not have an Innovator's privileges")
+    if request.method == 'POST':
+        add_innovation_form = CreateInnovationForm(request.POST or None, request.FILES or None)
+        if add_innovation_form.is_valid():
+            innovation_object = add_innovation_form.save(commit=False)
+            innovation_object.owner = innovator
+    
     return render(request, 'core/add-innovation.html')
