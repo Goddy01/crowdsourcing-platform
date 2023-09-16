@@ -36,6 +36,11 @@
 </head>
 <body>
     <div>
+        {% if success %}
+        <div class="d-flex justify-content-center" style="margin-top: 15px;">
+            <p class="ml-2 text-danger p-3 d-flex justify-content-center" style="background-color: rgb(52, 190, 52);color: white;font-weight: 500;width: 40%;">{{ success }}</p>
+        </div>
+        {% endif %}
         {% if add_innovation_form.errors %}
                   <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto;">
                 <div class="toast-body text-white m-2">
