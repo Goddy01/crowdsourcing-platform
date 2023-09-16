@@ -223,6 +223,18 @@ def edit_profile(request):
     user_info = BaseUser.objects.get(username=request.user.username)
     if not request.user.is_authenticated:
         return redirect('accounts:innovator_login')
+
+
+def moderator_edit_profile(request):
+    user = Moderator.objects.get(user__username=request.user.username)
+    try:
+        moderator = Moderator.objects.get(user__username=request.user.username)
+    except Innovator.DoesNotExist:
+        return HttpResponse('You are unable to access this page because you are not an innovator.')
+    user = Moderator.objects.get(user__username=request.user.username)
+    user_info = Moderator.objects.get(user__username=request.user.username)
+    if not request.user.is_authenticated:
+        return redirect('accounts:moderator_login')
     
     # USER ABOUT ME
     # if request.method == 'POST' and 'user_about_me' in request.POST:

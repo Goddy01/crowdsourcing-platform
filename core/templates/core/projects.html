@@ -31,8 +31,8 @@
 						</p> -->
 							<p class="project-filter filter-return">
 								<label>Expected Return Rate (ROI)</label>
-								<input class="minReturn" name="from_expected_return" type="text" placeholder="From" value="{{ request.GET.from_expected_return }}">
-								<input class="maxReturn" name="to_expected_return" type="text" placeholder="To" value="{{ request.GET.to_expected_return }}">
+								<input class="minReturn" name="from_expected_return" type="text" placeholder="From" value="{% if from_expected_return %}{{ from_expected_return }}{% endif %}">
+								<input class="maxReturn" name="to_expected_return" type="text" placeholder="To" value="{% if to_expected_return %}{{ to_expected_return }}{% endif %}">
 								<button type="submit" class="button button-primary button-outline">Filter Result</button>
 							</p>
 						<!-- <p class="project-filter filter-country">
@@ -57,7 +57,7 @@
 						</p> -->
 					</div>
 					<div class="filter-actions">
-						<button type="submit" class="button-primary"><em class="mdi mdi-filter"></em> Filter projects</button>
+						<button name="filter" type="submit" class="button-primary"><em class="mdi mdi-filter"></em> Filter projects</button>
 						<button type="reset"><em class="mdi mdi-restart"></em> Reset filters</button>
 					</div>
 				</form>
@@ -117,37 +117,71 @@
 				</div>
 				<div class="d-flex flex-column m-auto pagination mt-5">
 					<nav aria-label="Page navigation">
-					<ul class="pagination pg-grey justify-content-center" style="list-style: none;display: inline;">
-						{% if projects.has_previous %}
-							<li class="page-item" style="display: inline;">
-							  <a class="page-numbers" href="?{% if query %}query={{query}}&{% endif %}page={{projects.previous_page_number}}">Previous</a>
-							</li>
-						{% endif %}
-					
-						{% for i in projects.paginator.page_range %}
-							{% if projects.number == i %}
-								<li class="page-item active" style="display: inline;"><a class="page-link">
-									<span class="page-numbers current">
-										{{ i }}
-										<span class="sr-only">(current)</span>
-									</span>
-								</a></li>
-							{% else %}
-								<li class="page-item" style="display: inline;"><a class="page-numbers" href="?{% if query %}query={{query}}&{% endif %}page={{ i }}">{{ i }}</a></li>
+					{% if from_expected_return %}
+						<ul class="pagination pg-grey justify-content-center" style="list-style: none;display: inline;">
+							{% if projects.has_previous %}
+								<li class="page-item" style="display: inline;">
+								<a class="page-numbers" href="?{% if query %}query={{query}}&{% endif %}&page={{projects.previous_page_number}}">Previous</a>
+								</li>
 							{% endif %}
-						{% endfor %}
 						
-						{% if projects.has_next %}
-							<li class="page-item" style="display: inline;">
-							  <a class="page-numbers" href="?{% if query %}query={{query}}&{% endif %}page={{ projects.next_page_number }}">Next
-								
-							  </a>
-							</li>
-							<li class="page-item" style="display: inline;">
-							  <a class="page-numbers"  href="?{% if query %}query={{query}}&{% endif %}page={{ projects.paginator.num_pages }}">Last</a>
-							</li>
+							{% for i in projects.paginator.page_range %}
+								{% if projects.number == i %}
+									<li class="page-item active" style="display: inline;"><a class="page-link">
+										<span class="page-numbers current">
+											{{ i }}
+											<span class="sr-only">(current)</span>
+										</span>
+									</a></li>
+								{% else %}
+									<li class="page-item" style="display: inline;"><a class="page-numbers" href="?{% if query %}query={{query}}&{% endif %}page={{ i }}">{{ i }}</a></li>
+								{% endif %}
+							{% endfor %}
+							
+							{% if projects.has_next %}
+								<li class="page-item" style="display: inline;">
+								<a class="page-numbers" href="?{% if query %}query={{query}}&{% endif %}page={{ projects.next_page_number }}">Next
+									
+								</a>
+								</li>
+								<li class="page-item" style="display: inline;">
+								<a class="page-numbers"  href="?{% if query %}query={{query}}&{% endif %}page={{ projects.paginator.num_pages }}">Last</a>
+								</li>
+							{% endif %}
+						</ul>
+						{% else %}
+						<ul class="pagination pg-grey justify-content-center" style="list-style: none;display: inline;">
+							{% if projects.has_previous %}
+								<li class="page-item" style="display: inline;">
+								<a class="page-numbers" href="?page={{projects.previous_page_number}}">Previous</a>
+								</li>
+							{% endif %}
+						
+							{% for i in projects.paginator.page_range %}
+								{% if projects.number == i %}
+									<li class="page-item active" style="display: inline;"><a class="page-link">
+										<span class="page-numbers current">
+											{{ i }}
+											<span class="sr-only">(current)</span>
+										</span>
+									</a></li>
+								{% else %}
+									<li class="page-item" style="display: inline;"><a class="page-numbers" href="?page={{ i }}">{{ i }}</a></li>
+								{% endif %}
+							{% endfor %}
+							
+							{% if projects.has_next %}
+								<li class="page-item" style="display: inline;">
+								<a class="page-numbers" href="?page={{ projects.next_page_number }}">Next
+									
+								</a>
+								</li>
+								<li class="page-item" style="display: inline;">
+								<a class="page-numbers"  href="?page={{ projects.paginator.num_pages }}">Last</a>
+								</li>
+							{% endif %}
+						</ul>
 						{% endif %}
-					</ul>
 					</nav>
 				</div>
 			</div>

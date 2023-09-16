@@ -33,6 +33,10 @@ def add_project(request):
     return render(request, 'core/add-project.html', {'countries': countries, 'create_project_form': create_project_form, 'project_creation_request': project_creation_request})
 
 def pagination(request, items_list, num_of_pages):
+    # if 'from_expected_return' in request.session:
+    #     del request.session['from_expected_return']
+    # if 'to_expected_return' in request.session:
+    #     del request.session['to_expected_return']
     page_number = request.GET.get('page', 1)
     project_paginator = Paginator(items_list.order_by('-pk'), num_of_pages)
     try:
@@ -43,10 +47,14 @@ def pagination(request, items_list, num_of_pages):
         projects = project_paginator.page(project_paginator.num_pages)
     return projects
 
+
 def projects_list(request):
+    print('ON RE: ', request.META.get('HTTP_REFERER'))
     if request.GET.get('from_expected_return'):
         from_expected_return = request.GET.get('from_expected_return')
+        request.session['from_expected_return'] = from_expected_return
         to_expected_return = request.GET.get('to_expected_return')
+        request.session['to_expected_return'] = to_expected_return
 
         if from_expected_return:
             print('FROM: ', from_expected_return)
@@ -55,16 +63,17 @@ def projects_list(request):
                 projects = Project.objects.filter(
                     Q(expected_return__range=(int(from_expected_return), int(to_expected_return)))
                 )
-                projects = pagination(request, projects, 4)
+                # projects = pagination(request, projects, 4)
             else:
                 projects = Project.objects.filter(
                     Q(expected_return__gte=int(from_expected_return))
                 )
-                projects = pagination(request, projects, 4)
+                # projects = pagination(request, projects, 4)
     else:
+        # request.GET
         projects = Project.objects.all()
-        projects = pagination(request, projects, 4)
-    return render(request, 'core/projects.html', {'projects': projects})
+    projects = pagination(request, projects, 4)
+    return render(request, 'core/projects.html', {'projects': projects, "from_expected_return": request.GET.get('from_expected_return'), "to_expected_return": request.GET.get('to_expected_return')})
 
 def project_details(request, project_pk):
     project = Project.objects.get(pk=project_pk)
