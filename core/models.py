@@ -57,17 +57,6 @@ class Project(models.Model):
         return f"Project: {self.name} by {self.innovator.user.username}"
     
 
-class Contribution(models.Model):
-    contribution = RichTextField(null=True, blank=True)
-    contributor = models.ForeignKey(account_models.Innovator, on_delete=models.SET_NULL, null=True)
-    upvotes = models.IntegerField(default=0)
-    downvotes = models.IntegerField(default=0)
-    accepted = models.BooleanField(default=False)
-    date_created = models.DateTimeField(auto_now_add=True, null=True)
-
-    def __str__(self):
-        return f"Contribution by {self.contributor.user.username}"
-
 class Innovation(models.Model):
     title = models.CharField(max_length=255, null=True, blank=False)
     description = RichTextField(null=True, blank=False)
@@ -80,7 +69,6 @@ class Innovation(models.Model):
     downvotes = models.IntegerField(default=0)
     num_of_contributions = models.IntegerField(blank=True, null=True, default=0)
     reward = models.DecimalField(max_digits=255, decimal_places=2, null=False, blank=False)
-    contributions = models.ForeignKey(Contribution, on_delete=models.CASCADE, null=True)
     views = models.IntegerField(default=0)
     approved_by = models.ForeignKey(account_models.Moderator, on_delete=models.SET_NULL, null=True)
 
@@ -89,3 +77,14 @@ class Innovation(models.Model):
     
     class Meta:
         unique_together = ('title', 'owner')
+
+class Contribution(models.Model):
+    contribution = RichTextField(null=True, blank=True)
+    innovation = models.ForeignKey(Innovation, on_delete=models.SET_NULL, null=True)
+    upvotes = models.IntegerField(default=0)
+    downvotes = models.IntegerField(default=0)
+    accepted = models.BooleanField(default=False)
+    date_created = models.DateTimeField(auto_now_add=True, null=True)
+
+    def __str__(self):
+        return f"Contribution by {self.contributor.user.username}"
