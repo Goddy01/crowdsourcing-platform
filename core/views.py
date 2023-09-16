@@ -135,6 +135,20 @@ def innovation_detail(request, pk):
             obj.save()
             messages.success(request, 'Hurray. Your comment has been posted!')
             return HttpResponseRedirect('')
+    if request.method == 'POST' and 'nest_contribute' in request.POST:
+        nested_contribution_form_data = {
+            'contribution': request.POST.get('nested_contribution')
+        }
+        contribution_form = MakeContributionForm(contribution_form_data)
+        if contribution_form.is_valid():
+            obj = contribution_form.save(commit=False)
+            obj.innovation = Innovation.objects.get(pk=pk)
+            obj.contributor = Innovator.objects.get(user__pk=request.user.pk)
+            obj.innovation.num_of_contributions += 1
+            obj.innovation.save()
+            obj.save()
+            messages.success(request, 'Hurray. Your comment has been posted!')
+            return HttpResponseRedirect('')
     else:
         contribution_form = MakeContributionForm()
     context['contribution_form'] = contribution_form

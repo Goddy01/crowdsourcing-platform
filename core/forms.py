@@ -116,4 +116,4 @@ class MakeContributionForm(forms.ModelForm):
 class MakeNestedContributionForm(forms.ModelForm):
     class Meta:
         model = Nested_Contribution
-        fields = ['contribution']
+        fields = ['nested_contribution']

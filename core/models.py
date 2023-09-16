@@ -92,7 +92,7 @@ class Contribution(models.Model):
     
 class Nested_Contribution(models.Model):
     parent_contribution = models.ForeignKey(Contribution, on_delete=models.CASCADE, null=True)
-    contribution = models.CharField(max_length=255, null=True, blank=True)
+    nested_contribution = models.CharField(max_length=255, null=True, blank=True)
     contributor = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
 
