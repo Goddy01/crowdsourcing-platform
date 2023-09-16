@@ -6,29 +6,50 @@
     <style>
         /* Add your custom CSS for styling and enhancements */
 
-.cont-form {
-    /* background-color: #fff; */
-    padding: 20px;
-    border-radius: 10px;
-    background-color: whitesmoke;
-    /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); */
-}
+        .cont-form {
+            /* background-color: #fff; */
+            padding: 20px;
+            border-radius: 10px;
+            background-color: whitesmoke;
+            /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); */
+        }
 
-.btn-success {
-    background-color: #4CAF50;
-    border: none;
-}
+        .btn-success {
+            background-color: #4CAF50;
+            border: none;
+        }
 
-.btn-success:hover {
-    background-color: #45a049;
-}
+        .btn-success:hover {
+            background-color: #45a049;
+        }
 
 /* Additional custom styles can be added here */
 
     </style>
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 </head>
 <body>
-    <div class="container cont-form mt-5 bg-secondary-soft px-4 py-5 rounded">
+    <div>
+        {% if add_innovation_form.errors %}
+                  <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto;">
+                <div class="toast-body text-white m-2">
+                  <ul class="text-center mx-5" style="list-style: none;">
+                    {% for field in add_innovation_form %}
+                    {% for error in field.errors %}
+                    <li class="ml-2 text-danger p-3" style="background-color: rgb(239, 59, 59);color: white;font-weight: 500;">{{ error }}</li>
+                    {% endfor %}
+                    {% endfor %}
+                  </ul>        
+                </div>
+              </div>
+            {% endif %}
+            {% if add_innovation_form.non_field_errors %}
+                <p class="ml-2 text-danger p-3" style="background-color: rgb(239, 59, 59);color: white;font-weight: bold;">{{ add_innovation_form.non_field_errors }}</p>
+            {% endif %}
+    </div>
+    <div class="container cont-form bg-secondary-soft px-4 py-5 rounded" style="margin-top: 100px;">
         <h1 class="mb-4 text-center">Submit Your Innovation</h1>
         <form id="ideaForm">
             <div class="mb-3">

@@ -80,6 +80,7 @@ def project_details(request, project_pk):
     return render(request, 'core/project_details.html', {'project': project})
 
 def add_innovation(request):
+    context = []
     if not request.user.is_authenticated:
         return redirect('accounts:innovator_login')
     try:
@@ -91,5 +92,9 @@ def add_innovation(request):
         if add_innovation_form.is_valid():
             innovation_object = add_innovation_form.save(commit=False)
             innovation_object.owner = innovator
-    
-    return render(request, 'core/add-innovation.html')
+        else:
+            print('ERRORS: ', add_innovation_form.errors.as_data())
+    else:
+        add_innovation_form = CreateInnovationForm()
+    context['add_innovation_form'] = add_innovation_form
+    return render(request, 'core/add-innovation.html', context)
