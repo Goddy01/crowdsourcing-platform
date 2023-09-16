@@ -51,13 +51,16 @@
     </div>
     <div class="container cont-form bg-secondary-soft px-4 py-5 rounded" style="margin-top: 100px;">
         <h1 class="mb-4 text-center">Submit Your Innovation</h1>
-        <form id="ideaForm">
+        <form id="ideaForm" method="post" action="{% url 'add_innovation' %}">
+            {% csrf_token %}
             <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
                 <input type="text" class="form-control" id="title" required name="title">
             </div>
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
+                {{ add_innovation_form.media }}
+                {{ add_innovation_form.description }}
                 <!-- <textarea class="form-control" id="description" rows="4" required></textarea> -->
             </div>
             <div class="mb-3">

@@ -80,7 +80,7 @@ def project_details(request, project_pk):
     return render(request, 'core/project_details.html', {'project': project})
 
 def add_innovation(request):
-    context = []
+    context = {}
     if not request.user.is_authenticated:
         return redirect('accounts:innovator_login')
     try:
