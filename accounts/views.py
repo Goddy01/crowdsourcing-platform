@@ -362,7 +362,7 @@ def edit_profile(request):
                 if service_form.cleaned_data.get('service'):
                     if Innovator.objects.get(user__username=request.user.username).service_set.all().count() < 5:
                         service_obj = service_form.save(commit=False)
-                        service_obj.innovator = Innovator.objects.get(user__username=request.user.username)
+                        service_obj.user = BaseUser.objects.get(username=request.user.username)
                         service_obj.save()
                     else:
                         messages.error(request, 'You can only add a maximum of 5 services')
@@ -391,7 +391,7 @@ def moderator_edit_profile(request):
     user = Moderator.objects.get(user__username=request.user.username)
     try:
         moderator = Moderator.objects.get(user__username=request.user.username)
-    except Innovator.DoesNotExist:
+    except Moderator.DoesNotExist:
         return HttpResponse('You are unable to access this page because you are not an innovator.')
     user = Moderator.objects.get(user__username=request.user.username)
     user_info = Moderator.objects.get(user__username=request.user.username)
@@ -485,7 +485,7 @@ def moderator_edit_profile(request):
         change_password_form = ChangePasswordForm(user, request.POST)
         if change_password_form.is_valid():
             change_password_form.save()
-            return redirect('accounts:edit_profile')
+            return redirect('accounts:moderator_edit_profile')
         else:
             print('ERRORS: ', change_password_form.errors.as_data())
     else:
@@ -497,9 +497,9 @@ def moderator_edit_profile(request):
         if service_form.is_valid():
             if not Service.objects.filter(service=service_form.cleaned_data.get('service')).exists():
                 if service_form.cleaned_data.get('service'):
-                    if Innovator.objects.get(user__username=request.user.username).service_set.all().count() < 5:
+                    if Moderator.objects.get(user__username=request.user.username).service_set.all().count() < 5:
                         service_obj = service_form.save(commit=False)
-                        service_obj.innovator = Innovator.objects.get(user__username=request.user.username)
+                        service_obj.user = Moderator.objects.get(user__username=request.user.username)
                         service_obj.save()
                     else:
                         messages.error(request, 'You can only add a maximum of 5 services')
@@ -517,10 +517,10 @@ def moderator_edit_profile(request):
         'user_r_info_form': user_r_info,
         'user_s_info_form': user_s_info,
         'change_password_form': change_password_form,
-        'user_skills': Innovator.objects.get(user__username=request.user).innovatorskill_set.all(),
-        'user_services': Innovator.objects.get(user__username=request.user).service_set.all(),
+        'user_skills': Moderator.objects.get(user__username=request.user).innovatorskill_set.all(),
+        'user_services': Moderator.objects.get(user__username=request.user).service_set.all(),
         'user_service_form': service_form,
-        'innovator': Innovator.objects.get(user__username=request.user.username)
+        'moderator': Moderator.objects.get(user__username=request.user.username)
     })
 
 def resend_email_activation(request):

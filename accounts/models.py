@@ -165,11 +165,11 @@ class InnovatorSkill(models.Model):
         return f"Innovator-skill_{self.skill_id}"
     
 class Service(models.Model):
-    innovator = models.ForeignKey(Innovator, null=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(Innovator, null=True, on_delete=models.CASCADE)
     service = models.CharField(max_length=255, null=True, blank=True, unique=True)
 
     def __str__(self):
-        return f"{self.innovator.user.username}-{self.service}"
+        return f"{self.user.user.username}-{self.service}"
 
 
 # MODERATOR Model

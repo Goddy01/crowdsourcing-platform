@@ -428,5 +428,5 @@ class UpdateInnovatorServicesForm(forms.ModelForm):
     service_4 = forms.CharField(required=False)
     service_5 = forms.CharField(required=False)
     class Meta:
-        model = Innovator
+        model = BaseUser
         fields = ['service_1', 'service_2', 'service_3', 'service_4', 'service_5']
