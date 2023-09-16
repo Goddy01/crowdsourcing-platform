@@ -108,6 +108,7 @@ class CreateInnovationForm(forms.ModelForm):
         fields = ['title', 'description', 'image', 'category', 'reward']
 
 class MakeContributionForm(forms.ModelForm):
+    contribution = RichTextFormField()
     class Meta:
         model = Contribution
         fields = ['contribution']

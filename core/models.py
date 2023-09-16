@@ -58,7 +58,7 @@ class Project(models.Model):
     
 
 class Contribution(models.Model):
-    contribution = models.TextField(null=True, blank=True, max_length=10000)
+    contribution = RichTextField(null=True, blank=True)
     contributor = models.ForeignKey(account_models.Innovator, on_delete=models.SET_NULL, null=True)
     upvotes = models.IntegerField(default=0)
     downvotes = models.IntegerField(default=0)
