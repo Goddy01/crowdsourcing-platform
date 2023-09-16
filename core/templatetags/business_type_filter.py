@@ -1,5 +1,6 @@
 # myapp/custom_filters.py
 from django import template
+import ast
 
 register = template.Library()
 
@@ -7,7 +8,7 @@ register = template.Library()
 def remove_chars(value):
     if value:
         # Remove quotes, commas, and square brackets using str.replace
-        cleaned_value = value.replace('"', '').replace('[', '').replace(']', '').replace("'", '')
-        return cleaned_value
+        list = ast.literal_eval(value)
+        return list
     else:
         return value

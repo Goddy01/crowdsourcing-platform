@@ -30,7 +30,7 @@ urlpatterns = [
     path('project-details/<project_pk>', views.project_details, name='project_details'),
     path('add-innovation/', views.add_innovation, name='add_innovation'),
     path('innovations/', views.innovations_list, name='innovations_list'),
-    path('innovation-detail/<int:pk>/', views.innovation_detail, name='innovations_detail'),
+    path('innovation-detail/<int:pk>/', views.innovation_detail, name='innovation_details'),
 
 
     path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(template_name="password/password_change_done.html"), name="password_change_done"),

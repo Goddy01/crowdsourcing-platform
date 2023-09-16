@@ -23,14 +23,18 @@
                     {% for innovation in innovations %}
                     <div class="card" style="margin-bottom: 70px;">
                         {% if innovation.image %}
-                        <a href="#!"><img class="card-img-top" src="{{ innovation.image.url }}" alt="Innovation Image" style="width: 850px;height: 550px;" /></a>
+                        <a href="{% url 'innovation_details' innovation.pk %}"><img class="card-img-top" src="{{ innovation.image.url }}" alt="Innovation Image" style="width: 850px;height: 550px;" /></a>
                         {% endif %}
                         <div class="card-body">
                             <div class="small text-muted">{{ innovation.date_created }}</div>
-                            <h2 class="card-title mt-3">{{ innovation.title|title }}</h2>
+                            <h2 class="card-title mt-3">
+                                <a href="{% url 'innovation_details' innovation.pk %}" style="text-decoration: none;">
+                                    {{ innovation.title|title }}
+                                </a>
+                            </h2>
                             <p class="card-text">{{ innovation.description|safe|truncatechars:300 }}</p>
                             <p>
-                                <a class="button button-primary button-outline" href="#!">Read more →</a>
+                                <a class="button button-primary button-outline" href="{% url 'innovation_details' innovation.pk %}">Read more →</a>
                             </p>
                         </div>
                     </div>

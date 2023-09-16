@@ -118,4 +118,4 @@ def innovation_detail(request, pk):
     context = {}
     innovation = Innovation.objects.get(pk=pk)
     context['innovation'] = innovation
-    return render(request, 'core/innovation_details', context)
+    return render(request, 'core/innovation-details.html', context)
