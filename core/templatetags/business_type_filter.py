@@ -12,3 +12,10 @@ def remove_chars(value):
         return list
     else:
         return value
+    
+@register.filter(name='remove_session', takes_context=True)
+def remove_session(request, value):
+    if value:
+        del request.session[value]
+    else:
+        return value

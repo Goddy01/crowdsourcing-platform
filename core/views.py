@@ -7,6 +7,7 @@ from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm
 from accounts.models import Innovator, Moderator
 from django.utils import timezone
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib import messages
 # Create your views here.
 def home(request):
     print('TIME: ', timezone.now())
@@ -129,9 +130,11 @@ def innovation_detail(request, pk):
             obj = contribution_form.save(commit=False)
             obj.innovation = Innovation.objects.get(pk=pk)
             obj.contributor = Innovator.objects.get(user__pk=request.user.pk)
+            obj.innovation.num_of_contributions += 1
+            obj.innovation.save()
             obj.save()
-            context['success'] = 'Hurray. Your comment has been posted!'
-            contribution_form = MakeContributionForm()    
+            messages.success(request, 'Hurray. Your comment has been posted!')
+            return HttpResponseRedirect('')
     else:
         contribution_form = MakeContributionForm()
     context['contribution_form'] = contribution_form
