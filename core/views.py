@@ -108,4 +108,7 @@ def add_innovation(request):
     return render(request, 'core/add-innovation.html', context)
 
 def innovations_list(request):
-    return render(request, 'core/innovations-list.html')
+    context = {}
+    innovations = Innovation.objects.all().order_by('date_created')
+    context['innovations'] = innovations
+    return render(request, 'core/innovations-list.html', context)
