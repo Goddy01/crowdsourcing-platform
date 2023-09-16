@@ -69,7 +69,7 @@
             {% csrf_token %}
             <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
-                <input type="text" class="form-control " id="title" required name="title" value="{{ title }}">
+                <input type="text" class="form-control " id="title" required name="title">
             </div>
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
@@ -80,7 +80,7 @@
             <div class="mb-3">
                 <label for="image" class="form-label">Image</label>
                 <input type="file" class="form-control" id="image" accept="image/*" name="image">
-                <img id="imagePreview" src="#" alt="Image Preview" class="mt-3 d-none">
+                <img id="imagePreview" src="#" alt="Image Preview" class="mt-3 d-none" style="width: 450;height: 400px;">
             </div>
             <div class="mb-3">
                 <label for="category" class="form-label">Category</label>
@@ -88,7 +88,7 @@
             </div>
             <div class="mb-3">
                 <label for="reward" class="form-label">Reward(₦)</label>
-                <input type="number" class="form-control" id="reward" name="reward" value="{{ reward }}">
+                <input type="number" class="form-control" id="reward" name="reward">
             </div>
             <button type="submit" class="btn btn-success">Submit Innovation</button>
         </form>

@@ -24,6 +24,10 @@ def upload_project_gallery(instance, filename):
     return f'project_gallery/{instance.innovator.user.last_name} {instance.innovator.user.first_name} {instance.innovator.user.middle_name}/project-{instance.name}/-{filename}'
 
 
+def upload_innovation_images(instance, filename):
+    return f'innovation_images/{instance.owner.user.last_name} {instance.owner.user.first_name} {instance.innovator.user.middle_name}/innovation-{instance.title}/-{filename}'
+
+
 # PROJECT
 class Project(models.Model):
     innovator = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE)
@@ -69,7 +73,7 @@ class Innovation(models.Model):
     description = RichTextField(null=True, blank=False)
     owner = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(upload_to=upload_project_gallery, blank=True, null=True)
+    image = models.ImageField(upload_to=upload_innovation_images, blank=True, null=True)
     status = models.CharField(default='Unapproved', max_length=255)
     category = models.CharField(max_length=255)
     upvotes = models.IntegerField(default=0)
