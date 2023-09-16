@@ -223,19 +223,6 @@ def edit_profile(request):
     user_info = BaseUser.objects.get(username=request.user.username)
     if not request.user.is_authenticated:
         return redirect('accounts:innovator_login')
-
-
-def moderator_edit_profile(request):
-    user = Moderator.objects.get(user__username=request.user.username)
-    try:
-        moderator = Moderator.objects.get(user__username=request.user.username)
-    except Innovator.DoesNotExist:
-        return HttpResponse('You are unable to access this page because you are not an innovator.')
-    user = Moderator.objects.get(user__username=request.user.username)
-    user_info = Moderator.objects.get(user__username=request.user.username)
-    if not request.user.is_authenticated:
-        return redirect('accounts:moderator_login')
-    
     # USER ABOUT ME
     # if request.method == 'POST' and 'user_about_me' in request.POST:
     #     about_me_form = UpdateAboutMeForm(request.POST, instance=request.user)
@@ -394,6 +381,142 @@ def moderator_edit_profile(request):
         'user_s_info_form': user_s_info,
         'change_password_form': change_password_form,
         'user_skill_form': skill_form,
+        'user_skills': Innovator.objects.get(user__username=request.user).innovatorskill_set.all(),
+        'user_services': Innovator.objects.get(user__username=request.user).service_set.all(),
+        'user_service_form': service_form,
+        'innovator': Innovator.objects.get(user__username=request.user.username)
+    })
+
+def moderator_edit_profile(request):
+    user = Moderator.objects.get(user__username=request.user.username)
+    try:
+        moderator = Moderator.objects.get(user__username=request.user.username)
+    except Innovator.DoesNotExist:
+        return HttpResponse('You are unable to access this page because you are not an innovator.')
+    user = Moderator.objects.get(user__username=request.user.username)
+    user_info = Moderator.objects.get(user__username=request.user.username)
+    if not request.user.is_authenticated:
+        return redirect('accounts:moderator_login')
+    
+        # USER PERSONAL DATA
+    if request.method == 'POST' and 'user_p_form' in request.POST:
+        user_p_data = {
+            'about_me': request.POST.get('about_me'),
+            'username': request.POST.get('username'),
+            'email': request.POST.get('email'),
+            'first_name': request.POST.get('first_name'),
+            'last_name': request.POST.get('last_name'),
+            'middle_name': request.POST.get('middle_name'),
+            'pfp': request.POST.get('pfp'),
+            'phone_num': request.POST.get('phone_num'),
+            'date_of_birth': request.POST.get('date_of_birth'),
+            'bio': request.POST.get('bio')
+        }
+        user_p_info = UpdatePersonalProfileForm(user_p_data, request.FILES, instance=request.user)
+        if user_p_info.is_valid():
+            user_obj = user_p_info.save(commit=False)
+            if user_p_info.cleaned_data['pfp']:
+                user_obj.pfp = user_p_info.cleaned_data['pfp']
+            if user.date_of_birth:
+                user_obj.date_of_birth = user.date_of_birth
+            if user_p_info.cleaned_data['about_me']:
+                user_obj.about_me = user_p_info.cleaned_data['about_me']
+            user_obj.save()
+            print('ABOUT: ', user_obj.about_me)
+            return redirect('accounts:profile')
+        else:
+            print(user_p_info.errors.as_data())
+    else:
+        user_p_info = UpdatePersonalProfileForm(
+            instance=request.user,
+            initial= {
+                'about_me': user.about_me,
+                'username': user.username,
+                'email': user.email,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'middle_name': user.middle_name,
+                'pfp': user.pfp,
+                'phone_num': user.phone_num,
+                'date_of_birth': user.date_of_birth,
+                'bio': user.bio
+            }
+        )
+
+#   USER RESIDENTIAL DATA
+    if request.method == 'POST' and 'user_r_form' in request.POST:
+        user_r_data = {
+            'city': request.POST.get('city'),
+            'state': request.POST.get('state'),
+            'country': request.POST.get('country'),
+            'address': request.POST.get('address'),
+            'zipcode': request.POST.get('zipcode')
+        }
+        user_r_info = UpdateUserResidentialInfoForm(user_r_data, instance=request.user)
+        if user_r_info.is_valid():
+            user_r_info.save()
+            return redirect('accounts:profile')
+        else:
+            print(user_r_info.errors.as_data())
+    else:
+        user_r_info = UpdateUserResidentialInfoForm()
+
+#   USER SOCIALS DATA
+    if request.method == 'POST' and 'user_s_form' in request.POST:
+        user_s_data = {
+            'facebook': request.POST.get('facebook'),
+            'linkedin': request.POST.get('linkedin'),
+            'twitter': request.POST.get('twitter'),
+            'instagram': request.POST.get('instagram'),
+            'website': request.POST.get('website')
+        }
+        user_s_info = UpdateUserSocialsForm(user_s_data, instance=request.user)
+        if user_s_info.is_valid():
+            user_s_info.save()
+            return redirect('accounts:profile')
+        else:
+            print(user_s_info.errors.as_data())
+    else:
+        user_s_info = UpdateUserSocialsForm()
+
+#   USER CHANGE PASSWORD DATA
+    user = request.user
+    if request.method == 'POST' and 'password_change' in request.POST:
+        change_password_form = ChangePasswordForm(user, request.POST)
+        if change_password_form.is_valid():
+            change_password_form.save()
+            return redirect('accounts:edit_profile')
+        else:
+            print('ERRORS: ', change_password_form.errors.as_data())
+    else:
+        change_password_form = ChangePasswordForm(user)
+
+#   USER SERVICES DATA
+    if request.method == 'POST' and 'service_form' in request.POST:
+        service_form = UpdateUserServiceForm(request.POST)
+        if service_form.is_valid():
+            if not Service.objects.filter(service=service_form.cleaned_data.get('service')).exists():
+                if service_form.cleaned_data.get('service'):
+                    if Innovator.objects.get(user__username=request.user.username).service_set.all().count() < 5:
+                        service_obj = service_form.save(commit=False)
+                        service_obj.innovator = Innovator.objects.get(user__username=request.user.username)
+                        service_obj.save()
+                    else:
+                        messages.error(request, 'You can only add a maximum of 5 services')
+            else:
+                service_form.add_error('service', 'This skill already exists.')
+        else:
+            print('SERVICES FORM ERRORS: ', service_form.errors.as_data())
+    else:
+        service_form = UpdateInnovatorServicesForm()
+
+    return render(request, 'accounts/edit_profile.html', {
+        'user_form': user,
+        'user': user,
+        'user_p_info_form': user_p_info,
+        'user_r_info_form': user_r_info,
+        'user_s_info_form': user_s_info,
+        'change_password_form': change_password_form,
         'user_skills': Innovator.objects.get(user__username=request.user).innovatorskill_set.all(),
         'user_services': Innovator.objects.get(user__username=request.user).service_set.all(),
         'user_service_form': service_form,
