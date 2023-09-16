@@ -113,3 +113,9 @@ def innovations_list(request):
     innovations = pagination(request, innovations, 4)
     context['innovations'] = innovations
     return render(request, 'core/innovations-list.html', context)
+
+def innovation_detail(request, pk):
+    context = {}
+    innovation = Innovation.objects.get(pk=pk)
+    context['innovation'] = innovation
+    return render(request, 'core/innovation_details', context)
