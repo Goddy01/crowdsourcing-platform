@@ -106,13 +106,13 @@
                         <div class="toast-body text-white m-2">
                             {% if not user.signup_confirmation %}
                             <li class="" style="list-style: disc;">You have not clicked on your confirmation email. Go to your 
-                                <a href="{% url 'accounts:profile' %}" class="text-white text-decoration-underline">profile page</a>
+                                <a href="{% url 'accounts:mod_profile' %}" class="text-white text-decoration-underline">profile page</a>
                                  to request for a new one.
                             </li>
                             {% endif %}
                             {% if not user.is_verified %}
                             <li class="" style="list-style: disc;">Provide your details in the 
-                                <a href="{% url 'accounts:edit_profile' %}" class="text-white text-decoration-underline">edit profile page</a>
+                                <a href="{% url 'accounts:mod_edit_profile' %}" class="text-white text-decoration-underline">edit profile page</a>
                                 to get verified and have innovators' privileges.
                             </li>
                             {% endif %}
