@@ -3,6 +3,7 @@ from accounts import models as account_models
 from django_countries.fields import CountryField
 from PIL import Image
 from django.core.validators import FileExtensionValidator
+from ckeditor.fields import RichTextField
 # Create your models here.
 
 # EXPECTED RETURN
@@ -65,7 +66,7 @@ class Contribution(models.Model):
 
 class Innovation(models.Model):
     title = models.CharField(max_length=255, null=True, blank=False)
-    description = models.TextField(null=True, blank=True, max_length=10000)
+    description = RichTextField()
     owner = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to=upload_project_gallery, blank=True, null=True)
