@@ -269,7 +269,7 @@
 <div class="bg-secondary-soft px-4 py-5 rounded">
 <div class="row g-3 d-flex justify-content-center mb-5">
     <h4 class="mb-4 mt-0 text-success">Personal Information</h4>
-    <form method="post" action="{% url 'accounts:edit_profile' %}" enctype="multipart/form-data" class="file-upload row g-3" id="myForm">
+    <form method="post" action="{% url 'accounts:mod_edit_profile' %}" enctype="multipart/form-data" class="file-upload row g-3" id="myForm">
     {% csrf_token %}
         <!-- <div class="col-xxl-4"> -->
         <!-- <div class="d-flex justify-content-center"> -->
@@ -367,7 +367,7 @@
 <div class="bg-secondary-soft px-4 py-5 rounded mt-5">
     <!-- <form class="row g-3"> -->
     <h4 class="mb-4 mt-0 text-success">Residential Information</h4>
-    <form method="post" action="{% url 'accounts:edit_profile' %}" class="row g-3">
+    <form method="post" action="{% url 'accounts:mod_edit_profile' %}" class="row g-3">
         {% csrf_token %}
         <div class="col-md-6">
         <label class="form-label">City 
@@ -459,7 +459,7 @@
         </button>
         {% endfor %}
     </div>
-      <form method="post" action="{% url 'accounts:edit_profile' %}" class="row g-3">
+      <form method="post" action="{% url 'accounts:mod_edit_profile' %}" class="row g-3">
         {% csrf_token %}
         <div class="col-md-6">
             <label class="form-label">
@@ -522,7 +522,7 @@
 <div class="col-xxl-6">
 <div class="bg-secondary-soft px-4 py-5 rounded">
 <h4 class="mt-0 text-success">Change Password</h4>
-<form method="post" action="{% url 'accounts:edit_profile' %}" class="row g-3">
+<form method="post" action="{% url 'accounts:mod_edit_profile' %}" class="row g-3">
     {% csrf_token %}
     <div class="col-md-12">
     <label for="exampleInputPassword2" class="form-label">New password 

@@ -219,7 +219,7 @@ def mod_profile(request):
     return render(request, 'accounts/mod_profile.html', {
         'user': user,
         # 'user_skills': Innovator.objects.get(user__username=request.user.username).innovatorskill_set.all(),
-        'user_services': Moderator.objects.get(user__username=request.user.username).service_set.all()
+        'user_services': Service.objects.filter(user=request.user.pk)
         
     })
 
@@ -405,7 +405,10 @@ def edit_profile(request):
     })
 
 def moderator_edit_profile(request):
-    user = Moderator.objects.get(user__username=request.user.username)
+    try:
+        user = Moderator.objects.get(user__username=request.user.username)
+    except:
+        return redirect('accounts:moderator_login')
     try:
         moderator = Moderator.objects.get(user__username=request.user.username)
     except Moderator.DoesNotExist:
@@ -434,8 +437,8 @@ def moderator_edit_profile(request):
             user_obj = user_p_info.save(commit=False)
             if user_p_info.cleaned_data['pfp']:
                 user_obj.pfp = user_p_info.cleaned_data['pfp']
-            if user.date_of_birth:
-                user_obj.date_of_birth = user.date_of_birth
+            if user_p_info.cleaned_data['date_of_birth']:
+                user_obj.date_of_birth = user_p_info.cleaned_data['date_of_birth']
             if user_p_info.cleaned_data['about_me']:
                 user_obj.about_me = user_p_info.cleaned_data['about_me']
             user_obj.save()
@@ -444,21 +447,7 @@ def moderator_edit_profile(request):
         else:
             print(user_p_info.errors.as_data())
     else:
-        user_p_info = UpdatePersonalProfileForm(
-            instance=request.user,
-            initial= {
-                'about_me': user.about_me,
-                'username': user.username,
-                'email': user.email,
-                'first_name': user.first_name,
-                'last_name': user.last_name,
-                'middle_name': user.middle_name,
-                'pfp': user.pfp,
-                'phone_num': user.phone_num,
-                'date_of_birth': user.date_of_birth,
-                'bio': user.bio
-            }
-        )
+        user_p_info = UpdatePersonalProfileForm()
 
 #   USER RESIDENTIAL DATA
     if request.method == 'POST' and 'user_r_form' in request.POST:
@@ -534,8 +523,8 @@ def moderator_edit_profile(request):
         'user_r_info_form': user_r_info,
         'user_s_info_form': user_s_info,
         'change_password_form': change_password_form,
-        'user_skills': Moderator.objects.get(user__username=request.user).innovatorskill_set.all(),
-        'user_services': Moderator.objects.get(user__username=request.user).service_set.all(),
+        # 'user_skills': Moderator.objects.get(user__username=request.user).innovatorskill_set.all(),
+        'user_services': Service.objects.filter(user=request.user.pk),
         'user_service_form': service_form,
         'moderator': Moderator.objects.get(user__username=request.user.username)
     })

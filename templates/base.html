@@ -93,7 +93,11 @@
                             <li><a href="{% url 'add_project' %}">Add Investment Project</a></li>
                             {% endif %}
                             brev
+                            {% if innovator %}
                             <li><a href="{% url 'accounts:profile' %}">Profile</a></li>
+                            {% else %}
+                            <li><a href="{% url 'accounts:mod_profile' %}">Profile</a></li>
+                            {% endif %}
 						</ul>
 					</li>
                     {% if request.user.is_authenticated %}
