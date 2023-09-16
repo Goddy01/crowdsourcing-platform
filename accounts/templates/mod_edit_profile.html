@@ -108,8 +108,8 @@
                 {% endif %}
                 {% if not user.is_verified %}
                 <li class="" style="list-style: disc;">Provide your details in the 
-                    <a href="{% url 'accounts:edit_profile' %}" class="text-white text-decoration-underline">edit profile page</a>
-                    to get verified and have innovators' privileges.
+                    <a href="{% url 'accounts:mod_edit_profile' %}" class="text-white text-decoration-underline">edit profile page</a>
+                    to get verified and have moderators' privileges.
                 </li>
                 {% endif %}
             </div>
@@ -409,79 +409,6 @@
     
     </div>
 
-    <div class="bg-secondary-soft px-4 py-5 rounded mt-5">
-    <!-- <form class="row g-3"> -->
-    <div class="d-inline">
-      <span class="float-end">
-        {% include 'messages.html' %}
-      </span>
-      <div>
-        {% if user_skill_form.errors %}
-                    <ul>
-                      {% for field in user_skill_form %}
-                      {% for error in field.errors %}
-                      <div class="toast align-items-center bg-danger border-0 float-end" role="alert" aria-live="assertive" aria-atomic="true">
-                        <div class="d-flex">
-                          <div class="toast-body">
-                            <li class="ml-2 text-danger text-white" style="list-style: none;">{{ error }}</li>
-                         </div>
-                          <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                        </div>
-                      </div>
-                      {% endfor %}
-                      {% endfor %}
-                    </ul>
-      {% endif %}
-      {% if user_skill_form.non_field_errors %}
-              <div class="col-lg-8 col-xl-3 toastDiv">
-            <div class="card toast m-auto bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin-bottom: 1rem !important;">
-              <div class="toast-body text-white"">
-                {{user_skill_form.non_field_errors}}
-              </div>
-            </div>
-      {% endif %}
-    </div>
-        <h4 class="mb-4 mt-0 text-success d-inline">
-        Skills
-      </h4>
-      <small class="d-inline">(You can add up to 5 skills)</small>
-    </div>
-    <div class="mt-5">
-      {% for skill in user_skills %}
-      <button type="button" class="btn btn-success position-relative mx-3" id="element-to-hover">
-        <span id="skill-field">{{ skill.skill }}</span>
-        <span class="position-absolute bottom-50 start-0 translate-middle badge rounded-pill bg-danger" id="cancel">
-          <span class="skill_btn" onmouseover="Cancel()" data-skill-id="{{ skill.skill_id }}">{{ skill.skill_value }}</span>
-          <span class="visually-hidden">unread messages</span>
-        </span>
-        <a class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger skill_btn"
-       data-skill-id="{{ skill.skill_id }}"
-       href="{% url 'accounts:remove_skill' skill.skill_id %}" style="text-decoration: none;color: white;">
-      X
-    </a>
-      </button>
-      {% endfor %}
-  </div>
-    <form method="post" action="{% url 'accounts:edit_profile' %}" class="row g-3 form-container" id="myForm">
-      {% csrf_token %}
-        <div class="col-md-6">
-          <label class="form-label">
-          </label>
-          <input type="text" class="form-control" placeholder="Enter a new skill" aria-label="Skill" id="skill" name="skill">
-          <div class="col-md-12">
-            <input type="number" class="form-control" name="skill_value" id="skill_value" placeholder="Skill Level (10-100, in increments of 10)">
-          </div>
-        </div>
-
-        
-        <div id="form" class="form"></div>
-        <!-- <div class="d-flex justify-content-center"> -->
-          <button name="user_skill_form" type="submit" class="btn btn-success btn-lg mt-2">Save Changes</button>
-        <!-- </div> -->
-      <!-- </div> -->
-    </form>
-    <!-- </form>  -->
-    </div>
 
     <div class="bg-secondary-soft px-4 py-5 rounded mt-5">
       <!-- <form class="row g-3"> -->
@@ -553,15 +480,14 @@
 
 </div> 
 
-{% if not request.user.signup_with_google%}
+
 <div class="row mb-5 gx-5">
 <div class="col-xxl-6 mb-5 mb-xxl-0">
-{% endif %}
 <div class="bg-secondary-soft px-4 py-5 rounded">
 <!-- <div class="row g-3 form-div"> -->
 <h4 class="mdb-4 mt-0 text-success">Socials</h4>
 
-<form method="post" action="{% url 'accounts:edit_profile' %}" class="row g-3">
+<form method="post" action="{% url 'accounts:mod_edit_profile' %}" class="row g-3">
     {% csrf_token %}
     <div class="col-md-6">
     <label class="form-label"><i class="fab fa-fw fa-facebook me-2 text-facebook"></i>Facebook 
@@ -593,7 +519,6 @@
 <!-- </div> -->
 </div>
 
-{% if not request.user.signup_with_google %}
 <div class="col-xxl-6">
 <div class="bg-secondary-soft px-4 py-5 rounded">
 <h4 class="mt-0 text-success">Change Password</h4>
@@ -614,7 +539,6 @@
 </form>
 </div>
 </div>
-{% endif %}
 </div>
 </div> 
 

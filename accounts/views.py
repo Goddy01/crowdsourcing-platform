@@ -485,7 +485,7 @@ def moderator_edit_profile(request):
         change_password_form = ChangePasswordForm(user, request.POST)
         if change_password_form.is_valid():
             change_password_form.save()
-            return redirect('accounts:moderator_edit_profile')
+            return redirect('accounts:mod_edit_profile')
         else:
             print('ERRORS: ', change_password_form.errors.as_data())
     else:
