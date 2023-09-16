@@ -68,5 +68,38 @@ class CreateProjectForm(forms.ModelForm):
         fields = ['name', 'motto', 'description', 'target', 'expected_return', 'term_months', 'country', 'investment_deadline', 'image_1', 'image_2', 'image_3', 'video', 'business_type', 'innovator_user_agreement']
 
 class CreateInnovationForm(forms.ModelForm):
+    title = forms.CharField(error_messages={
+        'required': 'Please enter the title of the innovation'
+        })
+    description = forms.CharField(error_messages={
+        'required': 'Please enter the description about the innovation details'
+        })
+    
+    CATEGORY_CHOICES = (
+            ("TECHNOLOGY AND SOFTWARE", "Technology and Software"),
+            ("PRODUCT DESIGN", "Product Design"),
+            ("HEALTHCARE AND MEDICINE", "Healthcare and Medicine"),
+            ("SUSTAINABILITY AND ENVIRONMENT", "Sustainability and Environment"),
+            ("EDUCATION AND E-LEARNING", "Education and E-Learning"),
+            ("SOCIAL IMPACT", "Social Impact"),
+            ("ART AND CREATIVITY", "Art and Creativity"),
+            ("BUSINESS AND ENTREPRENEURSHIP", "Business and Entrepreneurship"),
+            ("TRAVEL AND TOURISM", "Travel and Tourism"),
+            ("ENERGY AND SUSTAINABILITY", "Energy and Sustainability"),
+            ("AGRICULTURE AND FOOD", "Agriculture and Food"),
+            ("ENTERTAINMENT AND MEDIA", "Entertainment and Media"),
+            ("FINANCE AND FINTECH", "Finance and Fintech"),
+            ("TRANSPORTATION AND MOBILITY", "Transportation and Mobility"),
+            ("SPACE AND AEROSPACE", "Space and Aerospace"),
+            ("SPORTS AND FITNESS", "Sports and Fitness"),
+            ("SCIENCE AND RESEARCH", "Science and Research"),
+            ("FASHION AND APPAREL", "Fashion and Apparel"),
+            ("SMART CITIES", "Smart Cities"),
+            ("CYBERSECURITY", "Cybersecurity"),
+        )
+    category = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=CATEGORY_CHOICES)
+    reward = forms.IntegerField(error_messages={
+        'required': 'Please enter the reward amount'
+    })
     class Meta:
         model = ['title', 'description', 'image', 'category', 'reward']
