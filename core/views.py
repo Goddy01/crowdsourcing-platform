@@ -127,6 +127,7 @@ def innovation_detail(request, pk):
         contribution_form = MakeContributionForm(contribution_form_data)
         if contribution_form.is_valid():
             obj = contribution_form.save(commit=False)
+            obj.innovation = Innovation.objects.get(pk=pk)
             obj.contributor = Innovator.objects.get(user__pk=request.user.pk)
             obj.save()
     else:
