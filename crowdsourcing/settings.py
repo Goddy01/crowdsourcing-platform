@@ -321,3 +321,11 @@ DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = True
 
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = None # higher than the count of fields
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': 'full',
+    },
+}

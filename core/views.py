@@ -90,8 +90,12 @@ def add_innovation(request):
     if request.method == 'POST':
         add_innovation_form = CreateInnovationForm(request.POST or None, request.FILES or None)
         if add_innovation_form.is_valid():
+            context['title'] = add_innovation_form.cleaned_data['title']
+            context['reward'] = add_innovation_form.cleaned_data['reward']
             innovation_object = add_innovation_form.save(commit=False)
             innovation_object.owner = innovator
+            innovation_object.save()
+            context['success'] = 'Innovation has been submitted. A moderator will reach out to you soon.'
         else:
             print('ERRORS: ', add_innovation_form.errors.as_data())
     else:

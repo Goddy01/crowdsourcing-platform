@@ -5,6 +5,10 @@
 
     <style>
         /* Add your custom CSS for styling and enhancements */
+        .django-ckeditor-widget{
+        width: 100%;
+        /* border: 2px solid red; */
+        }
 
         .cont-form {
             /* background-color: #fff; */
@@ -51,16 +55,16 @@
     </div>
     <div class="container cont-form bg-secondary-soft px-4 py-5 rounded" style="margin-top: 100px;">
         <h1 class="mb-4 text-center">Submit Your Innovation</h1>
-        <form id="ideaForm" method="post" action="{% url 'add_innovation' %}">
+        <form id="ideaForm" method="post" action="{% url 'add_innovation' %}" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
-                <input type="text" class="form-control" id="title" required name="title">
+                <input type="text" class="form-control " id="title" required name="title" value="{{ title }}">
             </div>
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
                 {{ add_innovation_form.media }}
-                {{ add_innovation_form.description }}
+                <p>{{ add_innovation_form.description }}</p>
                 <!-- <textarea class="form-control" id="description" rows="4" required></textarea> -->
             </div>
             <div class="mb-3">
@@ -70,16 +74,11 @@
             </div>
             <div class="mb-3">
                 <label for="category" class="form-label">Category</label>
-                <!-- <select class="form-select" id="category">
-                    <option value="technology">Technology</option>
-                    <option value="healthcare">Healthcare</option>
-                    <option value="environment">Environment</option>
-                    <!-- Add more category options -->
-                <!-- </select> -->
+                <p> {{ add_innovation_form.category }} </p>
             </div>
             <div class="mb-3">
-                <label for="reward" class="form-label">Reward</label>
-                <input type="text" class="form-control" id="reward">
+                <label for="reward" class="form-label">Reward(₦)</label>
+                <input type="number" class="form-control" id="reward" name="reward" value="{{ reward }}">
             </div>
             <button type="submit" class="btn btn-success">Submit Innovation</button>
         </form>
@@ -100,22 +99,6 @@
                 $("#imagePreview").attr("src", e.target.result).removeClass("d-none");
             };
             reader.readAsDataURL(file);
-        }
-    });
-
-    // Form submission and validation
-    $("#ideaForm").submit(function(event) {
-        event.preventDefault();
-        const title = $("#title").val();
-        const description = $("#description").val();
-        if (!title || !description) {
-            alert("Title and description are required.");
-        } else {
-            // Handle the form submission or AJAX request here
-            alert("Idea submitted!");
-            // Clear the form
-            $("#title, #description, #image, #category, #reward").val("");
-            $("#imagePreview").addClass("d-none").attr("src", "#");
         }
     });
 });

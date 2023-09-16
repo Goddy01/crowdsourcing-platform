@@ -70,7 +70,7 @@ class Innovation(models.Model):
     owner = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to=upload_project_gallery, blank=True, null=True)
-    status = models.BooleanField(default='Unapproved')
+    status = models.CharField(default='Unapproved', max_length=255)
     category = models.CharField(max_length=255)
     upvotes = models.IntegerField(default=0)
     downvotes = models.IntegerField(default=0)
