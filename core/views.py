@@ -106,3 +106,6 @@ def add_innovation(request):
         add_innovation_form = CreateInnovationForm()
     context['add_innovation_form'] = add_innovation_form
     return render(request, 'core/add-innovation.html', context)
+
+def innovations_list(request):
+    return render(request, 'core/innovations-list.html')
