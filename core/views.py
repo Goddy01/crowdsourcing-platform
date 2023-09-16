@@ -92,7 +92,7 @@ def add_innovation(request):
         if add_innovation_form.is_valid():
             context['title'] = add_innovation_form.cleaned_data['title']
             context['reward'] = add_innovation_form.cleaned_data['reward']
-            if not Innovation.objects.filter(title=add_innovation_form.cleaned_data['title'], owner=innovator.pk).exists():
+            if not Innovation.objects.filter(title=request.POST.get('title'), owner=innovator.pk).exists():
                 innovation_object = add_innovation_form.save(commit=False)
                 innovation_object.owner = innovator
                 innovation_object.save()
