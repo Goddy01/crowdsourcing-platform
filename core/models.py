@@ -82,3 +82,6 @@ class Innovation(models.Model):
 
     def __str__(self):
         return f"Innovation: {self.title} by {self.owner.user.username}"
+    
+    class Meta:
+        unique_together = ('title', 'owner')
