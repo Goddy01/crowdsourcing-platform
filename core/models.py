@@ -66,7 +66,7 @@ class Contribution(models.Model):
 
 class Innovation(models.Model):
     title = models.CharField(max_length=255, null=True, blank=False)
-    description = RichTextField()
+    description = RichTextField(null=True)
     owner = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to=upload_project_gallery, blank=True, null=True)
