@@ -71,10 +71,6 @@ class CreateInnovationForm(forms.ModelForm):
     title = forms.CharField(error_messages={
         'required': 'Please enter the title of the innovation'
         })
-    description = forms.CharField(error_messages={
-        'required': 'Please enter the description about the innovation details'
-        })
-    
     CATEGORY_CHOICES = (
             ("TECHNOLOGY AND SOFTWARE", "Technology and Software"),
             ("PRODUCT DESIGN", "Product Design"),
