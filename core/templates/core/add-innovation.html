@@ -37,12 +37,17 @@
 <body>
     <div>
         {% if add_innovation_success %}
-        <div class="d-flex justify-content-center" style="margin-top: 55px;" id="fadeout">
+        <div class="d-flex justify-content-center fadeout" style="margin-top: 55px;">
             <p class="ml-2 text-danger p-3 d-flex justify-content-center" style="background-color: rgb(52, 190, 52);color: white;font-weight: 500;">{{ add_innovation_success }}</p>
         </div>
         {% endif %}
+        {% if innovation_unique_error %}
+        <div class="d-flex justify-content-center fadeout" style="margin-top: 20px;">
+            <p class="ml-2 text-danger p-3 d-flex justify-content-center" style="background-color: rgb(239, 59, 59);color: white;font-weight: 500;">{{ innovation_unique_error }}</p>
+        </div>
+        {% endif %}
         {% if add_innovation_form.errors %}
-                  <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto;">
+                  <div class="card fadeout toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto;">
                 <div class="toast-body text-white m-2">
                   <ul class="text-center mx-5" style="list-style: none;">
                     {% for field in add_innovation_form %}
@@ -55,7 +60,7 @@
               </div>
             {% endif %}
             {% if add_innovation_form.non_field_errors %}
-                <p class="ml-2 text-danger p-3" style="background-color: rgb(239, 59, 59);color: white;font-weight: bold;">{{ add_innovation_form.non_field_errors }}</p>
+                <p class="ml-2 text-danger p-3 fadeout" style="background-color: rgb(239, 59, 59);color: white;font-weight: bold;">{{ add_innovation_form.non_field_errors }}</p>
             {% endif %}
     </div>
     <div class="container cont-form bg-secondary-soft px-4 py-5 rounded" style="margin-top: 100px;">
@@ -112,7 +117,7 @@
     <script>
         // Function to hide the toast element
         function hideToast() {
-            $('#fadeout').fadeOut('slow', function() {
+            $('.fadeout').fadeOut('slow', function() {
                 // Animation complete, you can optionally remove the element from the DOM
                 $(this).remove();
             });

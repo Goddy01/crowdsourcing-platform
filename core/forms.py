@@ -1,5 +1,6 @@
 from .models import Project, Innovation, Contribution
 from django import forms
+from ckeditor.fields import RichTextFormField
 
 class CreateProjectForm(forms.ModelForm):
     name = forms.CharField(error_messages={
@@ -71,6 +72,9 @@ class CreateInnovationForm(forms.ModelForm):
     title = forms.CharField(error_messages={
         'required': 'Please enter the title of the innovation'
         })
+    description = RichTextFormField(error_messages={
+        'required': 'Please enter the description about the innovation'
+        })
     CATEGORY_CHOICES = (
             ("TECHNOLOGY AND SOFTWARE", "Technology and Software"),
             ("PRODUCT DESIGN", "Product Design"),
@@ -93,7 +97,9 @@ class CreateInnovationForm(forms.ModelForm):
             ("SMART CITIES", "Smart Cities"),
             ("CYBERSECURITY", "Cybersecurity"),
         )
-    category = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=CATEGORY_CHOICES)
+    category = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=CATEGORY_CHOICES, error_messages={
+        'required': 'Please enter the reward amount'
+    })
     reward = forms.IntegerField(error_messages={
         'required': 'Please enter the reward amount'
     })
