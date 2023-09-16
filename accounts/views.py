@@ -207,7 +207,7 @@ def profile(request):
     })
 
 
-def profile(request):
+def mod_profile(request):
     if not request.user.is_authenticated:
         return redirect('accounts:innovator_login')
     try:
