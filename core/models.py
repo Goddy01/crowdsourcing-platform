@@ -57,3 +57,24 @@ class Contribution(models.Model):
     upvotes = models.IntegerField(default=0)
     downvotes = models.IntegerField(default=0)
     accepted = models.BooleanField(default=False)
+
+
+
+class Innovation(models.Model):
+    title = models.CharField(max_length=255, null=True, blank=False)
+    description = models.TextField(null=True, blank=True, max_length=10000)
+    owner = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE)
+    date_created = models.DateTimeField(auto_now_add=True)
+    image = models.ImageField(upload_to=upload_project_gallery, blank=False, null=False)
+    status = models.BooleanField(default='Unapproved')
+    category = models.CharField(max_length=255)
+    upvotes = models.IntegerField(default=0)
+    downvotes = models.IntegerField(default=0)
+    num_of_contributions = models.IntegerField(blank=True, null=True, default=0)
+    reward = models.DecimalField(max_digits=255, decimal_places=2, null=False, blank=False)
+    contribution = models.ForeignKey(Contribution, on_delete=models.CASCADE, null=True)
+    views = models.IntegerField(default=0)
+    approved_by = models.ForeignKey(account_models.Moderator, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return f"Innovation: {self.title} by {self.owner.user.username}"
