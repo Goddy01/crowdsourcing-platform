@@ -46,7 +46,7 @@ class Project(models.Model):
     image_3 = models.ImageField(upload_to=upload_project_gallery, blank=False, null=False)
     video = models.FileField(upload_to=upload_project_gallery,null=True, validators=[FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv'])])    
     business_type = models.CharField(max_length=255)
-    approved_by = models.ForeignKey(account_models.Moderator, on_delete=models.SET_NULL, null=True)
+    approved_by = models.ForeignKey(account_models.Moderator, on_delete=models.SET_NULL, null=True, related_name='approved_name')
 
     def __str__(self):
         return f"Project: {self.name} by {self.innovator.user.username}"
