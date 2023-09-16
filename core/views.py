@@ -96,6 +96,7 @@ def add_innovation(request):
             innovation_object.owner = innovator
             innovation_object.save()
             context['success'] = 'Innovation has been submitted. A moderator will reach out to you soon.'
+            return redirect('home')
         else:
             print('ERRORS: ', add_innovation_form.errors.as_data())
     else:

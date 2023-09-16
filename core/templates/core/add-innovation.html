@@ -36,9 +36,9 @@
 </head>
 <body>
     <div>
-        {% if success %}
-        <div class="d-flex justify-content-center" style="margin-top: 15px;">
-            <p class="ml-2 text-danger p-3 d-flex justify-content-center" style="background-color: rgb(52, 190, 52);color: white;font-weight: 500;width: 40%;">{{ success }}</p>
+        {% if add_innovation_success %}
+        <div class="d-flex justify-content-center" style="margin-top: 55px;" id="fadeout">
+            <p class="ml-2 text-danger p-3 d-flex justify-content-center" style="background-color: rgb(52, 190, 52);color: white;font-weight: 500;">{{ add_innovation_success }}</p>
         </div>
         {% endif %}
         {% if add_innovation_form.errors %}
@@ -108,5 +108,18 @@
     });
 });
 
+    </script>
+    <script>
+        // Function to hide the toast element
+        function hideToast() {
+            $('#fadeout').fadeOut('slow', function() {
+                // Animation complete, you can optionally remove the element from the DOM
+                $(this).remove();
+            });
+        }
+    
+        // Set a timeout to call the hideToast function after 9 seconds (9000 milliseconds)
+        setTimeout(hideToast, 5000);
+    
     </script>
 {% endblock content %}
