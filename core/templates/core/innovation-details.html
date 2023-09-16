@@ -88,15 +88,18 @@
                                     
                                     <!-- Single comment-->
                                     {% for contrib in contributions %}
-                                    <div class="d-flex mb-4">
+                                    <div class="d-flex mb-4 row">
                                         
-                                        <div class="ms-3">
-                                            <div class="fw-bold">
-                                                
-                                                {{ contrib.contributor.user.last_name }} {{ contrib.contributor.user.first_name }} ({{ contrib.contributor.user.username }})
-                                            </div>
-                                            <span>{{ contrib.contribution|safe }}</span>
-                                        </div>
+                                        <!-- <div class="ms-3 "> -->
+                                            <!-- <div class="fw-bold"> -->
+                                                <span class="col-lg-8 fw-bold">
+                                                    <a href="{% url 'accounts:profile_with_arg' contrib.contributor.pk %}" style="text-decoration: none;color: black;font-weight: bold;">
+                                                        {{ contrib.contributor.user.last_name }} {{ contrib.contributor.user.first_name }} ({{ contrib.contributor.user.username }})
+                                                    </a>
+                                                </span> <a class="col-lg-4">Reply</a>
+                                            <!-- </div> -->
+                                            <div>{{ contrib.contribution|safe }}</div>
+                                        <!-- </div> -->
                                     </div>
                                     {% endfor %}
                                     <div class="mt-3">

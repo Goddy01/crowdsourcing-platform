@@ -226,7 +226,7 @@ def mod_profile(request):
 def others_profile(request, innovator_pk):
     innovator = Innovator.objects.get(pk=innovator_pk)
     innovator_skills = InnovatorSkill.objects.filter(innovator__pk=innovator_pk)
-    innovator_services = Service.objects.filter(innovator__pk=innovator_pk)
+    innovator_services = Service.objects.filter(user__pk=innovator_pk)
     projects = Project.objects.filter(innovator__pk=innovator_pk)[:3]
     return render(request, 'accounts/others_profile.html', {'innovator': innovator, 'innovator_skills': innovator_skills, 'innovator_services': innovator_services, 'projects': projects})
 

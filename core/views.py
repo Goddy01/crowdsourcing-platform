@@ -118,7 +118,7 @@ def innovations_list(request):
 def innovation_detail(request, pk):
     context = {}
     innovation = Innovation.objects.get(pk=pk)
-    context['contributions'] = Innovation.objects.get(pk=pk).contribution_set.all()
+    context['contributions'] = Contribution.objects.filter(innovation__pk=pk)
     context['innovation'] = Innovation.objects.get(pk=pk)
 
     if request.method == 'POST' and 'contribute' in request.POST:
