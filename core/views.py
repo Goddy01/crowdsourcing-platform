@@ -118,4 +118,14 @@ def innovation_detail(request, pk):
     context = {}
     innovation = Innovation.objects.get(pk=pk)
     context['innovation'] = innovation
+
+    if request.method == 'POST' and 'contribute' in request.POST:
+        contribution_form_data = {
+            'contribution': request.POST.get('contribution')
+        }
+        contribution_form = MakeContributionForm(contribution_form_data)
+        if contribution_form.is_valid():
+            obj = contribution_form.save(commit=False)
+            obj.contributor = Innovator.objects.get(user__pk=request.user.pk)
+            obj.save()
     return render(request, 'core/innovation-details.html', context)
