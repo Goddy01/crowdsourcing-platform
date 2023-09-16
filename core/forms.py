@@ -1,4 +1,4 @@
-from .models import Project
+from .models import Project, Innovation, Contribution
 from django import forms
 
 class CreateProjectForm(forms.ModelForm):
@@ -102,4 +102,10 @@ class CreateInnovationForm(forms.ModelForm):
         'required': 'Please enter the reward amount'
     })
     class Meta:
-        model = ['title', 'description', 'image', 'category', 'reward']
+        model = Innovation
+        fields = ['title', 'description', 'image', 'category', 'reward']
+
+class MakeContributionForm(forms.ModelForm):
+    class Meta:
+        model = Contribution
+        fields = ['contribution']
