@@ -3,7 +3,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from .models import Project, Innovation, Contribution
 from django_countries import countries
-from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm
+from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm, MakeNestedContributionForm
 from accounts.models import Innovator, Moderator
 from django.utils import timezone
 from django.http import HttpResponse, HttpResponseRedirect
@@ -135,21 +135,28 @@ def innovation_detail(request, pk):
             obj.save()
             messages.success(request, 'Hurray. Your comment has been posted!')
             return HttpResponseRedirect('')
-    if request.method == 'POST' and 'nest_contribute' in request.POST:
-        nested_contribution_form_data = {
-            'contribution': request.POST.get('nested_contribution')
-        }
-        contribution_form = MakeContributionForm(contribution_form_data)
-        if contribution_form.is_valid():
-            obj = contribution_form.save(commit=False)
-            obj.innovation = Innovation.objects.get(pk=pk)
-            obj.contributor = Innovator.objects.get(user__pk=request.user.pk)
-            obj.innovation.num_of_contributions += 1
-            obj.innovation.save()
-            obj.save()
-            messages.success(request, 'Hurray. Your comment has been posted!')
-            return HttpResponseRedirect('')
     else:
         contribution_form = MakeContributionForm()
     context['contribution_form'] = contribution_form
     return render(request, 'core/innovation-details.html', context)
+
+def nested_contribution(request, parent_contributor_pk):
+    context = {}
+    if request.method == 'POST' and 'nest_contribute' in request.POST:
+        nested_contribution_form_data = {
+            'contribution': request.POST.get('nested_contribution')
+        }
+        nested_contribution_form = MakeNestedContributionForm(nested_contribution_form_data)
+        if nested_contribution_form.is_valid():
+            obj = nested_contribution_form.save(commit=False)
+            obj.parent_contribution = Contribution.objects.get(pk=parent_contributor_pk)
+            obj.contributor = Innovator.objects.get(user__pk=request.user.pk)
+            # obj.innovation.num_of_contributions += 1
+            # obj.innovation.save()
+            obj.save()
+            messages.success(request, 'Hurray. Your comment has been posted!')
+            return HttpResponseRedirect('')
+    else:
+        nested_contribution_form = MakeNestedContributionForm()
+    context['nested_contribution_form'] = nested_contribution_form
+    return render(request, 'core/innovation-details.html', context)1
