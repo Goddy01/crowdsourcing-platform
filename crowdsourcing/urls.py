@@ -28,6 +28,7 @@ urlpatterns = [
     path('add-project', views.add_project, name='add_project'),
     path('projects/', views.projects_list, name='projects'),
     path('project-details/<project_pk>', views.project_details, name='project_details'),
+    path('add-innovation/', views.add_innovation, name='add_innovation'),
 
 
 
