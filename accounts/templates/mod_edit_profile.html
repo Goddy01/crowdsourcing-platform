@@ -1,0 +1,680 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Edit Profile{% endblock title %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- <link rel="stylesheet" href="{% static 'css/style.css' %}"> -->
+<style type="text/css">
+.bg-secondary-soft {
+    background-color: rgba(208, 212, 217, 0.1) !important;
+}
+.rounded {
+    border-radius: 5px !important;
+}
+.py-5 {
+    padding-top: 3rem !important;
+    padding-bottom: 3rem !important;
+}
+.px-4 {
+    padding-right: 1.5rem !important;
+    padding-left: 1.5rem !important;
+}
+.file-upload .square {
+    /* height: 250px; */
+    width: 250px;
+    margin: auto;
+    vertical-align: middle;
+    border: 1px solid #e5dfe4;
+    background-color: #fff;
+    border-radius: 5px;
+}
+.text-secondary {
+    --bs-text-opacity: 1;
+    color: rgba(208, 212, 217, 0.5) !important;
+}
+.btn-success-soft {
+    color: #28a745;
+    background-color: rgba(40, 167, 69, 0.1);
+}
+.btn-danger-soft {
+    color: #dc3545;
+    background-color: rgba(220, 53, 69, 0.1);
+}
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    font-size: 0.9375rem;
+    font-weight: 400;
+    line-height: 1.6;
+    color: #29292e;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #e5dfe4;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 5px;
+    -webkit-transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+    transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+}
+
+@media (min-width: 1200px) {
+                .toastDiv {
+                position: absolute;
+                right: -110px;
+                top: 3rem;
+                z-index: 5
+                }
+                
+            }
+            
+@media (min-width: 1200px) {
+    .account-errors {
+    position: absolute;
+    right: -110px;
+    top: 11rem;
+    z-index: 5
+    }
+    
+}
+/* .errorlist {
+    list-style: none;
+} */
+    </style>
+</head>
+<body>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous" />
+
+<div class="container">
+    <ul>
+        {% if not user.signup_confirmation or not user.is_verified %}
+            <div class="col-lg-8 col-xl-5 toastDiv mt-5 mx-auto">
+                <!-- Then put toasts within -->
+            <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto">
+            <div class="toast-body text-white m-2">
+                {% if not user.signup_confirmation %}
+                <li class="" style="list-style: disc;">You have not clicked on your confirmation email. Go to your 
+                    <a href="{% url 'accounts:profile' %}" class="text-white text-decoration-underline">profile page</a>
+                     to request for a new one.
+                </li>
+                {% endif %}
+                {% if not user.is_verified %}
+                <li class="" style="list-style: disc;">Provide your details in the 
+                    <a href="{% url 'accounts:edit_profile' %}" class="text-white text-decoration-underline">edit profile page</a>
+                    to get verified and have innovators' privileges.
+                </li>
+                {% endif %}
+            </div>
+            </div>
+        </div>
+        {% endif %}
+    </ul>
+    {% if change_password_form.errors %}
+                  <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto;">
+                    <div class="toast-body text-white">
+                    <ul>
+                        {% for field in change_password_form %}
+                        {% for error in field.errors %}
+                        {% if field.errors|length != 1 %}
+                        <li style="list-style: disc;">{{ error }}</li>
+                        {% else %}
+                        <li style="list-style: none;">{{ error }}</li>
+                        {% endif %}
+                        {% endfor %}
+                        {% endfor %}
+                    </ul>        
+                    </div>
+                </div>
+    {% endif %}
+    {% if change_password_form.non_field_errors %}
+    ewe2
+            <!-- <div class="row justify-content-center mb-2"> -->
+            <div class="col-lg-8 col-xl-3 toastDiv">
+              <!-- Then put toasts within -->
+          <div class="card toast m-auto bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin-bottom: 1rem !important;">
+            <!-- <div class="toast-header d-flex justify-content-end"> -->
+              <!-- <button type="button" class="ml-2 mb-1 close d-flex justify-content-end" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button> -->
+            <!-- </div> -->
+            <div class="toast-body text-white"">
+              {{change_password_form.non_field_errors}}
+            </div>
+          </div>
+    {% endif %}
+
+
+    {% if user_p_info_form.errors %}
+                  <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto;">
+                <!-- <div class="toast-header d-flex justify-content-end">
+                  <button type="button" class="ml-2 mb-1 close d-flex justify-content-end" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div> -->
+                <div class="toast-body text-white m-2">
+                  <ul>
+                    {% for field in user_p_info_form %}
+                    {% for error in field.errors %}
+                    <li class="ml-2">{{ error }}</li>
+                    {% endfor %}
+                    {% endfor %}
+                  </ul>        
+                </div>
+              </div>
+    {% endif %}
+    {% if user_p_info_form.non_field_errors %}
+            <!-- <div class="row justify-content-center mb-2"> -->
+            <div class="col-lg-8 col-xl-3 toastDiv">
+              <!-- Then put toasts within -->
+          <div class="card toast m-auto bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin-bottom: 1rem !important;">
+            <!-- <div class="toast-header d-flex justify-content-end"> -->
+              <!-- <button type="button" class="ml-2 mb-1 close d-flex justify-content-end" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button> -->
+            <!-- </div> -->
+            <div class="toast-body text-white"">
+              {{user_p_info_form.non_field_errors}}
+            </div>
+          </div>
+    {% endif %}
+
+
+    {% if user_r_info_form.errors %}
+                  <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto;">
+                <!-- <div class="toast-header d-flex justify-content-end">
+                  <button type="button" class="ml-2 mb-1 close d-flex justify-content-end" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div> -->
+                <div class="toast-body text-white m-2">
+                  <ul>
+                    {% for field in user_r_info_form %}
+                    {% for error in field.errors %}
+                    <li class="ml-2">{{ error }}</li>
+                    {% endfor %}
+                    {% endfor %}
+                  </ul>        
+                </div>
+              </div>
+    {% endif %}
+    {% if user_r_info_form.non_field_errors %}
+    <!-- <div class="row justify-content-center mb-2"> -->
+    <div class="col-lg-8 col-xl-3 toastDiv">
+      <!-- Then put toasts within -->
+    <div class="card toast m-auto bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin-bottom: 1rem !important;">
+        <!-- <div class="toast-header d-flex justify-content-end"> -->
+        <!-- <button type="button" class="ml-2 mb-1 close d-flex justify-content-end" data-dismiss="toast" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button> -->
+        <!-- </div> -->
+        <div class="toast-body text-white"">
+        {{user_r_info_form.non_field_errors}}
+        </div>
+    </div>
+  {% endif %}
+    
+    {% if user_s_info_form.errors %}
+                  <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto;">
+                <!-- <div class="toast-header d-flex justify-content-end">
+                  <button type="button" class="ml-2 mb-1 close d-flex justify-content-end" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div> -->
+                <div class="toast-body text-white m-2">
+                  <ul>
+                    {% for field in user_s_info_form %}
+                    {% for error in field.errors %}
+                    <li class="ml-2">{{ error }}</li>
+                    {% endfor %}
+                    {% endfor %}
+                  </ul>        
+                </div>
+              </div>
+    {% endif %}
+    {% if user_s_info_form.non_field_errors %}
+            <!-- <div class="row justify-content-center mb-2"> -->
+            <div class="col-lg-8 col-xl-3 toastDiv">
+              <!-- Then put toasts within -->
+          <div class="card toast m-auto bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin-bottom: 1rem !important;">
+            <!-- <div class="toast-header d-flex justify-content-end"> -->
+              <!-- <button type="button" class="ml-2 mb-1 close d-flex justify-content-end" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button> -->
+            <!-- </div> -->
+            <div class="toast-body text-white"">
+              {{user_s_info_form.non_field_errors}}
+            </div>
+          </div>
+          {% endif %}
+<div class="row">
+<div class="col-12">
+
+<div class="mt-3">
+<h3 class="text-success">My Profile</h3>
+<hr>
+</div>
+
+<!-- <form class="file-upload"> -->
+<div class="row mb-5 gx-5 mt-5">
+
+<div class="col-xxl-12 mb-3 mb-xxl-0">
+<div class="bg-secondary-soft px-4 py-5 rounded">
+<div class="row g-3 d-flex justify-content-center mb-5">
+    <h4 class="mb-4 mt-0 text-success">Personal Information</h4>
+    <form method="post" action="{% url 'accounts:edit_profile' %}" enctype="multipart/form-data" class="file-upload row g-3" id="myForm">
+    {% csrf_token %}
+        <!-- <div class="col-xxl-4"> -->
+        <!-- <div class="d-flex justify-content-center"> -->
+        <!-- <div class="row g-3"> -->
+        <h5 class="text-center mt-0">Upload your profile photo</h5>
+        <div class="text-center mb-5">
+        
+        <div class="position-relative display-2 mb-3">
+            
+            {% if user.pfp %}
+            <img id="pfpImg" src="{{ user.pfp.url }}" class="img-responsive thumbnail rounded-pill bg-white p-2 shadow" style="height: 250px;width: 250px;">
+            {% else %}
+            <img id="pfpImg" src="{% static 'images/default_profile_image.jpg' %}" class="img-responsive thumbnail rounded-pill bg-white p-2 shadow" style="height: 250px;width: 250px;">
+            {% endif %}
+            <div style="display: flex;justify-content: center;" class="">
+                <button type="submit" class="my-2 btn btn-success" name="user_p_form" id="hiddenSbtBtn" style="display: none;">Upload</button>
+            </div>
+            <!-- <img id="display-img" style="height: 250px;width: 250px;"/> -->
+        </div>
+        <!-- <p class="btn btn-block" style="width: 115px;height: 40px;">{{ user_p_info_form.pfp }}</p> -->
+        <input class="mt-3 bg-success btn btn-block" type="file" name="pfp" id="pfp" accept="image/*" style="width: 100px;height: 15px;padding-right: 85px;padding-bottom: 35px;">
+        <!-- <input type="hidden" id="submitBtn" type="submit"> -->
+        <!-- <input type="file" id="pfp" name="pfp" hidden=""> -->
+        <!-- <label class="btn btn-success-soft btn-block" for="customFile">Upload</label> -->
+        <button type="button" class="btn btn-danger-soft px-3" style="height: 45px;" id="removePfpBtn">Remove</button>
+        
+        <!-- <p class="text-muted mt-3 mb-0"><span class="me-1">Note:</span>Minimum size 300px x 300px</p> -->
+        </div>
+        
+        <div class="col-md-12  d-flex justify-content-center">
+          <label class="form-label">About Me
+          <p cols="170" rows="10" style="font-weight: normal;">{{ user_p_info_form.about_me }}</p>
+        </div>
+        <div class="col-md-6">
+        <label class="form-label">First Name 
+        </label>
+        <input type="text" class="form-control" placeholder="Enter your firstname" aria-label="First name" value="{% if user.first_name %}{{ user.first_name }}{% endif %}" name="first_name" id="first_name">
+        </div>
+
+        <div class="col-md-6">
+        <label class="form-label">Last Name 
+        </label>
+        <input type="text" class="form-control" placeholder="Enter your lastname" aria-label="Last name" value="{% if user.last_name %}{{ user.last_name }}{% endif %}" name="last_name" id="last_name">
+        </div>
+
+        <div class="col-md-6">
+        <label class="form-label">Middle Name 
+        </label>
+        <input type="text" class="form-control" placeholder="Enter your middlename" aria-label="Middle name" value={% if user.middle_name %} "{{ user.middle_name }}" {% else %} "" {% endif %} name="middle_name" id="middle_name">
+        </div>
+
+        <div class="col-md-6">
+        <label class="form-label">Username 
+        </label>
+        <input type="text" class="form-control" placeholder="Enter your username" aria-label="Username" value="{% if user.username %}{{ user.username }}{% endif %}" name="username" id="username">
+        </div>
+
+        <div class="col-md-6">
+        <label class="form-label">Bio 
+        </label>
+        <input type="text" class="form-control" placeholder="Enter your bio" aria-label="bio" name="bio" id="bio" value="{% if user.bio %}{{ user.bio }}{% endif %}">
+        </div>
+
+        <div class="col-md-6">
+        <label class="form-label">Date of Birth 
+        </label>
+        <small>
+          {% if user.date_of_birth %}
+          ({{ user.date_of_birth }})
+          {% endif %}
+        </small>
+        <input type="date" class="form-control" aria-label="DOB" name="date_of_birth" id="date_of_birth" value="{% if user.date_of_birth %}{{ user.date_of_birth }}{% endif %}">
+        </div>
+
+        <div class="col-md-6">
+        <label class="form-label">Phone number 
+        </label>
+        <input type="tel" class="form-control" placeholder="Enter your phone number" aria-label="Phone number" value= {% if user.phone_num %}"{{ user.phone_num }}" {% else %} "" {% endif %} name="phone_num" id="phone_num">
+        </div>
+
+        <!-- <div class="d-flex justify-content-start"> -->
+            <div class="col-md-6">
+                <label for="inputEmail4" class="form-label">Email 
+                </label>
+                <input type="email" placeholder="Enter your email address" class="form-control" value="{{ user.email }}" name="email" id="email">
+                </div>    
+        <!-- </div> -->
+        <button type="submit" class="btn btn-success btn-lg" name="user_p_form" id="user_p_form">Save Changes</button>
+        </form>
+
+</div> 
+
+
+</div>
+<div class="bg-secondary-soft px-4 py-5 rounded mt-5">
+    <!-- <form class="row g-3"> -->
+    <h4 class="mb-4 mt-0 text-success">Residential Information</h4>
+    <form method="post" action="{% url 'accounts:edit_profile' %}" class="row g-3">
+        {% csrf_token %}
+        <div class="col-md-6">
+        <label class="form-label">City 
+        </label>
+        <input type="text" class="form-control" placeholder="" aria-label="City" value={% if user.city %} "{{ user.city }}" {% else %} "" {% endif %} name="city" id="city">
+        </div>
+        
+        <div class="col-md-6">
+        <label class="form-label">State 
+        </label>
+        <input type="text" class="form-control" placeholder="" aria-label="State" value={% if user.state %} "{{ user.state }}" {% else %} "" {% endif %} name="state" id="state">
+        </div>
+        
+        <div class="col-md-6">
+        <label class="form-label">Country 
+        </label>
+        <!-- <input type="text" class="form-control" placeholder="" aria-label="Country" value={% if user.country %} "{{ user.country }}" {% else %} "" {% endif %} name="country" id="country"> -->
+        {% if user.country %}
+        <small>({{ user.country.name }})</small>
+        {% endif %}
+        {{ user_r_info_form.country }}
+        </div>
+        
+        <div class="col-md-6">
+        <label class="form-label">Address 
+        </label>
+        <input type="text" class="form-control" placeholder="" aria-label="Address" value={% if user.address %} "{{ user.address }}" {% else %} "" {% endif %} name="address" id="address">
+        </div>
+        
+        <div class="col-md-6">
+        <label class="form-label">Zipcode 
+        </label>
+        <input type="text" class="form-control" placeholder="" aria-label="Address" value={% if user.zipcode %} "{{ user.zipcode }}" {% else %} "" {% endif %} name="zipcode" id="zipcode">
+        </div>
+        <button name="user_r_form" type="submit" class="btn btn-success btn-lg">Save Changes</button>
+    </form>
+    <!-- </form>  -->
+    
+    
+    </div>
+
+    <div class="bg-secondary-soft px-4 py-5 rounded mt-5">
+    <!-- <form class="row g-3"> -->
+    <div class="d-inline">
+      <span class="float-end">
+        {% include 'messages.html' %}
+      </span>
+      <div>
+        {% if user_skill_form.errors %}
+                    <ul>
+                      {% for field in user_skill_form %}
+                      {% for error in field.errors %}
+                      <div class="toast align-items-center bg-danger border-0 float-end" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="d-flex">
+                          <div class="toast-body">
+                            <li class="ml-2 text-danger text-white" style="list-style: none;">{{ error }}</li>
+                         </div>
+                          <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                      </div>
+                      {% endfor %}
+                      {% endfor %}
+                    </ul>
+      {% endif %}
+      {% if user_skill_form.non_field_errors %}
+              <div class="col-lg-8 col-xl-3 toastDiv">
+            <div class="card toast m-auto bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin-bottom: 1rem !important;">
+              <div class="toast-body text-white"">
+                {{user_skill_form.non_field_errors}}
+              </div>
+            </div>
+      {% endif %}
+    </div>
+        <h4 class="mb-4 mt-0 text-success d-inline">
+        Skills
+      </h4>
+      <small class="d-inline">(You can add up to 5 skills)</small>
+    </div>
+    <div class="mt-5">
+      {% for skill in user_skills %}
+      <button type="button" class="btn btn-success position-relative mx-3" id="element-to-hover">
+        <span id="skill-field">{{ skill.skill }}</span>
+        <span class="position-absolute bottom-50 start-0 translate-middle badge rounded-pill bg-danger" id="cancel">
+          <span class="skill_btn" onmouseover="Cancel()" data-skill-id="{{ skill.skill_id }}">{{ skill.skill_value }}</span>
+          <span class="visually-hidden">unread messages</span>
+        </span>
+        <a class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger skill_btn"
+       data-skill-id="{{ skill.skill_id }}"
+       href="{% url 'accounts:remove_skill' skill.skill_id %}" style="text-decoration: none;color: white;">
+      X
+    </a>
+      </button>
+      {% endfor %}
+  </div>
+    <form method="post" action="{% url 'accounts:edit_profile' %}" class="row g-3 form-container" id="myForm">
+      {% csrf_token %}
+        <div class="col-md-6">
+          <label class="form-label">
+          </label>
+          <input type="text" class="form-control" placeholder="Enter a new skill" aria-label="Skill" id="skill" name="skill">
+          <div class="col-md-12">
+            <input type="number" class="form-control" name="skill_value" id="skill_value" placeholder="Skill Level (10-100, in increments of 10)">
+          </div>
+        </div>
+
+        
+        <div id="form" class="form"></div>
+        <!-- <div class="d-flex justify-content-center"> -->
+          <button name="user_skill_form" type="submit" class="btn btn-success btn-lg mt-2">Save Changes</button>
+        <!-- </div> -->
+      <!-- </div> -->
+    </form>
+    <!-- </form>  -->
+    </div>
+
+    <div class="bg-secondary-soft px-4 py-5 rounded mt-5">
+      <!-- <form class="row g-3"> -->
+        <div class="d-inline">
+          <span class="float-end">
+            {% include 'messages.html' %}
+          </span>
+          <div>
+            {% if user_service_form.errors %}
+                        <ul>
+                          {% for field in user_service_form %}
+                          {% for error in field.errors %}
+                          <div class="toast align-items-center bg-danger border-0 float-end" role="alert" aria-live="assertive" aria-atomic="true">
+                            <div class="d-flex">
+                              <div class="toast-body">
+                                <li class="ml-2 text-danger text-white" style="list-style: none;">{{ error }}</li>
+                             </div>
+                              <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                          </div>
+                          {% endfor %}
+                          {% endfor %}
+                        </ul>
+          {% endif %}
+          {% if user_service_form.non_field_errors %}
+                  <div class="col-lg-8 col-xl-3 toastDiv">
+                <div class="card toast m-auto bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin-bottom: 1rem !important;">
+                  <div class="toast-body text-white"">
+                    {{user_service_form.non_field_errors}}
+                  </div>
+                </div>
+          {% endif %}
+        </div>
+      <div class="d-inline">
+        <h4 class="d-inline mt-0 text-success">Services</h4>
+      <small class="d-inline">(You can add up to 5 services)</small>
+      </div>
+      <div class="mt-5">
+        {% for service in user_services %}
+        <button type="button" class="btn btn-success position-relative mx-3" id="element-to-hover">
+          <span id="skill-field">{{ service.service }}</span>
+          
+          <a class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger skill_btn"
+         data-skill-id="{{ service.pk }}"
+         href="{% url 'accounts:remove_service' service.pk %}" style="text-decoration: none;color: white;">
+        X
+      </a>
+        </button>
+        {% endfor %}
+    </div>
+      <form method="post" action="{% url 'accounts:edit_profile' %}" class="row g-3">
+        {% csrf_token %}
+        <div class="col-md-6">
+            <label class="form-label">
+            </label>
+            <input type="text" class="form-control" placeholder="Enter service" aria-label="Service" id="service" name="service">
+          </div>
+          <div id="form" class="form"></div>
+          <!-- <div class="d-flex justify-content-center"> -->
+            <button name="service_form" type="submit" class="btn btn-success btn-lg mt-2">Save Changes</button>
+          <!-- </div> -->
+        <!-- </div> -->
+      </form>
+      <!-- </form>  -->
+      
+      
+      </div>
+</div>
+
+</div> 
+
+{% if not request.user.signup_with_google%}
+<div class="row mb-5 gx-5">
+<div class="col-xxl-6 mb-5 mb-xxl-0">
+{% endif %}
+<div class="bg-secondary-soft px-4 py-5 rounded">
+<!-- <div class="row g-3 form-div"> -->
+<h4 class="mdb-4 mt-0 text-success">Socials</h4>
+
+<form method="post" action="{% url 'accounts:edit_profile' %}" class="row g-3">
+    {% csrf_token %}
+    <div class="col-md-6">
+    <label class="form-label"><i class="fab fa-fw fa-facebook me-2 text-facebook"></i>Facebook 
+    </label>
+    <input type="text" class="form-control" placeholder="" aria-label="Facebook" value="{{ user.facebook }}" name="facebook" id="facebook">
+    </div>
+
+    <div class="col-md-6">
+    <label class="form-label"><i class="fab fa-fw fa-twitter text-twitter me-2"></i>Twitter 
+    </label>
+    <input type="text" class="form-control" placeholder="" aria-label="Twitter" value="{{ user.twitter }}" name="twitter" id="twitter">
+    </div>
+
+    <div class="col-md-6">
+    <label class="form-label"><i class="fab fa-fw fa-linkedin-in text-linkedin me-2"></i>Linkedin 
+    </label>
+    <input type="text" class="form-control" placeholder="" aria-label="Linkedin" value="{{ user.linkedin }}" name="linkedin" id="linkedin">
+    </div>
+
+    <div class="col-md-6">
+    <label class="form-label"><i class="fab fa-fw fa-instagram text-instagram me-2"></i>Instagram 
+    </label>
+    <input type="text" class="form-control" placeholder="" aria-label="Instragram" value="{{ user.instagram }}" name="instagram" id="instagram">
+    </div>
+    <button type="submit" class="btn btn-success btn-lg" name="user_s_form">Save Changes</button>
+</form>
+
+</div> 
+<!-- </div> -->
+</div>
+
+{% if not request.user.signup_with_google %}
+<div class="col-xxl-6">
+<div class="bg-secondary-soft px-4 py-5 rounded">
+<h4 class="mt-0 text-success">Change Password</h4>
+<form method="post" action="{% url 'accounts:edit_profile' %}" class="row g-3">
+    {% csrf_token %}
+    <div class="col-md-12">
+    <label for="exampleInputPassword2" class="form-label">New password 
+    </label>
+    <input type="password" class="form-control" id="new_password1" name="new_password1">
+    </div>
+
+    <div class="col-md-12">
+    <label for="exampleInputPassword3" class="form-label">Confirm Password 
+    </label>
+    <input type="password" class="form-control" id="new_password2" name="new_password2">
+    </div>
+    <button type="submit" class="btn btn-success btn-lg" name="password_change">Change Password</button>
+</form>
+</div>
+</div>
+{% endif %}
+</div>
+</div> 
+
+<div class="gap-3 d-md-flex justify-content-md-end text-center mb-3">
+<button type="button" class="btn btn-danger btn-lg">Delete profile</button>
+<!-- <button type="button" class="btn btn-success btn-lg">Update profile</button> -->
+</div>
+<!-- </form>  -->
+</div>
+</div>
+
+
+</div>
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
+<script type="text/javascript">
+	
+</script>
+</body>
+<script>
+    $(document).ready(function(){
+      $('.toast').toast('show');
+    });
+  
+    setTimeout(function() {
+      $('.toast').toast('hide')
+    }, 9999);
+</script>
+
+<script>
+const imgInput = document.querySelector("#pfp")
+const displayImg = document.querySelector("#pfpImg")
+const submitBtn = document.querySelector('#hiddenSbtBtn')
+imgInput.addEventListener('change',
+(event)=>{
+   const imgObject = event.target.files[0]
+   displayImg.src = URL.createObjectURL(imgObject)
+   submitBtn.style.display = 'block';
+   })
+   submitBtn.addEventListener('click', (event)=> {
+    document.querySelector('#user_p_form').click();
+   })
+</script>
+
+<script>
+    document.getElementById('removePfpBtn').addEventListener('click', function() {
+        // AJAX request to call the Django view
+        $.ajax ({
+                url: "{% url 'accounts:remove_pfp' %}",
+                dataType: 'json',
+                success: function(res) {
+                    // alert('Profile picture removed successfully.');
+                    window.location.href = "/accounts/profile"
+                }
+            })
+    });
+</script>
+
+
+
+</html>
+{% endblock content %}
