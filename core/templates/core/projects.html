@@ -77,7 +77,13 @@
 								</span>
 								<span class="project-country" title="Estonia"><img class="office-country" src="assets/images/ee.svg" width="24" alt=""> <em class="screen-reader-text">{{ project.country }}</em></span>
 							</a>
-							<span class="project-status"><em class="mdi mdi-plus"></em> Active</span>
+							<span class="project-status"><em class="mdi mdi-plus"></em>
+								{% if project.status is None %}
+								Yet to be Reviewed
+								{% else %}
+								{{ project.status }}
+								{% endif %}
+							</span>
 						</div>
 						<div class="project-details">
 							<h3 class="project-title"><a href="{% url 'project_details' project.pk %}">{{ project.name|title }}</a></h3>
@@ -111,8 +117,21 @@
 									</div>
 								</div>
 								<div class="progress-info">
-									<div class="progress-current-amount"><strong><span class="currency-sign">₦</span>19 466</strong> invested</div>
-									<div class="progress-amount-left"><strong><span class="currency-sign">₦</span>20 534</strong> left</div>
+									<div class="progress-current-amount"><strong><span class="currency-sign">₦</span>
+										{% if project.fund_raised  %}
+										{{ project.fund_raised }}
+										{% else %}
+										0
+										{% endif %}
+									</strong> invested</div>
+									<div class="progress-amount-left"><strong><span class="currency-sign">₦</span>
+										{% if project.amount_left is None %}
+										{{ project.target }}
+										{% else %}
+										0
+										{% endif %}
+									</strong> left
+									</div>
 								</div>
 							</div>
 							<div class="project-actions">

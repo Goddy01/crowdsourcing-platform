@@ -9,7 +9,7 @@ from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token
 from django.conf import settings
 from django.core.mail import send_mail
-from .models import BaseUser, Innovator, Moderator
+from .models import BaseUser, Innovator, Moderator, Follow
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import random
@@ -19,10 +19,12 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.forms import formset_factory
 from django.forms.models import modelformset_factory
-from .models import InnovatorSkill, Service
+from .models import InnovatorSkill, Service, LoadMoney
 from django import forms
 from django.contrib import messages
 from core.models import Project
+from django.http import HttpResponseRedirect
+from core.models import Investment_Payment
 
 
 # Create your views here.
@@ -201,8 +203,8 @@ def profile(request):
     #     user = BaseUser.objects.get(username=request.user.username)
     return render(request, 'accounts/profile.html', {
         'user': user,
-        'user_skills': Innovator.objects.get(user__username=request.user.username).innovatorskill_set.all(),
-        'user_services': Innovator.objects.get(user__username=request.user.username).service_set.all()
+        'user_skills': InnovatorSkill.objects.filter(innovator__user__pk=request.user.pk),
+        'user_services': Service.objects.filter(user__pk=request.user.pk)
         
     })
 
@@ -227,7 +229,7 @@ def others_profile(request, innovator_pk):
     innovator = Innovator.objects.get(pk=innovator_pk)
     innovator_skills = InnovatorSkill.objects.filter(innovator__pk=innovator_pk)
     innovator_services = Service.objects.filter(user__pk=innovator_pk)
-    projects = Project.objects.filter(innovator__pk=innovator_pk)[:3]
+    projects = Project.objects.filter(innovator=innovator)[:3]
     return render(request, 'accounts/others_profile.html', {'innovator': innovator, 'innovator_skills': innovator_skills, 'innovator_services': innovator_services, 'projects': projects})
 
 def edit_profile(request):
@@ -326,12 +328,13 @@ def edit_profile(request):
         context = {}
         skill_form = UpdateUserSkillsForm(request.POST)
         if skill_form.is_valid():
-            if not InnovatorSkill.objects.filter(skill=skill_form.cleaned_data.get('skill')).exists():
+            if not InnovatorSkill.objects.filter(skill=request.POST.get('skill'), innovator__user__pk=request.user.pk).exists():
                 if skill_form.cleaned_data.get('skill'):
-                    if Innovator.objects.get(user__username=request.user.username).innovatorskill_set.all().count() < 5:
+                    if InnovatorSkill.objects.filter(innovator__user__pk=request.user.pk).count() < 5:
                         skill_obj = skill_form.save(commit=False)
                         skill_obj.innovator = Innovator.objects.get(user__username=request.user.username)
                         skill_obj.save()
+                        return redirect('accounts:profile')
                     else:
                         messages.error(request, 'You can only add a maximum of 5 skills')
             else:
@@ -564,3 +567,60 @@ def remove_service(request, pk):
     service = Service.objects.get(pk=pk)
     service.delete()
     return redirect('accounts:edit_profile')
+
+
+@login_required
+def follow(request, username, option):
+    user = request.user.username
+    following = get_object_or_404(BaseUser, username=username)
+
+    try:
+        f, created = Follow.objects.get_or_create(follower=request.user, following=following)
+
+        if int(option) == 0:
+            f.delete()
+        else:
+            pass
+            
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        
+    except BaseUser.DoesNotExist:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def error404View(request):
+    return render(request, 'base/404.html')
+
+def payment(request):
+    return redirect('accounts:make_payment')
+    # return render(request, 'accounts/payment.html')
+
+@login_required
+def make_investment_payment(request):
+    context = {}
+    user = BaseUser.objects.get(pk=request.user.pk)
+    innovator = Innovator.objects.get(user__pk=user.pk)
+    if request.method == 'POST':
+        print('BREV')
+        load_money = LoadMoney.objects.create(
+            amount=request.POST.get('amount'),
+            innovator = Innovator.objects.get(user__pk=request.user.pk)
+        )
+        load_money = LoadMoney.objects.get(pk=load_money.pk)
+        if request.POST.get('bool') == 'True':
+            if load_money.innovator.account_balance is None:
+                load_money.innovator.account_balance = 0
+            # print('MAN')
+            # print('AMount: ', request.POST.get('amount'))
+            load_money.innovator.account_balance += int(request.POST.get('amount'))
+            load_money.innovator.save()
+            load_money.save()
+            # print(innovator.account_balance)
+            return redirect('accounts:profile')
+        else:
+            print('Transaction could not be completed')
+        # print('DONE')
+
+    context['user'] = user
+    context['innovator'] = innovator
+    return render(request, 'accounts/payment.html', context)

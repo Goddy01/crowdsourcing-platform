@@ -1,4 +1,4 @@
-from .models import Project, Innovation, Contribution, Nested_Contribution
+from .models import Project, Innovation, Contribution
 from django import forms
 from ckeditor.fields import RichTextFormField
 
@@ -64,6 +64,13 @@ class CreateProjectForm(forms.ModelForm):
         ("EDUCATION AND EDTECH", "Education and Edtech"),
         )
     business_type = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=BUSINESS_CHOICES)
+    # STATUS_CHOICES = (
+    #     ("ACCEPTED", "Accepted"),
+    #     ("DECLINED", "Declined"),
+    #     ("REVIEW IN PROGRESS", "Review in Progress"),
+    #     ("YET TO BE REVIEWED", "Yet to be reviewed"),
+    #     )
+    # status = forms.MultipleChoiceField(widget=forms.RadioSelect, choices=STATUS_CHOICES)
     class Meta:
         model = Project
         fields = ['name', 'motto', 'description', 'target', 'expected_return', 'term_months', 'country', 'investment_deadline', 'image_1', 'image_2', 'image_3', 'video', 'business_type', 'innovator_user_agreement']
@@ -108,12 +115,7 @@ class CreateInnovationForm(forms.ModelForm):
         fields = ['title', 'description', 'image', 'category', 'reward']
 
 class MakeContributionForm(forms.ModelForm):
-    contribution = RichTextFormField()
+    contribution = RichTextFormField(required=False)
     class Meta:
         model = Contribution
         fields = ['contribution']
-
-class MakeNestedContributionForm(forms.ModelForm):
-    class Meta:
-        model = Nested_Contribution
-        fields = ['nested_contribution']

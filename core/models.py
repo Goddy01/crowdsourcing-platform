@@ -36,7 +36,8 @@ class Project(models.Model):
     motto = models.CharField(max_length=255, null=False, blank=False)
     description = models.TextField(null=True, blank=True, max_length=10000)
     target = models.DecimalField(max_digits=255, decimal_places=2, null=False, blank=False)
-    fund_raised = models.DecimalField(max_digits=255, decimal_places=2, null=True, blank=True)
+    fund_raised = models.DecimalField(max_digits=255, decimal_places=2, null=True, blank=True, )
+    amount_left = models.DecimalField(max_digits=255, decimal_places=2, null=True, blank=True, )
     expected_return = ExpectedReturnField(blank=False, null=False)
     term_months = models.IntegerField(null=False, blank=False)
     country = CountryField(max_length=255, null=True, blank=True)
@@ -51,7 +52,7 @@ class Project(models.Model):
     image_3 = models.ImageField(upload_to=upload_project_gallery, blank=False, null=False)
     video = models.FileField(upload_to=upload_project_gallery,null=True, validators=[FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv'])])    
     business_type = models.CharField(max_length=255)
-    approved_by = models.ForeignKey(account_models.Moderator, on_delete=models.SET_NULL, null=True, related_name='approved_name')
+    approved_by = models.ForeignKey(account_models.Moderator, on_delete=models.SET_NULL, null=True, related_name='approved_name', blank=True)
 
     def __str__(self):
         return f"Project: {self.name} by {self.innovator.user.username}"
@@ -65,12 +66,12 @@ class Innovation(models.Model):
     image = models.ImageField(upload_to=upload_innovation_images, blank=True, null=True)
     status = models.CharField(default='Unapproved', max_length=255)
     category = models.CharField(max_length=255, null=True, blank=False)
-    upvotes = models.IntegerField(default=0)
-    downvotes = models.IntegerField(default=0)
-    num_of_contributions = models.IntegerField(blank=True, null=True, default=0)
+    upvotes = models.IntegerField()
+    downvotes = models.IntegerField()
+    num_of_contributions = models.IntegerField(blank=True, null=True)
     reward = models.DecimalField(max_digits=255, decimal_places=2, null=False, blank=False)
-    views = models.IntegerField(default=0)
-    approved_by = models.ForeignKey(account_models.Moderator, on_delete=models.SET_NULL, null=True)
+    views = models.IntegerField()
+    approved_by = models.ForeignKey(account_models.Moderator, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f"Innovation: {self.title} by {self.owner.user.username}"
@@ -82,19 +83,34 @@ class Contribution(models.Model):
     contribution = RichTextField(null=True, blank=True)
     contributor = models.ForeignKey(account_models.Innovator, on_delete=models.SET_NULL, null=True)
     innovation = models.ForeignKey(Innovation, on_delete=models.SET_NULL, null=True)
-    upvotes = models.IntegerField(default=0)
-    downvotes = models.IntegerField(default=0)
+    parent=models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE, related_name='parent_contrib')
+    upvotes = models.IntegerField(null=True, blank=True, default=0)
+    downvotes = models.IntegerField(null=True, blank=True, default=0)
+    upvoted_by = models.ManyToManyField(account_models.Innovator, related_name='upvoted_contributions', blank=True)
+    downvoted_by = models.ManyToManyField(account_models.Innovator, related_name='downvoted_contributions', blank=True)
     accepted = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
-        return f"Contribution by {self.contributor.user.username}"
-    
-class Nested_Contribution(models.Model):
-    parent_contribution = models.ForeignKey(Contribution, on_delete=models.CASCADE, null=True)
-    nested_contribution = models.CharField(max_length=255, null=True, blank=True)
-    contributor = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE, null=True)
-    date_created = models.DateTimeField(auto_now_add=True)
+        if self.contributor is not None:
+            return f"Contribution by {self.contributor.user.username}"
+        else:
+            return "a"
+        
+class Reward_Payment(models.Model):
+    send_to = models.ForeignKey(account_models.Innovator, null=False, blank=False, on_delete=models.CASCADE, related_name='recipient')
+    send_from = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE, blank=False, null=False, related_name='sender')
+    user = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE, null=False, blank=False, related_name='the_user')
+    amount = models.IntegerField()
+    innovation = models.ForeignKey(Innovation, on_delete=models.CASCADE, null=False, blank=False, related_name='the_innovation')
+    date_sent = models.DateTimeField(auto_now_add=True, null=True)
 
-    def __str__(self):
-        return f"Contribution by {self.contributor.user.username}"
+
+class Investment_Payment(models.Model):
+    send_to = models.ForeignKey(account_models.Innovator, null=False, blank=False, on_delete=models.CASCADE, related_name='send_to')
+    send_from = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE, blank=False, null=False, related_name='send_from')
+    sender = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE, null=False, blank=False, related_name='initiator')
+    amount = models.IntegerField()
+    investment = models.ForeignKey(Project, on_delete=models.CASCADE, null=False, blank=False, related_name='the_investment')
+    expected_return = ExpectedReturnField(blank=False, null=True)
+    date_sent = models.DateTimeField(auto_now_add=True, null=True)

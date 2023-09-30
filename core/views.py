@@ -1,13 +1,14 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
-from .models import Project, Innovation, Contribution
+from .models import Project, Innovation, Contribution, Reward_Payment, Investment_Payment
 from django_countries import countries
-from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm, MakeNestedContributionForm
+from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm
 from accounts.models import Innovator, Moderator
 from django.utils import timezone
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 def home(request):
     print('TIME: ', timezone.now())
@@ -77,8 +78,29 @@ def projects_list(request):
     return render(request, 'core/projects.html', {'projects': projects, "from_expected_return": request.GET.get('from_expected_return'), "to_expected_return": request.GET.get('to_expected_return')})
 
 def project_details(request, project_pk):
+    context = {}
     project = Project.objects.get(pk=project_pk)
-    return render(request, 'core/project_details.html', {'project': project})
+    context['project'] = project
+    # if not request.user.is_authenticated:
+    #     return redirect('accounts:innovator_login')
+    try:
+        if request.user.is_innovator:
+            investor_1 = Innovator.objects.get(user__pk=request.user.pk)
+            context['investor_1'] = investor_1
+        else:
+            moderator = Moderator.objects.get(user__pk=request.user.pk)
+            context['moderator'] = moderator
+            print('YO: ', request.POST.get('status'))
+            if request.method == 'POST'and 'status' in request.POST:
+                project.status = request.POST.get('status')
+                project.save()
+                print('broo: ', project.status)
+                
+                messages.success(request, 'Investment details has been updated!')
+    except:
+        pass
+        
+    return render(request, 'core/project_details.html', context)
 
 def add_innovation(request):
     context = {}
@@ -122,6 +144,8 @@ def innovation_detail(request, pk):
     context['innovation'] = Innovation.objects.get(pk=pk)
 
     if request.method == 'POST' and 'contribute' in request.POST:
+        if not request.user.is_authenticated:
+            return redirect('accounts:innovator_login')
         contribution_form_data = {
             'contribution': request.POST.get('contribution')
         }
@@ -134,29 +158,139 @@ def innovation_detail(request, pk):
             obj.innovation.save()
             obj.save()
             messages.success(request, 'Hurray. Your comment has been posted!')
-            return HttpResponseRedirect('')
+            return redirect('innovation_details', pk)
     else:
         contribution_form = MakeContributionForm()
     context['contribution_form'] = contribution_form
     return render(request, 'core/innovation-details.html', context)
 
-def nested_contribution(request, parent_contributor_pk):
+
+@login_required
+def upvote_contribution(request, contribution_pk):
+    contribution = Contribution.objects.get(pk=contribution_pk)
+    user = Innovator.objects.get(user__pk=request.user.pk)
+    print('ALL: ', contribution.upvoted_by.all())
+
+    # Check if the user has already upvoted this contribution
+    if user in contribution.upvoted_by.all():
+        return JsonResponse({'error': 'You have already upvoted this contribution'})
+
+    # Check if the user has previously downvoted and remove the downvote
+    elif user in contribution.downvoted_by.all() and user not in contribution.upvoted_by.all():
+        contribution.downvoted_by.remove(user)
+        if contribution.downvotes == -1:
+            contribution.downvotes = 0
+        else:
+            contribution.downvotes += 1
+        contribution.upvotes += 1
+        contribution.upvoted_by.add(user)
+        contribution.save()
+    elif user not in contribution.upvoted_by.all() and user not in contribution.downvoted_by.all():
+        contribution.upvoted_by.add(user)
+        contribution.upvotes += 1
+        contribution.save()
+    return JsonResponse({'upvotes': contribution.upvoted_by.count()})
+
+@login_required
+def downvote_contribution(request, contribution_pk):
+    contribution = Contribution.objects.get(pk=contribution_pk)
+    user = Innovator.objects.get(user__pk=request.user.pk)
+
+    # Check if the user has already downvoted this contribution
+    if user in contribution.downvoted_by.all():
+        return JsonResponse({'error': 'You have already downvoted this contribution'})
+
+    # Check if the user has previously upvoted and remove the upvote
+    elif user in contribution.upvoted_by.all() and user not in contribution.downvoted_by.all():
+        contribution.upvoted_by.remove(user)
+        contribution.upvotes -=1
+        if contribution.downvotes == 0:
+            contribution.downvotes = -1
+        else:
+            contribution.downvotes -= 1
+        contribution.downvoted_by.add(user)
+        contribution.save()
+    elif user not in contribution.upvoted_by.all() and user not in contribution.downvoted_by.all():
+        contribution.downvoted_by.add(user)
+        contribution.downvotes -= 1
+        contribution.save()
+    return JsonResponse({'downvotes': contribution.downvoted_by.count()})
+
+@login_required
+def accept_contribution(request, contribution_pk):
+    if Contribution.objects.get(pk=contribution_pk).innovation.owner.user.pk == request.user.pk:
+        contribution = Contribution.objects.get(pk=contribution_pk)
+        contribution.accepted = True
+        contribution.save()
+        return redirect('innovation_details', contribution.innovation.pk)
+    return render(request, 'core/innovation-details.html', {'contribution': contribution})
+
+
+@login_required
+def unaccept_contribution(request, contribution_pk):
+    if Contribution.objects.get(pk=contribution_pk).innovation.owner.user.pk == request.user.pk:
+        contribution = Contribution.objects.get(pk=contribution_pk)
+        contribution.accepted = False
+        contribution.save()
+        return redirect('innovation_details', contribution.innovation.pk)
+    return render(request, 'core/innovation-details.html', {'contribution': contribution})
+
+@login_required
+def make_investment_payment(request, investment_pk):
     context = {}
-    if request.method == 'POST' and 'nest_contribute' in request.POST:
-        nested_contribution_form_data = {
-            'contribution': request.POST.get('nested_contribution')
-        }
-        nested_contribution_form = MakeNestedContributionForm(nested_contribution_form_data)
-        if nested_contribution_form.is_valid():
-            obj = nested_contribution_form.save(commit=False)
-            obj.parent_contribution = Contribution.objects.get(pk=parent_contributor_pk)
-            obj.contributor = Innovator.objects.get(user__pk=request.user.pk)
-            # obj.innovation.num_of_contributions += 1
-            # obj.innovation.save()
-            obj.save()
-            messages.success(request, 'Hurray. Your comment has been posted!')
-            return HttpResponseRedirect('')
-    else:
-        nested_contribution_form = MakeNestedContributionForm()
-    context['nested_contribution_form'] = nested_contribution_form
-    return render(request, 'core/innovation-details.html', context)1
+    investment = Project.objects.get(pk=investment_pk)
+    # if request.POST.get('bool') == 'True':
+    if request.method == 'POST' and 'pay' in request.POST:
+        make_payment = Investment_Payment.objects.create(
+            send_to = Innovator.objects.get(user__email=investment.innovator.user.email),
+            send_from = Innovator.objects.get(user__pk=request.user.pk),
+            sender = Innovator.objects.get(user__pk=request.user.pk),
+            amount = request.POST.get('amount'),
+            investment = Project.objects.get(pk=investment_pk)
+        )
+        request.session['pk'] = investment.pk
+        investment.target -= int(make_payment.amount)
+        if investment.fund_raised is None:
+            investment.fund_raised = 0
+        investment.fund_raised += int(make_payment.amount)
+        if investment.amount_left is None:
+            investment.amount_left = investment.target
+        investment.amount_left -= int(make_payment.amount)
+        investment.save()
+        context['make_payment'] = make_payment
+        # return HttpResponse('Your payment is being proceesed!')
+        return redirect('projects')
+    # else:
+    #     return HttpResponse('Your payment could not be authenticated')
+    context['investment'] = investment
+    return render(request, 'core/project_details.html', context)
+
+@login_required
+def invest(request, investment_pk):
+    context = {}
+    investment = Project.objects.get(pk=investment_pk)
+    investor = Innovator.objects.get(user__pk=request.user.pk)
+    investment_owner = investment.innovator
+    context['investment'] = investment
+    if request.method == 'POST' and 'invest' in request.POST:
+        amount = int(request.POST.get('amount'))
+        if amount <= investor.account_balance:
+            investor.account_balance -= amount
+            investment.target -= amount
+            investor.save()
+            if investment_owner.account_balance is None:
+                investment_owner.account_balance = 0
+            investment_owner.account_balance += amount
+            investment_owner.save()
+            if investment.fund_raised is None:
+                investment.fund_raised = 0
+            investment.fund_raised += amount
+            if investment.amount_left == 0 and investment.fund_raised:
+                investment.complete = True
+            investment.save()
+            messages.success(request, 'Thank you for investing in this project!')
+            return redirect('project_details', investment_pk)
+        else:
+            return HttpResponse('Insufficient Account Balance ')
+
+    return render(request, 'core/project_details.html', context)

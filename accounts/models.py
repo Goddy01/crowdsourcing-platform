@@ -101,6 +101,8 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     is_verified =                   models.BooleanField(default=False)
     signup_confirmation =           models.BooleanField(default=False)
     signup_with_google =            models.BooleanField(default=False)
+    is_moderator = models.BooleanField(default=False)
+    is_innovator = models.BooleanField(default=False)
 
 
     USERNAME_FIELD = "email"
@@ -143,6 +145,7 @@ class Innovator(models.Model):
     downvotes_received =            models.IntegerField(default=0, null=True, blank=True)
     reputation_score =              models.IntegerField(default=0)   
     is_investor =                   models.BooleanField(default=False)
+    account_balance = models.IntegerField(null=True)
     
     USERNAME_FIELD = "email"
     # REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'middle_name', 'phone_num']
@@ -187,3 +190,12 @@ class Moderator(models.Model):
     USERNAME_FIELD = "email"
     # REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'middle_name', 'phone_num']
     REQUIRED_FIELDS = ['username', ]
+
+class Follow(models.Model):
+    follower = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='follower')
+    following = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='following')
+
+
+class LoadMoney(models.Model):
+    amount = models.IntegerField(null=True, blank=False, default=0)
+    innovator = models.ForeignKey(Innovator, on_delete=models.CASCADE, null=True, blank=False)

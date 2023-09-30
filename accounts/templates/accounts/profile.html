@@ -134,6 +134,7 @@
                             <img id="pfpImg" src="{% static 'images/default_profile_image.jpg' %}" class="img-responsive thumbnail rounded-pill bg-white p-2 shadow" style="height: 250px;width: 250px;">
                             {% endif %}
                         </div>
+                        <script src="https://js.paystack.co/v1/inline.js"></script>
                         <b class="fs-6">Hello I am, {{user.last_name}} {{user.first_name}}</b>
                         <h1 class="fw-bold mb-4 fs-1">Full Stack Developer</h1>
                         <p>
@@ -145,6 +146,9 @@
                             <li></li>
                         </ul>
                         <a href="{% url 'accounts:edit_profile' %}" class="btn btn-outline-success fw-bolder fs-7 px-4 py-2 mt-3 rounded-pill">Edit Profile</a>
+                        <p>
+                            <a href="{% url 'accounts:make_payment' %}" class="btn btn-outline-success fw-bolder fs-7 px-4 py-2 mt-3 rounded-pill">Load Money Into Your Account</a>
+                        </p>
                         {% if not user.signup_confirmation %}
                         <div class="mb-5">
                             <a href="{% url 'accounts:resend_email_activation' %}" class="request-email-btn btn fw-bolder fs-7 py-2 mt-3 bg-success text-white">Resend email confirmation</a>
@@ -437,6 +441,7 @@
       $('.toast').toast('hide')
     }, 8000)
 </script>
+
 
 <script src="{% static 'accounts/js/jquery-3.2.1.min.js' %}"></script>
 <script src="{% static 'accounts/js/popper.min.js' %}"></script>

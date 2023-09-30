@@ -48,10 +48,21 @@
 			<nav class="main-navigation">
 				<ul id="menu-main" class="menu px-3">
                     <li class="menu-item-has-children">
-						<a href="about.html"  style="font-weight: 600;">Innovate<em class="mdi mdi-chevron-down"></em></a>
+						<a href="about.html"  style="font-weight: 600;">
+                            {% if request.user.is_innovator %}
+                            Innovate
+                            {% else %}
+                            Innovations
+                            {% endif %}
+                            <em class="mdi mdi-chevron-down"></em></a>
 						<ul class="sub-menu">
+                            {% if request.user.is_innovator %}
 							<li><a href="{% url 'innovations_list' %}">Innovate</a></li>
-							<li><a href="{% url 'projects' %}">Invest</a></li>
+                            <li><a href="{% url 'projects' %}">Invest</a></li>
+                            {% else %}
+							<li><a href="{% url 'innovations_list' %}">Innovations</a></li>
+                            <li><a href="{% url 'projects' %}">Investments</a></li>
+                            {% endif %}
 						</ul>
 					</li>
 					<li class="menu-item-has-children">
@@ -92,10 +103,17 @@
                                     Guest
                                     {% endif %}
                                 </span> 
+                                {% if request.user.is_innovator %}
                                 <span class="account-balance">
                                     <em class="screen-reader-text">Total balance: </em>
-                                    <strong class="account-balance-amount">€215.50</strong>
+                                    <strong class="account-balance-amount">₦
+                                        
+                                        
+                                        {{ innovator.account_balance}}
+                                        
+                                    </strong>
                                 </span>
+                                {% endif %}
                             </span>
                             <em class="mdi mdi-chevron-down"></em>
                         </a>
@@ -104,11 +122,11 @@
 							<li><a href="account-investments.html">Investments</a></li>
 							<li><a href="account-statement.html">Statement</a></li>
 							<li><a href="account-funding.html">Funding</a></li>
-							{% if is_innovator %}
+							{% if request.user.is_innovator %}
                             <li><a href="{% url 'add_project' %}">Add Investment Project</a></li>
                             {% endif %}
                             brev
-                            {% if innovator %}
+                            {% if request.user.is_innovator %}
                             <li><a href="{% url 'accounts:profile' %}">Profile</a></li>
                             {% else %}
                             <li><a href="{% url 'accounts:mod_profile' %}">Profile</a></li>
@@ -116,6 +134,12 @@
 						</ul>
 					</li>
                     {% if request.user.is_authenticated %}
+                    <li>
+                        <a href="{% url 'chats:message' %}">
+                            Chat
+                            <i class="fa-solid fa-message"></i>
+                        </a>
+                    </li>
                     <li class="account-logout" style="margin-left: 20px;">
                         <a href="{% url 'accounts:sign_out' %}"  style="font-weight: 600;">
                             <i style="font-size: 24px;" class="fa-solid fa-right-from-bracket"></i>
@@ -231,7 +255,7 @@
         <input type="text" class="input-message" autocomplete="off" placeholder="Type your message here&hellip;">
         <span class="chat-powered-by"> Can be powered By <a href="https://chatcreate.com">ChatCreate</a></span>
     </div>
-    <a href="#chat-panel" class="chat-toggle"><span class="badge">1</span></a>
+    <a href="{% url 'chats:message' %}" class="chat-toggle"><span class="badge">1</span></a>
 </div>
 
 <script src="{% static 'js/modernizr-custom.js' %}"></script>

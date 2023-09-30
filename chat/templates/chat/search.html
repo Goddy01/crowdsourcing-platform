@@ -1,0 +1,113 @@
+{% load crispy_forms_tags %}
+
+
+
+{% load static %}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+{% include 'chat/head.html' %}
+  
+  <!-- login page start //-->
+  <body>
+    <div class="login-page2 animat-rate">
+      <div class="login-content-main"> 
+        <div class="login-content2">
+          <div class="theme-tab">       
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+              <li class="nav-item"><a class="nav-link" id="login-tab" data-toggle="tab" href="{% url 'chats:message' %}" role="tab" aria-selected="false">Go Back</a></li>
+              <!-- <li class="nav-item"><a class="nav-link active" id="signup-tab" data-toggle="tab" href="signup-2.html" role="tab" aria-selected="true">Signup</a></li> -->
+            </ul>
+          </div>
+        </div>
+        <div class="login-content">
+          <!-- <div class="login-content-header"><img class="img-fluid" src="../assets/images/logo/landing-landing-logo.png" alt="images"></div> -->
+          <!-- <h3>All <b>{{query}}</b></h3> -->
+          
+          <div class="theme-tab tab-sm chat-tabs">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item text-center" data-to="chat-content"><a class="nav-link button-effect active" id="chat-tab" data-toggle="tab" href="#chat" role="tab" aria-controls="chat" aria-selected="true"><i data-feather="message-square"> </i>Search Results for {{query}}</a></li>
+                
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="chat" role="tabpanel" aria-labelledby="chat-tab">
+                    <div class="theme-tab">
+                        <ul class="nav nav-tabs" id="myTab1" role="tablist">
+                        </ul>
+                        <div class="tab-content" id="myTabContent1">
+                            <div class="tab-pane fade show active" id="direct" role="tabpanel" aria-labelledby="direct-tab">
+                                <ul class="chat-main">
+
+                                    {% for user in users %}
+                                        <a href="{% url 'chats:directs' user.username %}">
+                                            <li class="active mb-1" data-to="chating">
+                                                <div class="chat-box">
+                                                    <div class="profile">
+                                                        {% if user.pfp %}
+                                                        <img class="bg-img" style="width: 50px; height: 50px; border-radius: 10px;" src="{{user.pfp.url}}" alt="{{message.user.first_name|title}} {{user.last_name|title}}" />
+                                                        {% else %}
+                                                        <img class="bg-img" style="width: 50px; height: 50px; border-radius: 10px;" src="{% static 'images/default_profile_image.jpg' %}" alt="{{message.user.first_name|title}} {{user.last_name|title}}" />
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="details">
+                                                        
+                                                        <h5>{{user.first_name|title}} {{user.last_name|title}}</h5>
+                                                        <h6>@{{user.username}}</h6>
+                                                    </div>
+                                                    <div class="date-status"><i class="ti-pin2"></i>
+                                                        <h6>Message</h6>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </a>
+                                        {% empty %}
+                                        <li class="active">
+                                            <h5>No Result for <i><b>{{query}}</b></i></h5>
+                                        </li>
+                                    {% endfor %}
+
+                                   
+                                    
+                                    
+                                </ul>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+        </div>
+      </div>
+      <div class="animation-block">
+        <div class="bg_circle">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <div class="cross"></div>
+        <div class="cross1"></div>
+        <div class="cross2"></div>
+        <div class="dot"></div>
+        <div class="dot1"></div>
+        <div class="top-circle"></div>
+        <div class="center-circle"></div>
+        <div class="bottom-circle1"></div>
+        <div class="right-circle"></div>
+        <div class="right-circle1"></div>
+        <!-- <div class="quarterCircle"></div><img class="cloud-logo" src="../assets/images/login_signup/2.png" alt="login logo"/><img class="cloud-logo1" src="../assets/images/login_signup/2.png" alt="login logo"/><img class="cloud-logo2" src="../assets/images/login_signup/2.png" alt="login logo"/><img class="cloud-logo3" src="../assets/images/login_signup/2.png" alt="login logo"/><img class="cloud-logo4" src="../assets/images/login_signup/2.png" alt="login logo"/><img class="cloud-logo5" src="../assets/images/login_signup/2.png" alt="login logo"/> -->
+      </div>
+    </div>
+  </body>
+</html>

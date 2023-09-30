@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import BaseUser, Innovator, Moderator, InnovatorSkill
+from .models import BaseUser, Innovator, Moderator, InnovatorSkill, LoadMoney
 from django.contrib.auth.admin import UserAdmin
 # Register your models here.
 class AccountAdmin(UserAdmin):
@@ -17,3 +17,4 @@ admin.site.register(BaseUser, AccountAdmin)
 admin.site.register(Innovator)
 admin.site.register(Moderator)
 admin.site.register(InnovatorSkill)
+admin.site.register(LoadMoney)

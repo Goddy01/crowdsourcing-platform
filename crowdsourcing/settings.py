@@ -18,7 +18,7 @@ from django.contrib.messages import constants as messages
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-load_dotenv(find_dotenv())
+load_dotenv()
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -34,6 +34,7 @@ DEBUG = True
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django_cleanup.apps.CleanupConfig',
     'jazzmin',
     'django_countries',
@@ -41,6 +42,8 @@ INSTALLED_APPS = [
     'import_export',
     'core',
     'accounts',
+    'chat',
+    'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -52,6 +55,7 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'django_celery_results',
     'social_django',
+    'paystack'
     
 ]
 
@@ -64,7 +68,10 @@ MESSAGE_TAGS = {
 }
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -73,6 +80,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware'
 ]
+
+# CORS Config
+CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ALLOW_CREDENTIALS = False
 
 ROOT_URLCONF = 'crowdsourcing.urls'
 
@@ -329,3 +340,12 @@ CKEDITOR_CONFIGS = {
         'width': 'full',
     },
 }
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+if os.getcwd() == "/app":
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True 
+
+PAYSTACK_SECRET_KEY = "sk_test_3368908ea4ce31641174f0e12c25fd1eb5bcb831"
+PAYSTACK_PUBLIC_KEY = "pk_test_94c9c0292b58b03a1e0feaa5b1b1da81b04b0873"
