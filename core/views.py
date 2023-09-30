@@ -294,3 +294,10 @@ def invest(request, investment_pk):
             return HttpResponse('Insufficient Account Balance ')
 
     return render(request, 'core/project_details.html', context)
+
+@login_required
+def investors(request, investment_pk):
+    context = {}
+    investors = Investment_Payment.objects.get(investment_pk=investment_pk).sender
+    context['investors'] = investors
+    return render(request, 'core/investment-investors.html', context)
