@@ -106,7 +106,7 @@
                    <div class="col-xl-6 text-center mx-auto align-self-center mb-2">
                         <div class="imgcover mb-4 display-2">
                             {% if innovator.user.pfp %}
-                            <img id="pfpimg" src="{{ innovator.user.pfp.url }}" class="img-responsive thumbnail rounded-pill bg-white p-2 shadow" alt="">
+                            <img id="pfpimg" src="{{ innovator.user.pfp.url }}" class="img-responsive thumbnail bg-white p-2 shadow" alt="" style="border-radius: 50%;height: 250px;width: 250px;">
                             {% else %}
                             <img id="pfpImg" src="{% static 'images/default_profile_image.jpg' %}" class="img-responsive thumbnail rounded-pill bg-white p-2 shadow" style="height: 250px;width: 250px;">
                             {% endif %}
@@ -121,6 +121,12 @@
                         <ul>
                             <li></li>
                         </ul>
+                        {% if request.user.username == innovator.user.username %}
+                        <a href="{% url 'accounts:edit_profile' %}" class="btn btn-outline-success fw-bolder fs-7 px-4 py-2 mt-3">Edit Profile</a>
+                        <p>
+                            <a href="{% url 'accounts:make_payment' %}" class="btn btn-outline-success fw-bolder fs-7 px-4 py-2 mt-3">Deposit Money Into Your Account</a>
+                        </p>
+                        {% endif %}
                     </div>
                </div>
             </div>

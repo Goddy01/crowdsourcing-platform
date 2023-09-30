@@ -244,8 +244,9 @@
 						<tbody>
 							{% for investor in investors %}
 							<tr>
-								<td><a href="single-project.html" class="project-id">{{ investor.pk }}</a></td>
-								<td>{{ investor.sender.user.first_name }} {{ investor.sender.user.last_name }}</td>
+								<td><a href="{% url 'accounts:profile_with_arg' investor.sender.pk %}" class="project-id">{{ investor.pk }}</a></td>
+								<td>
+									<a href="{% url 'accounts:profile_with_arg' investor.sender.pk %}" class="text-decoration-none">{{ investor.sender.user.first_name }} {{ investor.sender.user.last_name }}</a></td>
 								<td>₦{{ investor.amount }}</td>
 								<td>{{ investor.date_sent }}</td>
 								<td>{{ investor.sender.user.username }}</td>
