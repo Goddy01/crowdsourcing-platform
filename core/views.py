@@ -9,7 +9,7 @@ from django.utils import timezone
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-import datetime
+
 # Create your views here.
 def home(request):
     print('TIME: ', timezone.now())
@@ -82,7 +82,6 @@ def project_details(request, project_pk):
     context = {}
     project = Project.objects.get(pk=project_pk)
     context['project'] = project
-    investors = Make_Investment.objects.filter(investment__pk=project_pk)
     # if not request.user.is_authenticated:
     #     return redirect('accounts:innovator_login')
     try:
@@ -91,12 +90,14 @@ def project_details(request, project_pk):
             context['investor_1'] = investor_1
 
             if request.method == 'POST' and 'date-filter' in request.POST:
-                print('BRUH')
-                investors = Make_Investment.objects.filter(date_sent__date__range=(request.POST.get('date-from'), request.POST.get('date-to')))
-                print('1: ', request.POST.get('date-from'))
-                print('2: ', request.POST.get('date-to'))
-                print('ONRE EGBON MI: ', investors)
-                context['investors'] = investors
+                date_from = request.POST.get('date-from')
+                date_to = request.POST.get('date-to')
+                investors = Make_Investment.objects.filter(investment__pk=project_pk, date_sent__date__range=(date_from, date_to))
+                context['date_from'] = date_from
+                context['date_to'] = date_to
+            else:
+                investors = Make_Investment.objects.filter(investment__pk=project_pk)
+            context['investors'] = investors
 
         else:
             moderator = Moderator.objects.get(user__pk=request.user.pk)

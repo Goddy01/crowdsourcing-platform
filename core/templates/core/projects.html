@@ -33,7 +33,7 @@
 								<label>Expected Return Rate (ROI)</label>
 								<input class="minReturn" name="from_expected_return" type="text" placeholder="From" value="{% if from_expected_return %}{{ from_expected_return }}{% endif %}">
 								<input class="maxReturn" name="to_expected_return" type="text" placeholder="To" value="{% if to_expected_return %}{{ to_expected_return }}{% endif %}">
-								<button type="submit" class="button button-primary button-outline">Filter Result</button>
+								<button type="submit" class="button button-primary button-default"><em class="mdi mdi-filter"></em>Filter Result</button>
 							</p>
 						<!-- <p class="project-filter filter-country">
 							<label>Country</label>
@@ -56,10 +56,10 @@
 							</select>
 						</p> -->
 					</div>
-					<div class="filter-actions">
+					<!-- <div class="filter-actions">
 						<button name="filter" type="submit" class="button-primary"><em class="mdi mdi-filter"></em> Filter projects</button>
 						<button type="reset"><em class="mdi mdi-restart"></em> Reset filters</button>
-					</div>
+					</div> -->
 				</form>
 				<div class="project-listing">
                     {% for project in projects %}
