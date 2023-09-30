@@ -301,3 +301,8 @@ def investors(request, investment_pk):
     investors = Investment_Payment.objects.get(investment_pk=investment_pk).sender
     context['investors'] = investors
     return render(request, 'core/investment-investors.html', context)
+
+@login_required
+def investments(request):
+    investments = Project.objects.filter(innovator__user__pk=request.user.pk)
+    return render(request, 'core/investments.html', {'investments': investments})
