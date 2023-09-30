@@ -349,3 +349,5 @@ if os.getcwd() == "/app":
 
 PAYSTACK_SECRET_KEY = "sk_test_3368908ea4ce31641174f0e12c25fd1eb5bcb831"
 PAYSTACK_PUBLIC_KEY = "pk_test_94c9c0292b58b03a1e0feaa5b1b1da81b04b0873"
+
+THOUSAND_SEPARATOR = True

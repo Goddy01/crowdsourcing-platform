@@ -9,6 +9,7 @@ from django.utils import timezone
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+import datetime
 # Create your views here.
 def home(request):
     print('TIME: ', timezone.now())
@@ -82,13 +83,20 @@ def project_details(request, project_pk):
     project = Project.objects.get(pk=project_pk)
     context['project'] = project
     investors = Make_Investment.objects.filter(investment__pk=project_pk)
-    context['investors'] = investors
     # if not request.user.is_authenticated:
     #     return redirect('accounts:innovator_login')
     try:
         if request.user.is_innovator:
             investor_1 = Innovator.objects.get(user__pk=request.user.pk)
             context['investor_1'] = investor_1
+
+            if request.method == 'POST' and 'date-filter' in request.POST:
+                print('BRUH')
+                investors = Make_Investment.objects.filter(date_sent__date__range=(request.POST.get('date-from'), request.POST.get('date-to')))
+                print('1: ', request.POST.get('date-from'))
+                print('2: ', request.POST.get('date-to'))
+                print('ONRE EGBON MI: ', investors)
+                context['investors'] = investors
 
         else:
             moderator = Moderator.objects.get(user__pk=request.user.pk)
@@ -102,7 +110,6 @@ def project_details(request, project_pk):
                 messages.success(request, 'Investment details has been updated!')
     except:
         pass
-        
     return render(request, 'core/project_details.html', context)
 
 def add_innovation(request):
@@ -238,53 +245,59 @@ def unaccept_contribution(request, contribution_pk):
         return redirect('innovation_details', contribution.innovation.pk)
     return render(request, 'core/innovation-details.html', {'contribution': contribution})
 
-@login_required
-def make_investment_payment(request, investment_pk):
-    context = {}
-    investment = Project.objects.get(pk=investment_pk)
-    # if request.POST.get('bool') == 'True':
-    if request.method == 'POST' and 'pay' in request.POST:
-        make_payment = Investment_Payment.objects.create(
-            send_to = Innovator.objects.get(user__email=investment.innovator.user.email),
-            send_from = Innovator.objects.get(user__pk=request.user.pk),
-            sender = Innovator.objects.get(user__pk=request.user.pk),
-            amount = request.POST.get('amount'),
-            investment = Project.objects.get(pk=investment_pk)
-        )
-        request.session['pk'] = investment.pk
-        investment.target -= int(make_payment.amount)
-        if investment.fund_raised is None:
-            investment.fund_raised = 0
-        investment.fund_raised += int(make_payment.amount)
-        if investment.amount_left is None:
-            investment.amount_left = investment.target
-        investment.amount_left -= int(make_payment.amount)
-        investment.save()
-        context['make_payment'] = make_payment
-        # return HttpResponse('Your payment is being proceesed!')
-        return redirect('projects')
-    # else:
-    #     return HttpResponse('Your payment could not be authenticated')
-    context['investment'] = investment
-    return render(request, 'core/project_details.html', context)
+# @login_required
+# def make_investment_payment(request, investment_pk):
+#     context = {}
+#     investment = Project.objects.get(pk=investment_pk)
+#     # if request.POST.get('bool') == 'True':
+#     if request.method == 'POST' and 'pay' in request.POST:
+#         make_payment = Make_Investment.objects.create(
+#             send_to = Innovator.objects.get(user__email=investment.innovator.user.email),
+#             send_from = Innovator.objects.get(user__pk=request.user.pk),
+#             sender = Innovator.objects.get(user__pk=request.user.pk),
+#             amount = request.POST.get('amount'),
+#             investment = Project.objects.get(pk=investment_pk),
+#             expected_return=amount*investment.expected_return
+#         )
+#         request.session['pk'] = investment.pk
+#         investment.target -= int(make_payment.amount)
+#         if investment.fund_raised is None:
+#             investment.fund_raised = 0
+#         investment.fund_raised += int(make_payment.amount)
+#         if investment.amount_left is None:
+#             investment.amount_left = investment.target
+#         investment.amount_left -= int(make_payment.amount)
+#         investment.save()
+#         context['make_payment'] = make_payment
+#         # return HttpResponse('Your payment is being proceesed!')
+#         return redirect('projects')
+#     # else:
+#     #     return HttpResponse('Your payment could not be authenticated')
+#     context['investment'] = investment
+#     return render(request, 'core/project_details.html', context)
 
 @login_required
 def invest(request, investment_pk):
     context = {}
     investment = Project.objects.get(pk=investment_pk)
     investor = Innovator.objects.get(user__pk=request.user.pk)
+    context['investor_1'] = investor
     investment_owner = investment.innovator
     context['investment'] = investment
     if request.method == 'POST' and 'invest' in request.POST:
         amount = int(request.POST.get('amount'))
         if amount <= investor.account_balance:
+            # if request.user.username == investment_owner.user.username:
+            # else:
             investor.account_balance -= amount
-            investment.target -= amount
             investor.save()
+            print('ACCOUNT BALANCE: ', investor.account_balance)
+            investment.target -= amount
             if investment_owner.account_balance is None:
                 investment_owner.account_balance = 0
             investment_owner.account_balance += amount
             investment_owner.save()
+
             if investment.fund_raised is None:
                 investment.fund_raised = 0
             investment.fund_raised += amount
@@ -297,7 +310,7 @@ def invest(request, investment_pk):
                 sender=investor,
                 amount=amount,
                 investment=investment,
-                expected_return=investment.expected_return
+                expected_return=amount*investment.expected_return
             )
             messages.success(request, 'Thank you for investing in this project!')
             return redirect('project_details', investment_pk)

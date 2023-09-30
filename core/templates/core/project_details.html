@@ -207,105 +207,57 @@
 
 	{% if project.innovator.user.pk == request.user.pk %}
 	<div>
-		<header id="featured" class="site-featured">
-			<div id="featured-media" class="featured-media">
-				<div class="featured-text">
-					<div class="container">
-						<h2 class="entry-title">Investments</h2>
-					</div>
+		<div class="container my-5">
+			<h3 class="text-center mb-5">Investors</h3>
+			<div class="row">
+				<div id="sidebar" class="col-12 col-md-4 col-lg-3 content-filters">
+					<form action="{% url 'project_details' project.pk %}" method="post">
+						{% csrf_token %}
+						<div class="content-filter-date content-filter-interval">
+							<label for="date-from">
+								<span>From:</span>
+								<input type="date" id="date-from" name="date-from">
+							</label>
+							<label for="date-to">
+								<span>To:</span>
+								<input type="date" id="date-to" name="date-to">
+							</label>
+						</div>
+						<button type="submit" class="button button-primary button-default" name="date-filter">Filter</button>
+					</form>
+				</div>
+				<div class="col-12 col-md-8 col-lg-12">
+					<table class="text-center">
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th><span class="d-none d-xl-inline">Name</span> <span class="d-xl-none">Ctry</span></th>
+								<th>Amount</th>
+								<th>Date</th>
+								<th><span class="d-none d-lg-inline">Username</span></th>
+								<th><span class="d-none d-xl-inline">Email Address</span></th>
+								<th><span class="d-none d-xl-inline">Mobile Number</span></th>
+								<th><span class="d-none d-xl-inline">ROI</span> (Amount)</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for investor in investors %}
+							<tr>
+								<td><a href="single-project.html" class="project-id">{{ investor.pk }}</a></td>
+								<td>{{ investor.sender.user.first_name }} {{ investor.sender.user.last_name }}</td>
+								<td>₦{{ investor.amount }}</td>
+								<td>{{ investor.date_sent }}</td>
+								<td>{{ investor.sender.user.username }}</td>
+								<td>{{ investor.sender.user.email }}</td>
+								<td>{{ investor.sender.user.phone_num }}</td>
+								<td>₦{{ investor.expected_return }}</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+					
 				</div>
 			</div>
-		</header>
-	
-		<div id="content" class="site-content">
-			<main class="site-section section-main">
-				<div class="container">
-					<div class="row">
-						<div id="sidebar" class="col-12 col-md-4 col-lg-3 content-filters">
-							<form action="account-statement.html">
-								<h5 class="widget-title">Date of purchase</h5>
-								<div class="content-filter-date content-filter-interval">
-									<label for="date-from">
-										<span>From:</span>
-										<input type="date" id="date-from" name="date-from" value="2022-03-01">
-									</label>
-									<label for="date-to">
-										<span>To:</span>
-										<input type="date" id="date-to" name="date-to" value="2022-04-30">
-									</label>
-								</div>
-	
-								<h5 class="widget-title">Loan type</h5>
-								<div class="content-filter-type content-filter-checkboxes">
-									<label for="type-short-term">
-										<input id="type-short-term" name="type-short-term" type="checkbox">
-										<span>Short term</span>
-									</label>
-									<label for="type-long-term">
-										<input id="type-long-term" name="type-long-term" type="checkbox">
-										<span>Long-term</span>
-									</label>
-									<label for="type-real-estate">
-										<input id="type-real-estate" name="type-real-estate" type="checkbox">
-										<span>Real estate</span>
-									</label>
-									<label for="type-leasing">
-										<input id="type-leasing" name="type-leasing" type="checkbox">
-										<span>Leasing</span>
-									</label>
-									<label for="type-business">
-										<input id="type-business" name="type-business" type="checkbox">
-										<span>Business</span>
-									</label>
-								</div>
-	
-								<h5 class="widget-title">Country</h5>
-								<div class="content-filter-country content-filter-checkboxes">
-									<label for="country-estonia">
-										<input id="country-estonia" name="country-estonia" type="checkbox">
-										<span>Estonia</span>
-									</label>
-									<label for="country-latvia">
-										<input id="country-latvia" name="country-latvia" type="checkbox">
-										<span>Latvia</span>
-									</label>
-									<label for="country-lithuania">
-										<input id="country-lithuania" name="country-lithuania" type="checkbox">
-										<span>Lithuania</span>
-									</label>
-								</div>
-							</form>
-						</div>
-						<div class="col-12 col-md-8 col-lg-9">
-							<table class="text-center">
-								<thead>
-									<tr>
-										<th><span class="d-none d-xl-inline">Country</span> <span class="d-xl-none">Ctry</span></th>
-										<th>ID</th>
-										<th><span class="d-none d-lg-inline">Loan</span> type</th>
-										<th><span class="d-none d-xl-inline">Interest</span> <span class="d-xl-none">rate</span></th>
-										<th>Amount</th>
-										<th><span class="d-none d-xl-inline">Final</span> payment</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td><img src="assets/images/lv.svg" width="30" alt="" title="Latvia"></td>
-										<td><a href="single-project.html" class="project-id">5903</a></td>
-										<td>Short-term</td>
-										<td>10%</td>
-										<td>€150.00</td>
-										<td>2022-04-02</td>
-									</tr>
-								</tbody>
-							</table>
-							<div class="pagination">
-								<a href="account-statement.html" class="button button-outline">Load more</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</main>
 		</div>
 	</div>
 	{% endif %}

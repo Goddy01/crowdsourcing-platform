@@ -112,5 +112,5 @@ class Make_Investment(models.Model):
     sender = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE, null=False, blank=False, related_name='initiator')
     amount = models.IntegerField()
     investment = models.ForeignKey(Project, on_delete=models.CASCADE, null=False, blank=False, related_name='the_investment')
-    expected_return = ExpectedReturnField(blank=False, null=True)
+    expected_return = models.DecimalField(max_digits=255, decimal_places=2, blank=False, null=True)
     date_sent = models.DateTimeField(auto_now_add=True, null=True)
