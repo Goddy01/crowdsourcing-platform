@@ -106,7 +106,7 @@ class Reward_Payment(models.Model):
     date_sent = models.DateTimeField(auto_now_add=True, null=True)
 
 
-class Investment_Payment(models.Model):
+class Make_Investment(models.Model):
     send_to = models.ForeignKey(account_models.Innovator, null=False, blank=False, on_delete=models.CASCADE, related_name='send_to')
     send_from = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE, blank=False, null=False, related_name='send_from')
     sender = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE, null=False, blank=False, related_name='initiator')

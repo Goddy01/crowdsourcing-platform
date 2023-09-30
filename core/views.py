@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
-from .models import Project, Innovation, Contribution, Reward_Payment, Investment_Payment
+from .models import Project, Innovation, Contribution, Reward_Payment, Make_Investment
 from django_countries import countries
 from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm
 from accounts.models import Innovator, Moderator
@@ -81,12 +81,15 @@ def project_details(request, project_pk):
     context = {}
     project = Project.objects.get(pk=project_pk)
     context['project'] = project
+    investors = Make_Investment.objects.filter(investment__pk=project_pk)
+    context['investors'] = investors
     # if not request.user.is_authenticated:
     #     return redirect('accounts:innovator_login')
     try:
         if request.user.is_innovator:
             investor_1 = Innovator.objects.get(user__pk=request.user.pk)
             context['investor_1'] = investor_1
+
         else:
             moderator = Moderator.objects.get(user__pk=request.user.pk)
             context['moderator'] = moderator
@@ -288,6 +291,14 @@ def invest(request, investment_pk):
             if investment.amount_left == 0 and investment.fund_raised:
                 investment.complete = True
             investment.save()
+            Make_Investment.objects.create(
+                send_to=investment.innovator,
+                send_from=investor,
+                sender=investor,
+                amount=amount,
+                investment=investment,
+                expected_return=investment.expected_return
+            )
             messages.success(request, 'Thank you for investing in this project!')
             return redirect('project_details', investment_pk)
         else:
@@ -295,12 +306,6 @@ def invest(request, investment_pk):
 
     return render(request, 'core/project_details.html', context)
 
-@login_required
-def investors(request, investment_pk):
-    context = {}
-    investors = Investment_Payment.objects.get(investment_pk=investment_pk).sender
-    context['investors'] = investors
-    return render(request, 'core/investment-investors.html', context)
 
 @login_required
 def investments(request):

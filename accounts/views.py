@@ -24,7 +24,7 @@ from django import forms
 from django.contrib import messages
 from core.models import Project
 from django.http import HttpResponseRedirect
-from core.models import Investment_Payment
+from core.models import Make_Investment
 
 
 # Create your views here.
