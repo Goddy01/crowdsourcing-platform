@@ -332,6 +332,7 @@ def my_investments(request):
     my_investments = Make_Investment.objects.filter(sender__user__pk=request.user.pk)
     if request.method == 'POST' and 'filter-investment' in request.POST:
         select_categories = MyInvestmentForm()
+        context['select_categories'] = select_categories
         investment_date_from = request.POST.get('date_from')
         investment_date_to = request.POST.get('date_to')
         investment_categories = request.POST.get('business_type')
@@ -343,6 +344,6 @@ def my_investments(request):
         elif investment_date_from and not investment_date_to and investment_categories:
             my_investments = Make_Investment.objects.filter(sender__user__pk=request.user.pk, date_sent__lte=investment_date_from, investment__business_type__in=investment_categories)
         elif investment_date_from and investment_date_to and investment_categories:
-            my_investments = Make_Investment.objects.filter(sender__user__pk=request.user.pk, date_sent__date__range=(investment_date_from, investment_date_to), investment__business_type__in=investment_categories
+            my_investments = Make_Investment.objects.filter(sender__user__pk=request.user.pk, date_sent__date__range=(investment_date_from, investment_date_to), investment__business_type__in=investment_categories)
         context['my_investments'] = my_investments
     return render(request, 'core/my-investments.html', context)

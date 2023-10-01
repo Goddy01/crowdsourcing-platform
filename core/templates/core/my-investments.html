@@ -31,28 +31,15 @@
 								</label>
 							</div>
 
-							<h5 class="widget-title">Sector</h5>
+							<h5 class="widget-title">Business Category</h5>
 							<div class="content-filter-type content-filter-checkboxes">
+                                {{ select_categories }}
+                                {% for c in select_categories %}
 								<label for="type-short-term">
-									<input id="type-short-term" name="type-short-term" type="checkbox">
-									<span>Short term</span>
+									<input id="type-short-term" name="{{ c }}" type="checkbox">
+									<span>{{ c }}</span>
 								</label>
-							</div>
-
-							<h5 class="widget-title">Country</h5>
-							<div class="content-filter-country content-filter-checkboxes">
-								<label for="country-estonia">
-									<input id="country-estonia" name="country-estonia" type="checkbox">
-									<span>Estonia</span>
-								</label>
-								<label for="country-latvia">
-									<input id="country-latvia" name="country-latvia" type="checkbox">
-									<span>Latvia</span>
-								</label>
-								<label for="country-lithuania">
-									<input id="country-lithuania" name="country-lithuania" type="checkbox">
-									<span>Lithuania</span>
-								</label>
+                                {% endfor %}
 							</div>
 						</form>
 					</div>
