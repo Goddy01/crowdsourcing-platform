@@ -325,3 +325,6 @@ def invest(request, investment_pk):
 def investments(request):
     investments = Project.objects.filter(innovator__user__pk=request.user.pk)
     return render(request, 'core/investments.html', {'investments': investments})
+
+def my_investments(request):
+    return render(request, 'core/my-investments.html')
