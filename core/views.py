@@ -3,7 +3,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from .models import Project, Innovation, Contribution, Reward_Payment, Make_Investment
 from django_countries import countries
-from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm
+from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm, MyInvestmentForm
 from accounts.models import Innovator, Moderator
 from django.utils import timezone
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -326,5 +326,23 @@ def investments(request):
     investments = Project.objects.filter(innovator__user__pk=request.user.pk)
     return render(request, 'core/investments.html', {'investments': investments})
 
+@login_required
 def my_investments(request):
-    return render(request, 'core/my-investments.html')
+    context = {}
+    my_investments = Make_Investment.objects.filter(sender__user__pk=request.user.pk)
+    if request.method == 'POST' and 'filter-investment' in request.POST:
+        select_categories = MyInvestmentForm()
+        investment_date_from = request.POST.get('date_from')
+        investment_date_to = request.POST.get('date_to')
+        investment_categories = request.POST.get('business_type')
+
+        if investment_date_from and not investment_date_to and not investment_categories:
+            my_investments = Make_Investment.objects.filter(sender__user__pk=request.user.pk, date_sent__lte=investment_date_from)
+        elif investment_date_from and investment_date_to and not investment_categories:
+            my_investments = Make_Investment.objects.filter(sender__user__pk=request.user.pk, date_sent__date__range=(investment_date_from, investment_date_to))
+        elif investment_date_from and not investment_date_to and investment_categories:
+            my_investments = Make_Investment.objects.filter(sender__user__pk=request.user.pk, date_sent__lte=investment_date_from, investment__business_type__in=investment_categories)
+        elif investment_date_from and investment_date_to and investment_categories:
+            my_investments = Make_Investment.objects.filter(sender__user__pk=request.user.pk, date_sent__date__range=(investment_date_from, investment_date_to), investment__business_type__in=investment_categories
+        context['my_investments'] = my_investments
+    return render(request, 'core/my-investments.html', context)

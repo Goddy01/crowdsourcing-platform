@@ -119,3 +119,8 @@ class MakeContributionForm(forms.ModelForm):
     class Meta:
         model = Contribution
         fields = ['contribution']
+
+class MyInvestmentForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ['business_type']
