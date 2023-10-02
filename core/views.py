@@ -23,6 +23,11 @@ def add_project(request):
             project_obj = create_project_form.save(commit=False)
             project_obj.innovator = Innovator.objects.get(user__username=request.user.username)
             # project_obj.date_created = timezone.now()
+            print('BEFORE: ', project_obj.business_type)
+            print('BEFORE: ', len(project_obj.business_type))
+            project_obj.business_type = project_obj.business_type.replace("[", "").replace("]", "").replace("'", "").replace('"', '')
+            print('AFTER: ', project_obj.business_type)
+            print('AFTER: ', len(project_obj.business_type))
             if create_project_form.cleaned_data['innovator_user_agreement']:
                 project_obj.innovator_user_agreement = True
             project_obj.save()
@@ -332,20 +337,42 @@ def my_investments(request):
     
     context['category_form'] = MyInvestmentForm()
     if request.method == 'POST' and 'filter-investments' in request.POST:
-        investment_date_from = request.POST.get('date_from')
-        investment_date_to = request.POST.get('date_to')
+        print('WHY, MAN!!!')
+        investment_date_from = request.POST.get('investment_date_from')
+        investment_date_to = request.POST.get('investment_date_to')
         investment_categories = request.POST.getlist('business_type')
-        print('ONRE MAN: ', investment_categories)
+        context['investment_date_from'] = investment_date_from
+        context['investment_date_to'] = investment_date_to
+        context['investment_categories'] = investment_categories
+        # print('DF: ', investment_date_from)
+        # print('DT: ', investment_date_to)
+        # print('ONRE MAN: ', investment_categories)
 
         if investment_date_from and not investment_date_to and not investment_categories:
-            my_investments = Make_Investment.objects.filter(sender__user__pk=request.user.pk, date_sent__lte=investment_date_from)
+            my_investments = Make_Investment.objects.filter(sender__user__pk=request.user.pk, date_sent__gte=investment_date_from)
+            context['my_investments'] = my_investments
+            print('1')
         elif investment_date_from and investment_date_to and not investment_categories:
             my_investments = Make_Investment.objects.filter(sender__user__pk=request.user.pk, date_sent__date__range=(investment_date_from, investment_date_to))
+            context['my_investments'] = my_investments
+            print('2')
         elif investment_date_from and not investment_date_to and investment_categories:
-            my_investments = Make_Investment.objects.filter(sender__user__pk=request.user.pk, date_sent__lte=investment_date_from, investment__business_type__in=investment_categories)
+            my_investments = Make_Investment.objects.filter(sender__user__pk=request.user.pk, date_sent__gte=investment_date_from, investment__business_type__icontains=investment_categories[0])
+            context['my_investments'] = my_investments
+            print('3')
         elif investment_date_from and investment_date_to and investment_categories:
-            my_investments = Make_Investment.objects.filter(sender__user__pk=request.user.pk, date_sent__date__range=(investment_date_from, investment_date_to), investment__business_type__in=investment_categories)
+            my_investments = Make_Investment.objects.filter(sender__user__pk=request.user.pk, date_sent__date__range=(investment_date_from, investment_date_to), investment__business_type__icontains=investment_categories[0])
+            context['my_investments'] = my_investments
+            print('4')
+        elif not investment_date_from and not investment_date_to and investment_categories:
+            my_investments = Make_Investment.objects.filter(sender__user__pk=request.user.pk, investment__business_type__icontains=investment_categories[0])
+            context['my_investments'] = my_investments
+            print('5: ',  my_investments)
+        context['category_form'] = MyInvestmentForm({'business_type': request.POST.get('business_type')})
     else:
         my_investments = Make_Investment.objects.filter(sender__user__pk=request.user.pk)
-    context['my_investments'] = my_investments
+        context['my_investments'] = my_investments
+        for i in my_investments:
+            print('BRO: ', i.investment.business_type)
+        print('6')
     return render(request, 'core/my-investments.html', context)

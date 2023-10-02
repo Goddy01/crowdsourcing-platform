@@ -58,10 +58,10 @@
 					<div class="col-12">
 						<h3>Project description</h3>
 						<p>Sector: 
-							{% for category in project.business_type|remove_chars %}
-                                <span class="badge bg-success text-decoration-none link-light" href="#!">{{ category }}</span>
-                                {% with success=None %}{% endwith %}
-                            {% endfor %}
+							
+                                <span class="badge bg-success text-decoration-none link-light" href="#!">{{ project.business_type }}</span>
+                                
+                            
 						</p>
 						<p>{{ project.description }}</p>
 					</div>
@@ -177,7 +177,7 @@
 								
 								<div class="clear"></div>
 							</form> -->
-						{% if project.status == 'Approved' %}
+						{% if project.status.title == 'Approved' %}
 							<form method="POST" id="payForm" action="{% url 'invest' project.pk %}">
 							{% csrf_token %}
 							<div class="mb-3">

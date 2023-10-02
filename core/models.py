@@ -21,11 +21,11 @@ class ExpectedReturnField(models.DecimalField):
 
 
 def upload_project_gallery(instance, filename):
-    return f'project_gallery/{instance.innovator.user.last_name} {instance.innovator.user.first_name} {instance.innovator.user.middle_name}/project-{instance.name}/-{filename}'
+    return f'project_gallery/{instance.innovator.user.last_name}-{instance.innovator.user.first_name}-{instance.innovator.user.middle_name}/project-{instance.name}/-{filename}'
 
 
 def upload_innovation_images(instance, filename):
-    return f'innovation_images/{instance.owner.user.last_name} {instance.owner.user.first_name} {instance.owner.user.middle_name}/innovation-{instance.title}/-{filename}'
+    return f'innovation_images/{instance.owner.user.last_name}-{instance.owner.user.first_name}-{instance.owner.user.middle_name}/innovation-{instance.title}/-{filename}'
 
 
 # PROJECT

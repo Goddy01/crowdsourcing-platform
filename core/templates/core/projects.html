@@ -68,12 +68,8 @@
 							<a href="{% url 'project_details' project.pk %}">
 								<img src="{{ project.image_1.url }}" width="800" height="600" alt="">
 								<span class="project-industry" title="Investment type"><em class="mdi mdi-information"></em> Business &mdash; 
-									{% for type in project.business_type|remove_chars %}
-										{{ type|title }}
-										{% if forloop.counter != project.business_type|remove_chars|length %}
-										, 
-										{% endif %}
-									{% endfor %}
+									
+										{{ project.business_type|title }}
 								</span>
 								<span class="project-country" title="Estonia"><img class="office-country" src="assets/images/ee.svg" width="24" alt=""> <em class="screen-reader-text">{{ project.country }}</em></span>
 							</a>
