@@ -43,23 +43,32 @@
 						<table class="text-center">
 							<thead>
 								<tr>
-									<th><span class="d-none d-xl-inline">Country</span> <span class="d-xl-none">Ctry</span></th>
-									<th>ID</th>
-									<th><span class="d-none d-lg-inline">Loan</span> type</th>
-									<th><span class="d-none d-xl-inline">Interest</span> <span class="d-xl-none">rate</span></th>
-									<th>Amount</th>
-									<th><span class="d-none d-xl-inline">Final</span> payment</th>
+									<th><span class="d-none d-xl-inline">Name</span></th>
+									<!-- <th>ID</th> -->
+									<th><span class="d-none d-lg-inline">Proprietor</span> type</th>
+									<th><span class="d-none d-lg-inline">Date of Investment</span> type</th>
+									<th><span class="d-none d-xl-inline">ROI</span></th>
+									<th>Amount Invested</th>
+									<th><span class="d-none d-xl-inline">Expected Return Amount</th>
 								</tr>
 							</thead>
 							<tbody>
+                                {% for investment in my_investment %}
 								<tr>
 									<td><img src="assets/images/lv.svg" width="30" alt="" title="Latvia"></td>
-									<td><a href="single-project.html" class="project-id">5903</a></td>
-									<td>Short-term</td>
-									<td>10%</td>
-									<td>€150.00</td>
-									<td>2022-04-02</td>
+									<!-- <td><a href="single-project.html" class="project-id">5903</a></td> -->
+									<td>{{ investment.name }}</td>
+                                    {% if investment.innovator.middle_name %}
+									<td>{{ investment.innovator.last_name }}, {{ investment.innovator.first_name }} {{ investment.innovator.middle_name }}</td>
+                                    {% else %}
+                                    <td>{{ investment.innovator.first_name }} {{ investment.innovator.last_name }}</td>
+                                    {% endif %}
+                                    <td>{{ investment.date_sent }}</td>
+									<td>{{ investment.investment.expected_return }}%</td>
+									<td>₦{{ investment.amount }}</td>
+									<td>₦{{ investment.expected_return }}</td>
 								</tr>
+                                {% endfor %}
 							</tbody>
 						</table>
 						<div class="pagination">
