@@ -329,7 +329,7 @@ def investments(request):
 @login_required
 def my_investments(request):
     context = {}
-    my_investments = Make_Investment.objects.filter(sender__user__pk=request.user.pk)
+    
     context['category_form'] = MyInvestmentForm()
     if request.method == 'POST' and 'filter-investments' in request.POST:
         investment_date_from = request.POST.get('date_from')
@@ -345,5 +345,7 @@ def my_investments(request):
             my_investments = Make_Investment.objects.filter(sender__user__pk=request.user.pk, date_sent__lte=investment_date_from, investment__business_type__in=investment_categories)
         elif investment_date_from and investment_date_to and investment_categories:
             my_investments = Make_Investment.objects.filter(sender__user__pk=request.user.pk, date_sent__date__range=(investment_date_from, investment_date_to), investment__business_type__in=investment_categories)
-        context['my_investments'] = my_investments
+    else:
+        my_investments = Make_Investment.objects.filter(sender__user__pk=request.user.pk)
+    context['my_investments'] = my_investments
     return render(request, 'core/my-investments.html', context)
