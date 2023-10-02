@@ -18,7 +18,8 @@
 			<div class="container">
 				<div class="row">
 					<div id="sidebar" class="col-12 col-md-4 col-lg-3 content-filters">
-						<form action="account-statement.html">
+						<form action="{% url 'my-investments' %}" method="post">
+                            {% csrf_token %}
 							<h5 class="widget-title">Date</h5>
 							<div class="content-filter-date content-filter-interval">
 								<label for="date-from">
@@ -32,15 +33,10 @@
 							</div>
 
 							<h5 class="widget-title">Business Category</h5>
-							<div class="content-filter-type content-filter-checkboxes">
-                                {{ select_categories }}
-                                {% for c in select_categories %}
-								<label for="type-short-term">
-									<input id="type-short-term" name="{{ c }}" type="checkbox">
-									<span>{{ c }}</span>
-								</label>
-                                {% endfor %}
+							<div class="content-filter-type">
+                                {{ category_form.business_type }}
 							</div>
+                            <button type="submit" class="button button-primary button-default" name="filter-investments"><em class="mdi mdi-filter"></em>Filter</button>
 						</form>
 					</div>
 					<div class="col-12 col-md-8 col-lg-9">

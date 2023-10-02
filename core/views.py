@@ -330,12 +330,12 @@ def investments(request):
 def my_investments(request):
     context = {}
     my_investments = Make_Investment.objects.filter(sender__user__pk=request.user.pk)
-    if request.method == 'POST' and 'filter-investment' in request.POST:
-        select_categories = MyInvestmentForm()
-        context['select_categories'] = select_categories
+    context['category_form'] = MyInvestmentForm()
+    if request.method == 'POST' and 'filter-investments' in request.POST:
         investment_date_from = request.POST.get('date_from')
         investment_date_to = request.POST.get('date_to')
-        investment_categories = request.POST.get('business_type')
+        investment_categories = request.POST.getlist('business_type')
+        print('ONRE MAN: ', investment_categories)
 
         if investment_date_from and not investment_date_to and not investment_categories:
             my_investments = Make_Investment.objects.filter(sender__user__pk=request.user.pk, date_sent__lte=investment_date_from)

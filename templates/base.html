@@ -119,7 +119,7 @@
                         </a>
 						<ul class="sub-menu">
 							<li><a href="account-overview.html">Overview</a></li>
-							<li><a href="account-investments.html">Investments</a></li>
+							<li><a href="{% url 'my-investments' %}">Investments</a></li>
 							<li><a href="account-statement.html">Statement</a></li>
 							<li><a href="account-funding.html">Funding</a></li>
 							{% if request.user.is_innovator %}

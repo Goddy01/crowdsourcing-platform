@@ -121,6 +121,25 @@ class MakeContributionForm(forms.ModelForm):
         fields = ['contribution']
 
 class MyInvestmentForm(forms.ModelForm):
+    BUSINESS_CHOICES = (
+        ("REAL ESTATE", "Real Estate"),
+        ("TRANSPORTATION", "Transportation"),
+        ("FORESTRY", "Forestry"),
+        ("AGRICULTURE", "Agriculture"),
+        ("CONSTRUCTION", "Construction"),
+        ("ENERGY", "Energy"),
+        ("TECHNOLOGY", "Technology"),
+        ("HEALTHCARE", "Healthcare"),
+        ("CONSUMER GOODS", "Consumer Goods"),
+        ("FINANCE AND BANKING", "Finance and Banking"),
+        ("HOSPITALITY AND TOURISM", "Hospitality and Tourism"),
+        ("ENTERTAINMENT AND MEDIA", "Entertainment and Media"),
+        ("MANUFACTURING", "Manufacturing"),
+        ("MINING AND NATURAL RESOURCES", "Mining and Natural Resources"),
+        ("ENVIRONMENTAL AND SUSTAINABILITY", "Environmental and Sustainability"),
+        ("EDUCATION AND EDTECH", "Education and Edtech"),
+        )
+    business_type = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=BUSINESS_CHOICES)
     class Meta:
         model = Project
         fields = ['business_type']
