@@ -115,6 +115,7 @@ class Make_Investment(models.Model):
     investment = models.ForeignKey(Project, on_delete=models.CASCADE, null=False, blank=False, related_name='the_investment')
     expected_return = models.DecimalField(max_digits=255, decimal_places=2, blank=False, null=True)
     date_sent = models.DateTimeField(auto_now_add=True, null=True)
+    reference_code = models.UUIDField(default=uuid.uuid4, null=True)
 
 
 class Receipt(models.Model):
