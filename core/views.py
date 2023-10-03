@@ -9,6 +9,7 @@ from django.utils import timezone
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+import uuid
 
 # Create your views here.
 def home(request):
@@ -318,10 +319,14 @@ def invest(request, investment_pk):
                 investment=investment,
                 expected_return=amount*investment.expected_return
             )
-            Receipt.objects.create(
+            receipt = Receipt.objects.create(
                 owner=investor,
-                description= f"You have invested ₦{amount} in {investment.name}"
+                description= f"You have invested ₦{amount} in {investment.name}",
+                successful = not False,
+                # reference_code = str(uuid.uuid4),
+                amount = amount
             )
+            context['receipt'] = receipt
             messages.success(request, 'Thank you for investing in this project!')
             return redirect('project_details', investment_pk)
         else:

@@ -119,11 +119,11 @@ class Make_Investment(models.Model):
 
 class Receipt(models.Model):
     owner = models.ForeignKey(account_models.Innovator, null=False, blank=False, on_delete=models.CASCADE, related_name='receipt_owner')
-    description = RichTextField(null=True, blank=True)
+    description = models.CharField(null=True, blank=True, max_length=254)
     successful = models.BooleanField(default=False)
     date_generated = models.DateTimeField(auto_now_add=True, null=True)
     reference_code = models.UUIDField(default=uuid.uuid4, null=True)
-    amount = models.PositiveIntegerField(null=True, editable=False, blank=True)
+    amount = models.PositiveIntegerField(null=True, editable=False, blank=True, default=uuid.uuid5)
 
     def __str__(self):
         return F"Receipt for {self.owner.user.last_name}"
