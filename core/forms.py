@@ -1,4 +1,4 @@
-from .models import Project, Innovation, Contribution
+from .models import Project, Innovation, Contribution, Receipt
 from django import forms
 from ckeditor.fields import RichTextFormField
 
@@ -143,3 +143,8 @@ class MyInvestmentForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = ['business_type']
+
+class ReceiptForm(forms.ModelForm):
+    class Meta:
+        model = Receipt
+        fields = '__all__'
