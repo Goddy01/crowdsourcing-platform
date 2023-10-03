@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
-from .models import Project, Innovation, Contribution, Reward_Payment, Make_Investment
+from .models import Project, Innovation, Contribution, Reward_Payment, Make_Investment, Receipt
 from django_countries import countries
 from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm, MyInvestmentForm
 from accounts.models import Innovator, Moderator
@@ -318,7 +318,10 @@ def invest(request, investment_pk):
                 investment=investment,
                 expected_return=amount*investment.expected_return
             )
-
+            Receipt.objects.create(
+                owner=investor,
+                description= f"You have invested ₦{amount} in {investment.name}"
+            )
             messages.success(request, 'Thank you for investing in this project!')
             return redirect('project_details', investment_pk)
         else:

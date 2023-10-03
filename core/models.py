@@ -1,3 +1,4 @@
+import uuid
 from django.db import models, IntegrityError
 from accounts import models as account_models
 from django_countries.fields import CountryField
@@ -119,7 +120,10 @@ class Make_Investment(models.Model):
 class Receipt(models.Model):
     owner = models.ForeignKey(account_models.Innovator, null=False, blank=False, on_delete=models.CASCADE, related_name='receipt_owner')
     description = RichTextField(null=True, blank=True)
+    successful = models.BooleanField(default=False)
     date_generated = models.DateTimeField(auto_now_add=True, null=True)
+    reference_code = models.UUIDField(default=uuid.uuid4, null=True)
+    amount = models.PositiveIntegerField(null=True, editable=False, blank=True)
 
     def __str__(self):
         return F"Receipt for {self.owner.user.last_name}"

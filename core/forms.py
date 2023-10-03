@@ -143,8 +143,3 @@ class MyInvestmentForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = ['business_type']
-
-class ReceiptForm(forms.ModelForm):
-    class Meta:
-        model = Receipt
-        fields = '__all__'
