@@ -20,9 +20,13 @@
 	{% if messages %}
     <ul class="messages">
         {% for message in messages %}
-        {% if success %}
-        {% endif %}
-        <li  {% if message.tags %} class="fadeout p-3 text-center {{ message.tags }} " {% endif %} style="list-style: none;"> {{ message }} </li>
+        <li  {% if message.tags %} class="fadeout p-3 text-center {{ message.tags }} " {% endif %} style="list-style: none;"> 
+			{% if request.user.is_innovator %}
+			{{ message }} <a href="" data-bs-toggle="modal" data-bs-target="#exampleModal">See receipt</a>
+			{% else %}
+			{{ message }}
+			{% endif %}
+		</li>
         {% endfor %}
     </ul>
 	{% endif %}	  
@@ -30,32 +34,54 @@
 	<div id="content" class="site-content">
 		<main class="site-section section-main">
 			<div class="container">
-				<!-- Button trigger modal -->
-			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-				Launch demo modal
-			</button>
 			
 			<!-- Modal -->
 			<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				<div class="modal-dialog modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+					<h5 class="modal-title" id="exampleModalLabel">RECEIPT</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
-					...
+						<div class="row">
+							<p>
+								<span class="fw-bold text-success">Amount: </span>
+								<span>₦{{ receipt.amount }}</span>
+							</p>
+							<p>
+								<span class="fw-bold text-success">Description: </span>
+								<span>{{ receipt.description }}</span>
+							</p>
+							<p>
+								<span class="fw-bold text-success">Status: </span>
+								<span>
+									{% if receipt.successful %}
+										Successful
+									{% else %}
+										Failed
+									{% endif %}
+								</span>
+							</p>
+							<p>
+								<span class="fw-bold text-success">Transaction Date: </span>
+								<span>{{ receipt.date_generated }}</span>
+							</p>
+							<p>
+								<span class="fw-bold text-success">Reference Code: </span>
+								<span>{{ receipt.reference_code }}</span>
+							</p>
+						</div>
 					</div>
-					<div class="modal-footer">
+					<!-- <div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 					<button type="button" class="btn btn-primary">Save changes</button>
-					</div>
+					</div> -->
 				</div>
 				</div>
 			</div>
   
 				<div class="row">
-					BREV: {{ receipt }}
 					<div class="text-muted fst-italic mb-4">Posted on {{ project.date_created }} by <a href="{% url 'accounts:profile_with_arg' project.innovator.pk %}">
 						{% if project.innovator.user.middle_name %}
 						{{ project.innovator.user.last_name }}, {{ project.innovator.user.first_name }} {{ project.innovator.user.middle_name }}
@@ -83,10 +109,10 @@
 					<div class="col-12">
 						<h3>Project description</h3>
 						<p>Sector: 
-							
-                                <span class="badge bg-success text-decoration-none link-light" href="#!">{{ project.business_type }}</span>
-                                
-                            
+                                <span class="badge bg-success text-decoration-none link-light" href="#!">
+									
+									{{ project.business_type }}
+								</span>
 						</p>
 						<p>{{ project.description }}</p>
 					</div>
@@ -328,7 +354,7 @@
         }
     
         // Set a timeout to call the hideToast function after 9 seconds (9000 milliseconds)
-        setTimeout(hideToast, 5000);
+        setTimeout(hideToast, 9000);
     
     </script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>

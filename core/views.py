@@ -103,6 +103,7 @@ def project_details(request, project_pk):
                 context['date_to'] = date_to
             else:
                 investors = Make_Investment.objects.filter(investment__pk=project_pk)
+                context['receipt'] = Receipt.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
             context['investors'] = investors
 
         else:
@@ -326,12 +327,11 @@ def invest(request, investment_pk):
                 # reference_code = str(uuid.uuid4),
                 amount = amount
             )
-            context['receipt'] = receipt
+            context['receipt'] = Receipt.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
             messages.success(request, 'Thank you for investing in this project!')
             return redirect('project_details', investment_pk)
         else:
             return HttpResponse('Insufficient Account Balance ')
-
     return render(request, 'core/project_details.html', context)
 
 
