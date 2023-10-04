@@ -58,11 +58,14 @@ def pagination(request, items_list, num_of_pages):
 
 
 def projects_list(request):
+    context = {}
     print('ON RE: ', request.META.get('HTTP_REFERER'))
     if request.GET.get('from_expected_return'):
         from_expected_return = request.GET.get('from_expected_return')
+        context['from_expected_return'] = from_expected_return
         request.session['from_expected_return'] = from_expected_return
         to_expected_return = request.GET.get('to_expected_return')
+        context['to_expected_return'] = to_expected_return
         request.session['to_expected_return'] = to_expected_return
 
         if from_expected_return:
@@ -77,12 +80,14 @@ def projects_list(request):
                 projects = Project.objects.filter(
                     Q(expected_return__gte=int(from_expected_return))
                 )
-                # projects = pagination(request, projects, 4)
+                projects = pagination(request, projects, 4)
+            context['projects'] = projects
     else:
         # request.GET
         projects = Project.objects.all()
-    projects = pagination(request, projects, 4)
-    return render(request, 'core/projects.html', {'projects': projects, "from_expected_return": request.GET.get('from_expected_return'), "to_expected_return": request.GET.get('to_expected_return')})
+        projects = pagination(request, projects, 4)
+        context['projects'] = projects
+    return render(request, 'core/projects.html', context)
 
 def project_details(request, project_pk):
     context = {}
@@ -312,7 +317,7 @@ def invest(request, investment_pk):
             if investment.amount_left == 0 and investment.fund_raised:
                 investment.complete = True
             investment.save()
-            Make_Investment.objects.create(
+            invest = Make_Investment.objects.create(
                 send_to=investment.innovator,
                 send_from=investor,
                 sender=investor,
@@ -324,7 +329,7 @@ def invest(request, investment_pk):
                 owner=investor,
                 description= f"You have invested ₦{amount} in {investment.name}",
                 successful = not False,
-                # reference_code = str(uuid.uuid4),
+                reference_code = invest.reference_code,
                 amount = amount
             )
             context['receipt'] = Receipt.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
