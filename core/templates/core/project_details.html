@@ -244,6 +244,8 @@
 							  <button type="submit" name="invest" class="mb-5">Invest</button>
 							</div>
 						  </form>
+						  {% elif project.status.title == 'Declined' %}
+						  <button type="submit" name="invest" class="mb-5">This project has been declined because it does not adhere to the platform's policy.</button>
 						  {% else %}
 						  <button type="submit" name="invest" class="mb-5">Wait till the project is approved before you can invest</button>
 						  {% endif %}
@@ -253,7 +255,8 @@
 						{% csrf_token %}
 						<div class="mb-3">
 							<label for="category" class="form-label">Status</label>
-							<input type="text" name="status" id="status">
+							<!-- <input type="text" name="status" id="status"> -->
+							{{ status_form }}
 						</div>
 						<button type="submit" name="status_form">Submit</button>
 					</form>

@@ -143,3 +143,14 @@ class MyInvestmentForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = ['business_type']
+class InvestmentStatusForm(forms.ModelForm):
+    STATUS_CHOICES = (
+        ('APPROVED', 'Approved'),
+        ('DECLINED', 'Declined'),
+        ('YET TO BE REVIEWED', 'Yet to be Reviewed'),
+        ('REVIEW IN PROGRESS', 'Review In Progress')
+    )
+    status = forms.ChoiceField(choices=STATUS_CHOICES)
+    class Meta:
+        model = Project
+        fields = ['status']

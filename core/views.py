@@ -3,7 +3,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from .models import Project, Innovation, Contribution, Reward_Payment, Make_Investment, Receipt
 from django_countries import countries
-from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm, MyInvestmentForm
+from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm, MyInvestmentForm, InvestmentStatusForm
 from accounts.models import Innovator, Moderator
 from django.utils import timezone
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -115,6 +115,10 @@ def project_details(request, project_pk):
             moderator = Moderator.objects.get(user__pk=request.user.pk)
             context['moderator'] = moderator
             print('YO: ', request.POST.get('status'))
+            status_form = InvestmentStatusForm()
+            print('STATUS_FORM: ', status_form)
+            print('brev')
+            context['status_form'] = status_form
             if request.method == 'POST'and 'status' in request.POST:
                 project.status = request.POST.get('status')
                 project.save()
