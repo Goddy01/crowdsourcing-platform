@@ -195,8 +195,3 @@ class Moderator(models.Model):
 class Follow(models.Model):
     follower = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='follower')
     following = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='following')
-
-
-class LoadMoney(models.Model):
-    amount = models.IntegerField(null=True, blank=False, default=0)
-    innovator = models.ForeignKey(Innovator, on_delete=models.CASCADE, null=True, blank=False)

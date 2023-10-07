@@ -116,8 +116,10 @@
 					<div class="col-12">
 						<h3>Project description</h3>
 						<p>Sector: 
-                                <span class="badge bg-success text-decoration-none link-light" href="#!">}
-									{{ project.business_type.0 }}
+                                <span class="badge bg-success text-decoration-none link-light" href="#!">
+									{% for b in project.business_type %}
+									{{ b }}
+									{% endfor %}
 								</span>
 						</p>
 						<p>{{ project.description }}</p>

@@ -26,7 +26,7 @@ def add_project(request):
             # project_obj.date_created = timezone.now()
             print('BEFORE: ', project_obj.business_type)
             print('BEFORE: ', len(project_obj.business_type))
-            project_obj.business_type = project_obj.business_type.replace("[", "").replace("]", "").replace("'", "").replace('"', '')
+            project_obj.business_type = list(project_obj.business_type.replace("[", "").replace("]", "").replace("'", "").replace('"', ''))
             print('AFTER: ', project_obj.business_type)
             print('AFTER: ', len(project_obj.business_type))
             if create_project_form.cleaned_data['innovator_user_agreement']:
@@ -262,36 +262,73 @@ def unaccept_contribution(request, contribution_pk):
         return redirect('innovation_details', contribution.innovation.pk)
     return render(request, 'core/innovation-details.html', {'contribution': contribution})
 
-# @login_required
-# def make_investment_payment(request, investment_pk):
-#     context = {}
-#     investment = Project.objects.get(pk=investment_pk)
-#     # if request.POST.get('bool') == 'True':
-#     if request.method == 'POST' and 'pay' in request.POST:
-#         make_payment = Make_Investment.objects.create(
-#             send_to = Innovator.objects.get(user__email=investment.innovator.user.email),
-#             send_from = Innovator.objects.get(user__pk=request.user.pk),
-#             sender = Innovator.objects.get(user__pk=request.user.pk),
-#             amount = request.POST.get('amount'),
-#             investment = Project.objects.get(pk=investment_pk),
-#             expected_return=amount*investment.expected_return
-#         )
-#         request.session['pk'] = investment.pk
-#         investment.target -= int(make_payment.amount)
-#         if investment.fund_raised is None:
-#             investment.fund_raised = 0
-#         investment.fund_raised += int(make_payment.amount)
-#         if investment.amount_left is None:
-#             investment.amount_left = investment.target
-#         investment.amount_left -= int(make_payment.amount)
-#         investment.save()
-#         context['make_payment'] = make_payment
-#         # return HttpResponse('Your payment is being proceesed!')
-#         return redirect('projects')
-#     # else:
-#     #     return HttpResponse('Your payment could not be authenticated')
-#     context['investment'] = investment
-#     return render(request, 'core/project_details.html', context)
+@login_required
+def make_investment_payment(request):
+    context = {}
+    user = BaseUser.objects.get(pk=request.user.pk)
+    innovator = Innovator.objects.get(user__pk=user.pk)
+    if request.method == 'POST':
+        print('BREV')
+        load_money = LoadMoney.objects.create(
+            amount=request.POST.get('amount'),
+            innovator = Innovator.objects.get(user__pk=request.user.pk)
+        )
+        load_money = LoadMoney.objects.get(pk=load_money.pk)
+        if request.POST.get('bool') == 'True':
+            if load_money.innovator.account_balance is None:
+                load_money.innovator.account_balance = 0
+            # print('MAN')
+            # print('AMount: ', request.POST.get('amount'))
+            load_money.innovator.account_balance += int(request.POST.get('amount'))
+            load_money.innovator.save()
+            load_money.save()
+            # print(innovator.account_balance)
+            return redirect('accounts:profile')
+        else:
+            print('Transaction could not be completed')
+        # print('DONE')
+
+    context['user'] = user
+    context['innovator'] = innovator
+    return render(request, 'accounts/payment.html', context)
+
+@login_required
+def make_investment_payment(request, investment_pk):
+    context = {}
+    investment = Project.objects.get(pk=investment_pk)
+    # if request.POST.get('bool') == 'True':
+    if request.method == 'POST' and 'pay' in request.POST:
+        make_payment = Make_Investment.objects.create(
+            send_to = Innovator.objects.get(user__email=investment.innovator.user.email),
+            send_from = Innovator.objects.get(user__pk=request.user.pk),
+            sender = Innovator.objects.get(user__pk=request.user.pk),
+            amount = request.POST.get('amount'),
+            investment = Project.objects.get(pk=investment_pk),
+            expected_return=request.POST.get('amount')*investment.expected_return
+        )
+        request.session['pk'] = investment.pk
+        investment.target -= int(make_payment.amount)
+        if investment.fund_raised is None:
+            investment.fund_raised = 0
+        investment.fund_raised += int(make_payment.amount)
+        if investment.amount_left is None:
+            investment.amount_left = investment.target
+        investment.amount_left -= int(make_payment.amount)
+        investment.save()
+        context['make_payment'] = make_payment
+        receipt = Receipt.objects.create(
+                owner=Innovator.objects.get(user__email=investment.innovator.user.email),
+                description= f"You deposited ₦{request.POST.get('amount')} into your CrowdSourceIt",
+                successful = not False,
+                reference_code = invest.reference_code,
+                amount = request.POST.get('amount')
+            )
+        # return HttpResponse('Your payment is being proceesed!')
+        return redirect('projects')
+    # else:
+    #     return HttpResponse('Your payment could not be authenticated')
+    context['investment'] = investment
+    return render(request, 'core/project_details.html', context)
 
 @login_required
 def invest(request, investment_pk):

@@ -127,4 +127,12 @@ class Receipt(models.Model):
     amount = models.PositiveIntegerField(null=True, editable=False, blank=True, default=uuid.uuid5)
 
     def __str__(self):
-        return F"Receipt for {self.owner.user.last_name}"
+        if self.owner.user.middle_name:
+            return F"Receipt for {self.owner.user.last_name}, {self.owner.user.first_name} {self.owner.user.middle_name}"
+        else:
+            return F"Receipt for {self.owner.user.first_name} {self.owner.user.last_name}"
+        
+class DepositMoney(models.Model):
+    amount = models.IntegerField(null=True, blank=False, default=0)
+    innovator = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE, null=True, blank=False)
+    date = models.DateTimeField(auto_now_add=True, null=True)

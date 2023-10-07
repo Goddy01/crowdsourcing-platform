@@ -66,7 +66,7 @@
 					<div class="entry-project project-status-active">
 						<div class="project-media">
 							<a href="{% url 'project_details' project.pk %}">
-								<img src="{{ project.image_1.url }}" width="800" height="600" alt="">
+								<img src="{{ project.image_1.url }}" style="width: 600px;height: 450px;border-radius: 3%;" alt="">
 								<span class="project-industry" title="Investment type"><em class="mdi mdi-information"></em> Business &mdash; 
 									
 										{{ project.business_type|title }}
@@ -83,7 +83,7 @@
 						</div>
 						<div class="project-details">
 							<h3 class="project-title"><a href="{% url 'project_details' project.pk %}">{{ project.name|title }}</a></h3>
-							<p class="project-summary">{{ project.description }}</p>
+							<p class="project-summary">{{ project.description|truncatewords:50 }}</p>
 							<div class="project-specs">
 								<div class="project-total-invested">
 									<strong><span class="currency-sign">₦</span>{{ project.target }}</strong>
