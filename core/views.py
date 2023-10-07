@@ -304,9 +304,10 @@ def deposit_money(request):
         # print('DONE')
     elif request.method == 'POST' and 'withdraw' in request.POST:
         account_number = request.POST.get('withdraw_to')
-        bank_code = request.POST.get('bank_code')
-        amount = request.POST.get('withdraw_amount')
-        if account_number and bank_code and amount:
+        bank_name = request.POST.get('bank_code').split('#')[0]
+        bank_code = request.POST.get('bank_code').split('#')[1]
+        withdraw_amount = request.POST.get('withdraw_amount')
+        if account_number and bank_code and withdraw_amount:
             url = f"https://api.paystack.co/bank/resolve?account_number={account_number}&bank_code={bank_code}"
             headers = {
                 "Authorization": f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}"
@@ -316,10 +317,15 @@ def deposit_money(request):
             # Check if the request was successful (status code 200)
             if response.status_code == 200:
                 data = response.json()
-                context['account_data'] = data
+                context['account_data'] = data['data']
                 print(data)
                 context['status'] = True
+                context['account_number'] = account_number
+                context['bank_code'] = bank_code
+                context['bank_name'] = bank_name
+                context['withdraw_amount'] = withdraw_amount
                 # return redirect(f'/deposit/#tab-withdraw')
+                
             elif response.status_code == 400 or response.status_code == 401:
                 print("Request failed with status code:", response.status_code)
                 print("Response content:", response.text)
