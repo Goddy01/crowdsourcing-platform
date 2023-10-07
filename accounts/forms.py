@@ -54,13 +54,6 @@ class BaseUserSignUpForm(UserCreationForm):
         model = BaseUser
         fields = ['last_name', 'first_name', 'username', 'email']
 
-    # def save(self, commit=True):
-    #     user = super().save()
-    #     # user.is_teacher = True
-    #     if commit:
-    #         user.save()
-    #     # innovator = Innovator.objects.create(user=user)
-    #     return user
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -69,7 +62,7 @@ class BaseUserSignUpForm(UserCreationForm):
         return email
     def clean_username(self):
         username = self.cleaned_data.get('username')
-        if BaseUser.objects.filter(username=username):
+        if BaseUser.objects.filter(username__iexact=username):
             raise forms.ValidationError('A user with this username already exist.')
         return username
 
