@@ -4,7 +4,7 @@
 {% block title %}CrowdSourceIt - Payment{% endblock title %}
 {% block content %}
 <script src="https://js.paystack.co/v1/inline.js"></script>
-<form class="mb-4" method="POST" id="payForm" action="{% url 'accounts:make_payment' %}">
+<form class="mb-4" method="POST" id="payForm" action="{% url 'deposit' %}">
     {% csrf_token  %}
     <input type="text" id="hide" style="visibility: hidden;" value="false" name="bool">
     <!-- {% csrf_token %} -->

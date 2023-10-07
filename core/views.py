@@ -286,7 +286,7 @@ def deposit_money(request):
                 owner=Innovator.objects.get(user__email=request.user.email),
                 description= f"You deposited ₦{request.POST.get('amount')} into your CrowdSourceIt",
                 successful = not False,
-                reference_code = invest.reference_code,
+                reference_code = deposit_money.reference_code,
                 amount = request.POST.get('amount')
             )
             # print(innovator.account_balance)
@@ -299,43 +299,43 @@ def deposit_money(request):
     context['innovator'] = innovator
     return render(request, 'accounts/payment.html', context)
 
-@login_required
-def make_investment_payment(request, investment_pk):
-    context = {}
-    investment = Project.objects.get(pk=investment_pk)
-    # if request.POST.get('bool') == 'True':
-    if request.method == 'POST' and 'pay' in request.POST:
-        make_payment = Make_Investment.objects.create(
-            send_to = Innovator.objects.get(user__email=investment.innovator.user.email),
-            send_from = Innovator.objects.get(user__pk=request.user.pk),
-            sender = Innovator.objects.get(user__pk=request.user.pk),
-            amount = request.POST.get('amount'),
-            investment = Project.objects.get(pk=investment_pk),
-            expected_return=request.POST.get('amount')*investment.expected_return
-        )
-        request.session['pk'] = investment.pk
-        investment.target -= int(make_payment.amount)
-        if investment.fund_raised is None:
-            investment.fund_raised = 0
-        investment.fund_raised += int(make_payment.amount)
-        if investment.amount_left is None:
-            investment.amount_left = investment.target
-        investment.amount_left -= int(make_payment.amount)
-        investment.save()
-        context['make_payment'] = make_payment
-        receipt = Receipt.objects.create(
-                owner=Innovator.objects.get(user__email=investment.innovator.user.email),
-                description= f"You deposited ₦{request.POST.get('amount')} into your CrowdSourceIt",
-                successful = not False,
-                reference_code = invest.reference_code,
-                amount = request.POST.get('amount')
-            )
-        # return HttpResponse('Your payment is being proceesed!')
-        return redirect('projects')
-    # else:
-    #     return HttpResponse('Your payment could not be authenticated')
-    context['investment'] = investment
-    return render(request, 'core/project_details.html', context)
+# @login_required
+# def make_investment_payment(request, investment_pk):
+#     context = {}
+#     investment = Project.objects.get(pk=investment_pk)
+#     # if request.POST.get('bool') == 'True':
+#     if request.method == 'POST' and 'pay' in request.POST:
+#         make_payment = Make_Investment.objects.create(
+#             send_to = Innovator.objects.get(user__email=investment.innovator.user.email),
+#             send_from = Innovator.objects.get(user__pk=request.user.pk),
+#             sender = Innovator.objects.get(user__pk=request.user.pk),
+#             amount = request.POST.get('amount'),
+#             investment = Project.objects.get(pk=investment_pk),
+#             expected_return=request.POST.get('amount')*investment.expected_return
+#         )
+#         request.session['pk'] = investment.pk
+#         investment.target -= int(make_payment.amount)
+#         if investment.fund_raised is None:
+#             investment.fund_raised = 0
+#         investment.fund_raised += int(make_payment.amount)
+#         if investment.amount_left is None:
+#             investment.amount_left = investment.target
+#         investment.amount_left -= int(make_payment.amount)
+#         investment.save()
+#         context['make_payment'] = make_payment
+#         receipt = Receipt.objects.create(
+#                 owner=Innovator.objects.get(user__email=investment.innovator.user.email),
+#                 description= f"You deposited ₦{request.POST.get('amount')} into your CrowdSourceIt",
+#                 successful = not False,
+#                 reference_code = invest.reference_code,
+#                 amount = request.POST.get('amount')
+#             )
+#         # return HttpResponse('Your payment is being proceesed!')
+#         return redirect('projects')
+#     # else:
+#     #     return HttpResponse('Your payment could not be authenticated')
+#     context['investment'] = investment
+#     return render(request, 'core/project_details.html', context)
 
 @login_required
 def invest(request, investment_pk):
