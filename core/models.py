@@ -138,7 +138,7 @@ class DepositMoney(models.Model):
     date = models.DateTimeField(auto_now_add=True, null=True)
     reference_code = models.UUIDField(default=uuid.uuid4, null=True)
 
-class Withdraw(models.Model):
+class Withdrawal(models.Model):
     amount = models.PositiveIntegerField(null=True, blank=True)
     reference_code = models.UUIDField(default=uuid.uuid5, null=True)
     account_number = models.IntegerField(null=False, blank=True)

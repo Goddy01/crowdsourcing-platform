@@ -325,7 +325,10 @@ def deposit_money(request):
                 context['bank_name'] = bank_name
                 context['withdraw_amount'] = withdraw_amount
                 # return redirect(f'/deposit/#tab-withdraw')
-                
+
+                # if context['status'] == True:
+                    
+
             elif response.status_code == 400 or response.status_code == 401:
                 print("Request failed with status code:", response.status_code)
                 print("Response content:", response.text)
