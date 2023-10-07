@@ -304,8 +304,9 @@ def deposit_money(request):
         # print('DONE')
     elif request.method == 'POST' and 'withdraw' in request.POST:
         account_number = request.POST.get('withdraw_to')
-        bank_name = request.POST.get('bank_code').split('#')[0]
-        bank_code = request.POST.get('bank_code').split('#')[1]
+        bank = request.POST.get('bank_code').split('#')[0]
+        bank_name = bank[0]
+        bank_code = bank[1]
         withdraw_amount = request.POST.get('withdraw_amount')
         if account_number and bank_code and withdraw_amount:
             url = f"https://api.paystack.co/bank/resolve?account_number={account_number}&bank_code={bank_code}"
@@ -326,8 +327,21 @@ def deposit_money(request):
                 context['withdraw_amount'] = withdraw_amount
                 # return redirect(f'/deposit/#tab-withdraw')
 
-                # if context['status'] == True:
+                if context['status'] == True:
+                    withdrawal = Withdrawal.objects.create(
+                        amount=withdraw_amount,
+                        account_number=account_number,
+                        bank=context['bank_name'],
+                        innovator = Innovator.objects.get(user__pk=request.user.pk)
+                    )
                     
+                    Transaction.objects.create(
+                        owner=Innovator.objects.get(user__pk=request.user.pk),
+                        description= f"You made a withdrawal of ₦{withdraw_amount} into {account_number}-{bank_name}",
+                        successful = not False,
+                        reference_code = withdrawal.reference_code,
+                        amount = withdraw_amount
+                    )
 
             elif response.status_code == 400 or response.status_code == 401:
                 print("Request failed with status code:", response.status_code)
