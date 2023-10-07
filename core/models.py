@@ -136,3 +136,4 @@ class DepositMoney(models.Model):
     amount = models.IntegerField(null=True, blank=False, default=0)
     innovator = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE, null=True, blank=False)
     date = models.DateTimeField(auto_now_add=True, null=True)
+    reference_code = models.UUIDField(default=uuid.uuid4, null=True)

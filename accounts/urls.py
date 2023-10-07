@@ -23,6 +23,6 @@ urlpatterns = [
     path('profile/delete-pfp', views.remove_pfp, name='remove_pfp'),
     path('remove-skill/<skill_id>', views.remove_skill, name='remove_skill'),
     path('remove-service/<pk>', views.remove_service, name='remove_service'),
-    # path('make-payment/', views.make_investment_payment, name='make_payment'),
+    # path('make-payment/', views.deposit_money, name='make_payment'),
     # path('password-change', views.change_password, name='change_password'),
 ]

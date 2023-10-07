@@ -263,25 +263,32 @@ def unaccept_contribution(request, contribution_pk):
     return render(request, 'core/innovation-details.html', {'contribution': contribution})
 
 @login_required
-def make_investment_payment(request):
+def deposit_money(request):
     context = {}
     user = BaseUser.objects.get(pk=request.user.pk)
     innovator = Innovator.objects.get(user__pk=user.pk)
     if request.method == 'POST':
         print('BREV')
-        load_money = DepositMoney.objects.create(
+        deposit_money = DepositMoney.objects.create(
             amount=request.POST.get('amount'),
             innovator = Innovator.objects.get(user__pk=request.user.pk)
         )
-        load_money = DepositMoney.objects.get(pk=load_money.pk)
+        deposit_money = DepositMoney.objects.get(pk=deposit_money.pk)
         if request.POST.get('bool') == 'True':
-            if load_money.innovator.account_balance is None:
-                load_money.innovator.account_balance = 0
+            if deposit_money.innovator.account_balance is None:
+                deposit_money.innovator.account_balance = 0
             # print('MAN')
             # print('AMount: ', request.POST.get('amount'))
-            load_money.innovator.account_balance += int(request.POST.get('amount'))
-            load_money.innovator.save()
-            load_money.save()
+            deposit_money.innovator.account_balance += int(request.POST.get('amount'))
+            deposit_money.innovator.save()
+            deposit_money.save()
+            receipt = Receipt.objects.create(
+                owner=Innovator.objects.get(user__email=request.user.email),
+                description= f"You deposited ₦{request.POST.get('amount')} into your CrowdSourceIt",
+                successful = not False,
+                reference_code = invest.reference_code,
+                amount = request.POST.get('amount')
+            )
             # print(innovator.account_balance)
             return redirect('accounts:profile')
         else:

@@ -147,7 +147,7 @@
                         </ul>
                         <a href="{% url 'accounts:edit_profile' %}" class="btn btn-outline-success fw-bolder fs-7 px-4 py-2 mt-3">Edit Profile</a>
                         <p>
-                            <a href="{% url 'accounts:make_payment' %}" class="btn btn-outline-success fw-bolder fs-7 px-4 py-2 mt-3">Deposit Money Into Your Account</a>
+                            <a href="{% url 'deposit' %}" class="btn btn-outline-success fw-bolder fs-7 px-4 py-2 mt-3">Deposit Money Into Your Account</a>
                         </p>
                         {% if not user.signup_confirmation %}
                         <div class="mb-5">
