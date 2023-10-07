@@ -143,6 +143,11 @@ class Withdraw(models.Model):
     reference_code = models.UUIDField(default=uuid.uuid5, null=True)
     account_number = models.IntegerField(null=False, blank=True)
     bank = models.CharField(max_length=254, null=False, blank=False)
-    user = models.ForeignKey(account_models.BaseUser, on_delete=models.CASCADE, null=False)
+    innovator = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE, null=False)
     date = models.DateTimeField(auto_now_add=True, null=True)
-    post_withdrawal_account_balance = models.PositiveBigIntegerField(null=False, blank=False)
+    # post_withdrawal_account_balance = models.PositiveBigIntegerField(null=False, blank=False)
+
+    @property
+    def post_withdrawal_account_balance(self):
+        balance = self.innovator.account_balance - self.amount
+        return balance
