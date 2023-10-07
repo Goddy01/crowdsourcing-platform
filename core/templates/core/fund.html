@@ -26,14 +26,28 @@
         <div id="tab-withdraw" class="tab-content">
             <div class="row">
                 <div class="col-12 col-lg-9">
-                    <div class="data-box">
-                        <div class="data-property">Withdraw amount</div>
-                        <div class="data-value"><input type="number" step="0.1" min=0 placeholder="Amount"></div>
-                        <div class="data-property">Available funds</div>
-                        <div class="data-value">₦ {{ innovator.account_balance }}</div>
-                        <div class="data-actions"><button>Withdraw</button></div>
-                    </div>
-                    <p class="text-small text-faded">We keep investors money segregated from funds for business operations. You can withdraw funds that are not invested in loans from your investor account to your bank account at any time.</p>
+                    <form action="{% url 'deposit' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="data-box">
+                            <div class="data-property">Withdraw Amount</div>
+                            <div class="data-value"><input name="withdraw_amount" type="number" step="0.1" min=0></div>
+                            
+                            <div class="data-property">Account Number</div>
+                            <div class="data-value"><input name="withdraw_to" type="number"></div>
+                            <select class="data-value form-select form-select-sm " aria-label=".form-select-sm example" style="font-weight: normal;">
+                                <option selected>Select Bank</option>
+                                {% for  %}
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                            </select>
+
+                            <div class="data-property">Available Funds</div>
+                            <div class="data-value">₦ {{ innovator.account_balance }}</div>
+                            <div class="data-actions"><button type="submit">Withdraw</button></div>
+                        </div>
+                    </form>
+                    
                 </div>
             </div>
         </div>

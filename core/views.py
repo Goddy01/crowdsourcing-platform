@@ -9,7 +9,7 @@ from django.utils import timezone
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-import uuid
+import uuid, requests
 
 # Create your views here.
 def home(request):
@@ -296,7 +296,9 @@ def deposit_money(request):
         else:
             print('Transaction could not be completed')
         # print('DONE')
-    # elif request.method == 'POST' and 'withdraw' in request.POST:
+    elif request.method == 'POST' and 'withdraw_amount' in request.POST:
+        banks = requests.get(f"https://api.paystack.co/bank")
+        print('BANKS: ', banks.json()['data'])
 
     context['user'] = user
     context['innovator'] = innovator
