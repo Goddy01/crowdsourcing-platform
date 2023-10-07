@@ -291,7 +291,7 @@ def deposit_money(request):
             )
             context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
             # print(innovator.account_balance)
-            return redirect('deposit')
+            return redirect('projects')
         else:
             print('Transaction could not be completed')
         # print('DONE')

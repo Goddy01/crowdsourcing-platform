@@ -121,7 +121,7 @@
 							<li><a href="account-overview.html">Overview</a></li>
 							<li><a href="{% url 'my-investments' %}">Investments</a></li>
 							<li><a href="account-statement.html">Statement</a></li>
-							<li><a href="account-funding.html">Funding</a></li>
+							<li><a href="{% url 'deposit' %}">Fund Account</a></li>
 							{% if request.user.is_innovator %}
                             <li><a href="{% url 'add_project' %}">Add Investment Project</a></li>
                             {% endif %}
