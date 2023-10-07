@@ -19,7 +19,7 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.forms import formset_factory
 from django.forms.models import modelformset_factory
-from .models import InnovatorSkill, Service, LoadMoney
+from .models import InnovatorSkill, Service
 from django import forms
 from django.contrib import messages
 from core.models import Project

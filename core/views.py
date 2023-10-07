@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
-from .models import Project, Innovation, Contribution, Reward_Payment, Make_Investment, Receipt
+from .models import Project, Innovation, Contribution, Reward_Payment, Make_Investment, Receipt, DepositMoney
 from django_countries import countries
 from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm, MyInvestmentForm, InvestmentStatusForm
-from accounts.models import Innovator, Moderator
+from accounts.models import Innovator, Moderator, BaseUser
 from django.utils import timezone
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib import messages
@@ -269,11 +269,11 @@ def make_investment_payment(request):
     innovator = Innovator.objects.get(user__pk=user.pk)
     if request.method == 'POST':
         print('BREV')
-        load_money = LoadMoney.objects.create(
+        load_money = DepositMoney.objects.create(
             amount=request.POST.get('amount'),
             innovator = Innovator.objects.get(user__pk=request.user.pk)
         )
-        load_money = LoadMoney.objects.get(pk=load_money.pk)
+        load_money = DepositMoney.objects.get(pk=load_money.pk)
         if request.POST.get('bool') == 'True':
             if load_money.innovator.account_balance is None:
                 load_money.innovator.account_balance = 0
