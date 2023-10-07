@@ -47,13 +47,13 @@
 						<div class="row">
 							<p>
 								<span class="fw-bold text-success">Amount: </span>
-								<span>₦{{ receipt.amount }}</span>
+								<span>₦{{ transaction.amount }}</span>
 							</p>
 							<p>
 								<span class="fw-bold text-success">Description: </span>
 								<span cl>
 									You have invested 
-									<span class="fw-bold">₦{{ receipt.amount }}</span>
+									<span class="fw-bold">₦{{ transaction.amount }}</span>
 									in
 									<span class="fw-bold">
 										{{ project.name }}
@@ -63,7 +63,7 @@
 							<p>
 								<span class="fw-bold text-success">Status: </span>
 								<span>
-									{% if receipt.successful %}
+									{% if transaction.successful %}
 										Successful
 									{% else %}
 										Failed
@@ -72,11 +72,11 @@
 							</p>
 							<p>
 								<span class="fw-bold text-success">Transaction Date: </span>
-								<span>{{ receipt.date_generated }}</span>
+								<span>{{ transaction.date_generated }}</span>
 							</p>
 							<p>
 								<span class="fw-bold text-success">Reference Code: </span>
-								<span>{{ receipt.reference_code }}</span>
+								<span>{{ transaction.reference_code }}</span>
 							</p>
 						</div>
 					</div>

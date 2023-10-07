@@ -118,19 +118,19 @@ class Make_Investment(models.Model):
     reference_code = models.UUIDField(default=uuid.uuid4, null=True)
 
 
-class Receipt(models.Model):
-    owner = models.ForeignKey(account_models.Innovator, null=False, blank=False, on_delete=models.CASCADE, related_name='receipt_owner')
+class Transaction(models.Model):
+    owner = models.ForeignKey(account_models.Innovator, null=False, blank=False, on_delete=models.CASCADE, related_name='Transaction_owner')
     description = models.CharField(null=True, blank=True, max_length=254)
     successful = models.BooleanField(default=False)
     date_generated = models.DateTimeField(auto_now_add=True, null=True)
     reference_code = models.UUIDField(default=uuid.uuid4, null=True)
-    amount = models.PositiveIntegerField(null=True, editable=False, blank=True, default=uuid.uuid5)
+    amount = models.PositiveIntegerField(null=True, editable=False, blank=True)
 
     def __str__(self):
         if self.owner.user.middle_name:
-            return F"Receipt for {self.owner.user.last_name}, {self.owner.user.first_name} {self.owner.user.middle_name}"
+            return F"Transaction by {self.owner.user.last_name}, {self.owner.user.first_name} {self.owner.user.middle_name}"
         else:
-            return F"Receipt for {self.owner.user.first_name} {self.owner.user.last_name}"
+            return F"Transaction by {self.owner.user.first_name} {self.owner.user.last_name}"
         
 class DepositMoney(models.Model):
     amount = models.IntegerField(null=True, blank=False, default=0)

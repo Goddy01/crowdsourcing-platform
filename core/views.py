@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
-from .models import Project, Innovation, Contribution, Reward_Payment, Make_Investment, Receipt, DepositMoney
+from .models import Project, Innovation, Contribution, Reward_Payment, Make_Investment, Transaction, DepositMoney
 from django_countries import countries
 from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm, MyInvestmentForm, InvestmentStatusForm
 from accounts.models import Innovator, Moderator, BaseUser
@@ -108,7 +108,7 @@ def project_details(request, project_pk):
                 context['date_to'] = date_to
             else:
                 investors = Make_Investment.objects.filter(investment__pk=project_pk)
-                context['receipt'] = Receipt.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
+                context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
             context['investors'] = investors
 
         else:
@@ -282,15 +282,16 @@ def deposit_money(request):
             deposit_money.innovator.account_balance += int(request.POST.get('amount'))
             deposit_money.innovator.save()
             deposit_money.save()
-            receipt = Receipt.objects.create(
+            transaction = Transaction.objects.create(
                 owner=Innovator.objects.get(user__email=request.user.email),
                 description= f"You deposited ₦{request.POST.get('amount')} into your CrowdSourceIt",
                 successful = not False,
                 reference_code = deposit_money.reference_code,
                 amount = request.POST.get('amount')
             )
+            context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
             # print(innovator.account_balance)
-            return redirect('accounts:profile')
+            return redirect('deposit')
         else:
             print('Transaction could not be completed')
         # print('DONE')
@@ -323,7 +324,7 @@ def deposit_money(request):
 #         investment.amount_left -= int(make_payment.amount)
 #         investment.save()
 #         context['make_payment'] = make_payment
-#         receipt = Receipt.objects.create(
+#         transaction = Transaction.objects.create(
 #                 owner=Innovator.objects.get(user__email=investment.innovator.user.email),
 #                 description= f"You deposited ₦{request.POST.get('amount')} into your CrowdSourceIt",
 #                 successful = not False,
@@ -373,14 +374,14 @@ def invest(request, investment_pk):
                 investment=investment,
                 expected_return=amount*investment.expected_return
             )
-            receipt = Receipt.objects.create(
+            transaction = Transaction.objects.create(
                 owner=investor,
                 description= f"You have invested ₦{amount} in {investment.name}",
                 successful = not False,
                 reference_code = invest.reference_code,
                 amount = amount
             )
-            context['receipt'] = Receipt.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
+            context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
             messages.success(request, 'Thank you for investing in this project!')
             return redirect('project_details', investment_pk)
         else:

@@ -1,4 +1,4 @@
-from .models import Project, Innovation, Contribution, Receipt
+from .models import Project, Innovation, Contribution
 from django import forms
 from ckeditor.fields import RichTextFormField
 
