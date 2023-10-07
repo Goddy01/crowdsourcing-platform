@@ -9,7 +9,11 @@ from django.utils import timezone
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-import uuid, requests
+import uuid, requests, os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 # Create your views here.
 def home(request):
@@ -298,8 +302,28 @@ def deposit_money(request):
         else:
             print('Transaction could not be completed')
         # print('DONE')
-    elif request.method == 'POST' and 'withdraw_amount' in request.POST:
-        pass
+    elif request.method == 'POST' and 'withdraw' in request.POST:
+        account_number = request.POST.get('withdraw_to')
+        bank_code = request.POST.get('bank_code')
+        amount = request.POST.get('withdraw_amount')
+        if account_number and bank_code and amount:
+            url = f"https://api.paystack.co/bank/resolve?account_number={account_number}&bank_code={bank_code}"
+            headers = {
+                "Authorization": f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}"
+            }
+
+            response = requests.get(url, headers=headers)
+            # Check if the request was successful (status code 200)
+            if response.status_code == 200:
+                data = response.json()
+                context['account_data'] = data
+                print(data)
+                context['status'] = True
+                # return redirect(f'/deposit/#tab-withdraw')
+            elif response.status_code == 400 or response.status_code == 401:
+                print("Request failed with status code:", response.status_code)
+                print("Response content:", response.text)
+                context['status'] = False
 
     context['user'] = user
     context['innovator'] = innovator
