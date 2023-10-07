@@ -267,7 +267,7 @@ def deposit_money(request):
     context = {}
     user = BaseUser.objects.get(pk=request.user.pk)
     innovator = Innovator.objects.get(user__pk=user.pk)
-    if request.method == 'POST':
+    if request.method == 'POST' and 'amount' in request.POST:
         print('BREV')
         deposit_money = DepositMoney.objects.create(
             amount=request.POST.get('amount'),
@@ -291,14 +291,16 @@ def deposit_money(request):
             )
             context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
             # print(innovator.account_balance)
+            print('DONDA')
             return redirect('projects')
         else:
             print('Transaction could not be completed')
         # print('DONE')
+    # elif request.method == 'POST' and 'withdraw' in request.POST:
 
     context['user'] = user
     context['innovator'] = innovator
-    return render(request, 'accounts/payment.html', context)
+    return render(request, 'core/fund.html', context)
 
 # @login_required
 # def make_investment_payment(request, investment_pk):
