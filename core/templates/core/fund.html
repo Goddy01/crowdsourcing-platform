@@ -34,12 +34,11 @@
                             
                             <div class="data-property">Account Number</div>
                             <div class="data-value"><input name="withdraw_to" type="number"></div>
-                            <select class="data-value form-select form-select-sm " aria-label=".form-select-sm example" style="font-weight: normal;">
+                            <select>
                                 <option selected>Select Bank</option>
-                                {% for  %}
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                                {% for bank in banks %}
+                                <option value="{{ bank.id }}">{{ bank.name }}</option>
+                                {% endfor %}
                             </select>
 
                             <div class="data-property">Available Funds</div>

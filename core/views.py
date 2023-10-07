@@ -265,6 +265,8 @@ def unaccept_contribution(request, contribution_pk):
 @login_required
 def deposit_money(request):
     context = {}
+    banks = requests.get(f"https://api.paystack.co/bank")
+    context['banks'] = banks.json()['data']
     user = BaseUser.objects.get(pk=request.user.pk)
     innovator = Innovator.objects.get(user__pk=user.pk)
     if request.method == 'POST' and 'amount' in request.POST:
@@ -297,8 +299,7 @@ def deposit_money(request):
             print('Transaction could not be completed')
         # print('DONE')
     elif request.method == 'POST' and 'withdraw_amount' in request.POST:
-        banks = requests.get(f"https://api.paystack.co/bank")
-        print('BANKS: ', banks.json()['data'])
+        pass
 
     context['user'] = user
     context['innovator'] = innovator
