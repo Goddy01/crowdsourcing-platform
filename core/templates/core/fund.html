@@ -61,7 +61,7 @@
                             <select id="bank_code" name="bank_code">
                                 <option selected>Select Bank</option>
                                 {% for bank in banks %}
-                                <option value="{{bank.name}}#{{ bank.code }}">{{ bank.name }}</option>
+                                <option value='{{ bank.code }}'>{{ bank.name }}</option>
                                 {% endfor %}
                             </select>
 

@@ -9,7 +9,7 @@ from django.utils import timezone
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-import uuid, requests, os
+import uuid, requests, os, json
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -304,9 +304,13 @@ def deposit_money(request):
         # print('DONE')
     elif request.method == 'POST' and 'withdraw' in request.POST:
         account_number = request.POST.get('withdraw_to')
-        bank = request.POST.get('bank_code').split('#')[0]
-        bank_name = bank[0]
-        bank_code = bank[1]
+        # bank = request.POST.get('bank_code')
+        # bank_name = request.POST.get('bank_name')
+        bank_code = request.POST.get('bank_code')
+        for bank in context['banks']:
+            if bank['code'] == bank_code:
+                context['bank_name'] = bank['name']
+
         withdraw_amount = request.POST.get('withdraw_amount')
         if account_number and bank_code and withdraw_amount:
             url = f"https://api.paystack.co/bank/resolve?account_number={account_number}&bank_code={bank_code}"
@@ -323,21 +327,22 @@ def deposit_money(request):
                 context['status'] = True
                 context['account_number'] = account_number
                 context['bank_code'] = bank_code
-                context['bank_name'] = bank_name
                 context['withdraw_amount'] = withdraw_amount
                 # return redirect(f'/deposit/#tab-withdraw')
 
                 if context['status'] == True:
                     withdrawal = Withdrawal.objects.create(
-                        amount=withdraw_amount,
-                        account_number=account_number,
-                        bank=context['bank_name'],
-                        innovator = Innovator.objects.get(user__pk=request.user.pk)
+                        amount=request.POST.get('withdraw_amount'),
+                        account_number=request.POST.get('withdraw_to'),
+                        bank_name=context['bank_name'],
+                        bank_code=context['bank_code'],
+                        innovator = Innovator.objects.get(user__pk=request.user.pk),
+                        account_holder = context['account_data']['account_name']
                     )
                     
                     Transaction.objects.create(
                         owner=Innovator.objects.get(user__pk=request.user.pk),
-                        description= f"You made a withdrawal of ₦{withdraw_amount} into {account_number}-{bank_name}",
+                        description= f"You made a withdrawal of ₦{withdraw_amount} into {account_number}-{context['bank_name']}",
                         successful = not False,
                         reference_code = withdrawal.reference_code,
                         amount = withdraw_amount
