@@ -502,3 +502,29 @@ def my_investments(request):
 def statement(request):
     context = {}
     return render(request, 'core/statement.html', context)
+
+def get_bank_details(request):
+    account_number = request.POST.get('withdraw_to')
+    bank_code = request.POST.get('bank_code')
+    bank_name = ''
+    banks = requests.get(f"https://api.paystack.co/bank")
+    banks = banks.json()['data']
+    for bank in banks:
+        if bank['code'] == bank_code:
+            bank_name = bank['name']
+    if request.method == 'POST':
+        url = f"https://api.paystack.co/bank/resolve?account_number={account_number}&bank_code={bank_code}"
+        headers = {
+            "Authorization": f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}"
+        }
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            withdrawal_data = response.json()
+            data = {
+                'account_data': withdrawal_data['data'],
+                'bank_code': bank_code,
+                'bank_name': bank_name,
+                'status': True
+            }
+            return JsonResponse(data)
+            
