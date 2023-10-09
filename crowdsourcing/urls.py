@@ -39,6 +39,7 @@ urlpatterns = [
     path('invest/<investment_pk>/', views.invest, name='invest'),
     path('my-investments/', views.my_investments, name="my-investments"),
     path('deposit/', views.deposit_money, name='deposit'),
+    path('get-bank-details/', views.get_bank_details, name='get_bank_details'),
     
     # path('contribution/reply/<innovation_pk>/', views.reply, name='reply'),
 
