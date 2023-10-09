@@ -330,7 +330,16 @@ def deposit_money(request):
                 context['withdraw_amount'] = withdraw_amount
                 # return redirect(f'/deposit/#tab-withdraw')
 
-                if context['status'] == True:
+                if context['status']:
+                    print('STATUS')
+                else:
+                    print('NOT STATUS')
+                if 'withdraw_2' in request.POST:
+                    print('WITHDRAW-2')
+                else:
+                    print('NOT WITHDRAW-2')
+
+                if context['status'] == True and 'withdraw_2' in request.POST:
                     withdrawal = Withdrawal.objects.create(
                         amount=request.POST.get('withdraw_amount'),
                         account_number=request.POST.get('withdraw_to'),
@@ -347,6 +356,7 @@ def deposit_money(request):
                         reference_code = withdrawal.reference_code,
                         amount = withdraw_amount
                     )
+                    return redirect('home')
 
             elif response.status_code == 400 or response.status_code == 401:
                 print("Request failed with status code:", response.status_code)

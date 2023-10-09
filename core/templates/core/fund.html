@@ -58,8 +58,12 @@
                             
                             
                             <input name="withdraw_to" type="text" placeholder="Account Number" value="{{ account_number }}">
+                            {% if status %}
+                            <input type="text" name="withdraw_2" hidden>
+                            <!-- <div class="data-actions"><button type="submit" name="withdraw_2">Withdraw</button></div> -->
+                            {% endif %}
                             <select id="bank_code" name="bank_code">
-                                <option selected>Select Bank</option>
+                                <option value="{{ bank_code }}" selected>{{ bank_name }}</option>
                                 {% for bank in banks %}
                                 <option value='{{ bank.code }}'>{{ bank.name }}</option>
                                 {% endfor %}
