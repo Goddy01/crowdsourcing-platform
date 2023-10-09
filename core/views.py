@@ -504,6 +504,7 @@ def statement(request):
     return render(request, 'core/statement.html', context)
 
 def get_bank_details(request):
+    amount = request.POST.get('withdraw_amount')
     account_number = request.POST.get('withdraw_to')
     bank_code = request.POST.get('bank_code')
     bank_name = ''
@@ -524,7 +525,9 @@ def get_bank_details(request):
                 'account_data': withdrawal_data['data'],
                 'bank_code': bank_code,
                 'bank_name': bank_name,
-                'status': True
+                'status': True,
+                'withdraw_amount': amount
             }
             return JsonResponse(data)
+    return JsonResponse({'error': 'Provide the details of the bank account you want to withdraw to'})
             
