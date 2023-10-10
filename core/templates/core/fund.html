@@ -29,31 +29,34 @@
                         <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <h5 class="modal-title" id="exampleModalLabel">Beneficiary Account Details</h5>
+                            <!-- <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button> -->
                             </div>
-                            <div class="modal-body">
-                                <p id="bank_name">
+                            <div class="modal-body px-2" id="modal_body">
+                                <div>
                                     <span class="fw-bold">Bank Name: </span>
-                                    
-                                </p>
-                                <p id="account_number">
+                                    <span id="bank_name"></span>
+                                </div>
+                                <div class="mt-2">
                                     <span class="fw-bold">Account Number: </span>
-                                    
-                                </p>
-                                <p id="account_name">
+                                    <span id="account_number"></span>
+                                </div>
+                                <div class="mt-2">
                                     <span class="fw-bold">Account Name: </span>
-                                    
-                                </p>
-                                <p id="withdraw_amount">
-                                    <span class="fw-bold">Account Name: </span>
-                                    
-                                </p>
+                                    <span id="account_name"></span>
+                                </div>
+                                <div class="mt-2">
+                                    <span class="fw-bold">Amount: </span>
+                                    ₦<span id="withdraw_amount"></span>
+                                </div>
+                        </div>
+                        <div id="modal_body2">
+
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal" id="close">Close</button>
                             <a href="{% url 'deposit' %}">
-                                <button type="button" class="btn btn-success">Confirm Withdrawal</button>
+                                <button type="button" class="btn btn-success" id="confirmWithdrawal">Confirm Withdrawal</button>
                             </a>
                           </div>
                         </div>
@@ -195,17 +198,32 @@
                 url: "{% url 'get_bank_details' %}",
                 data: formData,
                 success: function (response) {
+                    if (response.status === 'success') {
                     // Update the resultDiv with the response data
-                    console.log(response)
+                    console.log('RESPONSE: ', response)
                     $("#bank_name").html(response.bank_name);
                     $("#account_number").html(response.account_data.account_number);
                     $("#account_name").html(response.account_data.account_name);
                     $("#withdraw_amount").html(response.withdraw_amount);
+                    $('#modal_body').show();
+                    $('#modal_body2').hide()
+                    $('#confirmWithdrawal').show();
+                    }
+                    else {
+                        $('#confirmWithdrawal').hide();
+                        $('#modal_body').hide();
+                        $("#modal_body2").html('Could not resolve account name');
+                        
+                    }
                 },
-                error: function (xhr, status, error) {
-                    console.error(xhr.responseText);
-                }
+                // error: function (xhr, status, error) {
+                //     console.log('yessirrr')
+                //     $('#confirmWithdrawal').hide();
+                //     $("#modal_body").html('Could not resolve account name');
+
+                // }
             });
+            
         });
     });
 </script>

@@ -519,15 +519,19 @@ def get_bank_details(request):
             "Authorization": f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}"
         }
         response = requests.get(url, headers=headers)
+        print('RESPONSE: ', response)
         if response.status_code == 200:
             withdrawal_data = response.json()
             data = {
                 'account_data': withdrawal_data['data'],
                 'bank_code': bank_code,
                 'bank_name': bank_name,
-                'status': True,
-                'withdraw_amount': amount
+                'status': 'success',
+                'withdraw_amount': amount,
             }
-            return JsonResponse(data)
-    return JsonResponse({'error': 'Provide the details of the bank account you want to withdraw to'})
+            return JsonResponse(data, status=200)
+        else:
+            print("Request failed with status code:", response.status_code)
+            print("Response content:", response.text)
+            return JsonResponse({'error': 'Error encountered while retrieving bank account details.', 'status': 'failed'})
             
