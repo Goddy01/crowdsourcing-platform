@@ -302,67 +302,6 @@ def deposit_money(request):
         else:
             print('Transaction could not be completed')
         # print('DONE')
-    elif request.method == 'POST' and 'withdraw' in request.POST:
-        account_number = request.POST.get('withdraw_to')
-        # bank = request.POST.get('bank_code')
-        # bank_name = request.POST.get('bank_name')
-        bank_code = request.POST.get('bank_code')
-        for bank in context['banks']:
-            if bank['code'] == bank_code:
-                context['bank_name'] = bank['name']
-
-        withdraw_amount = request.POST.get('withdraw_amount')
-        if account_number and bank_code and withdraw_amount:
-            url = f"https://api.paystack.co/bank/resolve?account_number={account_number}&bank_code={bank_code}"
-            headers = {
-                "Authorization": f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}"
-            }
-
-            response = requests.get(url, headers=headers)
-            # Check if the request was successful (status code 200)
-            if response.status_code == 200:
-                data = response.json()
-                context['account_data'] = data['data']
-                print(data)
-                context['status'] = True
-                context['account_number'] = account_number
-                context['bank_code'] = bank_code
-                context['withdraw_amount'] = withdraw_amount
-                # return redirect(f'/deposit/#tab-withdraw')
-
-                if context['status']:
-                    print('STATUS')
-                else:
-                    print('NOT STATUS')
-                if 'withdraw_2' in request.POST:
-                    print('WITHDRAW-2')
-                else:
-                    print('NOT WITHDRAW-2')
-
-                if context['status'] == True and 'withdraw_2' in request.POST:
-                    withdrawal = Withdrawal.objects.create(
-                        amount=request.POST.get('withdraw_amount'),
-                        account_number=request.POST.get('withdraw_to'),
-                        bank_name=context['bank_name'],
-                        bank_code=context['bank_code'],
-                        innovator = Innovator.objects.get(user__pk=request.user.pk),
-                        account_holder = context['account_data']['account_name']
-                    )
-                    
-                    Transaction.objects.create(
-                        owner=Innovator.objects.get(user__pk=request.user.pk),
-                        description= f"You made a withdrawal of ₦{withdraw_amount} into {account_number}-{context['bank_name']}",
-                        successful = not False,
-                        reference_code = withdrawal.reference_code,
-                        amount = withdraw_amount
-                    )
-                    return redirect('home')
-
-            elif response.status_code == 400 or response.status_code == 401:
-                print("Request failed with status code:", response.status_code)
-                print("Response content:", response.text)
-                context['status'] = False
-
     context['user'] = user
     context['innovator'] = innovator
     return render(request, 'core/fund.html', context)
