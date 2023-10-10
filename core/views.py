@@ -452,6 +452,10 @@ def get_bank_details(request):
     for bank in banks:
         if bank['code'] == bank_code:
             bank_name = bank['name']
+            # request.session['bank_name'] = bank_name
+    request.session['amount'] = amount
+    request.session['account_number'] = account_number
+    request.session['bank_code'] = bank_code
     if request.method == 'POST':
         url = f"https://api.paystack.co/bank/resolve?account_number={account_number}&bank_code={bank_code}"
         headers = {
@@ -461,6 +465,7 @@ def get_bank_details(request):
         print('RESPONSE: ', response)
         if response.status_code == 200:
             withdrawal_data = response.json()
+            request.session['account_holder'] = withdrawal_data['data']['account_name']
             data = {
                 'account_data': withdrawal_data['data'],
                 'bank_code': bank_code,
@@ -476,33 +481,42 @@ def get_bank_details(request):
 
 def withdraw(request):
     context = {}
-    withdraw_amount = request.POST.get('withdraw_amount')
-    account_number = request.POST.get('withdraw_to')
+    withdraw_amount = int(request.session.get('amount'))
+    account_number = request.session.get('account_number')
+    bank_code = request.session.get('bank_code')
+    banks = requests.get(f"https://api.paystack.co/bank").json()['data']
     bank_name = ''
-    bank_code = request.POST.get('bank_code')
-    for bank in context['banks']:
+    for bank in banks:
         if bank['code'] == bank_code:
             bank_name = bank['name']
     url = f"https://api.paystack.co/bank/resolve?account_number={account_number}&bank_code={bank_code}"
     headers = {
         "Authorization": f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}"
     }
-    response = requests.get(url, headers=headers).json()
-    withdrawal = Withdrawal.objects.create(
-        amount=withdraw_amount,
-        account_number=account_number,
-        bank_name=bank_name,
-        bank_code=bank_code,
-        innovator = Innovator.objects.get(user__pk=request.user.pk),
-        account_holder = response['data']['account_name']
-    )
+    response = requests.get(url, headers=headers)
+    print('RESPONSE: ', response.json())
+    innovator = Innovator.objects.get(user__pk=request.user.pk)
+    if response.status_code == 200:
+        if innovator.account_balance >= withdraw_amount:
+            withdrawal = Withdrawal.objects.create(
+                amount=withdraw_amount,
+                account_number=account_number,
+                bank_name=bank_name,
+                bank_code=bank_code,
+                innovator = Innovator.objects.get(user__pk=request.user.pk),
+                account_holder = response.json()['data']['account_name']
+            )
 
-    Transaction.objects.create(
-        owner=Innovator.objects.get(user__pk=request.user.pk),
-        description= f"You made a withdrawal of ₦{withdraw_amount} into {account_number}-{context['bank_name']}",
-        successful = not False,
-        reference_code = withdrawal.reference_code,
-        amount = withdraw_amount
-    )
-    return redirect('home')
-    # return render(request, 'core/fund.html', context)
+            Transaction.objects.create(
+                owner=Innovator.objects.get(user__pk=request.user.pk),
+                description= f"You made a withdrawal of ₦{withdraw_amount} into {account_number}-{bank_name}",
+                successful = not False,
+                reference_code = withdrawal.reference_code,
+                amount = withdraw_amount
+            )
+            innovator.account_balance -= withdraw_amount
+            innovator.save()
+            return redirect('home')
+        else:
+            return HttpResponse('You cannot withdraw more than what you have.')
+    return render(request, 'core/fund.html', context)
