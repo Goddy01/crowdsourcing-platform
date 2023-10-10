@@ -287,6 +287,7 @@ def deposit_money(request):
             # print('AMount: ', request.POST.get('amount'))
             deposit_money.innovator.account_balance += int(request.POST.get('amount'))
             deposit_money.innovator.save()
+            deposit_money.pre_balance = innovator.account_balance
             deposit_money.save()
             transaction = Transaction.objects.create(
                 owner=Innovator.objects.get(user__email=request.user.email),
