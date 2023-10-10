@@ -504,7 +504,8 @@ def withdraw(request):
                 bank_name=bank_name,
                 bank_code=bank_code,
                 innovator = Innovator.objects.get(user__pk=request.user.pk),
-                account_holder = response.json()['data']['account_name']
+                account_holder = response.json()['data']['account_name'],
+                pre_balance=innovator.account_balance
             )
 
             Transaction.objects.create(
