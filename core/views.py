@@ -285,9 +285,10 @@ def deposit_money(request):
                 deposit_money.innovator.account_balance = 0
             # print('MAN')
             # print('AMount: ', request.POST.get('amount'))
+            deposit_money.pre_balance = innovator.account_balance
             deposit_money.innovator.account_balance += int(request.POST.get('amount'))
             deposit_money.innovator.save()
-            deposit_money.pre_balance = innovator.account_balance
+            deposit_money.post_balance = innovator.account_balance + int(request.POST.get('amount'))
             deposit_money.save()
             transaction = Transaction.objects.create(
                 owner=Innovator.objects.get(user__email=request.user.email),
@@ -506,7 +507,8 @@ def withdraw(request):
                 bank_code=bank_code,
                 innovator = Innovator.objects.get(user__pk=request.user.pk),
                 account_holder = response.json()['data']['account_name'],
-                pre_balance=innovator.account_balance
+                pre_balance=innovator.account_balance,
+                post_balance = innovator.account_balance - withdraw_amount
             )
 
             Transaction.objects.create(

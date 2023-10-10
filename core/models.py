@@ -149,6 +149,7 @@ class Withdrawal(models.Model):
     account_holder = models.CharField(max_length=254, null=True, blank=False)
     innovator = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE, null=False)
     date = models.DateTimeField(auto_now_add=True, null=True)
+    pre_balance = models.PositiveIntegerField(null=True, blank=True)
     post_balance = models.PositiveIntegerField(null=True, blank=True)
     # post_withdrawal_account_balance = models.PositiveBigIntegerField(null=False, blank=False)
 
