@@ -534,4 +534,36 @@ def get_bank_details(request):
             print("Request failed with status code:", response.status_code)
             print("Response content:", response.text)
             return JsonResponse({'error': 'Error encountered while retrieving bank account details.', 'status': 'failed'})
-            
+
+def withdraw(request):
+    context = {}
+    withdraw_amount = request.POST.get('withdraw_amount')
+    account_number = request.POST.get('withdraw_to')
+    bank_name = ''
+    bank_code = request.POST.get('bank_code')
+    for bank in context['banks']:
+        if bank['code'] == bank_code:
+            bank_name = bank['name']
+    url = f"https://api.paystack.co/bank/resolve?account_number={account_number}&bank_code={bank_code}"
+    headers = {
+        "Authorization": f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}"
+    }
+    response = requests.get(url, headers=headers).json()
+    withdrawal = Withdrawal.objects.create(
+        amount=withdraw_amount,
+        account_number=account_number,
+        bank_name=bank_name,
+        bank_code=bank_code,
+        innovator = Innovator.objects.get(user__pk=request.user.pk),
+        account_holder = response['data']['account_name']
+    )
+
+    Transaction.objects.create(
+        owner=Innovator.objects.get(user__pk=request.user.pk),
+        description= f"You made a withdrawal of ₦{withdraw_amount} into {account_number}-{context['bank_name']}",
+        successful = not False,
+        reference_code = withdrawal.reference_code,
+        amount = withdraw_amount
+    )
+    return redirect('home')
+    # return render(request, 'core/fund.html', context)
