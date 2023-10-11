@@ -526,12 +526,12 @@ def withdraw(request):
     return render(request, 'core/fund.html', context)
 
 def send_money(request):
-    recipient_username = request.POST.get('username')
-    try:
-        recipient = Innovator.objects.get(user__username=recipient_username)
-    except:
-        return messages.error(request, 'No user found')
     if request.method == 'POST' and 'send_money' in request.POST:
+        recipient_username = request.POST.get('username')
+        try:
+            recipient = Innovator.objects.get(user__username=recipient_username)
+        except:
+            return messages.error(request, 'No user found')
         amount_to_send = request.POST.get('amount_to_send')
         sender = Innovator.objects.get(user__username=request.user.username)
         if amount_to_send == 0 or amount_to_send is None:
