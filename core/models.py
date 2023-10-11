@@ -168,4 +168,4 @@ class SendMoney(models.Model):
     post_balance = models.PositiveIntegerField(null=True, blank=True)
 
     def __str__(self) -> str:
-        return f"{self.sender.user.username} sent {self.amount} to {self.recipient.user.username}"
+        return f"{self.sender.user.username} sent : ₦{self.amount} to {self.recipient.user.username}"
