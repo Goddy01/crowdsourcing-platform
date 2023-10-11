@@ -530,31 +530,36 @@ def send_money(request):
     if request.method == 'POST' and 'send_money' in request.POST:
         recipient_username = request.POST.get('recipient_username')
         try:
-            recipient = Innovator.objects.get(user__username=recipient_username)
+            if recipient_username is not None:
+                recipient = Innovator.objects.get(user__username=recipient_username)
+                amount_to_send = int(request.POST.get('amount_to_send'))
+                sender = Innovator.objects.get(user__username=request.user.username)
+                if amount_to_send == 0 or amount_to_send is None:
+                    messages.error(request, 'You forgot to enter the amount you want to send')
+                # if not recipient_username:
+                #     messages.error(request, 'You forgot to provide the username of the recipient')
+                elif amount_to_send != 0 and amount_to_send is not None and sender.account_balance >= amount_to_send:
+                    send_money = SendMoney.objects.create(
+                        sender = sender,
+                        recipient = recipient,
+                        pre_balance = sender.account_balance,
+                        post_balance = sender.account_balance - amount_to_send,
+                    )
+                    Transaction.objects.create(
+                        owner=sender,
+                        description= f"You sent ₦{amount_to_send} to {recipient_username} on {send_money.date}",
+                        successful = not False,
+                        reference_code = send_money.reference_code,
+                        amount = amount_to_send
+                    )
+                    messages.success(request, f'You have successfully sent ₦{amount_to_send} to {recipient.user.username}')
+                    context['send_money_obj'] = send_money
+                    context['money_sent'] = True
+                else:
+                    messages.error(request, 'Insufficient Balance')
+                    context['money_sent'] = False
+            else:
+              messages.error(request, 'You forgot to provide the username of the recipient')  
         except:
             return messages.error(request, 'No user found')
-        amount_to_send = request.POST.get('amount_to_send')
-        sender = Innovator.objects.get(user__username=request.user.username)
-        if amount_to_send == 0 or amount_to_send is None:
-            messages.error(request, 'You forgot to enter the amount you want to send')
-        # if not recipient_username:
-        #     messages.error(request, 'You forgot to provide the username of the recipient')
-        elif amount_to_send != 0 and amount_to_send is not None and sender.account_balance >= amount_to_send:
-            send_money = SendMoney.objects.create(
-                sender = sender,
-                recipient = recipient,
-                pre_balance = sender.account_balance,
-                post_balance = sender.account_balance - amount_to_send,
-            )
-            Transaction.objects.create(
-                owner=sender,
-                description= f"You sent ₦{amount_to_send} to {recipient_username} on {send_money.date}",
-                successful = not False,
-                reference_code = send_money.reference_code,
-                amount = amount_to_send
-            )
-            messages.success(request, f'You have successfully sent ₦{amount_to_send} to {recipient.user.username}')
-            context['send_money_obj'] = send_money
-        else:
-            messages.error(request, 'Insufficient Balance')
     return render(request, 'core/fund.html', context)

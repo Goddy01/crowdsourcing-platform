@@ -30,11 +30,13 @@
     <ul class="messages">
         {% for message in messages %}
         <li  {% if message.tags %} class="fadeout p-3 text-center {{ message.tags }} " {% endif %} style="list-style: none;"> 
+            {{ message.tag }}
 			{{ message }} <a href="" data-bs-toggle="modal" data-bs-target="#exampleModal">See receipt</a>
 		</li>
         {% endfor %}
     </ul>
 	{% endif %}
+    {% if money_sent == True %}
     <!-- Modal -->
 			<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				<div class="modal-dialog modal-dialog-centered">
@@ -83,6 +85,7 @@
 				</div>
 				</div>
 			</div>
+    {% endif %}
         <div id="tab-deposit" class="mb-5" style="background-color: whitesmoke;padding: 40px;">
             <div class="row">
                 <div class="col-12 col-lg-12">
@@ -179,7 +182,8 @@
         </div>
 
         <div style="background-color: whitesmoke;padding: 40px;">
-            <form action="" class="row">
+            <form action="{% url 'send_money' %}" class="row" method="post">
+                {% csrf_token %}
                 <h4 class="mb-5">Send Money</h4>
                 <div class="col-md-6">
                     <input type="number" name="amount_to_send" id="amount_to_send" min="0" step="0.1" placeholder="Amount to send" class="form-control">
@@ -188,7 +192,7 @@
                 <div class="col-md-6">
                     <input type="text" name="username" id="recipient_username" placeholder="Recipient's username" class="form-control">
                 </div>
-                <button type="button" name="withdraw" id="initialWithdrawButton" data-bs-toggle="modal" data-bs-target="#exampleModal" class="button button-primary">Send Money</button>
+                <button type="submit" name="send_money" class="button button-primary">Send Money</button>
             </form>
         </div>
 </div>
