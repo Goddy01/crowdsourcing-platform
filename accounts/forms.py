@@ -138,7 +138,7 @@ class InnovatorSignUpForm(UserCreationForm):
         return email
     def clean_username(self):
         username = self.cleaned_data.get('username')
-        if BaseUser.objects.filter(username=username):
+        if BaseUser.objects.filter(username=username.lower()):
             raise forms.ValidationError('A user with this username already exist.')
         return username
         
@@ -215,7 +215,7 @@ class ModeratorSignUpForm(UserCreationForm):
     
     def clean_username(self):
         username = self.cleaned_data.get('username')
-        if BaseUser.objects.filter(username=username):
+        if BaseUser.objects.filter(username=username.lower()):
             raise forms.ValidationError('A moderator with this username already exist.')
         return username
 

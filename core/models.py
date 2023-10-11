@@ -157,3 +157,15 @@ class Withdrawal(models.Model):
     def post_withdrawal_account_balance(self):
         balance = self.innovator.account_balance - self.amount
         return balance
+    
+class SendMoney(models.Model):
+    amount = models.PositiveIntegerField(null=True, blank=True)
+    reference_code = models.UUIDField(default=uuid.uuid4, null=True)
+    sender = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE, null=False, blank=False, related_name='money_sender')
+    recipient = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE, null=False, related_name='money_recipient')
+    date = models.DateTimeField(auto_now_add=True, null=True)
+    pre_balance = models.PositiveIntegerField(null=True, blank=True)
+    post_balance = models.PositiveIntegerField(null=True, blank=True)
+
+    def __str__(self) -> str:
+        return f"{self.sender.user.username} sent {self.amount} to {self.recipient.user.username}"

@@ -524,3 +524,6 @@ def withdraw(request):
         else:
             return HttpResponse('You cannot withdraw more than what you have.')
     return render(request, 'core/fund.html', context)
+
+# def send_money(request, recipient_username):
+    
