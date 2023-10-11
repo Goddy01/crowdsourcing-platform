@@ -526,8 +526,9 @@ def withdraw(request):
     return render(request, 'core/fund.html', context)
 
 def send_money(request):
+    context = {}
     if request.method == 'POST' and 'send_money' in request.POST:
-        recipient_username = request.POST.get('username')
+        recipient_username = request.POST.get('recipient_username')
         try:
             recipient = Innovator.objects.get(user__username=recipient_username)
         except:
@@ -545,7 +546,15 @@ def send_money(request):
                 pre_balance = sender.account_balance,
                 post_balance = sender.account_balance - amount_to_send,
             )
+            Transaction.objects.create(
+                owner=sender,
+                description= f"You sent ₦{amount_to_send} to {recipient_username} on {send_money.date}",
+                successful = not False,
+                reference_code = send_money.reference_code,
+                amount = amount_to_send
+            )
             messages.success(request, f'You have successfully sent ₦{amount_to_send} to {recipient.user.username}')
-            return JsonResponse({'sned_money_obj': send_money})
+            context['send_money_obj'] = send_money
         else:
             messages.error(request, 'Insufficient Balance')
+    return render(request, 'core/fund.html', context)
