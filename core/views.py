@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
-from .models import Project, Innovation, Contribution, Reward_Payment, Make_Investment, Transaction, DepositMoney, Withdrawal
+from .models import Project, Innovation, Contribution, Reward_Payment, Make_Investment, Transaction, DepositMoney, Withdrawal, SendMoney
 from django_countries import countries
 from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm, MyInvestmentForm, InvestmentStatusForm
 from accounts.models import Innovator, Moderator, BaseUser
@@ -525,5 +525,27 @@ def withdraw(request):
             return HttpResponse('You cannot withdraw more than what you have.')
     return render(request, 'core/fund.html', context)
 
-# def send_money(request, recipient_username):
-    
+def send_money(request):
+    recipient_username = request.POST.get('username')
+    try:
+        recipient = Innovator.objects.get(user__username=recipient_username)
+    except:
+        return messages.error(request, 'No user found')
+    if request.method == 'POST' and 'send_money' in request.POST:
+        amount_to_send = request.POST.get('amount_to_send')
+        sender = Innovator.objects.get(user__username=request.user.username)
+        if amount_to_send == 0 or amount_to_send is None:
+            messages.error(request, 'You forgot to enter the amount you want to send')
+        # if not recipient_username:
+        #     messages.error(request, 'You forgot to provide the username of the recipient')
+        elif amount_to_send != 0 and amount_to_send is not None and sender.account_balance >= amount_to_send:
+            send_money = SendMoney.objects.create(
+                sender = sender,
+                recipient = recipient,
+                pre_balance = sender.account_balance,
+                post_balance = sender.account_balance - amount_to_send,
+            )
+            messages.success(request, f'You have successfully sent ₦{amount_to_send} to {recipient.user.username}')
+            return JsonResponse({'sned_money_obj': send_money})
+        else:
+            messages.error(request, 'Insufficient Balance')
