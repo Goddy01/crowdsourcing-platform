@@ -123,9 +123,6 @@
                         </ul>
                         {% if request.user.username == innovator.user.username %}
                         <a href="{% url 'accounts:edit_profile' %}" class="btn btn-outline-success fw-bolder fs-7 px-4 py-2 mt-3">Edit Profile</a>
-                        <p>
-                            <a href="{% url 'accounts:make_payment' %}" class="btn btn-outline-success fw-bolder fs-7 px-4 py-2 mt-3">Deposit Money Into Your Account</a>
-                        </p>
                         {% endif %}
                     </div>
                </div>

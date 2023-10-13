@@ -101,10 +101,12 @@ def project_details(request, project_pk):
     #     return redirect('accounts:innovator_login')
     try:
         if request.user.is_innovator:
+            print('2')
             investor_1 = Innovator.objects.get(user__pk=request.user.pk)
             context['investor_1'] = investor_1
 
             if request.method == 'POST' and 'date-filter' in request.POST:
+                print('3')
                 date_from = request.POST.get('date-from')
                 date_to = request.POST.get('date-to')
                 investors = Make_Investment.objects.filter(investment__pk=project_pk, date_sent__date__range=(date_from, date_to))
@@ -112,10 +114,12 @@ def project_details(request, project_pk):
                 context['date_to'] = date_to
             else:
                 investors = Make_Investment.objects.filter(investment__pk=project_pk)
-                context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
+                # context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
+                print('4')
             context['investors'] = investors
 
         else:
+            print('5')
             moderator = Moderator.objects.get(user__pk=request.user.pk)
             context['moderator'] = moderator
             print('YO: ', request.POST.get('status'))
@@ -127,7 +131,6 @@ def project_details(request, project_pk):
                 project.status = request.POST.get('status')
                 project.save()
                 print('broo: ', project.status)
-                
                 messages.success(request, 'Investment details has been updated!')
     except:
         pass
@@ -353,7 +356,7 @@ def invest(request, investment_pk):
     investor = Innovator.objects.get(user__pk=request.user.pk)
     context['investor_1'] = investor
     investment_owner = investment.innovator
-    context['investment'] = investment
+    context['project'] = investment
     if request.method == 'POST' and 'invest' in request.POST:
         amount = int(request.POST.get('amount'))
         if amount <= investor.account_balance:
@@ -389,7 +392,7 @@ def invest(request, investment_pk):
                 reference_code = invest.reference_code,
                 amount = amount
             )
-            context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
+            context['transaction'] = transaction
             messages.success(request, 'Thank you for investing in this project!')
             return redirect('project_details', investment_pk)
         else:
@@ -436,8 +439,6 @@ def my_investments(request):
     else:
         my_investments = Make_Investment.objects.filter(sender__user__pk=request.user.pk)
         context['my_investments'] = my_investments
-        for i in my_investments:
-            print('BRO: ', i.investment.business_type)
     return render(request, 'core/my-investments.html', context)
 
 def statement(request):
@@ -520,6 +521,7 @@ def withdraw(request):
             )
             innovator.account_balance -= withdraw_amount
             innovator.save()
+            messages.success(request, 'You have successfully made a request for withdrawal')
             return redirect('home')
         else:
             return HttpResponse('You cannot withdraw more than what you have.')
