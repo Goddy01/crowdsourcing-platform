@@ -42,6 +42,7 @@ urlpatterns = [
     path('get-bank-details/', views.get_bank_details, name='get_bank_details'),
     path('withdraw/', views.withdraw, name='withdraw'),
     path('send-money/', views.send_money, name='send_money'),
+    path('account-statement/', views.statement, name='statement'),
     
     # path('contribution/reply/<innovation_pk>/', views.reply, name='reply'),
 
