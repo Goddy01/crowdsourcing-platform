@@ -410,7 +410,7 @@ def my_investments(request):
     context = {}
     
     context['category_form'] = MyInvestmentForm()
-    if request.method == 'POST' and 'filter-investments' in request.POST:
+    if request.method == 'POST' and 'filter_investments' in request.POST:
         print('WHY, MAN!!!')
         investment_date_from = request.POST.get('investment_date_from')
         investment_date_to = request.POST.get('investment_date_to')
