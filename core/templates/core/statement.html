@@ -18,10 +18,11 @@
 		<main class="site-section section-main">
 			<div class="container">
 				<div class="row">
-					<div id="sidebar" class="col-12 col-md-4 col-lg-3 content-filters">
+					<div id="sidebar" class="col-12 col-md-4 col-lg-2 content-filters">
 						<form action="account-statement.html">
-							<h5 class="widget-title">Transaction date</h5>
-							<div class="content-filter-date content-filter-interval">
+							<!-- <h5 class="widget-title">Transaction date</h5> -->
+							<div class="content-filter-date content-filter-interval col-6">
+                                <h4>FILTER</h4>
                                 <div>
                                     <label for="date-from">
                                         <span>From:</span>
@@ -36,7 +37,7 @@
                                 </div>
 							</div>
 
-							<h5 class="widget-title">Transaction type</h5>
+							<!-- <h5 class="widget-title">Transaction type</h5> -->
 							<div class="content-filter-type content-filter-checkboxes">
 								<label for="type-deposit">
 									<input id="type-deposit" name="type-deposit" type="checkbox">
@@ -58,6 +59,7 @@
 									<input id="type-investment" name="type-investment" type="checkbox">
 									<span>Investment</span>
 								</label>
+                                <button type="submit" class="button button-primary">Filter</button>
 								<!-- <label for="type-referral-fee">
 									<input id="type-referral-fee" name="type-referral-fee" type="checkbox">
 									<span>Referral fee</span>
@@ -65,71 +67,25 @@
 							</div>
 						</form>
 					</div>
-					<div class="col-12 col-md-8 col-lg-9">
+					<div class="col-12 col-md-8 col-lg-10">
 						<table>
 							<thead>
 								<tr>
-									<th>Date</th>
+									<th class="col-3">Date</th>
 									<th>Details</th>
 									<th>Amount</th>
+									<th>Reference Code</th>
 								</tr>
 							</thead>
 							<tbody>
+                                {% for transaction in transactions %}
 								<tr>
-									<td>2022-03-26</td>
-									<td>Interest payment received <a href="" class="project-id">5903</a></td>
-									<td>€0.66</td>
+									<td>{{ transaction.date_generated }}</td>
+									<td>{{ transaction.description }}</td>
+									<td>₦{{ transaction.amount }}</td>
+                                    <td>{{ transaction.reference_code }}</td>
 								</tr>
-								<tr>
-									<td>2022-03-26</td>
-									<td>Principal payment received <a href="" class="project-id">5903</a></td>
-									<td>€40.00</td>
-								</tr>
-								<tr>
-									<td>2022-03-16</td>
-									<td>Withdrawal</td>
-									<td>-€240.00</td>
-								</tr>
-								<tr>
-									<td>2022-02-29</td>
-									<td>Interest payment received <a href="" class="project-id">6311</a></td>
-									<td>€0.50</td>
-								</tr>
-								<tr>
-									<td>2022-02-29</td>
-									<td>Principal payment received <a href="" class="project-id">6311</a></td>
-									<td>€€30.00</td>
-								</tr>
-								<tr>
-									<td>2022-02-28</td>
-									<td>Interest payment received <a href="" class="project-id">4980</a></td>
-									<td>€0.98</td>
-								</tr>
-								<tr>
-									<td>2022-02-23</td>
-									<td>Interest payment received <a href="" class="project-id">5813</a></td>
-									<td>€4.88</td>
-								</tr>
-								<tr>
-									<td>2022-02-16</td>
-									<td>Deposit</td>
-									<td>€400.00</td>
-								</tr>
-								<tr>
-									<td>2022-02-09</td>
-									<td>Interest payment received <a href="" class="project-id">4021</a></td>
-									<td>€2.75</td>
-								</tr>
-								<tr>
-									<td>2022-02-01</td>
-									<td>Interest payment received <a href="" class="project-id">5571</a></td>
-									<td>€0.37</td>
-								</tr>
-								<!-- <tr>
-									<td>2022-02-01</td>
-									<td>Principal payment received <a href="" class="project-id">5571</a></td>
-									<td>€150</td>
-								</tr> -->
+                                {% endfor %}
 							</tbody>
 						</table>
 						<!-- <div class="pagination">

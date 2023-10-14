@@ -295,7 +295,7 @@ def deposit_money(request):
             deposit_money.save()
             transaction = Transaction.objects.create(
                 owner=Innovator.objects.get(user__email=request.user.email),
-                description= f"You deposited ₦{request.POST.get('amount')} into your CrowdSourceIt",
+                description= f"You deposited ₦{request.POST.get('amount')} into your account",
                 successful = not False,
                 reference_code = deposit_money.reference_code,
                 amount = request.POST.get('amount')
@@ -443,6 +443,7 @@ def my_investments(request):
 
 def statement(request):
     context = {}
+    context['transactions'] = Transaction.objects.filter(owner__user__pk=request.user.pk)
     return render(request, 'core/statement.html', context)
 
 def get_bank_details(request):
