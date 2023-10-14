@@ -125,6 +125,8 @@ class Transaction(models.Model):
     date_generated = models.DateTimeField(auto_now_add=True, null=True)
     reference_code = models.UUIDField(default=uuid.uuid4, null=True)
     amount = models.PositiveIntegerField(null=True, blank=True)
+    pre_balance = models.PositiveIntegerField(null=True, blank=True)
+    post_balance = models.PositiveIntegerField(null=True, blank=True)
 
     def __str__(self):
         if self.owner.user.middle_name:
