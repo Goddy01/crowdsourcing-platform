@@ -293,13 +293,15 @@ def deposit_money(request):
             deposit_money.innovator.save()
             deposit_money.post_balance = innovator.account_balance + int(request.POST.get('amount'))
             deposit_money.save()
+            innovator = Innovator.objects.get(user__email=request.user.email)
             transaction = Transaction.objects.create(
-                owner=Innovator.objects.get(user__email=request.user.email),
+                owner=innovator,
                 description= f"You deposited ₦{request.POST.get('amount')} into your account",
                 successful = not False,
                 reference_code = deposit_money.reference_code,
-                amount = request.POST.get('amount'),
-                
+                amount = int(request.POST.get('amount')),
+                pre_balance = innovator.account_balance - int(request.POST.get('amount')),
+                post_balance = innovator.account_balance
             )
             context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
             # print(innovator.account_balance)
