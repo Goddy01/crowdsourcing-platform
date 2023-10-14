@@ -298,7 +298,8 @@ def deposit_money(request):
                 description= f"You deposited ₦{request.POST.get('amount')} into your account",
                 successful = not False,
                 reference_code = deposit_money.reference_code,
-                amount = request.POST.get('amount')
+                amount = request.POST.get('amount'),
+                
             )
             context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
             # print(innovator.account_balance)
