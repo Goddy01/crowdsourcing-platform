@@ -448,7 +448,17 @@ def my_investments(request):
 
 def statement(request):
     context = {}
-    context['transactions'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')
+    if request.method == 'POST' and 'filter_statement' in request.POST:
+        statement_date_from = request.POST.get('statement_date_from')
+        statement_date_to = request.POST.get('statement_date_to')
+        type_deposit = request.POST.get('type_deposit')
+        type_withdrawal = request.POST.get('type_withdrawal')
+        type_interest_payment = request.POST.get('type_interest_payment')
+        type_investment = request.POST.get('type_investment')
+        if statement_date_from and not statement_date_to and not type_deposit and not type_withdrawal and not type_interest_payment and not type_investment:
+            context['transactions'] = Transaction.objects.filter(owner__user__pk=request.user.pk)
+    else:
+        context['transactions'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')
     return render(request, 'core/statement.html', context)
 
 def get_bank_details(request):

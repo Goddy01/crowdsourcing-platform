@@ -26,13 +26,13 @@
                                 <div>
                                     <label for="date-from" class="w-100">
                                         <span>From:</span>
-                                        <input type="date" id="date-from" name="date-from" value="2022-03-01">
+                                        <input type="date" id="date-from" name="statement_date_from">
                                     </label>
                                 </div>
                                 <div>
                                     <label for="date-to" class="w-100">
                                         <span>To:</span>
-                                        <input type="date" id="date-to" name="date-to" value="2022-04-30">
+                                        <input type="date" id="date-to" name="statement_date_to">
                                     </label>
                                 </div>
 							</div>
@@ -40,11 +40,11 @@
 							<!-- <h5 class="widget-title">Transaction type</h5> -->
 							<div class="content-filter-type content-filter-checkboxes mt-3">
 								<label for="type-deposit">
-									<input id="type-deposit" name="type-deposit" type="checkbox">
+									<input id="type-deposit" name="type_deposit" type="checkbox">
 									<span>Deposit</span>
 								</label>
 								<label for="type-withdrawal">
-									<input id="type-withdrawal" name="type-withdrawal" type="checkbox">
+									<input id="type-withdrawal" name="type_withdrawal" type="checkbox">
 									<span>Withdrawal</span>
 								</label>
 								<!-- <label for="type-principal-repayment">
@@ -52,14 +52,14 @@
 									<span>Principal repayment</span>
 								</label> -->
 								<label for="type-interest-payment">
-									<input id="type-interest-payment" name="type-interest-payment" type="checkbox">
+									<input id="type-interest-payment" name="type_interest_payment" type="checkbox">
 									<span>Interest payment</span>
 								</label>
 								<label for="type-investment">
-									<input id="type-investment" name="type-investment" type="checkbox">
+									<input id="type-investment" name="type_investment" type="checkbox">
 									<span>Investment</span>
 								</label>
-                                <button type="submit" class="button button-primary w-100 mt-3 py-2">Filter</button>
+                                <button type="submit" class="button button-primary w-100 mt-3 py-2" name="filter_statement">Filter</button>
 								<!-- <label for="type-referral-fee">
 									<input id="type-referral-fee" name="type-referral-fee" type="checkbox">
 									<span>Referral fee</span>
