@@ -3,7 +3,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from .models import Project, Innovation, Contribution, Reward_Payment, Make_Investment, Transaction, DepositMoney, Withdrawal, SendMoney
 from django_countries import countries
-from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm, MyInvestmentForm, InvestmentStatusForm
+from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm, MyInvestmentForm, InvestmentStatusForm, StatementTypeForm
 from accounts.models import Innovator, Moderator, BaseUser
 from django.utils import timezone
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import uuid, requests, os, json
 from dotenv import load_dotenv
+from django.utils.dateparse import parse_datetime
 
 load_dotenv()
 
@@ -302,7 +303,7 @@ def deposit_money(request):
                 amount = int(request.POST.get('amount')),
                 pre_balance = innovator.account_balance - int(request.POST.get('amount')),
                 post_balance = innovator.account_balance,
-                type='deposit'
+                type='DEPOSIT'
             )
             context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
             # print(innovator.account_balance)
@@ -397,7 +398,7 @@ def invest(request, investment_pk):
                 amount = amount,
                 pre_balance = investor.account_balance - amount,
                 post_balance = investor.account_balance,
-                type='investment'
+                type='INVESTMENT'
             )
             context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
             messages.success(request, 'Thank you for investing in this project!')
@@ -450,15 +451,46 @@ def my_investments(request):
 
 def statement(request):
     context = {}
+    context['statement_type_form'] = StatementTypeForm()
     if request.method == 'POST' and 'filter_statement' in request.POST:
-        statement_date_from = request.POST.get('statement_date_from')
-        statement_date_to = request.POST.get('statement_date_to')
-        type_deposit = request.POST.get('type_deposit')
-        type_withdrawal = request.POST.get('type_withdrawal')
-        type_interest_payment = request.POST.get('type_interest_payment')
-        type_investment = request.POST.get('type_investment')
-        if statement_date_from and not statement_date_to and not type_deposit and not type_withdrawal and not type_interest_payment and not type_investment:
-            context['transactions'] = Transaction.objects.filter(owner__user__pk=request.user.pk)
+        statement_date_from = parse_datetime(request.POST.get('statement_date_from'))
+        statement_date_to = parse_datetime(request.POST.get('statement_date_to'))
+        type_list = request.POST.getlist('type')
+        context['statement_date_from'] = statement_date_from
+        context['statement_date_to'] = statement_date_to
+        print('TYPE LIST: ', type_list)
+        if statement_date_from != None and statement_date_to != None and len(type_list) > 0:
+            context['transactions'] = Transaction.objects.filter(
+                type__in=type_list,
+                owner__user__pk=request.user.pk,
+                date_generated__date__range=(statement_date_from, statement_date_to),
+                ).order_by('-date_generated')
+        elif statement_date_from != None and statement_date_to != None and len(type_list) == 0:
+            context['transactions'] = Transaction.objects.filter(
+                owner__user__pk=request.user.pk,
+                date_generated__date__range=(statement_date_from, statement_date_to),
+                ).order_by('-date_generated')
+        elif statement_date_from != None and statement_date_to == None and len(type_list) > 0:
+            context['transactions'] = Transaction.objects.filter(
+                type__in=type_list,
+                owner__user__pk=request.user.pk,
+                date_generated__gte=(statement_date_from),
+                ).order_by('-date_generated')
+        elif statement_date_from != None and statement_date_to == None and len(type_list) == 0:
+            context['transactions'] = Transaction.objects.filter(
+                owner__user__pk=request.user.pk,
+                date_generated__gte=(statement_date_from),
+                ).order_by('-date_generated')
+        elif statement_date_from == None and statement_date_to == None and len(type_list) > 0:
+            context['transactions'] = Transaction.objects.filter(
+                type__in=type_list,
+                owner__user__pk=request.user.pk
+                ).order_by('-date_generated')
+        elif statement_date_from == None and statement_date_to == None and len(type_list) == 0:
+            context['transactions'] = Transaction.objects.filter(
+                owner__user__pk=request.user.pk
+                ).order_by('-date_generated')
+        context['statement_type_form'] = StatementTypeForm({'type': type_list})
     else:
         context['transactions'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')
     return render(request, 'core/statement.html', context)
@@ -538,7 +570,7 @@ def withdraw(request):
                 amount = withdraw_amount,
                 pre_balance = innovator.account_balance - withdraw_amount,
                 post_balance = innovator.account_balance,
-                type = 'withdrawal',
+                type = 'WITHDRAWAL',
             )
             innovator.account_balance -= withdraw_amount
             innovator.save()
@@ -584,7 +616,7 @@ def send_money(request):
                         amount = amount_to_send,
                         pre_balance = sender.account_balance - amount_to_send,
                         post_balance = sender.account_balance,
-                        type = 'outgoing_transfer'
+                        type = 'OUTGOING TRANSFER'
                     )
                     send_money.create_receive_money_instance()
                     messages.success(request, f'You have successfully sent ₦{amount_to_send} to {recipient.user.username}.')

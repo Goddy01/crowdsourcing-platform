@@ -1,4 +1,4 @@
-from .models import Project, Innovation, Contribution
+from .models import Project, Innovation, Contribution, Transaction
 from django import forms
 from ckeditor.fields import RichTextFormField
 
@@ -154,3 +154,17 @@ class InvestmentStatusForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = ['status']
+
+class StatementTypeForm(forms.ModelForm):
+    TYPE_CHOICES = (
+        ('DEPOSIT', 'Deposit'),
+        ('WITHDRAWAL', 'Withdrawal'),
+        ('INTEREST PAYMENT', 'Interest Payment'),
+        ('INVESTMENT', 'Investment'),
+        ('OUTGOING TRANSFER', 'Outgoing Transfer'),
+        ('INCOMING TRANSFER', 'Incoming Transfer')
+    )
+    type = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=TYPE_CHOICES)
+    class Meta:
+        model = Transaction
+        fields = ['type']

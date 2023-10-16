@@ -19,54 +19,28 @@
 			<div class="mx-5">
 				<div class="row">
 					<div id="sidebar" class="col-12 col-md-4 col-lg-2 content-filters">
-						<form action="account-statement.html">
+						<form action="{% url 'statement' %}" method="POST">
+                            {% csrf_token %}
 							<!-- <h5 class="widget-title">Transaction date</h5> -->
-							<div class="content-filter-date content-filter-interval col-12">
+							<div class="col-12">
                                 <h4>FILTER</h4>
                                 <div>
                                     <label for="date-from" class="w-100">
                                         <span>From:</span>
-                                        <input type="date" id="date-from" name="statement_date_from">
+                                        <input type="date" name="statement_date_from" value="{{ request.POST.statement_date_from }}">
                                     </label>
                                 </div>
                                 <div>
                                     <label for="date-to" class="w-100">
                                         <span>To:</span>
-                                        <input type="date" id="date-to" name="statement_date_to">
+                                        <input type="date" name="statement_date_to" value="{{ request.POST.statement_date_to }}">
                                     </label>
                                 </div>
 							</div>
 
 							<!-- <h5 class="widget-title">Transaction type</h5> -->
-							<div class="content-filter-type content-filter-checkboxes mt-3">
-								<label for="type-deposit">
-									<input id="type-deposit" name="type_deposit" type="checkbox">
-									<span>Deposit</span>
-								</label>
-								<label for="type-withdrawal">
-									<input id="type-withdrawal" name="type_withdrawal" type="checkbox">
-									<span>Withdrawal</span>
-								</label>
-								<!-- <label for="type-principal-repayment">
-									<input id="type-principal-repayment" name="type-principal-repayment" type="checkbox">
-									<span>Principal repayment</span>
-								</label> -->
-								<label for="type-interest-payment">
-									<input id="type-interest-payment" name="type_interest_payment" type="checkbox">
-									<span>Interest payment</span>
-								</label>
-								<label for="type-investment">
-									<input id="type-investment" name="type_investment" type="checkbox">
-									<span>Investment</span>
-								</label>
-								<label for="type-transfer">
-									<input id="type-interest-payment" name="type_transfer" type="checkbox">
-									<span>Outgoing Transfer</span>
-								</label>
-								<label for="type-received">
-									<input id="type-investment" name="type_received" type="checkbox">
-									<span>Incoming Transfer</span>
-								</label>
+							<div class="mt-3">
+								{{ statement_type_form.type }}
                                 <button type="submit" class="button button-primary w-100 mt-3 py-2" name="filter_statement">Filter</button>
 								<!-- <label for="type-referral-fee">
 									<input id="type-referral-fee" name="type-referral-fee" type="checkbox">
