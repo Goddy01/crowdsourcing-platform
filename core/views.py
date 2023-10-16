@@ -584,7 +584,7 @@ def send_money(request):
                         amount = amount_to_send,
                         pre_balance = sender.account_balance - amount_to_send,
                         post_balance = sender.account_balance,
-                        type = 'send_money'
+                        type = 'outgoing_transfer'
                     )
                     send_money.create_receive_money_instance()
                     messages.success(request, f'You have successfully sent ₦{amount_to_send} to {recipient.user.username}.')

@@ -182,7 +182,7 @@ class SendMoney(models.Model):
             amount = self.amount,
             pre_balance = recipient_pre_balance,
             post_balance = recipient_pre_balance + self.amount,
-            type = 'receive_money'
+            type = 'incoming_transfer'
         )
         return transaction
 
