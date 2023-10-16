@@ -160,17 +160,6 @@ class Withdrawal(models.Model):
         balance = self.innovator.account_balance - self.amount
         return balance
     
-# class ReceiveMoney(models.Model):
-#     amount = models.PositiveIntegerField(null=True, blank=True)
-#     reference_code = models.UUIDField(default=uuid.uuid4, null=True)
-#     sender = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE, null=False, blank=False, related_name='money_sender')
-#     recipient = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE, null=False, related_name='money_recipient')
-#     date = models.DateTimeField(auto_now_add=True, null=True)
-#     pre_balance = models.PositiveIntegerField(null=True, blank=True)
-#     post_balance = models.PositiveIntegerField(null=True, blank=True)
-
-#     def __str__(self) -> str:
-#         return f"You received ₦{self.amount} from {self.sender.user.username}"
     
 class SendMoney(models.Model):
     amount = models.PositiveIntegerField(null=True, blank=True)
