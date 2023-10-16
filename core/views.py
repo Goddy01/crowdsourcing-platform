@@ -393,9 +393,11 @@ def invest(request, investment_pk):
                 description= f"You have invested ₦{amount} in {investment.name}",
                 successful = not False,
                 reference_code = invest.reference_code,
-                amount = amount
+                amount = amount,
+                pre_balance = investor.account_balance - amount,
+                post_balance = investor.account_balance
             )
-            context['transaction'] = transaction
+            context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
             messages.success(request, 'Thank you for investing in this project!')
             return redirect('project_details', investment_pk)
         else:
@@ -446,7 +448,7 @@ def my_investments(request):
 
 def statement(request):
     context = {}
-    context['transactions'] = Transaction.objects.filter(owner__user__pk=request.user.pk)
+    context['transactions'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')
     return render(request, 'core/statement.html', context)
 
 def get_bank_details(request):
