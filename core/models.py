@@ -1,3 +1,4 @@
+from collections.abc import Iterable
 import uuid
 from django.db import models, IntegrityError
 from accounts import models as account_models
@@ -170,18 +171,21 @@ class SendMoney(models.Model):
     pre_balance = models.PositiveIntegerField(null=True, blank=True)
     post_balance = models.PositiveIntegerField(null=True, blank=True)
 
-    def __str__(self) -> str:
-        return f"{self.sender.user.username} sent ₦{self.amount} to {self.recipient.user.username}"
     
-    @property
-    def create_receive_money_instance(self, pre_balance):
-        Transaction.objects.create(
+    def create_receive_money_instance(self):
+        recipient_pre_balance = self.recipient.account_balance - self.amount
+        transaction = Transaction.objects.create(
             owner=self.recipient,
             description = f"You received ₦{self.amount} from {self.sender.user.username}",
             successful = not False,
             reference_code = self.reference_code,
             amount = self.amount,
-            pre_balance = pre_balance,
-            post_balance = pre_balance + self.amount,
+            pre_balance = recipient_pre_balance,
+            post_balance = recipient_pre_balance + self.amount,
             type = 'receive_money'
         )
+        return transaction
+
+
+    def __str__(self) -> str:
+        return f"{self.sender.user.username} sent ₦{self.amount} to {self.recipient.user.username}"
