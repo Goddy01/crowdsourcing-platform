@@ -127,7 +127,7 @@ class Transaction(models.Model):
     amount = models.PositiveIntegerField(null=True, blank=True)
     pre_balance = models.PositiveIntegerField(null=True, blank=True)
     post_balance = models.PositiveIntegerField(null=True, blank=True)
-
+    type = models.CharField(null=True, blank=True)
     def __str__(self):
         if self.owner.user.middle_name:
             return F"Transaction by {self.owner.user.last_name}, {self.owner.user.first_name} {self.owner.user.middle_name}"
