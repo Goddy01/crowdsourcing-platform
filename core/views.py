@@ -113,7 +113,7 @@ def project_details(request, project_pk):
                 context['date_from'] = date_from
                 context['date_to'] = date_to
             else:
-                investors = Make_Investment.objects.filter(investment__pk=project_pk)
+                investors = Make_Investment.objects.filter(investment__pk=project_pk).order_by('-date_sent')
                 # context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
                 print('4')
             context['investors'] = investors
