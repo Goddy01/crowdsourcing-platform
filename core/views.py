@@ -301,7 +301,8 @@ def deposit_money(request):
                 reference_code = deposit_money.reference_code,
                 amount = int(request.POST.get('amount')),
                 pre_balance = innovator.account_balance - int(request.POST.get('amount')),
-                post_balance = innovator.account_balance
+                post_balance = innovator.account_balance,
+                type='deposit'
             )
             context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
             # print(innovator.account_balance)
@@ -395,7 +396,8 @@ def invest(request, investment_pk):
                 reference_code = invest.reference_code,
                 amount = amount,
                 pre_balance = investor.account_balance - amount,
-                post_balance = investor.account_balance
+                post_balance = investor.account_balance,
+                type='investment'
             )
             context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
             messages.success(request, 'Thank you for investing in this project!')
@@ -533,7 +535,10 @@ def withdraw(request):
                 description= f"You made a withdrawal of ₦{withdraw_amount} into {account_number}-{bank_name}",
                 successful = not False,
                 reference_code = withdrawal.reference_code,
-                amount = withdraw_amount
+                amount = withdraw_amount,
+                pre_balance = innovator.account_balance - withdraw_amount,
+                post_balance = innovator.account_balance,
+                type = 'withdrawal',
             )
             innovator.account_balance -= withdraw_amount
             innovator.save()
@@ -558,6 +563,7 @@ def send_money(request):
             try:
                 recipient = Innovator.objects.get(user__username=recipient_username)
                 if amount_to_send != 0 and amount_to_send is not None and sender.account_balance >= amount_to_send:
+                    amount_to_send = int(amount_to_send)
                     send_money = SendMoney.objects.create(
                         amount = amount_to_send,
                         sender = sender,
@@ -575,7 +581,10 @@ def send_money(request):
                         description= f"You sent ₦{amount_to_send} to {recipient_username} on {send_money.date}",
                         successful = not False,
                         reference_code = send_money.reference_code,
-                        amount = amount_to_send
+                        amount = amount_to_send,
+                        pre_balance = sender.account_balance - amount_to_send,
+                        post_balance = sender.account_balance,
+                        type = 'send_money'
                     )
                     messages.success(request, f'You have successfully sent ₦{amount_to_send} to {recipient.user.username}.')
                     context['send_money_obj'] = send_money
