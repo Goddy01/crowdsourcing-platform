@@ -195,3 +195,10 @@ class Moderator(models.Model):
 class Follow(models.Model):
     follower = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='follower')
     following = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='following')
+
+class PersonalFund(models.Model):
+    owner = models.ForeignKey(Innovator, on_delete=models.CASCADE, null=True, blank=True)
+    account_balance = models.PositiveIntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.owner.user.username.title()}'s Account Balance: {self.account_balance}"
