@@ -146,7 +146,7 @@ class Innovator(models.Model):
     downvotes_received =            models.IntegerField(default=0, null=True, blank=True)
     reputation_score =              models.IntegerField(default=0)   
     is_investor =                   models.BooleanField(default=False)
-    owner_funds =                models.ForeignKey('core.PersonalFund', on_delete=models.CASCADE, null=True, blank=True)
+    personal_funds =                models.PositiveIntegerField(null=True, blank=True)
 
     
     USERNAME_FIELD = "email"
