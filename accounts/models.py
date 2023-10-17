@@ -15,6 +15,7 @@ import datetime
 from django.contrib.auth.models import PermissionsMixin
 from django_countries.fields import CountryField
 from PIL import Image
+from core import models as core_models
 # Create your models here.
 
 
@@ -146,7 +147,6 @@ class Innovator(models.Model):
     downvotes_received =            models.IntegerField(default=0, null=True, blank=True)
     reputation_score =              models.IntegerField(default=0)   
     is_investor =                   models.BooleanField(default=False)
-    account_balance = models.IntegerField(null=True)
     
     USERNAME_FIELD = "email"
     # REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'middle_name', 'phone_num']
@@ -196,9 +196,3 @@ class Follow(models.Model):
     follower = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='follower')
     following = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='following')
 
-class PersonalFund(models.Model):
-    owner = models.ForeignKey(Innovator, on_delete=models.CASCADE, null=True, blank=True)
-    account_balance = models.PositiveIntegerField(null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.owner.user.username.title()}'s Account Balance: {self.account_balance}"
