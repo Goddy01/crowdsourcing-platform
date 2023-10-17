@@ -15,7 +15,6 @@ import datetime
 from django.contrib.auth.models import PermissionsMixin
 from django_countries.fields import CountryField
 from PIL import Image
-from core import models as core_models
 # Create your models here.
 
 
@@ -147,6 +146,8 @@ class Innovator(models.Model):
     downvotes_received =            models.IntegerField(default=0, null=True, blank=True)
     reputation_score =              models.IntegerField(default=0)   
     is_investor =                   models.BooleanField(default=False)
+    owner_funds =                models.ForeignKey('core.PersonalFund', on_delete=models.CASCADE, null=True, blank=True)
+
     
     USERNAME_FIELD = "email"
     # REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'middle_name', 'phone_num']

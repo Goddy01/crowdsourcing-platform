@@ -191,10 +191,13 @@ class SendMoney(models.Model):
         return f"{self.sender.user.username} sent ₦{self.amount} to {self.recipient.user.username}"
     
 class PersonalFund(models.Model):
-    owner = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE, null=True, blank=True)    
+    owner = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE, null=True, blank=True)
     account_balance = models.PositiveIntegerField(null=True, blank=True)
+    last_updated = models.DateTimeField(auto_now=True, null=True)
 
 
 class ProjectFund(models.Model):
+    owner = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE, null=True, blank=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     account_balance = models.PositiveIntegerField(null=True, blank=True)
+    last_updated = models.DateTimeField(auto_now=True, null=True)
