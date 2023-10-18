@@ -639,4 +639,9 @@ def send_money(request):
     return render(request, 'core/fund.html', context)
 
 def investment_capital(request):
-    return render(request, 'core/investment-capital.html')
+    context = {}
+    projects_owned = Project.objects.filter(
+        innovator__user__pk=request.user.pk
+    )
+    context['projects_owned'] = projects_owned
+    return render(request, 'core/investment-capital.html', context)
