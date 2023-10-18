@@ -87,8 +87,8 @@
 						</ul>
 					</li>
                     {% if request.user.is_innovator %}
-					<li class="menu-item-has-children">
-						<a href="help.html"  style="font-weight: 600;">Account Balance<em class="mdi mdi-chevron-down"></em></a>
+					<li class="menu-item-has-children" style="cursor: pointer;">
+						<a href=""  style="font-weight: 600;">Account Balance<em class="mdi mdi-chevron-down"></em></a>
 						<ul class="sub-menu">
 							<li data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                 <a>Personal Account Balance</a>
@@ -176,7 +176,8 @@
                 <h5 class="modal-title" id="staticBackdropLabel">Personal Account Balance</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body fw-bold">
+                <div class="modal-body">
+                    <span class="fw-bold">Account Balance: </span>
                     ₦{{ innovator.account_balance }}
                 </div>
                 <div class="modal-footer">
