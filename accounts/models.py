@@ -146,8 +146,7 @@ class Innovator(models.Model):
     downvotes_received =            models.IntegerField(default=0, null=True, blank=True)
     reputation_score =              models.IntegerField(default=0)   
     is_investor =                   models.BooleanField(default=False)
-    personal_funds =                models.PositiveIntegerField(null=True, blank=True)
-
+    account_balance = models.IntegerField(null=True)
     
     USERNAME_FIELD = "email"
     # REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'middle_name', 'phone_num']
@@ -196,4 +195,3 @@ class Moderator(models.Model):
 class Follow(models.Model):
     follower = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='follower')
     following = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='following')
-

@@ -606,6 +606,8 @@ def send_money(request):
                     sender.account_balance -= amount_to_send
                     sender.save()
                     
+                    if recipient.account_balance == None:
+                        recipient.account_balance = 0
                     recipient.account_balance += amount_to_send
                     recipient.save()
                     Transaction.objects.create(
