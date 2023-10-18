@@ -637,3 +637,6 @@ def send_money(request):
     context['amount_to_send'] = request.POST.get('amount_to_send')
     context['recipient_username'] = request.POST.get('recipient_username')
     return render(request, 'core/fund.html', context)
+
+def investment_capital(request):
+    return render(request, 'core/investment-capital.html')
