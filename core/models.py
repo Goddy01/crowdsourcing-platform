@@ -160,7 +160,19 @@ class Withdrawal(models.Model):
     def post_withdrawal_account_balance(self):
         balance = self.innovator.account_balance - self.amount
         return balance
-    
+
+class WithdrawProjectFunds(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
+    amount = models.PositiveIntegerField(null=True, blank=True)
+    reference_code = models.UUIDField(default=uuid.uuid4, null=True)
+    account_number = models.CharField(null=False, blank=True, max_length=254)
+    bank_name = models.CharField(max_length=254, null=False, blank=False)
+    bank_code = models.CharField(max_length=254, null=True, blank=False)
+    account_holder = models.CharField(max_length=254, null=True, blank=False)
+    innovator = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE, null=False)
+    date = models.DateTimeField(auto_now_add=True, null=True)
+    pre_balance = models.PositiveIntegerField(null=True, blank=True)
+    post_balance = models.PositiveIntegerField(null=True, blank=True)
     
 class SendMoney(models.Model):
     amount = models.PositiveIntegerField(null=True, blank=True)
