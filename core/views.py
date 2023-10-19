@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
-from .models import Project, Innovation, Contribution, Reward_Payment, Make_Investment, Transaction, DepositMoney, Withdrawal, SendMoney
+from .models import Project, Innovation, Contribution, Reward_Payment, Make_Investment, Transaction, DepositMoney, Withdrawal, SendMoney, WithdrawProjectFunds
 from django_countries import countries
 from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm, MyInvestmentForm, InvestmentStatusForm, StatementTypeForm
 from accounts.models import Innovator, Moderator, BaseUser
@@ -645,3 +645,53 @@ def investment_capital(request):
     )
     context['projects_owned'] = projects_owned
     return render(request, 'core/investment-capital.html', context)
+
+def withdraw_project_funds(request, project_pk):
+    context = {}
+    project = Project.objects.get(pk=project_pk)
+    withdraw_amount = int(request.session.get('amount'))
+    account_number = request.session.get('account_number')
+    bank_code = request.session.get('bank_code')
+    banks = requests.get(f"https://api.paystack.co/bank").json()['data']
+    bank_name = ''
+    for bank in banks:
+        if bank['code'] == bank_code:
+            bank_name = bank['name']
+    url = f"https://api.paystack.co/bank/resolve?account_number={account_number}&bank_code={bank_code}"
+    headers = {
+        "Authorization": f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}"
+    }
+    response = requests.get(url, headers=headers)
+    print('RESPONSE: ', response.json())
+    innovator = Innovator.objects.get(user__pk=request.user.pk)
+    if response.status_code == 200:
+        if project.fund_raised >= withdraw_amount:
+            withdraw_project_funds = WithdrawProjectFunds.objects.create(
+                project = project,
+                amount=withdraw_amount,
+                account_number=account_number,
+                bank_name=bank_name,
+                bank_code=bank_code,
+                innovator = Innovator.objects.get(user__pk=request.user.pk),
+                account_holder = response.json()['data']['account_name'],
+                pre_balance=project.fund_raised,
+                post_balance = project.fund_raised - withdraw_amount
+            )
+
+            Transaction.objects.create(
+                owner=Innovator.objects.get(user__pk=request.user.pk),
+                description= f"You made a withdrawal of ₦{withdraw_amount} into {account_number}-{bank_name}",
+                successful = not False,
+                reference_code = withdraw_project_funds.reference_code,
+                amount = withdraw_amount,
+                pre_balance = innovator.account_balance - withdraw_amount,
+                post_balance = innovator.account_balance,
+                type = 'WITHDRAWAL',
+            )
+            project.fund_raised -= withdraw_amount
+            project.save()
+            messages.success(request, f'You have successfully made a request for withdrawal from the {project.name.title()} project')
+            return redirect('home')
+        else:
+            return HttpResponse('You cannot withdraw more than what you have.')
+    return render(request, 'core/withdraw-project-funds.html', context)
