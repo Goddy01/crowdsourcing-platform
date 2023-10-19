@@ -690,7 +690,7 @@ def withdraw_project_funds(request, project_pk):
             )
             project.fund_raised -= withdraw_amount
             project.save()
-            messages.success(request, f'You have successfully made a request for withdrawal from the {project.name.title()} project')
+            messages.success(request, f'You have successfully made a request for withdrawal from the {project.name.title()} project funds')
             return redirect('home')
         else:
             return HttpResponse('You cannot withdraw more than what you have.')

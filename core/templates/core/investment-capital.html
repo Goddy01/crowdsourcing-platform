@@ -14,6 +14,7 @@
           <tr>
             <th class="text-success fw-bold">ID</th>
             <th class="text-success fw-bold">Project Name</th>
+            <th class="text-success fw-bold">Approved</th>
             <th class="text-success fw-bold">Target</th>
             <th class="text-success fw-bold">Fund Raised</th>
             <th class="text-success fw-bold">Amount Left</th>
@@ -28,6 +29,13 @@
           <tr>
             <th class="" scope="row">{{ forloop.counter }}</th>
             <td class="">{{ project.name }}</td>
+            <td class="">
+                {% if project.status.lower == 'approved' %}
+                ✅
+                {% else %}
+                ❌
+                {% endif %}
+            </td>
             <td class="">₦{{ project.target }}</td>
             <td class="">
                 {%if project.fund_raised is None %}

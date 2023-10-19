@@ -44,6 +44,7 @@ urlpatterns = [
     path('send-money/', views.send_money, name='send_money'),
     path('account-statement/', views.statement, name='statement'),
     path('investment-capital/', views.investment_capital, name='investment_capital'),
+    path('withdraw-project-funds/<project_pk>/', views.withdraw_project_funds, name='withdraw_project_funds'),
     
     # path('contribution/reply/<innovation_pk>/', views.reply, name='reply'),
 
