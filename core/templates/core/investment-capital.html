@@ -62,7 +62,7 @@
                     </svg>
 
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><a class="dropdown-item" href="#">View Details</a></li>
+                        <li><a class="dropdown-item" href="{% url 'project_details' project.pk %}">View Details</a></li>
                         {% if project.fund_raised is not None and project.fund_raised > 0 %}
                         <li><a class="dropdown-item" href="#">Withdraw Funds</a></li>
                         {% endif %}

@@ -646,6 +646,10 @@ def investment_capital(request):
     context['projects_owned'] = projects_owned
     return render(request, 'core/investment-capital.html', context)
 
+def withdraw_project_funds_page(request):
+    context = {}
+    return render(request, 'core/withdraw-project-funds-page.html', context)
+
 def withdraw_project_funds(request, project_pk):
     context = {}
     project = Project.objects.get(pk=project_pk)
