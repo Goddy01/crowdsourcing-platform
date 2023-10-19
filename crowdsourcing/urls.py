@@ -45,6 +45,7 @@ urlpatterns = [
     path('account-statement/', views.statement, name='statement'),
     path('investment-capital/', views.investment_capital, name='investment_capital'),
     path('withdraw-project-funds/<project_pk>/', views.withdraw_project_funds, name='withdraw_project_funds'),
+    path('withdraw-project-funds-page/', views.withdraw_project_funds_page, name='withdraw_project_funds_page'),
     
     # path('contribution/reply/<innovation_pk>/', views.reply, name='reply'),
 
