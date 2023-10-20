@@ -173,7 +173,7 @@
                             </select>
 
                             <div class="data-actions mt-3">
-                                <button type="button" name="withdraw" id="initialWithdrawButton" data-bs-toggle="modal" data-bs-target="#staticBackdrop4" class="button button-primary">Withdraw</button>
+                                <button type="button" name="withdraw" id="initialWithdrawButton{{ project.pk }}" data-bs-toggle="modal" data-bs-target="#staticBackdrop4" class="button button-primary">Withdraw</button>
                             </div>
                             <!-- <button class="mt-3 button button-primary" type="submit">
                                 Withdraw
@@ -257,7 +257,7 @@
                     document.getElementById("modal_content").style.display = 'block';
                 }, 6000); // 6000 milliseconds = 6 seconds
             }
-        $("#initialWithdrawButton").click(function () {
+        $("#initialWithdrawButton"+a).click(function () {
             document.getElementById("modal_content").style.display = 'none';
             console.log("Button clicked!");
             var formData = $("#withdraw_form").serialize();

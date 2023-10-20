@@ -497,8 +497,11 @@ def statement(request):
 
 def get_bank_details(request):
     amount = request.POST.get('withdraw_amount')
+    print('AMOUNT: ', amount)
     account_number = request.POST.get('withdraw_to')
+    print('ACCOUNT NUMBER: ', account_number)
     bank_code = request.POST.get('bank_code')
+    print('BANK CODE', bank_code)
     bank_name = ''
     banks = requests.get(f"https://api.paystack.co/bank")
     banks = banks.json()['data']
@@ -515,7 +518,7 @@ def get_bank_details(request):
             "Authorization": f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}"
         }
         response = requests.get(url, headers=headers)
-        print('RESPONSE: ', response)
+        print('GET BANK DETAILS RESPONSE: ', response)
         if response.status_code == 200:
             withdrawal_data = response.json()
             request.session['account_holder'] = withdrawal_data['data']['account_name']
@@ -547,7 +550,7 @@ def withdraw(request):
         "Authorization": f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}"
     }
     response = requests.get(url, headers=headers)
-    print('RESPONSE: ', response.json())
+    print('WITHDRAW RESPONSE: ', response.json())
     innovator = Innovator.objects.get(user__pk=request.user.pk)
     if response.status_code == 200:
         if innovator.account_balance >= withdraw_amount:
@@ -641,6 +644,7 @@ def send_money(request):
 def investment_capital(request):
     context = {}
     banks = requests.get(f"https://api.paystack.co/bank")
+    print('BANKS: ', banks.json())
     context['banks'] = banks.json()['data']
     projects_owned = Project.objects.filter(
         innovator__user__pk=request.user.pk
@@ -668,7 +672,7 @@ def withdraw_project_funds(request, project_pk):
         "Authorization": f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}"
     }
     response = requests.get(url, headers=headers)
-    print('RESPONSE: ', response.json())
+    print('WITHDRAW PROJECT FUNDS RESPONSE: ', response.json())
     innovator = Innovator.objects.get(user__pk=request.user.pk)
     if response.status_code == 200:
         if project.fund_raised >= withdraw_amount:
@@ -686,7 +690,7 @@ def withdraw_project_funds(request, project_pk):
 
             Transaction.objects.create(
                 owner=Innovator.objects.get(user__pk=request.user.pk),
-                description= f"You made a withdrawal of ₦{withdraw_amount} into {account_number}-{bank_name}",
+                description= f"You made a withdrawal of ₦{withdraw_amount} from {project.name}'s funds into {account_number}-{bank_name}",
                 successful = not False,
                 reference_code = withdraw_project_funds.reference_code,
                 amount = withdraw_amount,

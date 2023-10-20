@@ -25,6 +25,7 @@
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
@@ -58,23 +59,23 @@
                         <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel{{ project.pk }}">Modal title</h5>
+                            <h5 class="modal-title" id="staticBackdropLabel{{ project.pk }}">Withdraw Project Funds</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <form name="withdraw_form" method="POST" id="withdraw_form" action="{%url 'withdraw_project_funds' project.pk %}">
+                                <form name="withdraw_form" method="POST" id="withdraw_project_funds_form{{ project.pk }}">
                                     {% csrf_token %}
-                                    <h4>Withdraw</h4>
+                                    <!-- <h4>Withdraw</h4> -->
                                     <div class="mb-3">
                                         <span class="fw-bold">Available Funds: </span>
                                         ₦{{ project.fund_raised }}
                                     </div>
                                     <div class="data-box">
                                         
-                                        <input name="withdraw_amount" type="number" step="0.1" min=0 placeholder="Amount" value="{{ withdraw_amount }}">
+                                        <input name="withdraw_amount" id="withdraw_amount" type="number" step="0.1" min=0 placeholder="Amount">
                                         
                                         
-                                        <input name="withdraw_to" type="text" placeholder="Account Number" value="{{ account_number }}">
+                                        <input name="withdraw_to" id="withdraw_to" type="text" placeholder="Account Number">
                                         
                                         {% if status %}
                                         <input type="text" name="withdraw_2" id="" hidden>
@@ -90,7 +91,7 @@
 
                                         <!-- 22 -->
                                         <div class="data-actions mt-3">
-                                            <button type="button" name="withdraw" id="initialWithdrawButton10" data-bs-toggle="modal" data-bs-target="#staticBackdrop3" class="button button-primary">Withdraw Funds Bro</button>
+                                            <button type="button" name="withdraw" data-bs-toggle="modal" data-bs-target="#exampleModal{{ project.pk }}" class="button button-primary initialWithdrawButton" id="initialWithdrawButton{{ project.pk }}">Withdraw Funds</button>
                                         </div>
                                         <!-- <button class="mt-3 button button-primary" type="submit">
                                             Withdraw
@@ -105,44 +106,147 @@
                         </div>
                         </div>
                     </div>
-                    <div class="modal fade" id="staticBackdrop3" tabindex="-1" aria-labelledby="staticBackdropLabel3" aria-hidden="true">
+                    <div class="modal fade" id="exampleModal{{ project.pk }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ project.pk }}" aria-hidden="true">
                         <div class="modal-dialog">
-                        <div class="modal-content" id="modal_content">
+                        <div class="modal-content" id="modal_content{{ project.pk }}">
                             <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel3">Beneficiary Account Details</h5>
+                            <h5 class="modal-title" id="exampleModalLabel{{ project.pk }}">Beneficiary Account Details</h5>
                             <!-- <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button> -->
                             </div>
-                            <div class="modal-body px-2" id="modal_body">
+                            <div class="modal-body px-2" id="modal_body{{ project.pk }}">
                                 <div>
                                     <span class="fw-bold">Bank Name: </span>
-                                    <span id="bank_name"></span>
+                                    <span id="bank_name{{ project.pk }}"></span>
                                 </div>
                                 <div class="mt-2">
                                     <span class="fw-bold">Account Number: </span>
-                                    <span id="account_number"></span>
+                                    <span id="account_number{{ project.pk }}"></span>
                                 </div>
                                 <div class="mt-2">
                                     <span class="fw-bold">Account Name: </span>
-                                    <span id="account_name"></span>
+                                    <span id="account_name{{ project.pk }}"></span>
                                 </div>
                                 <div class="mt-2">
                                     <span class="fw-bold">Amount: </span>
-                                    ₦<span id="withdraw_amount"></span>
+                                    ₦<span id="amount{{ project.pk }}"></span>
                                 </div>
                         </div>
-                        <p id="modal_body2" class="px-3 pt-3 text-danger">
+                        <p id="modal_body2{{ project.pk }}" class="px-3 pt-3 text-danger">
                             
                         </p>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal" id="close">Close</button>
+                            <a href="">
+                                <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal" id="close">Close</button>
+                            </a>
                             <a href="{% url 'withdraw_project_funds' project.pk %}">
-                                <button type="button" class="btn btn-success" id="confirmWithdrawal">Confirm Withdrawal</button>
+                                <button type="button" class="btn btn-success" id="confirmWithdrawal{{ project.pk }}">Confirm Withdrawal</button>
                             </a>
                           </div>
                         </div>
                       </div>
                     </div>
                 {% endif %}
+                <script>
+                    $(document).ready(function () {
+                    function displayForSixSeconds() {
+                            var loadingElement = document.getElementById("loading");
+                            console.log('BREV')
+                            // Display the element
+                            loadingElement.style.display = "flex";
+                            
+                            // Set a timer to hide the element after 6 seconds
+                            setTimeout(function () {
+                                loadingElement.style.display = "none";
+                                // console.log('MODAL CONTENT: ', document.getElementById("modal_content" + a).innerHTML)
+                                // document.getElementById("modal_content" + a).style.display = 'block';
+                                
+                                document.getElementById("modal_content" + a).style.display = 'block';
+                                console.log('MODAL CONTENT: ', document.querySelector("#modal_content" + a).innerHTML)
+                            }, 6000); // 6000 milliseconds = 6 seconds
+                        }
+
+                    var a = "{{ project.pk }}"
+                    // $(document).ready(function () {
+                        $("#initialWithdrawButton" + a).click(function () {
+                            // e.preventDefault();
+                            console.log("Button clicked!");
+                            document.getElementById("modal_content" + a).style.display = 'none';
+                            
+                            // console.log('AMOUNT: ', document.getElementById("bro").value)
+                            // var formData = $("#withdraw_project_funds_form").serialize();
+                            // var form = document.getElementById('withdraw_project_funds_form');
+                            // var amountInput = document.getElementById("withdraw_amount");
+                            // var withdrawToInput = document.getElementById("withdraw_to");
+                            // var bankCodeInput = document.getElementById("bank_code");
+                            var formData = $("#withdraw_project_funds_form" + a).serialize();
+                
+                
+                            // Create a new FormData object
+                            // var formData = new FormData();
+                
+                            // formData.append('withdraw_amount', amountInput.value);
+                            // formData.append('withdraw_to', withdrawToInput.value);
+                            // formData.append('bank_code', bankCodeInput.value);
+                            // Call the function to display the element for 6 seconds
+                            displayForSixSeconds();
+                            // document.getElementById("modal_content").style.display = 'block';
+                            console.log(formData)
+                            // Manually add the CSRF token to the data
+                            formData += '&csrfmiddlewaretoken=' + $("[name=csrfmiddlewaretoken]").val();
+                            
+                            $.ajax({
+                                type: "POST",
+                                url: "{% url 'get_bank_details' %}",
+                                data: formData,
+                                success: function (response) {
+                                    
+                                    if (response.status === 'success') {
+                                    // Update the resultDiv with the response data
+                                    console.log('RESPONSE: ', response)
+                                    $("#bank_name" + a).html(response.bank_name);
+                                    $("#account_number" + a).html(response.account_data.account_number);
+                                    $("#account_name" + a).html(response.account_data.account_name);
+                                    $("#amount" + a).html(response.withdraw_amount);
+                                    // console.log('YESSITRRR')
+                                    document.getElementById("modal_body" + a).style.display = 'block';
+                                    $("#modal_body" + a).show();
+                                    // console.log('MODAL BODY: ', $("#modal_body").innerHTML)
+
+                                    console.log('YESSITRRR')
+                                    // $('#modal_body2').replaceWith('')
+                                    document.getElementById('modal_body2' + a).innerHTML = '<p style="color: red;display: none">Could not resolve account name</p>';
+                                    $("#confirmWithdrawal" + a).show();
+                                    }
+                                    else {
+                                        console.log('YO BRO')
+                                        // $('#modal_body').hide();
+                                        document.getElementById('modal_body' + a).style.display = 'none';
+                                        
+                                        document.getElementById('modal_body2' + a).innerHTML = '<p style="color: red;">Could not resolve account name</p>';
+                                        // var errorMessage = '<p style="color: red; padding: 10px;">Could not resolve account name</p>';
+                                        // $("#modal_body2").replaceWith(errorMessage);
+                
+                                        
+                                        $("#confirmWithdrawal" + a).hide();
+                                        
+                                    }
+                                },
+                                // error: function (xhr, status, error) {
+                                //     console.log('yessirrr')
+                                //     $('#confirmWithdrawal').hide();
+                                //     $("#modal_body").html('Could not resolve account name');
+                
+                                // }
+                                
+                            });
+                        });
+                            
+                       
+                
+                    });
+                
+                    
+                </script>
           <tr>
             <th class="" scope="row">{{ forloop.counter }}</th>
             <td class="">{{ project.name }}</td>
@@ -193,9 +297,6 @@
     </div>
 
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
     window.onload = function () {
         OpenBootstrapPopup();
@@ -203,77 +304,5 @@
     function OpenBootstrapPopup() {
         $("#Modal").modal('show');
     }
-</script>
-
-<script>
-    $(document).ready(function () {
-
-        function displayForSixSeconds() {
-                var loadingElement = document.getElementById("loading");
-                console.log('BREV')
-                // Display the element
-                loadingElement.style.display = "flex";
-                
-                // Set a timer to hide the element after 6 seconds
-                setTimeout(function () {
-                    loadingElement.style.display = "none";
-                    document.getElementById("modal_content").style.display = 'block';
-                }, 6000); // 6000 milliseconds = 6 seconds
-            }
-            
-        $("#initialWithdrawButton10").click(function () {
-            document.getElementById("modal_content").style.display = 'none';
-            console.log("Button clicked!");
-            var formData = $("#withdraw_form").serialize();
-
-            // Call the function to display the element for 6 seconds
-            displayForSixSeconds();
-            // document.getElementById("modal_content").style.display = 'block';
-            console.log(formData)
-            // Manually add the CSRF token to the data
-            formData += '&csrfmiddlewaretoken=' + $("[name=csrfmiddlewaretoken]").val();
-            $.ajax({
-                type: "POST",
-                url: "{% url 'get_bank_details' %}",
-                data: formData,
-                success: function (response) {
-                    if (response.status === 'success') {
-                    // Update the resultDiv with the response data
-                    console.log('RESPONSE: ', response)
-                    $("#bank_name").html(response.bank_name);
-                    $("#account_number").html(response.account_data.account_number);
-                    $("#account_name").html(response.account_data.account_name);
-                    $("#withdraw_amount").html(response.withdraw_amount);
-                    $('#modal_body').show();
-                    // $('#modal_body2').replaceWith('')
-                    document.getElementById('modal_body2').innerHTML = '<p style="color: red;display: none">Could not resolve account name</p>';
-                    $('#confirmWithdrawal').show();
-                    }
-                    else {
-                        console.log('YO BRO')
-                        // $('#modal_body').hide();
-                        document.getElementById('modal_body').style.display = 'none';
-                        document.getElementById('modal_body2').innerHTML = '<p style="color: red;">Could not resolve account name</p>';
-                        // var errorMessage = '<p style="color: red; padding: 10px;">Could not resolve account name</p>';
-                        // $("#modal_body2").replaceWith(errorMessage);
-
-                        
-                        $('#confirmWithdrawal').hide();
-                        
-                    }
-                },
-                // error: function (xhr, status, error) {
-                //     console.log('yessirrr')
-                //     $('#confirmWithdrawal').hide();
-                //     $("#modal_body").html('Could not resolve account name');
-
-                // }
-                
-            });
-        });
-
-    });
-
-    
 </script>
 {% endblock content %}
