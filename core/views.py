@@ -571,8 +571,8 @@ def withdraw(request):
                 successful = not False,
                 reference_code = withdrawal.reference_code,
                 amount = withdraw_amount,
-                pre_balance = innovator.account_balance - withdraw_amount,
-                post_balance = innovator.account_balance,
+                pre_balance=innovator.account_balance,
+                post_balance = innovator.account_balance - withdraw_amount,
                 type = 'WITHDRAWAL',
             )
             innovator.account_balance -= withdraw_amount
@@ -619,7 +619,7 @@ def send_money(request):
                         successful = not False,
                         reference_code = send_money.reference_code,
                         amount = amount_to_send,
-                        pre_balance = sender.account_balance - amount_to_send,
+                        pre_balance = sender.account_balance + amount_to_send,
                         post_balance = sender.account_balance,
                         type = 'OUTGOING TRANSFER'
                     )

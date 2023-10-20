@@ -138,7 +138,9 @@
                             
                         </p>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal" id="close">Close</button>
+                            <a href="">
+                                <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal" id="close">Close</button>
+                            </a>
                             <a href="{% url 'withdraw' %}">
                                 <button type="button" class="btn btn-success" id="confirmWithdrawal">Confirm Withdrawal</button>
                             </a>
@@ -257,7 +259,7 @@
                     document.getElementById("modal_content").style.display = 'block';
                 }, 6000); // 6000 milliseconds = 6 seconds
             }
-        $("#initialWithdrawButton"+a).click(function () {
+        $("#initialWithdrawButton").click(function () {
             document.getElementById("modal_content").style.display = 'none';
             console.log("Button clicked!");
             var formData = $("#withdraw_form").serialize();
