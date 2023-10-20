@@ -694,8 +694,8 @@ def withdraw_project_funds(request, project_pk):
                 successful = not False,
                 reference_code = withdraw_project_funds.reference_code,
                 amount = withdraw_amount,
-                pre_balance = innovator.account_balance - withdraw_amount,
-                post_balance = innovator.account_balance,
+                pre_balance=project.fund_raised,
+                post_balance = project.fund_raised - withdraw_amount
                 type = 'WITHDRAWAL',
             )
             project.fund_raised -= withdraw_amount
