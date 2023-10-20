@@ -109,11 +109,11 @@
             <div class="row">
                 <div class="col-12 col-lg-12">
                     <!-- Modal -->
-                    <div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal fade" id="staticBackdrop4" tabindex="-1" aria-labelledby="staticBackdropLabel4" aria-hidden="true">
                         <div class="modal-dialog">
                         <div class="modal-content" id="modal_content">
                             <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Beneficiary Account Details</h5>
+                            <h5 class="modal-title" id="staticBackdropLabel4">Beneficiary Account Details</h5>
                             <!-- <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button> -->
                             </div>
                             <div class="modal-body px-2" id="modal_body">
@@ -146,7 +146,7 @@
                         </div>
                       </div>
                     </div>
-                    <form name="withdraw_form" method="POST" action="{% url 'deposit' %}" id="withdraw_form">
+                    <form name="withdraw_form" method="POST" id="withdraw_form">
                         {% csrf_token %}
                         <h4>Withdraw</h4>
                         <div class="mb-3">
@@ -173,7 +173,7 @@
                             </select>
 
                             <div class="data-actions mt-3">
-                                <button type="button" name="withdraw" id="initialWithdrawButton" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="button button-primary">Withdraw</button>
+                                <button type="button" name="withdraw" id="initialWithdrawButton" data-bs-toggle="modal" data-bs-target="#staticBackdrop4" class="button button-primary">Withdraw</button>
                             </div>
                             <!-- <button class="mt-3 button button-primary" type="submit">
                                 Withdraw
@@ -200,7 +200,6 @@
             </form>
         </div>
 </div>
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     // document.getElementById('make-payment-btn').addEventListener('click', makePayment);
@@ -230,7 +229,7 @@
 // window.onload = makePayment()
 </script>
 
-  <script>
+<script>
     window.onload = function () {
         OpenBootstrapPopup();
     };

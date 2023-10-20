@@ -640,6 +640,8 @@ def send_money(request):
 
 def investment_capital(request):
     context = {}
+    banks = requests.get(f"https://api.paystack.co/bank")
+    context['banks'] = banks.json()['data']
     projects_owned = Project.objects.filter(
         innovator__user__pk=request.user.pk
     )
