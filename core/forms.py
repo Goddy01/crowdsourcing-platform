@@ -172,9 +172,9 @@ class StatementTypeForm(forms.ModelForm):
 
 class WithdrawalRequestAuthorizationForm(forms.ModelForm):
     TYPE_CHOICES = (
-        ('APPROVED', 'Approved'),
-        ('DECLINED', 'Declined'),
-        ('YET TO BE REVIEWED', 'Yet to be Reviewed'),
+        ('APPROVED', True),
+        ('DECLINED', False),
+        # ('YET TO BE REVIEWED', 'Yet to be Reviewed'),
         # ('REVIEW IN PROGRESS', 'Review In Progress')
     )
     type = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=TYPE_CHOICES)

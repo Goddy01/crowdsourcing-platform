@@ -728,10 +728,51 @@ def withdrawal_requests(request):
         context['date_from'] = date_from
         context['date_to'] = date_to
         context['type_list'] = type_list
-        withdrawal_requests = Withdrawal.objects.filter().order_by('-date')
-        project_withdrawal_requests = WithdrawProjectFunds.objects.filter().order_by('-date')
-        context['withdrawal_requests'] = withdrawal_requests
-        context['project_withdrawal_requests'] = project_withdrawal_requests
+        # withdrawal_requests = Withdrawal.objects.filter().order_by('-date')
+        # project_withdrawal_requests = WithdrawProjectFunds.objects.filter().order_by('-date')
+        if date_from != None and date_to != None and len(type_list) > 0:
+            context['withdrawal_requests'] = Withdrawal.objects.filter(
+                is_approved__in=type_list,
+                date__date__range=(date_from, date_to),
+                ).order_by('-date')
+            context['project_withdrawal_requests'] = WithdrawProjectFunds.objects.filter(
+                is_approved__in=type_list,
+                date__date__range=(date_from, date_to),
+                ).order_by('-date')
+        elif date_from != None and date_to != None and len(type_list) == 0:
+            context['withdrawal_requests'] = Withdrawal.objects.filter(
+                date__date__range=(date_from, date_to),
+                ).order_by('-date')
+            context['project_withdrawal_requests'] = WithdrawProjectFunds.objects.filter(
+                date__date__range=(date_from, date_to),
+                ).order_by('-date')
+        elif date_from != None and date_to == None and len(type_list) > 0:
+            context['withdrawal_requests'] = Withdrawal.objects.filter(
+                is_approved__in=type_list,
+                date__gte=(date_from),
+                ).order_by('-date')
+            context['project_withdrawal_requests'] = WithdrawProjectFunds.objects.filter(
+                is_approved__in=type_list,
+                date__gte=(date_from),
+                ).order_by('-date')
+        elif date_from != None and date_to == None and len(type_list) == 0:
+            context['withdrawal_requests'] = Withdrawal.objects.filter(
+                date__gte=(date_from),
+                ).order_by('-date')
+            context['project_withdrawal_requests'] = WithdrawProjectFunds.objects.filter(
+                date__gte=(date_from),
+                ).order_by('-date')
+        elif date_from == None and date_to == None and len(type_list) > 0:
+            context['withdrawal_requests'] = Withdrawal.objects.filter(
+                is_approved__in=type_list,
+                ).order_by('-date')
+            context['project_withdrawal_requests'] = WithdrawProjectFunds.objects.filter(
+                is_approved__in=type_list,
+                ).order_by('-date')
+        elif date_from == None and date_to == None and len(type_list) == 0:
+            context['withdrawal_requests'] = Withdrawal.objects.filter().order_by('-date')
+            context['project_withdrawal_requests'] = WithdrawProjectFunds.objects.filter().order_by('-date')
+
         context['form'] = WithdrawalRequestAuthorizationForm(
             {
                 'type': type_list
