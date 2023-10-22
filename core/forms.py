@@ -169,3 +169,11 @@ class StatementTypeForm(forms.ModelForm):
     class Meta:
         model = Transaction
         fields = ['type']
+
+class WithdrawalRequestAuthorizationForm(forms.ModelForm):
+    TYPE_CHOICES = (
+        ('APPROVED', 'Approved'),
+        ('DECLINED', 'Declined'),
+        ('YET TO BE REVIEWED', 'Yet to be Reviewed'),
+        # ('REVIEW IN PROGRESS', 'Review In Progress')
+    )
