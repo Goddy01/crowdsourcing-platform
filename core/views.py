@@ -29,15 +29,15 @@ def add_project(request):
             project_obj = create_project_form.save(commit=False)
             project_obj.innovator = Innovator.objects.get(user__username=request.user.username)
             # project_obj.date_created = timezone.now()
-            print('BEFORE: ', project_obj.business_type)
-            print('BEFORE: ', len(project_obj.business_type))
+            # print('BEFORE: ', project_obj.business_type)
+            # print('BEFORE: ', len(project_obj.business_type))
             project_obj.business_type = list(project_obj.business_type.replace("[", "").replace("]", "").replace("'", "").replace('"', ''))
-            print('AFTER: ', project_obj.business_type)
-            print('AFTER: ', len(project_obj.business_type))
+            # print('AFTER: ', project_obj.business_type)
+            # print('AFTER: ', len(project_obj.business_type))
             if create_project_form.cleaned_data['innovator_user_agreement']:
                 project_obj.innovator_user_agreement = True
             project_obj.save()
-            print('TIME: ', project_obj.date_created)
+            # print('TIME: ', project_obj.date_created)
             project_creation_request = 'Thank you for submitting your project details. Your project creation request has been sent to a moderator for review. A moderator will carefully assess your project to ensure that the provided information aligns with our user agreement and complies with legal regulations. Please allow some time for our team to review your project thoroughly. We appreciate your patience. If there are any additional details or documents required, a moderator will reach out to you for clarification. We value your commitment to our platform and look forward to the possibility of bringing your project to our community. Once again, thank you for choosing our platform to showcase your project, and we will be in touch with you soon.'
 
         else:
@@ -64,7 +64,7 @@ def pagination(request, items_list, num_of_pages):
 
 def projects_list(request):
     context = {}
-    print('ON RE: ', request.META.get('HTTP_REFERER'))
+    # print('ON RE: ', request.META.get('HTTP_REFERER'))
     if request.GET.get('from_expected_return'):
         from_expected_return = request.GET.get('from_expected_return')
         context['from_expected_return'] = from_expected_return
@@ -74,9 +74,9 @@ def projects_list(request):
         request.session['to_expected_return'] = to_expected_return
 
         if from_expected_return:
-            print('FROM: ', from_expected_return)
+            # print('FROM: ', from_expected_return)
             if to_expected_return:
-                print('TO: ', to_expected_return)
+                # print('TO: ', to_expected_return)
                 projects = Project.objects.filter(
                     Q(expected_return__range=(int(from_expected_return), int(to_expected_return)))
                 )
@@ -102,12 +102,12 @@ def project_details(request, project_pk):
     #     return redirect('accounts:innovator_login')
     try:
         if request.user.is_innovator:
-            print('2')
+            # print('2')
             investor_1 = Innovator.objects.get(user__pk=request.user.pk)
             context['investor_1'] = investor_1
 
             if request.method == 'POST' and 'date-filter' in request.POST:
-                print('3')
+                # print('3')
                 date_from = request.POST.get('date-from')
                 date_to = request.POST.get('date-to')
                 investors = Make_Investment.objects.filter(investment__pk=project_pk, date_sent__date__range=(date_from, date_to))
@@ -116,22 +116,22 @@ def project_details(request, project_pk):
             else:
                 investors = Make_Investment.objects.filter(investment__pk=project_pk).order_by('-date_sent')
                 # context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
-                print('4')
+                # print('4')
             context['investors'] = investors
 
         else:
-            print('5')
+            # print('5')
             moderator = Moderator.objects.get(user__pk=request.user.pk)
             context['moderator'] = moderator
-            print('YO: ', request.POST.get('status'))
+            # print('YO: ', request.POST.get('status'))
             status_form = InvestmentStatusForm()
-            print('STATUS_FORM: ', status_form)
-            print('brev')
+            # print('STATUS_FORM: ', status_form)
+            # print('brev')
             context['status_form'] = status_form
             if request.method == 'POST'and 'status' in request.POST:
                 project.status = request.POST.get('status')
                 project.save()
-                print('broo: ', project.status)
+                # print('broo: ', project.status)
                 messages.success(request, 'Investment details has been updated!')
     except:
         pass
@@ -204,7 +204,7 @@ def innovation_detail(request, pk):
 def upvote_contribution(request, contribution_pk):
     contribution = Contribution.objects.get(pk=contribution_pk)
     user = Innovator.objects.get(user__pk=request.user.pk)
-    print('ALL: ', contribution.upvoted_by.all())
+    # print('ALL: ', contribution.upvoted_by.all())
 
     # Check if the user has already upvoted this contribution
     if user in contribution.upvoted_by.all():
@@ -307,7 +307,7 @@ def deposit_money(request):
             )
             context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
             # print(innovator.account_balance)
-            print('DONDA')
+            # print('DONDA')
             return redirect('projects')
         else:
             print('Transaction could not be completed')
@@ -369,12 +369,12 @@ def invest(request, investment_pk):
             # else:
             investor.account_balance -= amount
             investor.save()
-            print('ACCOUNT BALANCE: ', investor.account_balance)
+            # print('ACCOUNT BALANCE: ', investor.account_balance)
             investment.target -= amount
-            if investment_owner.account_balance is None:
-                investment_owner.account_balance = 0
-            investment_owner.account_balance += amount
-            investment_owner.save()
+            # if investment_owner.account_balance is None:
+            #     investment_owner.account_balance = 0
+            # investment_owner.account_balance += amount
+            # investment_owner.save()
 
             if investment.fund_raised is None:
                 investment.fund_raised = 0
@@ -396,9 +396,19 @@ def invest(request, investment_pk):
                 successful = not False,
                 reference_code = invest.reference_code,
                 amount = amount,
-                pre_balance = investor.account_balance - amount,
+                pre_balance = investor.account_balance + amount,
                 post_balance = investor.account_balance,
-                type='INVESTMENT'
+                type='OUTGOING INVESTMENT'
+            )
+            transaction = Transaction.objects.create(
+                owner=investment_owner,
+                description= f"Investor {investor.user.username} invested ₦{amount} in your project --{investment.name}",
+                successful = not False,
+                reference_code = invest.reference_code,
+                amount = amount,
+                pre_balance = investment.fund_raised - amount,
+                post_balance = investment.fund_raised,
+                type='INCOMING INVESTMENT'
             )
             context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
             messages.success(request, 'Thank you for investing in this project!')
@@ -458,7 +468,7 @@ def statement(request):
         type_list = request.POST.getlist('type')
         context['statement_date_from'] = statement_date_from
         context['statement_date_to'] = statement_date_to
-        print('TYPE LIST: ', type_list)
+        # print('TYPE LIST: ', type_list)
         if statement_date_from != None and statement_date_to != None and len(type_list) > 0:
             context['transactions'] = Transaction.objects.filter(
                 type__in=type_list,
@@ -497,11 +507,11 @@ def statement(request):
 
 def get_bank_details(request):
     amount = request.POST.get('withdraw_amount')
-    print('AMOUNT: ', amount)
+    # print('AMOUNT: ', amount)
     account_number = request.POST.get('withdraw_to')
-    print('ACCOUNT NUMBER: ', account_number)
+    # print('ACCOUNT NUMBER: ', account_number)
     bank_code = request.POST.get('bank_code')
-    print('BANK CODE', bank_code)
+    # print('BANK CODE', bank_code)
     bank_name = ''
     banks = requests.get(f"https://api.paystack.co/bank")
     banks = banks.json()['data']
@@ -518,7 +528,7 @@ def get_bank_details(request):
             "Authorization": f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}"
         }
         response = requests.get(url, headers=headers)
-        print('GET BANK DETAILS RESPONSE: ', response)
+        # print('GET BANK DETAILS RESPONSE: ', response)
         if response.status_code == 200:
             withdrawal_data = response.json()
             request.session['account_holder'] = withdrawal_data['data']['account_name']
@@ -532,7 +542,7 @@ def get_bank_details(request):
             return JsonResponse(data, status=200)
         else:
             print("Request failed with status code:", response.status_code)
-            print("Response content:", response.text)
+            # print("Response content:", response.text)
             return JsonResponse({'error': 'Error encountered while retrieving bank account details.', 'status': 'failed'})
 
 def withdraw(request):
@@ -550,7 +560,7 @@ def withdraw(request):
         "Authorization": f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}"
     }
     response = requests.get(url, headers=headers)
-    print('WITHDRAW RESPONSE: ', response.json())
+    # print('WITHDRAW RESPONSE: ', response.json())
     innovator = Innovator.objects.get(user__pk=request.user.pk)
     if response.status_code == 200:
         if innovator.account_balance >= withdraw_amount:
@@ -644,7 +654,7 @@ def send_money(request):
 def investment_capital(request):
     context = {}
     banks = requests.get(f"https://api.paystack.co/bank")
-    print('BANKS: ', banks.json())
+    # print('BANKS: ', banks.json())
     context['banks'] = banks.json()['data']
     projects_owned = Project.objects.filter(
         innovator__user__pk=request.user.pk
@@ -672,7 +682,7 @@ def withdraw_project_funds(request, project_pk):
         "Authorization": f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}"
     }
     response = requests.get(url, headers=headers)
-    print('WITHDRAW PROJECT FUNDS RESPONSE: ', response.json())
+    # print('WITHDRAW PROJECT FUNDS RESPONSE: ', response.json())
     innovator = Innovator.objects.get(user__pk=request.user.pk)
     if response.status_code == 200:
         if project.fund_raised >= withdraw_amount:

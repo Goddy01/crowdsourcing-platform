@@ -160,7 +160,8 @@ class StatementTypeForm(forms.ModelForm):
         ('DEPOSIT', 'Deposit'),
         ('WITHDRAWAL', 'Withdrawal'),
         ('INTEREST PAYMENT', 'Interest Payment'),
-        ('INVESTMENT', 'Investment'),
+        ('OUTGOING INVESTMENT', 'Outgoing Investment'),
+        ('INCOMING INVESTMENT', 'Incoming Investment'),
         ('OUTGOING TRANSFER', 'Outgoing Transfer'),
         ('INCOMING TRANSFER', 'Incoming Transfer')
     )
