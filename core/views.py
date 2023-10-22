@@ -3,7 +3,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from .models import Project, Innovation, Contribution, Reward_Payment, Make_Investment, Transaction, DepositMoney, Withdrawal, SendMoney, WithdrawProjectFunds
 from django_countries import countries
-from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm, MyInvestmentForm, InvestmentStatusForm, StatementTypeForm
+from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm, MyInvestmentForm, InvestmentStatusForm, StatementTypeForm, WithdrawalRequestAuthorizationForm
 from accounts.models import Innovator, Moderator, BaseUser
 from django.utils import timezone
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -720,11 +720,23 @@ def withdraw_project_funds(request, project_pk):
 @login_required
 def withdrawal_requests(request):
     context = {}
+    context['form'] = WithdrawalRequestAuthorizationForm()
     if request.user.is_moderator:
-        withdrawal_requests = Withdrawal.objects.filter(is_approved=False).order_by('-date')
-        project_withdrawal_requests = WithdrawProjectFunds.objects.filter(is_approved=False).order_by('-date')
+        date_from = request.POST.get('date_from')
+        date_to = request.POST.get('date_to')
+        type_list = request.POST.getlist('type')
+        context['date_from'] = date_from
+        context['date_to'] = date_to
+        context['type_list'] = type_list
+        withdrawal_requests = Withdrawal.objects.filter().order_by('-date')
+        project_withdrawal_requests = WithdrawProjectFunds.objects.filter().order_by('-date')
         context['withdrawal_requests'] = withdrawal_requests
         context['project_withdrawal_requests'] = project_withdrawal_requests
+        context['form'] = WithdrawalRequestAuthorizationForm(
+            {
+                'type': type_list
+            }
+        )
     else:
-        messages.error(request, 'You are not authorized to view this page')
+        return HttpResponse('You are not authorized to view this page')
     return render(request, 'core/withdrawal-requests.html', context)

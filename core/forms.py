@@ -177,3 +177,4 @@ class WithdrawalRequestAuthorizationForm(forms.ModelForm):
         ('YET TO BE REVIEWED', 'Yet to be Reviewed'),
         # ('REVIEW IN PROGRESS', 'Review In Progress')
     )
+    is_approved = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=TYPE_CHOICES)
