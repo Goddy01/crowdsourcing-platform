@@ -154,6 +154,7 @@ class Withdrawal(models.Model):
     date = models.DateTimeField(auto_now_add=True, null=True)
     pre_balance = models.PositiveIntegerField(null=True, blank=True)
     post_balance = models.PositiveIntegerField(null=True, blank=True)
+    is_approved = models.BooleanField(default=False)
     # post_withdrawal_account_balance = models.PositiveBigIntegerField(null=False, blank=False)
 
     @property
@@ -173,6 +174,7 @@ class WithdrawProjectFunds(models.Model):
     date = models.DateTimeField(auto_now_add=True, null=True)
     pre_balance = models.PositiveIntegerField(null=True, blank=True)
     post_balance = models.PositiveIntegerField(null=True, blank=True)
+    is_approved = models.BooleanField(default=False)
     
 class SendMoney(models.Model):
     amount = models.PositiveIntegerField(null=True, blank=True)
