@@ -1,4 +1,4 @@
-from .models import Project, Innovation, Contribution, Transaction
+from .models import Project, Innovation, Contribution, Transaction, Withdrawal, WithdrawProjectFunds
 from django import forms
 from ckeditor.fields import RichTextFormField
 
@@ -177,4 +177,7 @@ class WithdrawalRequestAuthorizationForm(forms.ModelForm):
         ('YET TO BE REVIEWED', 'Yet to be Reviewed'),
         # ('REVIEW IN PROGRESS', 'Review In Progress')
     )
-    is_approved = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=TYPE_CHOICES)
+    type = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=TYPE_CHOICES)
+    class Meta:
+        model = Withdrawal
+        fields = ['is_approved']
