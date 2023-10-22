@@ -785,3 +785,9 @@ def withdrawal_requests(request):
     else:
         return HttpResponse('You are not authorized to view this page')
     return render(request, 'core/withdrawal-requests.html', context)
+
+def withdrawal_request_detail(request, pk):
+    context = {}
+    withdrawal_request = Withdrawal.objects.get(pk=pk)
+    context['withdrawal_request'] = withdrawal_request
+    return render(request, 'core/withdrawal-request-detail.html', context)
