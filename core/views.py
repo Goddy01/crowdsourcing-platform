@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 import uuid, requests, os, json
 from dotenv import load_dotenv
 from django.utils.dateparse import parse_datetime
+from itertools import chain
 
 load_dotenv()
 
@@ -715,3 +716,15 @@ def withdraw_project_funds(request, project_pk):
         else:
             return HttpResponse('You cannot withdraw more than what you have.')
     return render(request, 'core/withdraw-project-funds.html', context)
+
+@login_required
+def withdrawal_requests(request):
+    context = {}
+    if request.user.is_moderator:
+        withdrawal_requests = Withdrawal.objects.filter(is_approved=False)
+        project_withdrawal_requests = WithdrawProjectFunds.objects.filter(is_approved=False)
+        withdrawal_requests = list(chain(withdrawal_requests, project_withdrawal_requests))
+        context['withdrawal_requests'] = withdrawal_requests
+    else:
+        messages.error(request, 'You are not authorized to view this page')
+    return render(request, 'core/withdrawal-requests.html', context)
