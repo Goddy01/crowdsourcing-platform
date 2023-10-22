@@ -721,10 +721,10 @@ def withdraw_project_funds(request, project_pk):
 def withdrawal_requests(request):
     context = {}
     if request.user.is_moderator:
-        withdrawal_requests = Withdrawal.objects.filter(is_approved=False)
-        project_withdrawal_requests = WithdrawProjectFunds.objects.filter(is_approved=False)
-        withdrawal_requests = list(chain(withdrawal_requests, project_withdrawal_requests))
+        withdrawal_requests = Withdrawal.objects.filter(is_approved=False).order_by('-date')
+        project_withdrawal_requests = WithdrawProjectFunds.objects.filter(is_approved=False).order_by('-date')
         context['withdrawal_requests'] = withdrawal_requests
+        context['project_withdrawal_requests'] = project_withdrawal_requests
     else:
         messages.error(request, 'You are not authorized to view this page')
     return render(request, 'core/withdrawal-requests.html', context)

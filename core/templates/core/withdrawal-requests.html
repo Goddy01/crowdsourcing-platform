@@ -60,6 +60,7 @@
                                 <th>Bank Name</th>
                                 <th>Bank Account Holder</th>
                                 <th>Owner</th>
+                                <th>type</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -71,6 +72,18 @@
                                 <td>{{ withdrawal.bank_name }}</td>
                                 <td>{{ withdrawal.account_holder }}</td>
                                 <td>{{ withdrawal.innovator.user.username }}</td>
+                                <td>Personal Funds</td>
+                            </tr>
+                            {% endfor %}
+                            {% for withdrawal in project_withdrawal_requests %}
+                            <tr>
+                                <td>{{ withdrawal.date }}</td>
+                                <td>₦{{ withdrawal.amount }}</td>
+                                <td>{{ withdrawal.account_number }}</td>
+                                <td>{{ withdrawal.bank_name }}</td>
+                                <td>{{ withdrawal.account_holder }}</td>
+                                <td>{{ withdrawal.innovator.user.username }}</td>
+                                <td>Project Capital Contribution Funds</td>
                             </tr>
                             {% endfor %}
                         </tbody>

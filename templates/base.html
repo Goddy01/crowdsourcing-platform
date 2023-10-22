@@ -123,7 +123,9 @@
                             <em class="mdi mdi-chevron-down"></em>
                         </a>
 						<ul class="sub-menu">
-							<li><a href="account-overview.html">Overview</a></li>
+                            {% if request.user.is_moderator %}
+							<li><a href="{% url 'withdrawal_requests' %}">Withdrawal Requests</a></li>
+                            {% endif %}
 							<li><a href="{% url 'my-investments' %}">Investments</a></li>
 							<li><a href="{% url 'statement' %}">Statement</a></li>
 							<li><a href="{% url 'deposit' %}">Funding</a></li>
