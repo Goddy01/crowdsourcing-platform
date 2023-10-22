@@ -172,8 +172,8 @@ class StatementTypeForm(forms.ModelForm):
 
 class WithdrawalRequestAuthorizationForm(forms.ModelForm):
     TYPE_CHOICES = (
-        ('APPROVED', True),
-        ('DECLINED', False),
+        (True, 'APPROVED'),
+        (False, 'DECLINED'),
         # ('YET TO BE REVIEWED', 'Yet to be Reviewed'),
         # ('REVIEW IN PROGRESS', 'Review In Progress')
     )
