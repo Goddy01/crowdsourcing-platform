@@ -786,8 +786,12 @@ def withdrawal_requests(request):
         return HttpResponse('You are not authorized to view this page')
     return render(request, 'core/withdrawal-requests.html', context)
 
-def withdrawal_request_detail(request, pk):
+def withdrawal_request_detail(request, pk, type):
     context = {}
-    withdrawal_request = Withdrawal.objects.get(pk=pk)
-    context['withdrawal_request'] = withdrawal_request
+    if type == 'personal_funds':
+        withdrawal_request = Withdrawal.objects.get(pk=pk)
+        context['withdrawal_request'] = withdrawal_request
+    elif type == 'project_capital_contribution_funds':
+        withdrawal_request = WithdrawProjectFunds.objects.get(pk=pk)
+        context['withdrawal_request'] = withdrawal_request
     return render(request, 'core/withdrawal-request-detail.html', context)
