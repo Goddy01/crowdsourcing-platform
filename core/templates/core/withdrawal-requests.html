@@ -36,6 +36,7 @@
                 <div id="sidebar" class="col-12 col-md-4 col-lg-2 content-filters">
                     <form action="{% url 'withdrawal_requests' %}" method="POST">
                         {% csrf_token %}
+                        {{ form.is_approved }}
                         <!-- <h5 class="widget-title">withdrawal date</h5> -->
                         <div class="col-12">
                             <h4>FILTER</h4>
@@ -162,6 +163,8 @@
                     <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
                     </div>
                 </div>
+                </div>
+                </div>
                             
                             <tr>
                                 <td>{{ withdrawal.date }}</td>
@@ -190,7 +193,89 @@
                             </tr>
                             
                             {% endfor %}
-                            {% for withdrawal in project_withdrawals %}
+                            {% for withdrawal in project_withdrawal_requests %}
+                            <div class="modal fade" id="exampleModal{{ withdrawal.pk }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ withdrawal.pk }}" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel{{ withdrawal.pk }}">Withdrawal Request Details</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <p>
+                                                <span class="fw-bold text-success">Date Requested: </span>
+                                                <span>{{ withdrawal.date }}</span>
+                                            </p>
+                                            <p>
+                                                <span class="fw-bold text-success">Amount: </span>
+                                                <span>₦{{ withdrawal.amount }}</span>
+                                            </p>
+                                            <p>
+                                                <span class="fw-bold text-success">Reference Code: </span>
+                                                <span cl>
+                                                    {{ withdrawal.reference_code }}
+                                                </span>
+                                            </p>
+                                            <p>
+                                                <span class="fw-bold text-success">Account Number: </span>
+                                                <span cl>
+                                                    {{ withdrawal.account_number }}
+                                                </span>
+                                            </p>
+                                            <p>
+                                                <span class="fw-bold text-success">Bank Name: </span>
+                                                <span cl>
+                                                    {{ withdrawal.bank_name }}
+                                                </span>
+                                            </p>
+                                            <p>
+                                                <span class="fw-bold text-success">Account Holder: </span>
+                                                <span cl>
+                                                    {{ withdrawal.account_holder }}
+                                                </span>
+                                            </p>
+                                            <p>
+                                                <span class="fw-bold text-success">Requester: </span>
+                                                <span cl>
+                                                    {{ withdrawal.innovator.user.username }}
+                                                </span>
+                                            </p>
+                                            <p>
+                                                <span class="fw-bold text-success">Pre Balance: </span>
+                                                <span>₦{{ withdrawal.pre_balance }}</span>
+                                            </p>
+                                            <p>
+                                                <span class="fw-bold text-success">Post Balance: </span>
+                                                <span>₦{{ withdrawal.post_balance }}</span>
+                                            </p>
+                                            <p>
+                                                <span class="fw-bold text-success">Status: </span>
+                                                <span>
+                                                    {% if withdrawal.is_approved == True %}
+                                                    <span style="font-size: 20px;">✅</span>
+                                                    {% else %}
+                                                    <span style="font-size: 20px;">❌</span>
+                                                    {% endif %}
+                                                </span>
+                                            </p>
+                
+                                            <form method="POST" action="{% url 'set_withdrawal_request_status' pk=withdrawal.pk type='project_capital_contribution_funds' %}">
+                                                {% csrf_token %}
+                                                <div class="mb-3">
+                                                    <span style="display: inline;">{{ form.is_approved }}</span>
+                                                </div>
+                                                <button type="submit" name="set_status">Submit</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                                    </div>
+                                </div>
+                                </div>
+                                </div>
                             <tr>
                                 <td>{{ withdrawal.date }}</td>
                                 <td>₦{{ withdrawal.amount }}</td>
@@ -199,6 +284,22 @@
                                 <td>{{ withdrawal.account_holder }}</td>
                                 <td>{{ withdrawal.innovator.user.username }}</td>
                                 <td>Project Capital Contribution Funds</td>
+                                <td class="text-success" style="margin-right: 2px;">
+                                    <div class="dropdown">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#009900" class="w-6 h-6 dropdown-toggle" style="width: 30px;" id="dropdownMenuButton2" data-toggle="dropdown" aria-expanded="false">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
+                                        </svg>
+                    
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                                            <li>
+                                                <button data-bs-target="#exampleModal{{ withdrawal.pk }}" data-bs-toggle="modal" type="button" class="btn btn-success">
+                                                    Details
+                                                </button>
+                                            </li>
+                                                
+                                        </ul>
+                                    </div>
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>
