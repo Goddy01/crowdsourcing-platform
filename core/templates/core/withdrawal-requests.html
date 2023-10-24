@@ -57,7 +57,7 @@
                         <div class="mt-3">
                             {{ form.type }}
                             
-                            <button type="submit" class="button button-primary w-100 mt-3 py-2" name="filter_statement">Filter</button>
+                            <button type="submit" class="button button-primary w-100 mt-3 py-2" name="filter_withdrawal_requests">Filter</button>
                             <!-- <label for="type-referral-fee">
                                 <input id="type-referral-fee" name="type-referral-fee" type="checkbox">
                                 <span>Referral fee</span>
@@ -148,14 +148,12 @@
                                 </span>
                             </p>
 
-                            <form method="POST" action="{% url 'project_details' project.pk %}">
+                            <form method="POST" action="{% url 'set_withdrawal_request_status' pk=withdrawal.pk type='personal_funds' %}">
                                 {% csrf_token %}
                                 <div class="mb-3">
-                                    <label for="category" class="form-label">Status</label>
-                                    <!-- <input type="text" name="status" id="status"> -->
-                                    {{ status_form }}
+                                    <span style="display: inline;">{{ form.is_approved }}</span>
                                 </div>
-                                <button type="submit" name="status_form">Submit</button>
+                                <button type="submit" name="set_status">Submit</button>
                             </form>
                         </div>
                     </div>

@@ -47,7 +47,7 @@ urlpatterns = [
     path('withdraw-project-funds/<project_pk>/', views.withdraw_project_funds, name='withdraw_project_funds'),
     path('withdraw-project-funds-page/', views.withdraw_project_funds_page, name='withdraw_project_funds_page'),
     path('withdrawal-requests/', views.withdrawal_requests, name='withdrawal_requests'),
-    path('withdrawal-request-detail/<pk>', views.withdrawal_request_detail, name='withdrawal_request_details'),
+    path('withdrawal-requests/set-withdrawal-request-status/<type>/<pk>', views.set_withdrawal_request_status, name='set_withdrawal_request_status'),
     
     # path('contribution/reply/<innovation_pk>/', views.reply, name='reply'),
 

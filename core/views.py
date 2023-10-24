@@ -129,7 +129,7 @@ def project_details(request, project_pk):
             # print('STATUS_FORM: ', status_form)
             # print('brev')
             context['status_form'] = status_form
-            if request.method == 'POST'and 'status' in request.POST:
+            if request.method == 'POST' and 'status' in request.POST:
                 project.status = request.POST.get('status')
                 project.save()
                 # print('broo: ', project.status)
@@ -722,7 +722,7 @@ def withdrawal_requests(request):
     context = {}
     context['form'] = WithdrawalRequestAuthorizationForm()
     if request.user.is_moderator:
-        if request.method == 'POST':
+        if request.method == 'POST' and 'filter_withdrawal_requests' in request.POST:
             date_from = parse_datetime(request.POST.get('date_from'))
             date_to = parse_datetime(request.POST.get('date_to'))
             type_list = request.POST.getlist('type')
@@ -773,7 +773,7 @@ def withdrawal_requests(request):
             elif date_from == None and date_to == None and len(type_list) == 0:
                 context['withdrawal_requests'] = Withdrawal.objects.filter().order_by('-date')
                 context['project_withdrawal_requests'] = WithdrawProjectFunds.objects.filter().order_by('-date')
-
+            
             context['form'] = WithdrawalRequestAuthorizationForm(
                 {
                     'type': type_list
@@ -786,12 +786,34 @@ def withdrawal_requests(request):
         return HttpResponse('You are not authorized to view this page')
     return render(request, 'core/withdrawal-requests.html', context)
 
-def withdrawal_request_detail(request, pk, type):
+def set_withdrawal_request_status(request, pk, type):
     context = {}
-    if type == 'personal_funds':
-        withdrawal_request = Withdrawal.objects.get(pk=pk)
-        context['withdrawal_request'] = withdrawal_request
-    elif type == 'project_capital_contribution_funds':
-        withdrawal_request = WithdrawProjectFunds.objects.get(pk=pk)
-        context['withdrawal_request'] = withdrawal_request
-    return render(request, 'core/withdrawal-request-detail.html', context)
+    if request.method == 'POST' and 'set_status' in request.POST:
+        is_approved = request.POST.get('is_approved')
+        print('TYPE: ', is_approved)
+        if type == 'personal_funds':
+            print('personal_funds')
+            withdrawal_request = Withdrawal.objects.get(pk=pk)
+            if is_approved == 'True':
+                withdrawal_request.is_approved = not withdrawal_request.is_approved
+                withdrawal_request.save()
+                print('STATUS1: ', withdrawal_request.is_approved)
+            else:
+                withdrawal_request.is_approved = withdrawal_request.is_approved
+                withdrawal_request.save()
+                print('STATUS1.1: ', withdrawal_request.is_approved)
+            context['withdrawal_request'] = withdrawal_request
+            return redirect('withdrawal_requests')
+        elif type == 'project_capital_contribution_funds':
+            print('project_capital_contribution_funds')
+            withdrawal_request = WithdrawProjectFunds.objects.get(pk=pk)
+            if is_approved == True:
+                withdrawal_request.is_approved = True
+            else:
+                withdrawal_request.is_approved = False
+            withdrawal_request.save()
+            withdrawal_request.save()
+            context['withdrawal_request'] = withdrawal_request
+            print('STATUS2: ', withdrawal_request.is_approved)
+            return redirect('withdrawal_requests')
+    return render(request, 'core/withdrawal-requests.html', context)
