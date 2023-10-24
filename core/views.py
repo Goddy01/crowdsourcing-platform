@@ -3,7 +3,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from .models import Project, Innovation, Contribution, Reward_Payment, Make_Investment, Transaction, DepositMoney, Withdrawal, SendMoney, WithdrawProjectFunds
 from django_countries import countries
-from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm, MyInvestmentForm, InvestmentStatusForm, StatementTypeForm, WithdrawalRequestAuthorizationForm
+from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm, MyInvestmentForm, InvestmentStatusForm, StatementTypeForm, WithdrawalRequestAuthorizationForm, FilterWithdrawalRequestForm
 from accounts.models import Innovator, Moderator, BaseUser
 from django.utils import timezone
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -720,7 +720,8 @@ def withdraw_project_funds(request, project_pk):
 @login_required
 def withdrawal_requests(request):
     context = {}
-    context['form'] = WithdrawalRequestAuthorizationForm()
+    context['form'] = FilterWithdrawalRequestForm()
+    context['set_is_approved_form'] = WithdrawalRequestAuthorizationForm()
     if request.user.is_moderator:
         if request.method == 'POST' and 'filter_withdrawal_requests' in request.POST:
             date_from = parse_datetime(request.POST.get('date_from'))
@@ -774,7 +775,7 @@ def withdrawal_requests(request):
                 context['withdrawal_requests'] = Withdrawal.objects.filter().order_by('-date')
                 context['project_withdrawal_requests'] = WithdrawProjectFunds.objects.filter().order_by('-date')
             
-            context['form'] = WithdrawalRequestAuthorizationForm(
+            context['form'] = FilterWithdrawalRequestForm(
                 {
                     'type': type_list
                 }
@@ -788,6 +789,7 @@ def withdrawal_requests(request):
 
 def set_withdrawal_request_status(request, pk, type):
     context = {}
+    context['set_is_approved_form'] = WithdrawalRequestAuthorizationForm()
     if request.method == 'POST' and 'set_status' in request.POST:
         is_approved = request.POST.get('is_approved')
         print('TYPE: ', is_approved)
@@ -799,7 +801,7 @@ def set_withdrawal_request_status(request, pk, type):
                 withdrawal_request.save()
                 print('STATUS1: ', withdrawal_request.is_approved)
             else:
-                withdrawal_request.is_approved = withdrawal_request.is_approved
+                withdrawal_request.is_approved = False
                 withdrawal_request.save()
                 print('STATUS1.1: ', withdrawal_request.is_approved)
             context['withdrawal_request'] = withdrawal_request
@@ -807,13 +809,18 @@ def set_withdrawal_request_status(request, pk, type):
         elif type == 'project_capital_contribution_funds':
             print('project_capital_contribution_funds')
             withdrawal_request = WithdrawProjectFunds.objects.get(pk=pk)
-            if is_approved == True:
+            if is_approved == 'True':
                 withdrawal_request.is_approved = True
+                withdrawal_request.save()
             else:
                 withdrawal_request.is_approved = False
-            withdrawal_request.save()
-            withdrawal_request.save()
+                withdrawal_request.save()
             context['withdrawal_request'] = withdrawal_request
             print('STATUS2: ', withdrawal_request.is_approved)
             return redirect('withdrawal_requests')
+        context['set_is_approved_form'] = WithdrawalRequestAuthorizationForm(
+            {
+                'is_approved': is_approved
+            }
+        )
     return render(request, 'core/withdrawal-requests.html', context)

@@ -152,7 +152,7 @@
                             <form method="POST" action="{% url 'set_withdrawal_request_status' pk=withdrawal.pk type='personal_funds' %}">
                                 {% csrf_token %}
                                 <div class="mb-3">
-                                    <span style="display: inline;">{{ form.is_approved }}</span>
+                                    <span style="display: inline;">{{ set_is_approved_form.is_approved }}</span>
                                 </div>
                                 <button type="submit" name="set_status">Submit</button>
                             </form>
@@ -175,20 +175,20 @@
                                 <td>{{ withdrawal.innovator.user.username }}</td>
                                 <td>Personal Funds</td>
                                 <td class="text-success" style="margin-right: 2px;">
-                                    <div class="dropdown">
+                                    <!-- <div class="dropdown">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#009900" class="w-6 h-6 dropdown-toggle" style="width: 30px;" id="dropdownMenuButton2" data-toggle="dropdown" aria-expanded="false">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
                                         </svg>
                     
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                                            <li>
+                                            <li style="margin-top: -40px;"> -->
                                                 <button data-bs-target="#exampleModal{{ withdrawal.pk }}" data-bs-toggle="modal" type="button" class="btn btn-success">
                                                     Details
                                                 </button>
-                                            </li>
+                                            <!-- </li>
                                                 
                                         </ul>
-                                    </div>
+                                    </div> -->
                                 </td>
                             </tr>
                             
@@ -263,7 +263,7 @@
                                             <form method="POST" action="{% url 'set_withdrawal_request_status' pk=withdrawal.pk type='project_capital_contribution_funds' %}">
                                                 {% csrf_token %}
                                                 <div class="mb-3">
-                                                    <span style="display: inline;">{{ form.is_approved }}</span>
+                                                    <span style="display: inline;">{{ set_is_approved_form.is_approved }}</span>
                                                 </div>
                                                 <button type="submit" name="set_status">Submit</button>
                                             </form>
@@ -285,20 +285,20 @@
                                 <td>{{ withdrawal.innovator.user.username }}</td>
                                 <td>Project Capital Contribution Funds</td>
                                 <td class="text-success" style="margin-right: 2px;">
-                                    <div class="dropdown">
+                                    <!-- <div class="dropdown">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#009900" class="w-6 h-6 dropdown-toggle" style="width: 30px;" id="dropdownMenuButton2" data-toggle="dropdown" aria-expanded="false">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
                                         </svg>
                     
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                                            <li>
+                                            <li> -->
                                                 <button data-bs-target="#exampleModal{{ withdrawal.pk }}" data-bs-toggle="modal" type="button" class="btn btn-success">
                                                     Details
                                                 </button>
-                                            </li>
+                                            <!-- </li>
                                                 
                                         </ul>
-                                    </div>
+                                    </div> -->
                                 </td>
                             </tr>
                             {% endfor %}
