@@ -799,11 +799,10 @@ def set_withdrawal_request_status(request, pk, type):
             if is_approved == 'True':
                 withdrawal_request.is_approved = not withdrawal_request.is_approved
                 withdrawal_request.save()
-                print('STATUS1: ', withdrawal_request.is_approved)
+                request.session['amount_authorized'] = withdrawal_request.amount
             else:
                 withdrawal_request.is_approved = False
                 withdrawal_request.save()
-                print('STATUS1.1: ', withdrawal_request.is_approved)
             context['withdrawal_request'] = withdrawal_request
             return redirect('withdrawal_requests')
         elif type == 'project_capital_contribution_funds':
@@ -812,11 +811,11 @@ def set_withdrawal_request_status(request, pk, type):
             if is_approved == 'True':
                 withdrawal_request.is_approved = True
                 withdrawal_request.save()
+                request.session['amount_authorized'] = withdrawal_request.amount
             else:
                 withdrawal_request.is_approved = False
                 withdrawal_request.save()
             context['withdrawal_request'] = withdrawal_request
-            print('STATUS2: ', withdrawal_request.is_approved)
             return redirect('withdrawal_requests')
         context['set_is_approved_form'] = WithdrawalRequestAuthorizationForm(
             {
@@ -824,3 +823,59 @@ def set_withdrawal_request_status(request, pk, type):
             }
         )
     return render(request, 'core/withdrawal-requests.html', context)
+
+def create_recipient(request, name, account_number, bank_code):
+    # CREATE TRANSFER RECIPIENT
+    create_recipient_url = "https://api.paystack.co/transferrecipient"
+
+    headers = {
+        "Authorization": f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}",
+        "Content-Type": "application/json",
+    }
+
+    data = {
+        "type": "nuban",
+        "name": name,
+        "account_number": account_number,
+        "bank_code": bank_code,
+        "currency": "NGN",
+    }
+
+    response = requests.post(create_recipient_url, headers=headers, json=data)
+
+    # Check the response status and content
+    if response.status_code == 200:
+        response = response.json()
+        print("Request successful")
+        print(response)
+        return JsonResponse(response, status=200)
+    else:
+        print(f"Request failed with status code {response.status_code}")
+        print(response.text)
+        return JsonResponse({'error': f"Request failed with status code {response.status_code}"})
+
+
+
+
+def initiate_single_transfer(request, name, account_number, bank_code):
+    
+    url = "https://api.paystack.co/transfer"
+
+    data = {
+        "source": "balance",
+        "reason": f"Withdrawal of {request.session.get('amount_authorized')} Granted!!!",
+        "amount": request.session.get('amount_authorized') * 100,
+        "recipient": "RCP_gx2wn530m0i3w3m"
+    }
+
+    headers = {
+        "Authorization": f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}",
+        "Cache-Control": "no-cache",
+    }
+
+    response = requests.post(url, data=data, headers=headers)
+    print('INITIATE TF RESPONSE: ', response.json())
+    if response.status_code == 200:
+        return JsonResponse(response.json(), status=200)
+    else:
+        return JsonResponse({'error': "Failed to make the API request"}, status=response.status_code)
