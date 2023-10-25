@@ -799,6 +799,9 @@ def set_withdrawal_request_status(request, pk, type):
             if is_approved == 'True':
                 withdrawal_request.is_approved = not withdrawal_request.is_approved
                 withdrawal_request.save()
+                request.session['name'] = withdrawal_request.account_holder
+                request.session['account_number'] = withdrawal_request.account_number
+                request.session['bank_code'] = withdrawal_request.bank_code
                 request.session['amount_authorized'] = withdrawal_request.amount
             else:
                 withdrawal_request.is_approved = False
@@ -811,6 +814,9 @@ def set_withdrawal_request_status(request, pk, type):
             if is_approved == 'True':
                 withdrawal_request.is_approved = True
                 withdrawal_request.save()
+                request.session['name'] = withdrawal_request.account_holder
+                request.session['account_number'] = withdrawal_request.account_number
+                request.session['bank_code'] = withdrawal_request.bank_code
                 request.session['amount_authorized'] = withdrawal_request.amount
             else:
                 withdrawal_request.is_approved = False
