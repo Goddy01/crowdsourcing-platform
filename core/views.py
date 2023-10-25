@@ -717,6 +717,103 @@ def withdraw_project_funds(request, project_pk):
             return HttpResponse('You cannot withdraw more than what you have.')
     return render(request, 'core/withdraw-project-funds.html', context)
 
+def create_recipient(request):
+    # CREATE TRANSFER RECIPIENT
+    create_recipient_url = "https://api.paystack.co/transferrecipient"
+
+    headers = {
+        "Authorization": f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}",
+        "Content-Type": "application/json",
+    }
+
+    data = {
+        "type": "nuban",
+        "name": request.session.get('name'),
+        "account_number": request.session.get('account_number'),
+        "bank_code": request.session.get('bank_code'),
+        "currency": "NGN",
+    }
+
+    response = requests.post(create_recipient_url, headers=headers, json=data)
+
+    # Check the response status and content
+    if response.status_code == 200 or response.status_code == 201:
+        response = response.json()
+        print("Request successful")
+        print('CREATE RECIPIENT RESPONSE:', response)
+        request.session['recipient_code'] = response['data']['recipient_code']
+        # return JsonResponse(response, status=200)
+        initiate_single_transfer(request)
+    else:
+        print(f"Request failed with status code {response.status_code}")
+        print(response.text)
+        return JsonResponse({'error': f"Request failed with status code {response.status_code}"})
+
+# REAL-TIME TRANSFER
+
+# def initiate_single_transfer(request):
+
+#     # Generate a v4 UUID
+#     uuid_obj = uuid.uuid4()
+
+#     # Convert the UUID to a string and truncate to a maximum of 100 characters
+#     uuid_reference = str(uuid_obj)[:100]
+
+#     url = "https://api.paystack.co/transfer"
+
+#     data = {
+#         "source": "balance",
+#         "reason": f"Withdrawal of {request.session.get('amount_authorized')} Granted!!!",
+#         "amount": request.session.get('amount_authorized') * 100,
+#         'reference': uuid_reference,
+#         "recipient": request.session.get('recipient_code')
+#     }
+
+#     headers = {
+#         "Authorization": f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}",
+#         "Cache-Control": "no-cache",
+#     }
+
+#     response = requests.post(url, data=data, headers=headers)
+#     print('INITIATE TF RESPONSE: ', response.json())
+#     if response.status_code == 200:
+#         request.session['transfer_code'] = response.json()['data']['transfer_code']
+#         finalize_transfer(request)
+#         print('INITIATE SINGLE TRANSFER RESPONSE: ', response)
+#         # return JsonResponse(response.json(), status=200)
+#     else:
+#         return JsonResponse({'error': "Failed to make the API request"}, status=response.status_code)
+    
+# def finalize_transfer(request):
+#     url = "https://api.paystack.co/transfer/finalize_transfer"
+#     authorization = f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}"
+#     content_type = "application/json"
+#     # Generate a v4 UUID
+#     uuid_obj = uuid.uuid4()
+
+#     # Convert the UUID to a string and truncate to a maximum of 100 characters
+#     otp_code = str(uuid_obj)[:6]
+#     data = {
+#         "transfer_code": request.session.get('transfer_code'),
+#         "otp": otp_code
+#     }
+
+#     headers = {
+#         "Authorization": authorization,
+#         "Content-Type": content_type,
+#     }
+
+#     response = requests.post(url, headers=headers, json=data)
+
+#     if response.status_code == 200:
+#         response_data = response.json()
+#         print('FINAL DATA: ', response_data)
+#         # return JsonResponse(response_data)
+#     else:
+#         error_message = f"Failed to finalize transfer. Status code: {response.status_code}"
+#         return JsonResponse({"error": error_message}, status=500)
+
+
 @login_required
 def withdrawal_requests(request):
     context = {}
@@ -799,10 +896,11 @@ def set_withdrawal_request_status(request, pk, type):
             if is_approved == 'True':
                 withdrawal_request.is_approved = not withdrawal_request.is_approved
                 withdrawal_request.save()
-                request.session['name'] = withdrawal_request.account_holder
-                request.session['account_number'] = withdrawal_request.account_number
-                request.session['bank_code'] = withdrawal_request.bank_code
-                request.session['amount_authorized'] = withdrawal_request.amount
+                # request.session['name'] = withdrawal_request.account_holder
+                # request.session['account_number'] = withdrawal_request.account_number
+                # request.session['bank_code'] = withdrawal_request.bank_code
+                # request.session['amount_authorized'] = withdrawal_request.amount
+                # create_recipient(request)
             else:
                 withdrawal_request.is_approved = False
                 withdrawal_request.save()
@@ -814,10 +912,11 @@ def set_withdrawal_request_status(request, pk, type):
             if is_approved == 'True':
                 withdrawal_request.is_approved = True
                 withdrawal_request.save()
-                request.session['name'] = withdrawal_request.account_holder
-                request.session['account_number'] = withdrawal_request.account_number
-                request.session['bank_code'] = withdrawal_request.bank_code
-                request.session['amount_authorized'] = withdrawal_request.amount
+                # request.session['name'] = withdrawal_request.account_holder
+                # request.session['account_number'] = withdrawal_request.account_number
+                # request.session['bank_code'] = withdrawal_request.bank_code
+                # request.session['amount_authorized'] = withdrawal_request.amount
+                # create_recipient(request)
             else:
                 withdrawal_request.is_approved = False
                 withdrawal_request.save()
@@ -829,93 +928,3 @@ def set_withdrawal_request_status(request, pk, type):
             }
         )
     return render(request, 'core/withdrawal-requests.html', context)
-
-def create_recipient(request):
-    # CREATE TRANSFER RECIPIENT
-    create_recipient_url = "https://api.paystack.co/transferrecipient"
-
-    headers = {
-        "Authorization": f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}",
-        "Content-Type": "application/json",
-    }
-
-    data = {
-        "type": "nuban",
-        "name": request.session.get('name'),
-        "account_number": request.session.get('account_number'),
-        "bank_code": request.session.get('bank_code'),
-        "currency": "NGN",
-    }
-
-    response = requests.post(create_recipient_url, headers=headers, json=data)
-
-    # Check the response status and content
-    if response.status_code == 200:
-        response = response.json()
-        print("Request successful")
-        print(response)
-        return JsonResponse(response, status=200)
-    else:
-        print(f"Request failed with status code {response.status_code}")
-        print(response.text)
-        return JsonResponse({'error': f"Request failed with status code {response.status_code}"})
-
-
-
-def initiate_single_transfer(request, name, account_number, bank_code,):
-
-    # Generate a v4 UUID
-    uuid_obj = uuid.uuid4()
-
-    # Convert the UUID to a string and truncate to a maximum of 100 characters
-    uuid_reference = str(uuid_obj)[:100]
-
-    url = "https://api.paystack.co/transfer"
-
-    data = {
-        "source": "balance",
-        "reason": f"Withdrawal of {request.session.get('amount_authorized')} Granted!!!",
-        "amount": request.session.get('amount_authorized') * 100,
-        'reference': uuid_reference,
-        "recipient": "RCP_gx2wn530m0i3w3m"
-    }
-
-    headers = {
-        "Authorization": f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}",
-        "Cache-Control": "no-cache",
-    }
-
-    response = requests.post(url, data=data, headers=headers)
-    print('INITIATE TF RESPONSE: ', response.json())
-    if response.status_code == 200:
-        return JsonResponse(response.json(), status=200)
-    else:
-        return JsonResponse({'error': "Failed to make the API request"}, status=response.status_code)
-    
-def finalize_transfer(request):
-    url = "https://api.paystack.co/transfer/finalize_transfer"
-    authorization = f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}"
-    content_type = "application/json"
-    # Generate a v4 UUID
-    uuid_obj = uuid.uuid4()
-
-    # Convert the UUID to a string and truncate to a maximum of 100 characters
-    otp_code = str(uuid_obj)[:6]
-    data = {
-        "transfer_code": request.session.get('transfer_code'),
-        "otp": otp_code
-    }
-
-    headers = {
-        "Authorization": authorization,
-        "Content-Type": content_type,
-    }
-
-    response = requests.post(url, headers=headers, json=data)
-
-    if response.status_code == 200:
-        response_data = response.json()
-        return JsonResponse(response_data)
-    else:
-        error_message = f"Failed to finalize transfer. Status code: {response.status_code}"
-        return JsonResponse({"error": error_message}, status=500)
