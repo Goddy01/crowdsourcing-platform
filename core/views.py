@@ -824,7 +824,7 @@ def set_withdrawal_request_status(request, pk, type):
         )
     return render(request, 'core/withdrawal-requests.html', context)
 
-def create_recipient(request, name, account_number, bank_code):
+def create_recipient(request):
     # CREATE TRANSFER RECIPIENT
     create_recipient_url = "https://api.paystack.co/transferrecipient"
 
@@ -835,9 +835,9 @@ def create_recipient(request, name, account_number, bank_code):
 
     data = {
         "type": "nuban",
-        "name": name,
-        "account_number": account_number,
-        "bank_code": bank_code,
+        "name": request.session.get('name'),
+        "account_number": request.session.get('account_number'),
+        "bank_code": request.session.get('bank_code'),
         "currency": "NGN",
     }
 
@@ -856,7 +856,7 @@ def create_recipient(request, name, account_number, bank_code):
 
 
 
-def initiate_single_transfer(request, name, account_number, bank_code):
+def initiate_single_transfer(request, name, account_number, bank_code,):
 
     # Generate a v4 UUID
     uuid_obj = uuid.uuid4()
@@ -885,3 +885,31 @@ def initiate_single_transfer(request, name, account_number, bank_code):
         return JsonResponse(response.json(), status=200)
     else:
         return JsonResponse({'error': "Failed to make the API request"}, status=response.status_code)
+    
+def finalize_transfer(request):
+    url = "https://api.paystack.co/transfer/finalize_transfer"
+    authorization = f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}"
+    content_type = "application/json"
+    # Generate a v4 UUID
+    uuid_obj = uuid.uuid4()
+
+    # Convert the UUID to a string and truncate to a maximum of 100 characters
+    otp_code = str(uuid_obj)[:6]
+    data = {
+        "transfer_code": request.session.get('transfer_code'),
+        "otp": otp_code
+    }
+
+    headers = {
+        "Authorization": authorization,
+        "Content-Type": content_type,
+    }
+
+    response = requests.post(url, headers=headers, json=data)
+
+    if response.status_code == 200:
+        response_data = response.json()
+        return JsonResponse(response_data)
+    else:
+        error_message = f"Failed to finalize transfer. Status code: {response.status_code}"
+        return JsonResponse({"error": error_message}, status=500)
