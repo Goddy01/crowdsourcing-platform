@@ -856,15 +856,21 @@ def create_recipient(request, name, account_number, bank_code):
 
 
 
-
 def initiate_single_transfer(request, name, account_number, bank_code):
-    
+
+    # Generate a v4 UUID
+    uuid_obj = uuid.uuid4()
+
+    # Convert the UUID to a string and truncate to a maximum of 100 characters
+    uuid_reference = str(uuid_obj)[:100]
+
     url = "https://api.paystack.co/transfer"
 
     data = {
         "source": "balance",
         "reason": f"Withdrawal of {request.session.get('amount_authorized')} Granted!!!",
         "amount": request.session.get('amount_authorized') * 100,
+        'reference': uuid_reference,
         "recipient": "RCP_gx2wn530m0i3w3m"
     }
 
