@@ -148,7 +148,7 @@
                                     {% endif %}
                                 </span>
                             </p>
-
+                            {% if not withdrawal.is_approved %}
                             <form method="POST" action="{% url 'set_withdrawal_request_status' pk=withdrawal.pk type='personal_funds' %}">
                                 {% csrf_token %}
                                 <div class="mb-3">
@@ -156,6 +156,7 @@
                                 </div>
                                 <button type="submit" name="set_status">Submit</button>
                             </form>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="modal-footer">
