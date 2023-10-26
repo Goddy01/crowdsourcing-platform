@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
-from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm, UpdateUserResidentialInfoForm, UpdateUserSocialsForm, ChangePasswordForm, UpdateUserSkillsForm, UpdateInnovatorServicesForm, UpdateUserServiceForm
+from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm, UpdateUserResidentialInfoForm, UpdateUserSocialsForm, ChangePasswordForm, UpdateUserSkillsForm, UpdateInnovatorServicesForm, UpdateUserServiceForm, UpdateUserNINForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -25,6 +25,7 @@ from django.contrib import messages
 from core.models import Project
 from django.http import HttpResponseRedirect
 from core.models import Make_Investment
+import requests
 
 
 # Create your views here.
@@ -309,10 +310,35 @@ def edit_profile(request):
 
     # USER NIN DATA
     if request.method == 'POST' and 'nin_form' in request.POST:
+        nin = request.POST.get('nin')
         nin_data = {
-            'nin': request.POST.get('nin')
+            'nin': nin
         }
+        user_nin_info = UpdateUserNINForm(nin_data, instance=request.user)
+        if user_nin_info.is_valid():
+            url = "https://api.verified.africa/sfx-verify/v3/id-service/"
+            # 02730846093
+            payload = {
+                "searchParameter": nin,
+                "verificationType": "NIN-SEARCH"
+            }
+            headers = {
+                "accept": "application/json",
+                "userid": "1628022119761",
+                "apiKey": "KC69ZuFxVEsSpld69koD",
+                "content-type": "application/json"
+            }
 
+            response = requests.post(url, json=payload, headers=headers)
+
+            if response.json()['description'].lower() == "success":
+                user_nin_info.save()
+                # return redirect('accounts:profile')
+            else:
+                messages.error(request, f'No NIN record found for {nin}')
+            print(response.text)
+            # user_nin_info.save()
+            return redirect('accounts:profile')
 #   USER RESIDENTIAL DATA
     if request.method == 'POST' and 'user_r_form' in request.POST:
         user_r_data = {
