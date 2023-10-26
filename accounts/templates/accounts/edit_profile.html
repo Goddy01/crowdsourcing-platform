@@ -98,19 +98,26 @@
         {% if not user.signup_confirmation or not user.is_verified %}
             <div class="col-lg-8 col-xl-5 toastDiv mt-5 mx-auto">
                 <!-- Then put toasts within -->
-            <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto">
+            <div class="card toast mb-2 bg-gray animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto">
             <div class="toast-body text-white m-2">
                 {% if not user.signup_confirmation %}
-                <li class="" style="list-style: disc;">You have not clicked on your confirmation email. Go to your 
-                    <a href="{% url 'accounts:profile' %}" class="text-white text-decoration-underline">profile page</a>
+                <li class="text-danger" style="list-style: disc;">You have not clicked on your confirmation email. Go to your 
+                    <a href="{% url 'accounts:profile' %}" class="text-info text-decoration-underline">profile page</a>
                      to request for a new one.
                 </li>
                 {% endif %}
                 {% if not user.is_verified %}
-                <li class="" style="list-style: disc;">Provide your details in the 
-                    <a href="{% url 'accounts:edit_profile' %}" class="text-white text-decoration-underline">edit profile page</a>
+                <li class="text-danger" style="list-style: disc;">Provide your details in the 
+                    <a href="{% url 'accounts:edit_profile' %}" class="text-info text-decoration-underline">edit profile page</a>
                     to get verified and have innovators' privileges.
                 </li>
+                {% endif %}
+                {% if messages %}
+                <!-- <ul class="messages"> -->
+                    {% for message in messages %}
+                    <li {% if message.tags == 'alert-danger' %} class="text-danger" {% endif %} style="list-style: disc;">{{ message }}</li>
+                    {% endfor %}
+                <!-- </ul> -->
                 {% endif %}
             </div>
             </div>
@@ -364,13 +371,15 @@
 </div>
 
 <div class="bg-secondary-soft px-4 py-5 rounded mt-5 row mb-5 gx-5 mt-5">
-  <h4 class="mb-4 mt-0 text-success">National Identity Number</h4>
-  <form action="" method="post">
+  <h4 class="mb-2 mt-0 text-success">National Identity Number</h4>
+    <small class="mb-4 text-info">Due to privacy concerns, the API used restricts access to data related to the National Identification Number (NIN) only to registered businesses verified by the government. Therefore, only the NIN '02730846093' is considered valid. Any other input, aside from '02730846093', will be regarded as invalid.</small>
+  <form action="{% url 'accounts:edit_profile' %}" method="post">
+    {% csrf_token %}
     <div class="">
       <div class="col-md-6">
-        <label class="form-label">NIN Number
+        <label class="form-label">NIN Number 
         </label>
-        <input type="password" class="form-control" placeholder="Enter your NIN number" aria-label="Username" value="" name="nin" id="nin">
+        <input type="number" step="0.1" min=0 class="form-control" placeholder="Enter your NIN number" value="{{ user.nin }}" name="nin" id="nin">
       </div>
 
       <button type="submit" name="nin_form" class="btn btn-success btn-lg mt-2">Save Changes</button>

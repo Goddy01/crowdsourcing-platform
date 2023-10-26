@@ -334,12 +334,19 @@ def edit_profile(request):
             if response.json()['description'].lower() == "success":
                 user_nin_info.save()
                 messages.success(request, 'NIN is valid. ✅')
-                # return redirect('accounts:profile')
+                return redirect('accounts:profile')
             else:
-                messages.error(request, f'No NIN record found for {nin}')
+                messages.error(request, f"No NIN record found for '{nin}'")
+                return redirect('accounts:edit_profile')
             print(response.text)
             # user_nin_info.save()
-            return redirect('accounts:profile')
+    else:
+        user_nin_info = UpdateUserNINForm(
+            instance=request.user,
+            initial= {
+                'nin': user.nin
+            }
+        )
 #   USER RESIDENTIAL DATA
     if request.method == 'POST' and 'user_r_form' in request.POST:
         user_r_data = {
@@ -434,6 +441,7 @@ def edit_profile(request):
         'user_p_info_form': user_p_info,
         'user_r_info_form': user_r_info,
         'user_s_info_form': user_s_info,
+        'user_nin_info': user_nin_info,
         'change_password_form': change_password_form,
         'user_skill_form': skill_form,
         'user_skills': Innovator.objects.get(user__username=request.user).innovatorskill_set.all(),
