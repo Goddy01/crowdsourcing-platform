@@ -309,7 +309,8 @@ def edit_profile(request):
 
 
     # USER NIN DATA
-    if request.method == 'POST' and 'nin_form' in request.POST:
+    if request.method == 'POST' and 'nin' in request.POST:
+        print('YES BRO')
         nin = request.POST.get('nin')
         nin_data = {
             'nin': nin
@@ -330,11 +331,13 @@ def edit_profile(request):
             }
 
             response = requests.post(url, json=payload, headers=headers)
-
+            print('BRO DAYUM')
             if response.json()['description'].lower() == "success":
                 user_nin_info.save()
+                print('DONE MAN')
                 messages.success(request, 'NIN is valid. ✅')
-                return redirect('accounts:profile')
+                return JsonResponse(response.json(), status=200)
+                # return redirect('accounts:profile')
             else:
                 messages.error(request, f"No NIN record found for '{nin}'")
                 return redirect('accounts:edit_profile')

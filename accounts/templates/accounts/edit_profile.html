@@ -362,7 +362,7 @@
                 <label for="inputEmail4" class="form-label">Email 
                 </label>
                 <input type="email" placeholder="Enter your email address" class="form-control" value="{{ user.email }}" name="email" id="email">
-                </div>    
+                </div>
         <!-- </div> -->
         <button type="submit" class="btn btn-success btn-lg" name="user_p_form" id="user_p_form">Save Changes</button>
         </form>
@@ -373,16 +373,72 @@
 <div class="bg-secondary-soft px-4 py-5 rounded mt-5 row mb-5 gx-5 mt-5">
   <h4 class="mb-2 mt-0 text-success">National Identity Number</h4>
     <small class="mb-4 text-info">Due to privacy concerns, the API used restricts access to data related to the National Identification Number (NIN) only to registered businesses verified by the government. Therefore, only the NIN '02730846093' is considered valid. Any other input, aside from '02730846093', will be regarded as invalid.</small>
-  <form action="{% url 'accounts:edit_profile' %}" method="post">
+  <form action="" method="post" id="nin_form">
     {% csrf_token %}
     <div class="">
       <div class="col-md-6">
         <label class="form-label">NIN Number 
         </label>
         <input type="number" step="0.1" min=0 class="form-control" placeholder="Enter your NIN number" value="{{ user.nin }}" name="nin" id="nin">
+        
       </div>
+      <div id="nin_error">
 
-      <button type="submit" name="nin_form" class="btn btn-success btn-lg mt-2">Save Changes</button>
+      </div>
+      <div id="nin_details" style="background-color: whitesmoke;display: none;" class="m-3 p-3">
+        <div class="row mb-3">
+          <div class="col">
+            <span class="fw-bold">
+              Firstname: 
+            </span>
+            <span id="nin_firstname">
+
+            </span>
+          </div>
+          <div class="col">
+            <span class="fw-bold">
+              Lastname: 
+            </span>
+            <span id="nin_lastname">
+
+            </span>
+          </div>
+          <!-- <div class="col">
+            3 of 3
+          </div> -->
+        </div>
+        <div class="row">
+          <div class="col">
+            <span class="fw-bold">
+              Telephone: 
+            </span>
+            <span id="nin_telephone">
+
+            </span>
+          </div>
+          <div class="col">
+            <span class="fw-bold">
+              Birth Date: 
+            </span>
+            <span id="nin_birth">
+
+            </span>
+          </div>
+          <!-- <div class="col">
+            3 of 3
+          </div> -->
+        </div>
+        <!-- <div class="card" style="width: 100%;">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="card-link">Card link</a>
+            <a href="#" class="card-link">Another link</a>
+          </div>
+        </div> -->
+      </div>
+      <button type="button" name="nin_form" class="btn btn-success btn-lg mt-2" id="nin_form_button">Save Changes</button>
     </div>
   </form>
 </div>
@@ -699,7 +755,42 @@ imgInput.addEventListener('change',
     });
 </script>
 
+<script>
+  $("#nin_form_button").click(function () {
+    console.log("Button clicked!");
+    var formData = $("#nin_form").serialize();
 
+    console.log('FORM DATA: ', formData)
+    // Manually add the CSRF token to the data
+    formData += '&csrfmiddlewaretoken=' + $("[name=csrfmiddlewaretoken]").val();
+    $.ajax({
+        type: "POST",
+        url: "{% url 'accounts:edit_profile' %}",
+        data: formData,
+        success: function (response) {
+            if (response.description === 'Success') {
+            // Update the resultDiv with the response data
+            console.log('RESPONSE: ', response)
+            document.querySelector('#nin_details').style.display = 'block';
+            $("#nin_firstname").html(response.response[0].firstname);
+            $("#nin_lastname").html(response.response[0].surname);
+            $("#nin_telephone").html(response.response[0].telephoneno);
+            $("#nin_birth").html(response.response[0].birthdate);
+            }
+            else {
+              document.querySelector('#nin_error').innerHTML = '<p style="color: red;">No NIN record found for ' + document.querySelector('#nin').value + '</p>';
+            }
+        },
+        // error: function (xhr, status, error) {
+        //     console.log('yessirrr')
+        //     $('#confirmWithdrawal').hide();
+        //     $("#modal_body").html('Could not resolve account name');
+
+        // }
+        
+    });
+  })
+</script>
 
 </html>
 {% endblock content %}
