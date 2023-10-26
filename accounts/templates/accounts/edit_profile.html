@@ -399,7 +399,7 @@
       <div class="col-md-6">
         <label class="form-label">NIN Number 
         </label>
-        <input type="text" step="0.1" min=0 class="form-control" placeholder="Enter your NIN number" value="{{ user.nin }}" name="nin" id="nin">
+        <input type="text" class="form-control" placeholder="Enter your NIN number" value="{% if user.nin %} {{ user.nin }} {% endif %}" name="nin" id="nin">
         
       </div>
       <div id="nin_error">

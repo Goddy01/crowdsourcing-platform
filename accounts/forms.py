@@ -404,7 +404,7 @@ class UpdateUserSkillsForm(forms.ModelForm):
 #         fields  = ['skill', 'skill_value']
 
 class UpdateUserNINForm(forms.ModelForm):
-    nin = forms.IntegerField(required=False, widget=forms.NumberInput())
+    nin = forms.CharField(required=False)
     class Meta:
         model = BaseUser
         fields = ['nin']
