@@ -80,7 +80,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     bio =                           models.CharField(max_length=100, null=True, blank=True)
     about_me =                      models.TextField(null=True, blank=True, max_length=2000)
     pfp =                           models.ImageField(upload_to=upload_location_pfp, blank=True, null=True)
-    nin =                           models.PositiveIntegerField(null=True, blank=True)
+    nin =                           models.TextField(null=True, blank=True, max_length=254)
     # id_card =                       models.ImageField(upload_to=upload_location_id_card, blank=True, null=True)
     city =                          models.CharField(max_length=128, blank=True, null=True)
     state =                         models.CharField(max_length=128, blank=True, null=True)
