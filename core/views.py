@@ -717,37 +717,37 @@ def withdraw_project_funds(request, project_pk):
             return HttpResponse('You cannot withdraw more than what you have.')
     return render(request, 'core/withdraw-project-funds.html', context)
 
-def create_recipient(request):
-    # CREATE TRANSFER RECIPIENT
-    create_recipient_url = "https://api.paystack.co/transferrecipient"
+# def create_recipient(request):
+#     # CREATE TRANSFER RECIPIENT
+#     create_recipient_url = "https://api.paystack.co/transferrecipient"
 
-    headers = {
-        "Authorization": f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}",
-        "Content-Type": "application/json",
-    }
+#     headers = {
+#         "Authorization": f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}",
+#         "Content-Type": "application/json",
+#     }
 
-    data = {
-        "type": "nuban",
-        "name": request.session.get('name'),
-        "account_number": request.session.get('account_number'),
-        "bank_code": request.session.get('bank_code'),
-        "currency": "NGN",
-    }
+#     data = {
+#         "type": "nuban",
+#         "name": request.session.get('name'),
+#         "account_number": request.session.get('account_number'),
+#         "bank_code": request.session.get('bank_code'),
+#         "currency": "NGN",
+#     }
 
-    response = requests.post(create_recipient_url, headers=headers, json=data)
+#     response = requests.post(create_recipient_url, headers=headers, json=data)
 
-    # Check the response status and content
-    if response.status_code == 200 or response.status_code == 201:
-        response = response.json()
-        print("Request successful")
-        print('CREATE RECIPIENT RESPONSE:', response)
-        request.session['recipient_code'] = response['data']['recipient_code']
-        # return JsonResponse(response, status=200)
-        initiate_single_transfer(request)
-    else:
-        print(f"Request failed with status code {response.status_code}")
-        print(response.text)
-        return JsonResponse({'error': f"Request failed with status code {response.status_code}"})
+#     # Check the response status and content
+#     if response.status_code == 200 or response.status_code == 201:
+#         response = response.json()
+#         print("Request successful")
+#         print('CREATE RECIPIENT RESPONSE:', response)
+#         request.session['recipient_code'] = response['data']['recipient_code']
+#         # return JsonResponse(response, status=200)
+#         initiate_single_transfer(request)
+#     else:
+#         print(f"Request failed with status code {response.status_code}")
+#         print(response.text)
+#         return JsonResponse({'error': f"Request failed with status code {response.status_code}"})
 
 # REAL-TIME TRANSFER
 
