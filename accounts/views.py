@@ -333,6 +333,7 @@ def edit_profile(request):
 
             if response.json()['description'].lower() == "success":
                 user_nin_info.save()
+                messages.success(request, 'NIN is valid. ✅')
                 # return redirect('accounts:profile')
             else:
                 messages.error(request, f'No NIN record found for {nin}')
