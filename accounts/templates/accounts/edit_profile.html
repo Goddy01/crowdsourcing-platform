@@ -365,19 +365,17 @@
 
 <div class="bg-secondary-soft px-4 py-5 rounded mt-5 row mb-5 gx-5 mt-5">
   <h4 class="mb-4 mt-0 text-success">National Identity Number</h4>
-  <div class="">
-  <div class="col-md-6">
-    <label class="form-label">NIN Number
-    </label>
-    <input type="password" class="form-control" placeholder="Enter your NIN number" aria-label="Username" value="" name="nin" id="nin">
-    </div>
+  <form action="" method="post">
+    <div class="">
+      <div class="col-md-6">
+        <label class="form-label">NIN Number
+        </label>
+        <input type="password" class="form-control" placeholder="Enter your NIN number" aria-label="Username" value="" name="nin" id="nin">
+      </div>
 
-    <!-- <div class="col-md-6">
-    <label class="form-label">Bio 
-    </label>
-    <input type="text" class="form-control" placeholder="Enter your bio" aria-label="bio" name="bio" id="bio" value="{% if user.bio %}{{ user.bio }}{% endif %}">
-    </div> -->
-  </div>
+      <button type="submit" name="nin_form" class="btn btn-success btn-lg mt-2">Save Changes</button>
+    </div>
+  </form>
 </div>
 
 

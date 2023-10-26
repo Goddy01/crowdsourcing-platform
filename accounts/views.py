@@ -306,6 +306,13 @@ def edit_profile(request):
             }
         )
 
+
+    # USER NIN DATA
+    if request.method == 'POST' and 'nin_form' in request.POST:
+        nin_data = {
+            'nin': request.POST.get('nin')
+        }
+
 #   USER RESIDENTIAL DATA
     if request.method == 'POST' and 'user_r_form' in request.POST:
         user_r_data = {
