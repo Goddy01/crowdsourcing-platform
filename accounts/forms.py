@@ -403,6 +403,13 @@ class UpdateUserSkillsForm(forms.ModelForm):
 #         model = InnovatorSkill
 #         fields  = ['skill', 'skill_value']
 
+class UpdateUserNINForm(forms.ModelForm):
+    nin = forms.IntegerField(required=False, widget=forms.NumberInput())
+    class Meta:
+        model = BaseUser
+        fields = ['nin']
+
+
 class UpdateUserServiceForm(forms.ModelForm):
     service = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Service'}))
     class Meta:
