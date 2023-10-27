@@ -84,7 +84,9 @@ class KBAQuestion(models.Model):
     kba_question =                  models.CharField('', max_length=1, blank=True, null=True, choices=KBA_QUESTIONS)
     answer =                        models.CharField(max_length=200)
 
+
 class BaseUser(AbstractBaseUser, PermissionsMixin):
+    kba =                           models.ForeignKey(KBAQuestion, on_delete=models.CASCADE, null=True, blank=True)
     last_name =                     models.CharField(max_length=256, null=True, blank=True)
     first_name =                    models.CharField(max_length=256, null=True, blank=True)
     middle_name =                   models.CharField(max_length=256, null=True, blank=True)
