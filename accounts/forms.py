@@ -442,9 +442,11 @@ class UpdateInnovatorServicesForm(forms.ModelForm):
         fields = ['service_1', 'service_2', 'service_3', 'service_4', 'service_5']
 
 class UpdateKBAQuestionForm(forms.ModelForm):
+    kba_question = forms.Selectwidget=forms.TextInput(attrs={'class': 'form-control'})
+    answer = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your answer to the knowledge-based question'}))  # Specify the widget and its attributes directly
     class Meta:
         model = KBAQuestion
-        fields = ['kba_question']
-        widgets = {
-            'kba_question': forms.Select(attrs={'class': 'form-control'})
-        }
+        fields = ['kba_question', 'answer']
+        # widgets = {
+        #     'kba_question': forms.Select(attrs={'class': 'form-control'}),
+        # }

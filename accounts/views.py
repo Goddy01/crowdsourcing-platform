@@ -9,7 +9,7 @@ from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token
 from django.conf import settings
 from django.core.mail import send_mail
-from .models import BaseUser, Innovator, Moderator, Follow
+from .models import BaseUser, Innovator, Moderator, Follow, KBAQuestion
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import random
@@ -309,15 +309,19 @@ def edit_profile(request):
 
 
     # KNOWLEDGE-BASED QUESTION
-    if request.method == 'POST' and 'kba' in request.POST:
+    if request.method == 'POST' and 'kba_question' in request.POST:
         kba_data = {
-            'kba_question': request.POST.get('kba')
+            'kba_question': request.POST.get('kba'),
+            'answer': request.POST.get('answer')
         }
         kba_form = UpdateKBAQuestionForm(kba_data, instance=request.user)
         if kba_form.is_valid():
-            user.kba = kba_form.cleaned_data['answer']
+            kba_obj = KBAQuestion.objects.create(
+                kba_question=request.POST.get('kba_question'),
+                answer = request.POST.get('answer')
+            )
+            user.kba = KBAQuestion.objects.get(pk=kba_obj.pk)
             user.save()
-            kba_form.save()
             messages.success(request, 'Knowledge-based Question successfully updated.')
         else:
             messages.error(request, 'Knowledge-based Question could not be updated.')

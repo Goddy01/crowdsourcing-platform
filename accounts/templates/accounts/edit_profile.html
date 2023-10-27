@@ -390,6 +390,25 @@
 </div> 
 </div>
 
+{% if not user.kba %}
+<div class="bg-secondary-soft px-4 py-5 rounded mt-5 row mb-5 gx-5 mt-5">
+  <h4 class="mb-3 mt-0 text-success">Knowledge-Based Question</h4>
+  <form action="{% url 'accounts:edit_profile' %}" id="kba_form" method="post">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-md-6">
+        {{ kba_form.kba_question }}
+      </div>
+      <div class="col-md-6">
+        {{ kba_form.answer }}
+      </div>
+    </div>
+    <button type="submit" class="btn btn-success btn-lg mt-2">Save Changes</button>
+    </form>
+</div>
+{% endif %}
+
+
 <div class="bg-secondary-soft px-4 py-5 rounded mt-5 row mb-5 gx-5 mt-5">
   <h4 class="mb-2 mt-0 text-success">National Identity Number</h4>
     <small class="mb-4 text-info">Due to privacy concerns, the API used restricts access to data related to the National Identification Number (NIN) only to registered businesses verified by the government. Therefore, only the NIN '02730846093' is considered valid. Any other input, aside from '02730846093', will be regarded as invalid.</small>
