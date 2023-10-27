@@ -68,8 +68,7 @@ def upload_location_id_card(instance, filename):
     return f'id_cards/{str(instance.username)}/-{filename}'
 
 
-
-class BaseUser(AbstractBaseUser, PermissionsMixin):
+class KBAQuestion(models.Model):
     KBA_QUESTIONS = [
         ('book', 'What is the name of your favorite childhood book?'),
         ('city', 'In which city were you born?'),
@@ -83,6 +82,9 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
         ('best-friend', 'What is the name of your first best friend?'),
     ]
     kba_question =                  models.CharField('', max_length=1, blank=True, null=True, choices=KBA_QUESTIONS)
+    answer =                        models.CharField(max_length=200)
+
+class BaseUser(AbstractBaseUser, PermissionsMixin):
     last_name =                     models.CharField(max_length=256, null=True, blank=True)
     first_name =                    models.CharField(max_length=256, null=True, blank=True)
     middle_name =                   models.CharField(max_length=256, null=True, blank=True)
