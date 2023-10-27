@@ -315,6 +315,8 @@ def edit_profile(request):
         }
         kba_form = UpdateKBAQuestionForm(kba_data, instance=request.user)
         if kba_form.is_valid():
+            user.kba = kba_form.cleaned_data['answer']
+            user.save()
             kba_form.save()
             messages.success(request, 'Knowledge-based Question successfully updated.')
         else:
