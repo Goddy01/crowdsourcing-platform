@@ -81,7 +81,7 @@ class KBAQuestion(models.Model):
         ('vacation-spot', 'What was your favorite childhood vacation spot?'),
         ('best-friend', 'What is the name of your first best friend?'),
     ]
-    kba_question =                  models.CharField('', max_length=1, blank=True, null=True, choices=KBA_QUESTIONS)
+    kba_question =                  models.CharField('', max_length=254, blank=True, null=True, choices=KBA_QUESTIONS)
     answer =                        models.CharField(max_length=200)
 
 
