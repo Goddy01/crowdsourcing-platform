@@ -440,3 +440,11 @@ class UpdateInnovatorServicesForm(forms.ModelForm):
     class Meta:
         model = BaseUser
         fields = ['service_1', 'service_2', 'service_3', 'service_4', 'service_5']
+
+class UpdateKBAQuestionForm(forms.ModelForm):
+    class Meta:
+        model = BaseUser
+        fields = ['kba_question']
+        widgets = {
+            'kba_question': forms.Select(attrs={'class': 'form-control'})
+        }
