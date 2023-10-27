@@ -311,7 +311,7 @@ def edit_profile(request):
     # USER NIN DATA
     if request.method == 'POST' and 'nin' in request.POST:
         print('YES BRO')
-        nin = request.POST.get('nin')
+        nin = request.POST.get('nin', '').strip()
         nin_data = {
             'nin': nin
         }
@@ -347,7 +347,7 @@ def edit_profile(request):
         user_nin_info = UpdateUserNINForm(
             instance=request.user,
             initial= {
-                'nin': user.nin
+                'nin': user.nin.strip()
             }
         )
 #   USER RESIDENTIAL DATA

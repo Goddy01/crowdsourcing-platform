@@ -393,13 +393,13 @@
 <div class="bg-secondary-soft px-4 py-5 rounded mt-5 row mb-5 gx-5 mt-5">
   <h4 class="mb-2 mt-0 text-success">National Identity Number</h4>
     <small class="mb-4 text-info">Due to privacy concerns, the API used restricts access to data related to the National Identification Number (NIN) only to registered businesses verified by the government. Therefore, only the NIN '02730846093' is considered valid. Any other input, aside from '02730846093', will be regarded as invalid.</small>
-  <form action="" method="post" id="nin_form">
+  <form action="" id="nin_form">
     {% csrf_token %}
     <div class="">
       <div class="col-md-6">
         <label class="form-label">NIN Number 
         </label>
-        <input type="text" class="form-control" placeholder="Enter your NIN number" value="{% if user.nin %} {{ user.nin }} {% endif %}" name="nin" id="nin">
+        <input type="text" class="form-control" placeholder="Enter your NIN number" value="{% if user.nin %}{{ user.nin }}{% endif %}" name="nin" id="nin">
         
       </div>
       <div id="nin_error">
