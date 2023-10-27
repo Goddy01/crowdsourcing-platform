@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
-from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm, UpdateUserResidentialInfoForm, UpdateUserSocialsForm, ChangePasswordForm, UpdateUserSkillsForm, UpdateInnovatorServicesForm, UpdateUserServiceForm, UpdateUserNINForm
+from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm, UpdateUserResidentialInfoForm, UpdateUserSocialsForm, ChangePasswordForm, UpdateUserSkillsForm, UpdateInnovatorServicesForm, UpdateUserServiceForm, UpdateUserNINForm, UpdateKBAQuestionForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -308,6 +308,25 @@ def edit_profile(request):
         )
 
 
+    # KNOWLEDGE-BASED QUESTION
+    if request.method == 'POST' and 'kba' in request.POST:
+        kba_data = {
+            'kba_question': request.POST.get('kba')
+        }
+        kba_form = UpdateKBAQuestionForm(kba_data, instance=request.user)
+        if kba_form.is_valid():
+            kba_form.save()
+            messages.success(request, 'Knowledge-based Question successfully updated.')
+        else:
+            messages.error(request, 'Knowledge-based Question could not be updated.')
+    else:
+        kba_form = UpdateKBAQuestionForm(
+            instance=request.user, 
+            initial= {
+                'kba_question': request.POST.get('kba')
+            }
+        )
+
     # USER NIN DATA
     if request.method == 'POST' and 'nin' in request.POST:
         print('YES BRO')
@@ -444,6 +463,7 @@ def edit_profile(request):
         'user_p_info_form': user_p_info,
         'user_r_info_form': user_r_info,
         'user_s_info_form': user_s_info,
+        'kba_form': kba_form,
         'user_nin_info': user_nin_info,
         'change_password_form': change_password_form,
         'user_skill_form': skill_form,
