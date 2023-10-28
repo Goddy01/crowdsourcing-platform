@@ -310,26 +310,30 @@ def edit_profile(request):
 
     # KNOWLEDGE-BASED QUESTION
     if request.method == 'POST' and 'kba_question' in request.POST:
+        kba_question = request.POST.get('kba_question')
+        answer = request.POST.get('answer')
+        print('brev_man')
         kba_data = {
-            'kba_question': request.POST.get('kba'),
-            'answer': request.POST.get('answer')
+            'kba_question': kba_question,
+            'answer': answer
         }
         kba_form = UpdateKBAQuestionForm(kba_data, instance=request.user)
         if kba_form.is_valid():
-            kba_obj = KBAQuestion.objects.create(
-                kba_question=request.POST.get('kba_question'),
-                answer = request.POST.get('answer')
+            KBAQuestion.objects.create(
+                kba_question= kba_question,
+                answer=answer,
+                user=user
             )
-            user.kba = KBAQuestion.objects.get(pk=kba_obj.pk)
-            user.save()
             messages.success(request, 'Knowledge-based Question successfully updated.')
+            return redirect('accounts:profile')
         else:
             messages.error(request, 'Knowledge-based Question could not be updated.')
     else:
         kba_form = UpdateKBAQuestionForm(
             instance=request.user, 
             initial= {
-                'kba_question': request.POST.get('kba')
+                'kba_question': request.POST.get('kba'),
+                'answer': request.POST.get('answer')
             }
         )
 
@@ -476,7 +480,8 @@ def edit_profile(request):
         'user_skills': Innovator.objects.get(user__username=request.user).innovatorskill_set.all(),
         'user_services': Innovator.objects.get(user__username=request.user).service_set.all(),
         'user_service_form': service_form,
-        'innovator': Innovator.objects.get(user__username=request.user.username)
+        'innovator': Innovator.objects.get(user__username=request.user.username),
+        'kba': len(KBAQuestion.objects.filter(user__username=request.user.username))
     })
 
 def moderator_edit_profile(request):

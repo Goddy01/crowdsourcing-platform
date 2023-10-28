@@ -390,18 +390,20 @@
 </div> 
 </div>
 
-{% if not user.kba %}
+{% if kba < 1 %}
 <div class="bg-secondary-soft px-4 py-5 rounded mt-5 row mb-5 gx-5 mt-5">
   <h4 class="mb-3 mt-0 text-success">Knowledge-Based Question</h4>
   <form action="{% url 'accounts:edit_profile' %}" id="kba_form" method="post">
     {% csrf_token %}
     <div class="row">
+      {% for data in kba_form %}
       <div class="col-md-6">
-        {{ kba_form.kba_question }}
+        {{ data }}
       </div>
-      <div class="col-md-6">
-        {{ kba_form.answer }}
-      </div>
+      {% endfor %}
+      <!-- <div class="col-md-6">
+        
+      </div> -->
     </div>
     <button type="submit" class="btn btn-success btn-lg mt-2">Save Changes</button>
     </form>
