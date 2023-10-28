@@ -51,7 +51,7 @@
 			<nav class="main-navigation">
 				<ul id="menu-main" class="menu px-3">
                     <li class="menu-item-has-children">
-						<a href="about.html"  style="font-weight: 600;">
+						<a href="{% url 'innovations_list' %}"  style="font-weight: 600;">
                             {% if request.user.is_innovator %}
                             Innovate
                             {% else %}
@@ -68,7 +68,7 @@
                             {% endif %}
 						</ul>
 					</li>
-					<li class="menu-item-has-children">
+					<!-- <li class="menu-item-has-children">
 						<a href="about.html"  style="font-weight: 600;">About<em class="mdi mdi-chevron-down"></em></a>
 						<ul class="sub-menu">
 							<li><a href="about.html">About Us</a></li>
@@ -76,16 +76,16 @@
 							<li><a href="statistics.html">Statistics</a></li>
 							<li><a href="affiliate.html">Affiliate Program</a></li>
 						</ul>
-					</li>
-					<li><a href="news.html"  style="font-weight: 600;">News</a></li>
+					</li> -->
+					<!-- <li><a href="news.html"  style="font-weight: 600;">News</a></li> -->
 					<!-- <li><a href="styleguide.html">Styleguide</a></li> -->
-					<li class="menu-item-has-children">
+					<!-- <li class="menu-item-has-children">
 						<a href="help.html"  style="font-weight: 600;">Help<em class="mdi mdi-chevron-down"></em></a>
 						<ul class="sub-menu">
 							<li><a href="help.html">Help &amp; Support</a></li>
 							<li><a href="contact.html">Contact Details</a></li>
 						</ul>
-					</li>
+					</li> -->
                     {% if request.user.is_innovator %}
 					<li class="menu-item-has-children" style="cursor: pointer;">
 						<a href=""  style="font-weight: 600;">Account Balance<em class="mdi mdi-chevron-down"></em></a>

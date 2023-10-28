@@ -1,3 +1,9 @@
+from django.utils.encoding import force_bytes, force_str
+from django.conf import settings
+from django.core.mail import send_mail
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
@@ -886,6 +892,7 @@ def withdrawal_requests(request):
 
 def set_withdrawal_request_status(request, pk, type):
     context = {}
+    moderator = Moderator.objects.get(pk=request.user.pk)
     context['set_is_approved_form'] = WithdrawalRequestAuthorizationForm()
     if request.method == 'POST' and 'set_status' in request.POST:
         is_approved = request.POST.get('is_approved')
@@ -896,11 +903,16 @@ def set_withdrawal_request_status(request, pk, type):
             if is_approved == 'True':
                 withdrawal_request.is_approved = not withdrawal_request.is_approved
                 withdrawal_request.save()
-                # request.session['name'] = withdrawal_request.account_holder
-                # request.session['account_number'] = withdrawal_request.account_number
-                # request.session['bank_code'] = withdrawal_request.bank_code
-                # request.session['amount_authorized'] = withdrawal_request.amount
-                # create_recipient(request)
+                current_site = get_current_site(request)
+                subject = 'Activate your account'
+                message = render_to_string('core/withdrawal-confirmation.html', {
+                    'user': moderator,
+                    'domain': current_site.domain,
+                    'uid': urlsafe_base64_encode(force_bytes(moderator.pk)),
+                })
+                to_email = [withdrawal_request.innovator.useremail]
+                from_email = settings.EMAIL_HOST_USER
+                send_mail(subject, message, from_email, to_email, fail_silently=True)
             else:
                 withdrawal_request.is_approved = False
                 withdrawal_request.save()
@@ -912,11 +924,16 @@ def set_withdrawal_request_status(request, pk, type):
             if is_approved == 'True':
                 withdrawal_request.is_approved = True
                 withdrawal_request.save()
-                # request.session['name'] = withdrawal_request.account_holder
-                # request.session['account_number'] = withdrawal_request.account_number
-                # request.session['bank_code'] = withdrawal_request.bank_code
-                # request.session['amount_authorized'] = withdrawal_request.amount
-                # create_recipient(request)
+                current_site = get_current_site(request)
+                subject = 'Activate your account'
+                message = render_to_string('core/withdrawal-confirmation.html', {
+                    'user': moderator,
+                    'domain': current_site.domain,
+                    'uid': urlsafe_base64_encode(force_bytes(moderator.pk)),
+                })
+                to_email = [withdrawal_request.innovator.useremail]
+                from_email = settings.EMAIL_HOST_USER
+                send_mail(subject, message, from_email, to_email, fail_silently=True)
             else:
                 withdrawal_request.is_approved = False
                 withdrawal_request.save()
