@@ -901,18 +901,21 @@ def set_withdrawal_request_status(request, pk, type):
             print('personal_funds')
             withdrawal_request = Withdrawal.objects.get(pk=pk)
             if is_approved == 'True':
-                withdrawal_request.is_approved = not withdrawal_request.is_approved
-                withdrawal_request.save()
-                current_site = get_current_site(request)
-                subject = 'Activate your account'
-                message = render_to_string('core/withdrawal-confirmation.html', {
-                    'user': moderator,
-                    'domain': current_site.domain,
-                    'uid': urlsafe_base64_encode(force_bytes(moderator.pk)),
-                })
-                to_email = [withdrawal_request.innovator.useremail]
-                from_email = settings.EMAIL_HOST_USER
-                send_mail(subject, message, from_email, to_email, fail_silently=True)
+                if not withdrawal_request.confirmation:
+                    current_site = get_current_site(request)
+                    subject = 'Activate your account'
+                    message = render_to_string('core/withdrawal-confirmation.html', {
+                        'user': moderator,
+                        'domain': current_site.domain,
+                        'uid': urlsafe_base64_encode(force_bytes(moderator.pk)),
+                    })
+                    to_email = [withdrawal_request.innovator.user.email]
+                    from_email = settings.EMAIL_HOST_USER
+                    send_mail(subject, message, from_email, to_email, fail_silently=True)
+                    request.session['withdrawal_request_pk'] = withdrawal_request.pk
+                else:
+                    withdrawal_request.is_approved = not withdrawal_request.is_approved
+                    withdrawal_request.save()
             else:
                 withdrawal_request.is_approved = False
                 withdrawal_request.save()
@@ -922,18 +925,21 @@ def set_withdrawal_request_status(request, pk, type):
             print('project_capital_contribution_funds')
             withdrawal_request = WithdrawProjectFunds.objects.get(pk=pk)
             if is_approved == 'True':
-                withdrawal_request.is_approved = True
-                withdrawal_request.save()
-                current_site = get_current_site(request)
-                subject = 'Activate your account'
-                message = render_to_string('core/withdrawal-confirmation.html', {
-                    'user': moderator,
-                    'domain': current_site.domain,
-                    'uid': urlsafe_base64_encode(force_bytes(moderator.pk)),
-                })
-                to_email = [withdrawal_request.innovator.useremail]
-                from_email = settings.EMAIL_HOST_USER
-                send_mail(subject, message, from_email, to_email, fail_silently=True)
+                if not withdrawal_request.confirmation:
+                    current_site = get_current_site(request)
+                    subject = 'Activate your account'
+                    message = render_to_string('core/withdrawal-confirmation.html', {
+                        'user': moderator,
+                        'domain': current_site.domain,
+                        'uid': urlsafe_base64_encode(force_bytes(moderator.pk)),
+                    })
+                    to_email = [withdrawal_request.innovator.user.email]
+                    from_email = settings.EMAIL_HOST_USER
+                    send_mail(subject, message, from_email, to_email, fail_silently=True)
+                    request.session['withdrawal_request_pk'] = withdrawal_request.pk
+                else:
+                    withdrawal_request.is_approved = not withdrawal_request.is_approved
+                    withdrawal_request.save()
             else:
                 withdrawal_request.is_approved = False
                 withdrawal_request.save()
