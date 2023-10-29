@@ -1,3 +1,4 @@
+from notifications.signals import notify
 from django.utils.encoding import force_bytes, force_str
 from django.conf import settings
 from django.core.mail import send_mail
@@ -936,6 +937,7 @@ def set_withdrawal_request_status(request, pk, type):
                     to_email = [withdrawal_request.innovator.user.email]
                     from_email = settings.EMAIL_HOST_USER
                     send_mail(subject, message, from_email, to_email, fail_silently=True)
+                    notify.send(actor=moderator, recipient=withdrawal_request.innovator, verb='Notification',description='There is an update about your withdrawal request(s)')
                     request.session['withdrawal_request_pk'] = withdrawal_request.pk
                 else:
                     withdrawal_request.is_approved = not withdrawal_request.is_approved
@@ -951,3 +953,15 @@ def set_withdrawal_request_status(request, pk, type):
             }
         )
     return render(request, 'core/withdrawal-requests.html', context)
+
+def withdrawal_user_confirmation(request, type):
+    context = {}
+    if type == 'personal_funds':            
+        withdrawal_request = Withdrawal.objects.get(pk=request.session.get('withdrawal_pk'))
+        withdrawal_request.confirmation = True
+        withdrawal_request.save()
+    elif type == 'project_Capital_contribution_funds':
+        withdrawal_request = WithdrawProjectFunds.objects.get(pk=request.session.get('withdrawal_pk'))
+        withdrawal_request.confirmation = True
+        withdrawal_request.save()
+    return render(request, 'core/withdrawal-confirmation.html', context)
