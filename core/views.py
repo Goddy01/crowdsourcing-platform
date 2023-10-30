@@ -913,6 +913,7 @@ def send_withdrawal_request_confirmation_email(request, pk, type):
         from_email = settings.EMAIL_HOST_USER
         send_mail(subject, message, from_email, to_email, fail_silently=True, html_message=html_message)
         request.session['withdrawal_request_pk'] = withdrawal_request.pk
+        request.session['withdrawal_request_type'] = 'p_f'
         
         context['withdrawal_request'] = withdrawal_request
         messages.success(request, 'Confirmation email has successfully been sent. ✅')
@@ -934,6 +935,7 @@ def send_withdrawal_request_confirmation_email(request, pk, type):
         from_email = settings.EMAIL_HOST_USER
         send_mail(subject, message, from_email, to_email, fail_silently=True, html_message=html_message)
         request.session['withdrawal_request_pk'] = withdrawal_request.pk
+        request.session['withdrawal_request_type'] = 'p_c_c_f'
         context['withdrawal_request'] = withdrawal_request
         messages.success(request, 'Confirmation email has successfully been sent. ✅')
         return redirect('withdrawal_requests')
@@ -968,7 +970,7 @@ def set_withdrawal_request_status(request, pk, type):
                     to_email = [withdrawal_request.innovator.user.email]
                     from_email = settings.EMAIL_HOST_USER
                     send_mail(subject, message, from_email, to_email, fail_silently=True, html_message=html_message)
-                    request.session['withdrawal_request_pk'] = withdrawal_request.pk
+                    # request.session['withdrawal_request_pk'] = withdrawal_request.pk
                 else:
                     withdrawal_request.is_approved = not withdrawal_request.is_approved
                     withdrawal_request.save()
@@ -992,7 +994,7 @@ def set_withdrawal_request_status(request, pk, type):
                     to_email = [withdrawal_request.innovator.user.email]
                     from_email = settings.EMAIL_HOST_USER
                     send_mail(subject, message, from_email, to_email, fail_silently=True)
-                    request.session['withdrawal_request_pk'] = withdrawal_request.pk
+                    # request.session['withdrawal_request_pk'] = withdrawal_request.pk
                 else:
                     withdrawal_request.is_approved = not withdrawal_request.is_approved
                     withdrawal_request.save()
@@ -1008,19 +1010,21 @@ def set_withdrawal_request_status(request, pk, type):
         )
     return render(request, 'core/withdrawal-requests.html', context)
 
-def confirm_withdrawal_request(request, type, pk):
+def confirm_withdrawal_request(request, response):
     context = {}
-    if type == 'personal_funds':            
+    pk = request.session.get('withdrawal_pk')
+    type = request.session.get('type')
+    if type == 'p_f':            
         withdrawal_request = Withdrawal.objects.get(pk=pk)
-        if request.POST.get('confirm_withdrawal_request_response') == 'yes':
+        if response == 'yes':
             withdrawal_request.confirmation = True
             withdrawal_request.save()
         else:
             withdrawal_request.confirmation = False
             withdrawal_request.save()
-    elif type == 'project_capital_contribution_funds':
+    elif type == 'p_c_c_f':
         withdrawal_request = WithdrawProjectFunds.objects.get(pk=pk)
-        if request.POST.get('confirm_withdrawal_request_response') == 'yes':
+        if response == 'yes':
             withdrawal_request.confirmation = True
             withdrawal_request.save()
         else:

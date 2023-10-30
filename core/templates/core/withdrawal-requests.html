@@ -36,7 +36,6 @@
                 <div id="sidebar" class="col-12 col-md-4 col-lg-2 content-filters">
                     <form action="{% url 'withdrawal_requests' %}" method="POST">
                         {% csrf_token %}
-                        {{ form.is_approved }}
                         <!-- <h5 class="widget-title">withdrawal date</h5> -->
                         <div class="col-12">
                             <h4>FILTER</h4>
@@ -150,7 +149,7 @@
                             </p>
                             {% if not withdrawal.is_approved %}
                             <a href="{% url 'send_withdrawal_request_confirmation_email' pk=withdrawal.pk type='personal_funds' %}">
-                                <button type="button" class="btn btn-success">Send Confirmation Email</button>
+                                <button type="button" class="btn btn-success col-12">Send Confirmation Email</button>
                             </a>
                             {% endif %}
                         </div>
@@ -258,7 +257,7 @@
                                             </p>
                 
                                             <a href="{% url 'send_withdrawal_request_confirmation_email' pk=withdrawal.pk type='project_capital_contribution_funds' %}">
-                                                <button type="button" class="btn btn-success">Send Confirmation Email</button>
+                                                <button type="button" class="btn btn-success col-12">Send Confirmation Email</button>
                                             </a>
                                         </div>
                                     </div>
