@@ -1010,24 +1010,33 @@ def set_withdrawal_request_status(request, pk, type):
         )
     return render(request, 'core/withdrawal-requests.html', context)
 
-def confirm_withdrawal_request(request, response):
+def confirm_withdrawal_request(request, response, uidb64):
     context = {}
     pk = request.session.get('withdrawal_pk')
     type = request.session.get('type')
-    if type == 'p_f':            
-        withdrawal_request = Withdrawal.objects.get(pk=pk)
-        if response == 'yes':
-            withdrawal_request.confirmation = True
-            withdrawal_request.save()
-        else:
-            withdrawal_request.confirmation = False
-            withdrawal_request.save()
-    elif type == 'p_c_c_f':
-        withdrawal_request = WithdrawProjectFunds.objects.get(pk=pk)
-        if response == 'yes':
-            withdrawal_request.confirmation = True
-            withdrawal_request.save()
-        else:
-            withdrawal_request.confirmation = False
-            withdrawal_request.save()
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = BaseUser.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, BaseUser.DoesNotExist):
+        user = None
+    # checking if the user exists, if the token is valid.
+    if user is not None:
+        if type == 'p_f':            
+            withdrawal_request = Withdrawal.objects.get(pk=pk)
+            if response == 'yes':
+                withdrawal_request.confirmation = True
+                withdrawal_request.save()
+            else:
+                withdrawal_request.confirmation = False
+                withdrawal_request.save()
+        elif type == 'p_c_c_f':
+            withdrawal_request = WithdrawProjectFunds.objects.get(pk=pk)
+            if response == 'yes':
+                withdrawal_request.confirmation = True
+                withdrawal_request.save()
+            else:
+                withdrawal_request.confirmation = False
+                withdrawal_request.save()
+    else:
+        return HttpResponse('Confirmation failed!')
     return render(request, 'core/withdrawal-confirmation.html', context)
