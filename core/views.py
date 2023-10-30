@@ -896,48 +896,47 @@ def send_withdrawal_request_confirmation_email(request, pk, type):
     context = {}
     moderator = Moderator.objects.get(user__email=request.user.email)
     
-    if request.method == 'POST' and 'send_confirmation_email' in request.POST:
-        if type == 'personal_funds':
-            
-            withdrawal_request = Withdrawal.objects.get(pk=pk)
-            current_site = get_current_site(request)
-            subject = 'Withdrawal Request Confirmation'
-            message = render_to_string('core/withdrawal-confirmation.html', {
-                'user': moderator,
-                'domain': current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(moderator.pk)),
-            })
-            html_message = loader.render_to_string(
-                'core/withdrawal-confirmation.html'
-            )
-            to_email = [withdrawal_request.innovator.user.email]
-            from_email = settings.EMAIL_HOST_USER
-            send_mail(subject, message, from_email, to_email, fail_silently=True, html_message=html_message)
-            request.session['withdrawal_request_pk'] = withdrawal_request.pk
-            
-            context['withdrawal_request'] = withdrawal_request
-            messages.success(request, 'Confirmation email has successfully been sent. ✅')
-            return redirect('withdrawal_requests')
-        elif type == 'project_capital_contribution_funds':
-            print('project_capital_contribution_funds')
-            withdrawal_request = WithdrawProjectFunds.objects.get(pk=pk)
-            current_site = get_current_site(request)
-            subject = 'Activate your account'
-            message = render_to_string('core/withdrawal-confirmation.html', {
-                'user': moderator,
-                'domain': current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(moderator.pk)),
-            })
-            html_message = loader.render_to_string(
-                'core/withdrawal-confirmation.html'
-            )
-            to_email = [withdrawal_request.innovator.user.email]
-            from_email = settings.EMAIL_HOST_USER
-            send_mail(subject, message, from_email, to_email, fail_silently=True, html_message=html_message)
-            request.session['withdrawal_request_pk'] = withdrawal_request.pk
-            context['withdrawal_request'] = withdrawal_request
-            messages.success(request, 'Confirmation email has successfully been sent. ✅')
-            return redirect('withdrawal_requests')
+    if type == 'personal_funds':
+        
+        withdrawal_request = Withdrawal.objects.get(pk=pk)
+        current_site = get_current_site(request)
+        subject = 'Withdrawal Request Confirmation'
+        message = render_to_string('core/withdrawal-confirmation.html', {
+            'user': moderator,
+            'domain': current_site.domain,
+            'uid': urlsafe_base64_encode(force_bytes(moderator.pk)),
+        })
+        html_message = loader.render_to_string(
+            'core/withdrawal-confirmation.html'
+        )
+        to_email = [withdrawal_request.innovator.user.email]
+        from_email = settings.EMAIL_HOST_USER
+        send_mail(subject, message, from_email, to_email, fail_silently=True, html_message=html_message)
+        request.session['withdrawal_request_pk'] = withdrawal_request.pk
+        
+        context['withdrawal_request'] = withdrawal_request
+        messages.success(request, 'Confirmation email has successfully been sent. ✅')
+        return redirect('withdrawal_requests')
+    elif type == 'project_capital_contribution_funds':
+        print('project_capital_contribution_funds')
+        withdrawal_request = WithdrawProjectFunds.objects.get(pk=pk)
+        current_site = get_current_site(request)
+        subject = 'Activate your account'
+        message = render_to_string('core/withdrawal-confirmation.html', {
+            'user': moderator,
+            'domain': current_site.domain,
+            'uid': urlsafe_base64_encode(force_bytes(moderator.pk)),
+        })
+        html_message = loader.render_to_string(
+            'core/withdrawal-confirmation.html'
+        )
+        to_email = [withdrawal_request.innovator.user.email]
+        from_email = settings.EMAIL_HOST_USER
+        send_mail(subject, message, from_email, to_email, fail_silently=True, html_message=html_message)
+        request.session['withdrawal_request_pk'] = withdrawal_request.pk
+        context['withdrawal_request'] = withdrawal_request
+        messages.success(request, 'Confirmation email has successfully been sent. ✅')
+        return redirect('withdrawal_requests')
     return render(request, 'core/withdrawal-requests.html', context)
 
 def set_withdrawal_request_status(request, pk, type):
