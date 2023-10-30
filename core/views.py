@@ -1037,11 +1037,10 @@ def set_withdrawal_request_status(request, pk, type):
         )
     return render(request, 'core/withdrawal-requests.html', context)
 
+# @login_required
 def confirm_withdrawal_request(request, type, withdrawal_pk, response):
-    context = {}
-    context['type'] = type
-    context['withdrawal_pk'] = withdrawal_pk
-    context['response'] = response
+    if not request.user.is_authenticated:
+        return redirect('accounts:innovator_login')
     if type == 'p_f':
         withdrawal_request = Withdrawal.objects.get(pk=withdrawal_pk)
         if response == 'yes':
