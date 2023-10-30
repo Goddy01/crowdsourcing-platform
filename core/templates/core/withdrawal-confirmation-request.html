@@ -120,7 +120,7 @@
 																			From Summit Team
 
 																			Hi {{ user.username }},
-																			Please click the following link to confirm your withdrawal request of  ₦{{ withdrawal_request.amount }} initiated on {{ withdrawal_request.date }}: http://{{ domain }}{% url 'accounts:activate' uidb64=uid token=token %}
+																			Please click the following link to confirm your withdrawal request of  ₦{{ withdrawal_request.amount }} initiated on {{ withdrawal_request.date }}: http://{{ domain }}{% url 'confirm_withdrawal_request' withdrawal_pk=withdrawal_request.pk type=type %}
 																		{% endautoescape %}
 																	</span>
 																</h3>

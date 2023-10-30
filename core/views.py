@@ -23,6 +23,7 @@ import uuid, requests, os, json
 from dotenv import load_dotenv
 from django.utils.dateparse import parse_datetime
 from itertools import chain
+from django.urls import reverse
 
 load_dotenv()
 
@@ -913,6 +914,9 @@ def send_withdrawal_request_confirmation_email(request, pk, type):
             'user': withdrawal_request.innovator.user,
             'domain': current_site.domain,
             'uid': urlsafe_base64_encode(force_bytes(withdrawal_request.innovator.user.pk)),
+            'withdrawal_request': withdrawal_request,
+            'type': 'p_f',
+            'pk': pk
         }, request=request
         )
         to_email = f'{withdrawal_request.innovator.user.email}'
@@ -940,6 +944,9 @@ def send_withdrawal_request_confirmation_email(request, pk, type):
             'user': withdrawal_request.innovator.user,
             'domain': current_site.domain,
             'uid': urlsafe_base64_encode(force_bytes(withdrawal_request.innovator.user.pk)),
+            'withdrawal_request': withdrawal_request,
+            'type': 'p_c_c_f',
+            'pk': pk
         }, request=request
         )
         to_email = f'{withdrawal_request.innovator.user.email}'
@@ -1030,37 +1037,93 @@ def set_withdrawal_request_status(request, pk, type):
         )
     return render(request, 'core/withdrawal-requests.html', context)
 
-def confirm_withdrawal_request(request, response):
+def confirm_withdrawal_request(request, type, withdrawal_pk, response):
     context = {}
-    logout(request)
-    # if not request.user.is_authenticated:
-    #     print('User is not authenticated')
-    redirect('accounts:innovator_login')
-    pk = request.session.get('withdrawal_request_pk')
-    type = request.session.get('withdrawal_request_type')
-    print('TYEP: ', type, 'PK: ', pk)
-    
+    context['type'] = type
+    context['withdrawal_pk'] = withdrawal_pk
+    context['response'] = response
     if type == 'p_f':
-        print('p_f')
-        withdrawal_request = Withdrawal.objects.get(pk=pk)
+        withdrawal_request = Withdrawal.objects.get(pk=withdrawal_pk)
         if response == 'yes':
             withdrawal_request.confirmation = True
             withdrawal_request.save()
-            print('yesman1')
-            return HttpResponse('Response confirmed')
-            
+            messages.success(request, 'Thanks for your confirmation. Payment will be made soon.')
         else:
             withdrawal_request.confirmation = False
             withdrawal_request.save()
+            messages.error(request, 'Thanks for your confirmation. The withdrawal request will be cancelled. Expect refund soon')
     elif type == 'p_c_c_f':
-        print('p_c_c_f')
-        withdrawal_request = WithdrawProjectFunds.objects.get(pk=pk)
+        withdrawal_request = WithdrawProjectFunds.objects.get(pk=withdrawal_pk)
         if response == 'yes':
             withdrawal_request.confirmation = True
             withdrawal_request.save()
-            print('yesman2')
-            return HttpResponse('Response confirmed')
+            messages.success(request, 'Thanks for your confirmation. Payment will be made soon.')
         else:
             withdrawal_request.confirmation = False
             withdrawal_request.save()
-    return render(request, 'core/withdrawal-confirmation.html', context)
+            
+            messages.error(request, 'Thanks for your confirmation. The withdrawal request will be cancelled. Expect refund soon')
+    return redirect('home')
+    # return render(request, 'core/withdrawal-confirmation.html', context)
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    # context = {}
+    # logout(request)
+    # # if not request.user.is_authenticated:
+    # #     print('User is not authenticated')
+    # redirect('accounts:innovator_login')
+    # pk = request.session.get('withdrawal_request_pk')
+    # type = request.session.get('withdrawal_request_type')
+    # print('TYEP: ', type, 'PK: ', pk)
+    
+    # if type == 'p_f':
+    #     print('p_f')
+    #     withdrawal_request = Withdrawal.objects.get(pk=pk)
+    #     if response == 'yes':
+    #         withdrawal_request.confirmation = True
+    #         withdrawal_request.save()
+    #         print('yesman1')
+    #         return HttpResponse('Response confirmed')
+            
+    #     else:
+    #         withdrawal_request.confirmation = False
+    #         withdrawal_request.save()
+    # elif type == 'p_c_c_f':
+    #     print('p_c_c_f')
+    #     withdrawal_request = WithdrawProjectFunds.objects.get(pk=pk)
+    #     if response == 'yes':
+    #         withdrawal_request.confirmation = True
+    #         withdrawal_request.save()
+    #         print('yesman2')
+    #         return HttpResponse('Response confirmed')
+    #     else:
+    #         withdrawal_request.confirmation = False
+    #         withdrawal_request.save()
+    # return render(request, 'core/withdrawal-confirmation.html', context)
