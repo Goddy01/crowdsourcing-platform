@@ -149,7 +149,7 @@
                                 </span>
                             </p>
                             {% if not withdrawal.is_approved %}
-                            <form method="POST" action="{% url 'set_withdrawal_request_status' pk=withdrawal.pk type='personal_funds' %}">
+                            <form method="POST" action="{% url 'confirm_withdrawal_request' pk=withdrawal.pk type='personal_funds' %}">
                                 {% csrf_token %}
                                 <div class="mb-3">
                                     <span style="display: inline;">{{ set_is_approved_form.is_approved }}</span>
