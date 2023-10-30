@@ -82,11 +82,11 @@
                         <tbody>
                             {% for withdrawal in withdrawal_requests %}
                             <!-- Modal -->
-            <div class="modal fade" id="exampleModal{{ withdrawal.pk }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ withdrawal.pk }}" aria-hidden="true">
+            <div class="modal fade" id="exampleModal{{ withdrawal.reference_code }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ withdrawal.reference_code }}" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel{{ withdrawal.pk }}">Withdrawal Request Details</h5>
+                    <h5 class="modal-title" id="exampleModalLabel{{ withdrawal.reference_code }}">Withdrawal Request Details</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -178,7 +178,7 @@
                     
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
                                             <li style="margin-top: -40px;"> -->
-                                                <button data-bs-target="#exampleModal{{ withdrawal.pk }}" data-bs-toggle="modal" type="button" class="btn btn-success">
+                                                <button data-bs-target="#exampleModal{{ withdrawal.reference_code }}" data-bs-toggle="modal" type="button" class="btn btn-success">
                                                     Details
                                                 </button>
                                             <!-- </li>
@@ -190,11 +190,11 @@
                             
                             {% endfor %}
                             {% for withdrawal in project_withdrawal_requests %}
-                            <div class="modal fade" id="exampleModal{{ withdrawal.pk }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ withdrawal.pk }}" aria-hidden="true">
+                            <div class="modal fade" id="exampleModal{{ withdrawal.reference_code }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ withdrawal.reference_code }}" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel{{ withdrawal.pk }}">Withdrawal Request Details</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel{{ withdrawal.reference_code }}">Withdrawal Request Details</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
@@ -284,7 +284,7 @@
                     
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
                                             <li> -->
-                                                <button data-bs-target="#exampleModal{{ withdrawal.pk }}" data-bs-toggle="modal" type="button" class="btn btn-success">
+                                                <button data-bs-target="#exampleModal{{ withdrawal.reference_code }}" data-bs-toggle="modal" type="button" class="btn btn-success">
                                                     Details
                                                 </button>
                                             <!-- </li>
