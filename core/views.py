@@ -902,9 +902,9 @@ def send_withdrawal_request_confirmation_email(request, pk, type):
         current_site = get_current_site(request)
         subject = 'Withdrawal Request Confirmation'
         message = render_to_string('core/withdrawal-confirmation.html', {
-            'user': moderator,
+            'user': withdrawal_request.innovator.user,
             'domain': current_site.domain,
-            'uid': urlsafe_base64_encode(force_bytes(moderator.pk)),
+            'uid': urlsafe_base64_encode(force_bytes(withdrawal_request.innovator.user.pk)),
         })
         html_message = loader.render_to_string(
             'core/withdrawal-confirmation.html'
@@ -922,11 +922,11 @@ def send_withdrawal_request_confirmation_email(request, pk, type):
         print('project_capital_contribution_funds')
         withdrawal_request = WithdrawProjectFunds.objects.get(pk=pk)
         current_site = get_current_site(request)
-        subject = 'Activate your account'
+        subject = 'Withdrawal Request Confirmation'
         message = render_to_string('core/withdrawal-confirmation.html', {
-            'user': moderator,
+            'user': withdrawal_request.innovator.user,
             'domain': current_site.domain,
-            'uid': urlsafe_base64_encode(force_bytes(moderator.pk)),
+            'uid': urlsafe_base64_encode(force_bytes(withdrawal_request.innovator.user.pk)),
         })
         html_message = loader.render_to_string(
             'core/withdrawal-confirmation.html'
