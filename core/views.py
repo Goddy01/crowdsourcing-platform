@@ -961,14 +961,22 @@ def set_withdrawal_request_status(request, pk, type):
         )
     return render(request, 'core/withdrawal-requests.html', context)
 
-def withdrawal_user_confirmation(request, type):
+def confirm_withdrawal_request(request, type):
     context = {}
     if type == 'personal_funds':            
         withdrawal_request = Withdrawal.objects.get(pk=request.session.get('withdrawal_pk'))
-        withdrawal_request.confirmation = True
-        withdrawal_request.save()
-    elif type == 'project_Capital_contribution_funds':
+        if request.POST.get('confirm_withdrawal_request_response') == 'yes':
+            withdrawal_request.confirmation = True
+            withdrawal_request.save()
+        else:
+            withdrawal_request.confirmation = False
+            withdrawal_request.save()
+    elif type == 'project_capital_contribution_funds':
         withdrawal_request = WithdrawProjectFunds.objects.get(pk=request.session.get('withdrawal_pk'))
-        withdrawal_request.confirmation = True
-        withdrawal_request.save()
+        if request.POST.get('confirm_withdrawal_request_response') == 'yes':
+            withdrawal_request.confirmation = True
+            withdrawal_request.save()
+        else:
+            withdrawal_request.confirmation = False
+            withdrawal_request.save()
     return render(request, 'core/withdrawal-confirmation.html', context)
