@@ -1,4 +1,5 @@
 from .models import Project, Innovation, Contribution, Transaction, Withdrawal, WithdrawProjectFunds
+from accounts.models import KBAQuestion
 from django import forms
 from ckeditor.fields import RichTextFormField
 
@@ -204,3 +205,8 @@ class FilterConfirmationClickedForm(forms.ModelForm):
     class Meta:
         model = Withdrawal
         fields = ['confirmation_clicked']
+
+class KBQForm(forms.ModelForm):
+    class Meta:
+        model = KBAQuestion
+        fields = ['answer']
