@@ -13,7 +13,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from .models import Project, Innovation, Contribution, Reward_Payment, Make_Investment, Transaction, DepositMoney, Withdrawal, SendMoney, WithdrawProjectFunds
 from django_countries import countries
-from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm, MyInvestmentForm, InvestmentStatusForm, StatementTypeForm, WithdrawalRequestAuthorizationForm, FilterWithdrawalRequestForm
+from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm, MyInvestmentForm, InvestmentStatusForm, StatementTypeForm, WithdrawalRequestAuthorizationForm, FilterWithdrawalRequestForm, FilterConfirmationClickedForm
 from accounts.models import Innovator, Moderator, BaseUser
 from django.utils import timezone
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -830,11 +830,13 @@ def withdrawal_requests(request):
     context = {}
     context['form'] = FilterWithdrawalRequestForm()
     context['set_is_approved_form'] = WithdrawalRequestAuthorizationForm()
+    context['filter_confirmation'] = FilterConfirmationClickedForm()
     if request.user.is_moderator:
         if request.method == 'POST' and 'filter_withdrawal_requests' in request.POST:
             date_from = parse_datetime(request.POST.get('date_from'))
             date_to = parse_datetime(request.POST.get('date_to'))
             type_list = request.POST.getlist('type')
+            confirmation_clicked = request.POST.getlist('confirmation_clicked')
             context['date_from'] = date_from
             context['date_to'] = date_to
             context['type_list'] = type_list
@@ -894,6 +896,11 @@ def withdrawal_requests(request):
             context['form'] = FilterWithdrawalRequestForm(
                 {
                     'type': type_list
+                }
+            )
+            context['filter_confirmation'] = FilterConfirmationClickedForm(
+                {
+                    'confirmation_clicked': confirmation_clicked
                 }
             )
         else:
