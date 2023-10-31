@@ -1062,64 +1062,43 @@ def confirm_withdrawal_request(request, type, withdrawal_pk, response):
     return redirect('home')
     # return render(request, 'core/withdrawal-confirmation.html', context)
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    # context = {}
-    # logout(request)
-    # # if not request.user.is_authenticated:
-    # #     print('User is not authenticated')
-    # redirect('accounts:innovator_login')
-    # pk = request.session.get('withdrawal_request_pk')
-    # type = request.session.get('withdrawal_request_type')
-    # print('TYEP: ', type, 'PK: ', pk)
-    
-    # if type == 'p_f':
-    #     print('p_f')
-    #     withdrawal_request = Withdrawal.objects.get(pk=pk)
-    #     if response == 'yes':
-    #         withdrawal_request.confirmation = True
-    #         withdrawal_request.save()
-    #         print('yesman1')
-    #         return HttpResponse('Response confirmed')
-            
-    #     else:
-    #         withdrawal_request.confirmation = False
-    #         withdrawal_request.save()
-    # elif type == 'p_c_c_f':
-    #     print('p_c_c_f')
-    #     withdrawal_request = WithdrawProjectFunds.objects.get(pk=pk)
-    #     if response == 'yes':
-    #         withdrawal_request.confirmation = True
-    #         withdrawal_request.save()
-    #         print('yesman2')
-    #         return HttpResponse('Response confirmed')
-    #     else:
-    #         withdrawal_request.confirmation = False
-    #         withdrawal_request.save()
-    # return render(request, 'core/withdrawal-confirmation.html', context)
+def send_kbq(request, withdrawal_pk, type):
+    if type == 'p_f':
+        withdrawal_request = Withdrawal.objects.get(pk=withdrawal_pk)
+        current_site = get_current_site(request)
+        subject = 'Knowledge-Based Question Confirmation'
+        html_message = loader.render_to_string(
+            'core/kbq-confirmation.html', {
+            'user': withdrawal_request.innovator.user,
+            'domain': current_site.domain,
+            'uid': urlsafe_base64_encode(force_bytes(withdrawal_request.innovator.user.pk)),
+            'withdrawal_request': withdrawal_request,
+            'type': 'p_f',
+            'pk': withdrawal_pk
+        }, request=request
+        )
+        to_email = f'{withdrawal_request.innovator.user.email}'
+        from_email = settings.EMAIL_HOST_USER
+        send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
+        messages.success(request, 'Confirmation email has successfully been sent. ✅')
+        return redirect('withdrawal_requests')
+    elif type == 'p_c_c_f':
+        withdrawal_request = WithdrawProjectFunds.objects.get(pk=withdrawal_pk)
+        current_site = get_current_site(request)
+        subject = 'Knowledge-Based Question Confirmation'
+        html_message = loader.render_to_string(
+            'core/kbq-confirmation.html', {
+            'user': withdrawal_request.innovator.user,
+            'domain': current_site.domain,
+            'uid': urlsafe_base64_encode(force_bytes(withdrawal_request.innovator.user.pk)),
+            'withdrawal_request': withdrawal_request,
+            'type': 'p_f',
+            'pk': withdrawal_pk
+        }, request=request
+        )
+        to_email = f'{withdrawal_request.innovator.user.email}'
+        from_email = settings.EMAIL_HOST_USER
+        send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
+        messages.success(request, 'Confirmation email has successfully been sent. ✅')
+        return redirect('withdrawal_requests')
+    return render(request, 'core/kbq-confirmation.html')
