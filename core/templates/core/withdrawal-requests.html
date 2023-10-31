@@ -3,21 +3,43 @@
 {% load business_type_filter %}
 {% block title %}Withdrawal Requests{% endblock title %}
 {% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
 
-{% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li  {% if message.tags %} class="fadeout p-3 text-center {{ message.tags }} " {% endif %} style="list-style: none;"> 
-			{% if request.user.is_innovator %}
-			{{ message }}
-			{% endif %}
-		</li>
-        {% endfor %}
-    </ul>
-	{% endif %}
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<style>
+    @media (min-width: 1200px) {
+        .toastDiv {
+        position: absolute;
+        right: -110px;
+        top: 3rem;
+        z-index: 5
+        }
+        
+    }
+</style>
+
+
+<div class="container">
+<div class="row">
+    {% if messages %}
+    <div class="col-lg-12 col-xl-5 toastDiv mt-5 mx-auto">
+        <!-- Then put toasts within -->
+    <div class="card toast mb-2 bg-gray animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto">
+    <div class="toast-body text-white m-2">
+        
+        <ul class="messages">
+            {% for message in messages %}
+            <li {% if message.tags == 'alert-danger' %} class="text-danger" {% elif message.tags == 'alert-success' %} class="text-success" {% endif %} style="list-style: disc;">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    </div>
+    </div>
+    {% endif %}
+</div>
+</div>
 
 <header id="featured" class="site-featured">
     <div id="featured-media" class="featured-media">
@@ -323,5 +345,17 @@
     </script> -->
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+      $('.toast').toast('show');
+    });
+  
+    setTimeout(function() {
+      $('.toast').toast('hide')
+    }, 9999);
+</script>
 {% endblock content %}

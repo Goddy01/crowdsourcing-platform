@@ -1046,22 +1046,21 @@ def confirm_withdrawal_request(request, type, withdrawal_pk, response):
         if response == 'yes':
             withdrawal_request.confirmation = True
             withdrawal_request.save()
-            messages.success(request, 'Thanks for your confirmation. Payment will be made soon.')
+            return HttpResponse('Thanks for your confirmation. Payment will be made soon.')
         else:
             withdrawal_request.confirmation = False
             withdrawal_request.save()
-            messages.error(request, 'Thanks for your confirmation. The withdrawal request will be cancelled. Expect refund soon')
+            return HttpResponse( 'Thanks for your confirmation. The withdrawal request will be cancelled. Expect refund soon')
     elif type == 'p_c_c_f':
         withdrawal_request = WithdrawProjectFunds.objects.get(pk=withdrawal_pk)
         if response == 'yes':
             withdrawal_request.confirmation = True
             withdrawal_request.save()
-            messages.success(request, 'Thanks for your confirmation. Payment will be made soon.')
+            return HttpResponse('Thanks for your confirmation. Payment will be made soon.')
         else:
             withdrawal_request.confirmation = False
             withdrawal_request.save()
-            
-            messages.error(request, 'Thanks for your confirmation. The withdrawal request will be cancelled. Expect refund soon')
+            return HttpResponse( 'Thanks for your confirmation. The withdrawal request will be cancelled. Expect refund soon')
     return redirect('home')
     # return render(request, 'core/withdrawal-confirmation.html', context)
 
