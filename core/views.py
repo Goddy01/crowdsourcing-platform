@@ -1043,28 +1043,34 @@ def confirm_withdrawal_request(request, type, withdrawal_pk, response):
         return redirect('accounts:innovator_login')
     if type == 'p_f':
         withdrawal_request = Withdrawal.objects.get(pk=withdrawal_pk)
-        if response == 'yes':
-            withdrawal_request.confirmation = True
-            withdrawal_request.confirmation_clicked = True
-            withdrawal_request.save()
-            return HttpResponse('Thanks for your confirmation. Payment will be made soon.')
+        if not withdrawal_request.confirmation_clicked:
+            if response == 'yes':
+                withdrawal_request.confirmation = True
+                withdrawal_request.confirmation_clicked = True
+                withdrawal_request.save()
+                return HttpResponse('Thanks for your confirmation. Payment will be made soon.')
+            else:
+                withdrawal_request.confirmation = False
+                withdrawal_request.confirmation_clicked = True
+                withdrawal_request.save()
+                return HttpResponse( 'Thanks for your confirmation. The withdrawal request will be cancelled. Expect refund soon')
         else:
-            withdrawal_request.confirmation = False
-            withdrawal_request.confirmation_clicked = True
-            withdrawal_request.save()
-            return HttpResponse( 'Thanks for your confirmation. The withdrawal request will be cancelled. Expect refund soon')
+            return HttpResponse('You have confirmed this withdrawal request before')
     elif type == 'p_c_c_f':
         withdrawal_request = WithdrawProjectFunds.objects.get(pk=withdrawal_pk)
-        if response == 'yes':
-            withdrawal_request.confirmation = True
-            withdrawal_request.confirmation_clicked = True
-            withdrawal_request.save()
-            return HttpResponse('Thanks for your confirmation. Payment will be made soon.')
+        if not withdrawal_request.confirmation_clicked:
+            if response == 'yes':
+                withdrawal_request.confirmation = True
+                withdrawal_request.confirmation_clicked = True
+                withdrawal_request.save()
+                return HttpResponse('Thanks for your confirmation. Payment will be made soon.')
+            else:
+                withdrawal_request.confirmation = False
+                withdrawal_request.confirmation_clicked = True
+                withdrawal_request.save()
+                return HttpResponse( 'Thanks for your confirmation. The withdrawal request will be cancelled. Expect refund soon')
         else:
-            withdrawal_request.confirmation = False
-            withdrawal_request.confirmation_clicked = True
-            withdrawal_request.save()
-            return HttpResponse( 'Thanks for your confirmation. The withdrawal request will be cancelled. Expect refund soon')
+            return HttpResponse('You have confirmed this withdrawal request before')
     return redirect('home')
     # return render(request, 'core/withdrawal-confirmation.html', context)
 
