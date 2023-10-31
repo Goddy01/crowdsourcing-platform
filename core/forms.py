@@ -197,7 +197,6 @@ class FilterWithdrawalRequestForm(forms.ModelForm):
 
 class FilterConfirmationClickedForm(forms.ModelForm):
     CONFIRM_CHOICES = (
-        (False, '-------'),
         (True, 'CONFIRMED'),
         (False, 'UNCONFIRMED')
     )

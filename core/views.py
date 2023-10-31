@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.contrib.auth import login, authenticate, logout
 from django.utils.html import strip_tags
 from django.template import loader
@@ -830,77 +831,49 @@ def withdrawal_requests(request):
     context = {}
     context['form'] = FilterWithdrawalRequestForm()
     context['set_is_approved_form'] = WithdrawalRequestAuthorizationForm()
-    context['filter_confirmation'] = FilterConfirmationClickedForm()
+    context['filter_confirmation_form'] = FilterConfirmationClickedForm()
     if request.user.is_moderator:
         if request.method == 'POST' and 'filter_withdrawal_requests' in request.POST:
             date_from = parse_datetime(request.POST.get('date_from'))
             date_to = parse_datetime(request.POST.get('date_to'))
             type_list = request.POST.getlist('type')
-            confirmation_clicked = request.POST.getlist('confirmation_clicked')
+            confirmation_list = request.POST.getlist('confirmation_clicked')
             context['date_from'] = date_from
             context['date_to'] = date_to
             context['type_list'] = type_list
+            context['confirmation_list'] = confirmation_list
             # withdrawal_requests = Withdrawal.objects.filter().order_by('-date')
             # project_withdrawal_requests = WithdrawProjectFunds.objects.filter().order_by('-date')
-            if date_from != None and date_to != None and len(type_list) > 0:
-                context['withdrawal_requests'] = Withdrawal.objects.filter(
-                    is_approved__in=type_list,
-                    date__date__range=(date_from, date_to),
-                    ).order_by('-date')
-                context['project_withdrawal_requests'] = WithdrawProjectFunds.objects.filter(
-                    is_approved__in=type_list,
-                    date__date__range=(date_from, date_to),
-                    ).order_by('-date')
-                context['confirmed_withdrawal_requests'] = Withdrawal.objects.filter(
-                    is_approved__in=type_list,
-                    date__date__range=(date_from, date_to),
-                    ).order_by('-date')
-                context['confirmed_project_withdrawal_requests'] = WithdrawProjectFunds.objects.filter(
-                    is_approved__in=type_list,
-                    date__date__range=(date_from, date_to),
-                    ).order_by('-date')
-            elif date_from != None and date_to != None and len(type_list) == 0:
-                context['withdrawal_requests'] = Withdrawal.objects.filter(
-                    date__date__range=(date_from, date_to),
-                    ).order_by('-date')
-                context['project_withdrawal_requests'] = WithdrawProjectFunds.objects.filter(
-                    date__date__range=(date_from, date_to),
-                    ).order_by('-date')
-            elif date_from != None and date_to == None and len(type_list) > 0:
-                context['withdrawal_requests'] = Withdrawal.objects.filter(
-                    is_approved__in=type_list,
-                    date__gte=(date_from),
-                    ).order_by('-date')
-                context['project_withdrawal_requests'] = WithdrawProjectFunds.objects.filter(
-                    is_approved__in=type_list,
-                    date__gte=(date_from),
-                    ).order_by('-date')
-            elif date_from != None and date_to == None and len(type_list) == 0:
-                context['withdrawal_requests'] = Withdrawal.objects.filter(
-                    date__gte=(date_from),
-                    ).order_by('-date')
-                context['project_withdrawal_requests'] = WithdrawProjectFunds.objects.filter(
-                    date__gte=(date_from),
-                    ).order_by('-date')
-            elif date_from == None and date_to == None and len(type_list) > 0:
-                context['withdrawal_requests'] = Withdrawal.objects.filter(
-                    is_approved__in=type_list,
-                    ).order_by('-date')
-                context['project_withdrawal_requests'] = WithdrawProjectFunds.objects.filter(
-                    is_approved__in=type_list,
-                    ).order_by('-date')
-            elif date_from == None and date_to == None and len(type_list) == 0:
-                context['withdrawal_requests'] = Withdrawal.objects.filter().order_by('-date')
-                context['project_withdrawal_requests'] = WithdrawProjectFunds.objects.filter().order_by('-date')
+            withdrawal_filter = Q()  # Initialize an empty filter for Withdrawal
+            project_withdrawal_filter = Q()  # Initialize an empty filter for WithdrawProjectFunds
+
+            if date_from is not None and date_to is None:
+                withdrawal_filter &= Q(date__gte=(date_from))
+                project_withdrawal_filter &= Q(date__gte=(date_from))
+
+            elif date_to is not None and date_to is not None:
+                withdrawal_filter &= Q(date__date__range=(date_from, date_to))
+                project_withdrawal_filter &= Q(date__date__range=(date_from, date_to))
+            
+            if len(type_list) > 0:
+                withdrawal_filter &= Q(is_approved__in=type_list)
+                project_withdrawal_filter &= Q(is_approved__in=type_list)
+
+            if len(confirmation_list) > 0:
+                withdrawal_filter &= Q(confirmation_clicked__in=confirmation_list)
+                project_withdrawal_filter &= Q(confirmation_clicked__in=confirmation_list)
+
+            context['withdrawal_requests'] = Withdrawal.objects.filter(withdrawal_filter).order_by('-date')
+            context['project_withdrawal_requests'] = WithdrawProjectFunds.objects.filter(project_withdrawal_filter).order_by('-date')
             
             context['form'] = FilterWithdrawalRequestForm(
                 {
                     'type': type_list
                 }
             )
-            context['filter_confirmation'] = FilterConfirmationClickedForm(
+            context['filter_confirmation_form'] = FilterConfirmationClickedForm(
                 {
-                    'confirmation_clicked': confirmation_clicked
+                    'confirmation_clicked': confirmation_list
                 }
             )
         else:
