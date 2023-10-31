@@ -161,7 +161,33 @@
                                 <span>₦{{ withdrawal.post_balance }}</span>
                             </p>
                             <p>
-                                <span class="fw-bold text-success">Status: </span>
+                                <span class="fw-bold text-success">Confirmed by Requester: </span>
+                                <span>
+                                    {% if withdrawal.confirmation_clicked == True %}
+                                    <span style="font-size: 20px;">✅</span>
+                                    {% else %}
+                                    <span style="font-size: 20px;">❌</span>
+                                    {% endif %}
+                                </span>
+                            </p>
+                            
+                            <p>
+                                <span class="fw-bold text-success">Requester Confirmation Response: </span>
+                                <span>
+                                    {% if withdrawal.confirmation_clicked == True %}
+                                    {% if withdrawal.confirmation == True %}
+                                    <span style="">Yes, I requested the withdrawal</span>
+                                    {% elif withdrawal.confirmation == False %}
+                                    <span style="">No, I did not request the withdrawal</span>
+                                    {% endif %}
+                                    {% else %}
+                                    <span style="">The requester has not confirmed the withdrawal request</span>
+                                    {% endif %}
+                                </span>
+                            </p>
+
+                            <p>
+                                <span class="fw-bold text-success">Approved by a Moderator: </span>
                                 <span>
                                     {% if withdrawal.is_approved == True %}
                                     <span style="font-size: 20px;">✅</span>
@@ -170,9 +196,14 @@
                                     {% endif %}
                                 </span>
                             </p>
-                            {% if not withdrawal.is_approved %}
+                            {% if not withdrawal.is_approved and not withdrawal.confirmation_clicked %}
                             <a href="{% url 'send_withdrawal_request_confirmation_email' pk=withdrawal.pk type='personal_funds' %}">
                                 <button type="button" class="btn btn-success col-12">Send Confirmation Email</button>
+                            </a>
+                            {% endif %}
+                            {% if withdrawal.confirmation_clicked %}
+                            <a href="">
+                                <button type="button" class="btn btn-success col-12">Approve</button>
                             </a>
                             {% endif %}
                         </div>
