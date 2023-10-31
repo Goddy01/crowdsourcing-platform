@@ -849,6 +849,14 @@ def withdrawal_requests(request):
                     is_approved__in=type_list,
                     date__date__range=(date_from, date_to),
                     ).order_by('-date')
+                context['confirmed_withdrawal_requests'] = Withdrawal.objects.filter(
+                    is_approved__in=type_list,
+                    date__date__range=(date_from, date_to),
+                    ).order_by('-date')
+                context['confirmed_project_withdrawal_requests'] = WithdrawProjectFunds.objects.filter(
+                    is_approved__in=type_list,
+                    date__date__range=(date_from, date_to),
+                    ).order_by('-date')
             elif date_from != None and date_to != None and len(type_list) == 0:
                 context['withdrawal_requests'] = Withdrawal.objects.filter(
                     date__date__range=(date_from, date_to),
@@ -1055,7 +1063,7 @@ def confirm_withdrawal_request(request, type, withdrawal_pk, response):
                 withdrawal_request.save()
                 return HttpResponse( 'Thanks for your confirmation. The withdrawal request will be cancelled. Expect refund soon')
         else:
-            return HttpResponse('You have confirmed this withdrawal request before')
+            return HttpResponse('You have confirmed this withdrawal request before.')
     elif type == 'p_c_c_f':
         withdrawal_request = WithdrawProjectFunds.objects.get(pk=withdrawal_pk)
         if not withdrawal_request.confirmation_clicked:
@@ -1070,7 +1078,7 @@ def confirm_withdrawal_request(request, type, withdrawal_pk, response):
                 withdrawal_request.save()
                 return HttpResponse( 'Thanks for your confirmation. The withdrawal request will be cancelled. Expect refund soon')
         else:
-            return HttpResponse('You have confirmed this withdrawal request before')
+            return HttpResponse('You have confirmed this withdrawal request before.')
     return redirect('home')
     # return render(request, 'core/withdrawal-confirmation.html', context)
 

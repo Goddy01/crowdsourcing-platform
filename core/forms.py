@@ -194,3 +194,14 @@ class FilterWithdrawalRequestForm(forms.ModelForm):
     class Meta:
         model = Withdrawal
         fields = ['is_approved']
+
+class FilterConfirmationClickedForm(forms.ModelForm):
+    CONFIRM_CHOICES = (
+        (False, '-------'),
+        (True, 'CONFIRMED'),
+        (False, 'UNCONFIRMED')
+    )
+    confirmation_clicked = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=CONFIRM_CHOICES)
+    class Meta:
+        model = Withdrawal
+        fields = ['confirmation_clicked']
