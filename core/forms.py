@@ -208,5 +208,5 @@ class FilterConfirmationClickedForm(forms.ModelForm):
 
 class KBQForm(forms.ModelForm):
     class Meta:
-        model = KBAQuestion
-        fields = ['answer']
+        model = Withdrawal
+        fields = ['kbq_answer']

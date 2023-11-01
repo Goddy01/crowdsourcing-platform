@@ -13,6 +13,7 @@ from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from .models import Project, Innovation, Contribution, Reward_Payment, Make_Investment, Transaction, DepositMoney, Withdrawal, SendMoney, WithdrawProjectFunds
+from accounts.models import KBAQuestion
 from django_countries import countries
 from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm, MyInvestmentForm, InvestmentStatusForm, StatementTypeForm, WithdrawalRequestAuthorizationForm, FilterWithdrawalRequestForm, FilterConfirmationClickedForm, KBQForm
 from accounts.models import Innovator, Moderator, BaseUser
@@ -1102,3 +1103,39 @@ def send_kbq(request, withdrawal_pk, type):
         messages.success(request, 'Confirmation email has successfully been sent. ✅')
         return redirect('withdrawal_requests')
     return render(request, 'core/kbq-confirmation-request.html')
+
+def kbq_confirmation(request, withdrawal_pk, type):
+    context = {}
+    kbq_form = KBQForm()
+    context['kbq_form'] = kbq_form
+    if request.method == 'POST':
+        kbq_form = KBQForm(request.POST)
+        if kbq_form.is_valid():
+            if type == 'p_f':
+                withdrawal_request = Withdrawal.object.get(pk=withdrawal_pk)
+                user = withdrawal_request.innovator.user
+                kbq = KBAQuestion.objects.get(user__pk=user.pk)
+                context['kbq'] = kbq
+                kbq_form.save()
+                if kbq_form.cleaned_data.get('kbq_answer') == kbq.answer:
+                    return HttpResponse('Correct, expect payment soon.')
+                else:
+                    return HttpResponse('Wrong, your withdrawal request has been declined. Expect refund soon')
+            elif type == 'p_c_c_f':
+                withdrawal_request = Withdrawal.object.get(pk=withdrawal_pk)
+                user = withdrawal_request.innovator.user
+                kbq = KBAQuestion.objects.get(user__pk=user.pk)
+                context['kbq'] = kbq
+                kbq_form.save()
+                kbq_answer = kbq_form.cleaned_data.get('kbq_answer')
+                if kbq_answer == kbq.answer:
+                    return HttpResponse('Correct, expect payment soon.')
+                else:
+                    return HttpResponse('Wrong, your withdrawal request has been declined. Expect refund soon')
+            context['kbq_form'] = KBQForm(
+                {
+                    'kbq_answer': kbq_answer
+                }
+            )
+            
+    return render(request, 'core/kbq-confirmation.html', context)
