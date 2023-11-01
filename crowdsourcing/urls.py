@@ -50,6 +50,7 @@ urlpatterns = [
     path('withdrawal-requests/set-withdrawal-request-status/<type>/<pk>', views.set_withdrawal_request_status, name='set_withdrawal_request_status'),
     path('<type>/<pk>/send-withdrawal-request-confirmation-email', views.send_withdrawal_request_confirmation_email, name='send_withdrawal_request_confirmation_email'),
     path('confirm-withdrawal-request/<type>/<withdrawal_pk>/<response>', views.confirm_withdrawal_request, name='confirm_withdrawal_request'),
+    path('sned-kbq/<type>/<withdrawal_pk>', views.send_kbq, name='send_kbq'),
     
     # path('contribution/reply/<innovation_pk>/', views.reply, name='reply'),
 

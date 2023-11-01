@@ -1068,7 +1068,7 @@ def send_kbq(request, withdrawal_pk, type):
         current_site = get_current_site(request)
         subject = 'Knowledge-Based Question Confirmation'
         html_message = loader.render_to_string(
-            'core/kbq-confirmation.html', {
+            'core/kbq-confirmation-request.html', {
             'user': withdrawal_request.innovator.user,
             'domain': current_site.domain,
             'uid': urlsafe_base64_encode(force_bytes(withdrawal_request.innovator.user.pk)),
@@ -1087,7 +1087,7 @@ def send_kbq(request, withdrawal_pk, type):
         current_site = get_current_site(request)
         subject = 'Knowledge-Based Question Confirmation'
         html_message = loader.render_to_string(
-            'core/kbq-confirmation.html', {
+            'core/kbq-confirmation-request.html', {
             'user': withdrawal_request.innovator.user,
             'domain': current_site.domain,
             'uid': urlsafe_base64_encode(force_bytes(withdrawal_request.innovator.user.pk)),
@@ -1101,4 +1101,4 @@ def send_kbq(request, withdrawal_pk, type):
         send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
         messages.success(request, 'Confirmation email has successfully been sent. ✅')
         return redirect('withdrawal_requests')
-    return render(request, 'core/kbq-confirmation.html')
+    return render(request, 'core/kbq-confirmation-request.html')
