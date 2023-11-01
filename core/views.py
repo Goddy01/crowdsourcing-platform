@@ -1,3 +1,4 @@
+from django.template import RequestContext
 from django.db.models import Q
 from django.contrib.auth import login, authenticate, logout
 from django.utils.html import strip_tags
@@ -21,6 +22,7 @@ from django.utils import timezone
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
 import uuid, requests, os, json
 from dotenv import load_dotenv
 from django.utils.dateparse import parse_datetime
@@ -1095,7 +1097,7 @@ def send_kbq(request, withdrawal_pk, type):
             'uid': urlsafe_base64_encode(force_bytes(withdrawal_request.innovator.user.pk)),
             'withdrawal_request': withdrawal_request,
             'kbq': KBAQuestion.objects.get(user__pk=withdrawal_request.innovator.user.pk),
-            'type': 'p_f',
+            'type': 'p_c_c_f',
             'pk': withdrawal_pk
         }, request=request
         )
@@ -1106,8 +1108,10 @@ def send_kbq(request, withdrawal_pk, type):
         return redirect('withdrawal_requests')
     return render(request, 'core/withdrawal-requests.html')
 
-@login_required
+# @login_required
+@csrf_exempt
 def kbq_confirmation(request, withdrawal_pk, type):
+    print('brev')
     # withdrawal_pk = request.GET.get('withdrawal_pk')
     # type = request.GET.get('type')
     context = {}
@@ -1116,25 +1120,36 @@ def kbq_confirmation(request, withdrawal_pk, type):
     if request.method == 'POST':
         kbq_form = KBQForm(request.POST)
         if kbq_form.is_valid():
+            kbq_answer = kbq_form.cleaned_data.get('kbq_answer').lower()
             if type == 'p_f':
-                withdrawal_request = Withdrawal.object.get(pk=withdrawal_pk)
+                withdrawal_request = Withdrawal.objects.get(pk=withdrawal_pk)
+                withdrawal_request.kbq_answer = kbq_answer
+                withdrawal_request.save(update_fields=['kbq_answer'])
                 context['withdrawal_request'] = withdrawal_request
+
                 user = withdrawal_request.innovator.user
+
                 kbq = KBAQuestion.objects.get(user__pk=user.pk)
                 context['kbq'] = kbq
-                kbq_form.save()
-                if kbq_form.cleaned_data.get('kbq_answer') == kbq.answer:
+                
+                
+                if kbq_answer == kbq.answer.lower():
                     return HttpResponse('Correct, expect payment soon.')
                 else:
                     return HttpResponse('Wrong, your withdrawal request has been declined. Expect refund soon')
             elif type == 'p_c_c_f':
-                withdrawal_request = Withdrawal.object.get(pk=withdrawal_pk)
+                withdrawal_request = WithdrawProjectFunds.objects.get(pk=withdrawal_pk)
+                withdrawal_request.kbq_answer = kbq_answer
+                withdrawal_request.save(update_fields=['kbq_answer'])
+                print('KBQ: ', withdrawal_request.kbq_answer)
+                context['withdrawal_request'] = withdrawal_request
+
                 user = withdrawal_request.innovator.user
+                
                 kbq = KBAQuestion.objects.get(user__pk=user.pk)
                 context['kbq'] = kbq
-                kbq_form.save()
-                kbq_answer = kbq_form.cleaned_data.get('kbq_answer')
-                if kbq_answer == kbq.answer:
+                
+                if kbq_answer == kbq.answer.lower():
                     return HttpResponse('Correct, expect payment soon.')
                 else:
                     return HttpResponse('Wrong, your withdrawal request has been declined. Expect refund soon')
@@ -1144,4 +1159,4 @@ def kbq_confirmation(request, withdrawal_pk, type):
                 }
             )
             
-    return render(request, 'core/kbq-confirmation.html', context)
+    return render(request, 'core/kbq-confirmation-request.html', context)

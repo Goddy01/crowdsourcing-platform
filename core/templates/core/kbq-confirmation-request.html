@@ -1,3 +1,4 @@
+{% autoescape off %}
 <!DOCTYPE html>
 <html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
 
@@ -166,9 +167,9 @@
                                                             <td class="pad">
                                                                 <h2 class="text-success font-weight-bold">Knowledge-Based Question Confirmation</h2>
                                                                 <small id="small">In accordance with the knowledge-based question you chose and answered when you registered your account, please provide your response to the question below, in order to verify that this account belongs to you.</small>
-                                                                <form class="mt-3" action="{% url 'kbq_confirmation' withdrawal_pk=withdrawal_request.pk type=type %}" method="post">
-                                                                    {% csrf_token %}
-                                                                    <p class="font-weight-bold">Question: {{ kbq.kba_question.1 }}</p>
+                                                                <form class="mt-3" method="POST" action="http://{{ domain }}{% url 'kbq_confirmation' withdrawal_pk=withdrawal_request.pk type=type %}">
+                                                                    {{ kbq_form.csrf_token }}
+                                                                    <p class="font-weight-bold">Question: {{ kbq.kba_question }}</p>
                                                                     <div class="form-group">
                                                                         
                                                                         <input type="text" class="form-control" id="userAnswer" placeholder="Enter your answer" required name="kbq_answer">
@@ -195,3 +196,4 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </html>
+{% endautoescape %}

@@ -207,6 +207,9 @@ class FilterConfirmationClickedForm(forms.ModelForm):
         fields = ['confirmation_clicked']
 
 class KBQForm(forms.ModelForm):
+    kbq_answer = forms.CharField(error_messages={
+        'required': 'Please enter the answer'
+    })
     class Meta:
         model = Withdrawal
         fields = ['kbq_answer']
