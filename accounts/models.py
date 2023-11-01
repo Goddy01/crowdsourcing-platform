@@ -140,16 +140,16 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
 
 class KBAQuestion(models.Model):
     KBA_QUESTIONS = [
-        ('book', 'What is the name of your favorite childhood book?'),
-        ('city', 'In which city were you born?'),
-        ('pet', 'What is the name of your first pet?'),
-        ('hero', 'Who was your childhood hero?'),
-        ('movie', 'What is your favorite childhood movie?'),
-        ('maiden', "What is your mother's maiden name?"),
-        ('stuffed-animal', 'What was the name of your first stuffed animal?'),
-        ('favorite-teacher', 'What is the name of your favorite teacher from elementary school?'),
-        ('vacation-spot', 'What was your favorite childhood vacation spot?'),
-        ('best-friend', 'What is the name of your first best friend?'),
+        ('What is the name of your favorite childhood book?', 'What is the name of your favorite childhood book?'),
+        ('In which city were you born?', 'In which city were you born?'),
+        ('What is the name of your first pet?', 'What is the name of your first pet?'),
+        ('Who was your childhood hero?', 'Who was your childhood hero?'),
+        ('What is your favorite childhood movie?', 'What is your favorite childhood movie?'),
+        ("What is your mother's maiden name?", "What is your mother's maiden name?"),
+        ('What was the name of your first stuffed animal?', 'What was the name of your first stuffed animal?'),
+        ('What is the name of your favorite teacher from elementary school?', 'What is the name of your favorite teacher from elementary school?'),
+        ('What was your favorite childhood vacation spot?', 'What was your favorite childhood vacation spot?'),
+        ('What is the name of your first best friend?', 'What is the name of your first best friend?'),
     ]
     user =                          models.ForeignKey(BaseUser, on_delete=models.CASCADE, null=True, blank=True)
     kba_question =                  models.CharField(max_length=254, blank=True, null=True, choices=KBA_QUESTIONS)

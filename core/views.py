@@ -1074,6 +1074,7 @@ def send_kbq(request, withdrawal_pk, type):
             'domain': current_site.domain,
             'uid': urlsafe_base64_encode(force_bytes(withdrawal_request.innovator.user.pk)),
             'withdrawal_request': withdrawal_request,
+            'kbq': KBAQuestion.objects.get(user__pk=withdrawal_request.innovator.user.pk),
             'type': 'p_f',
             'pk': withdrawal_pk
         }, request=request
@@ -1093,6 +1094,7 @@ def send_kbq(request, withdrawal_pk, type):
             'domain': current_site.domain,
             'uid': urlsafe_base64_encode(force_bytes(withdrawal_request.innovator.user.pk)),
             'withdrawal_request': withdrawal_request,
+            'kbq': KBAQuestion.objects.get(user__pk=withdrawal_request.innovator.user.pk),
             'type': 'p_f',
             'pk': withdrawal_pk
         }, request=request
@@ -1102,9 +1104,12 @@ def send_kbq(request, withdrawal_pk, type):
         send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
         messages.success(request, 'Confirmation email has successfully been sent. ✅')
         return redirect('withdrawal_requests')
-    return render(request, 'core/kbq-confirmation-request.html')
+    return render(request, 'core/withdrawal-requests.html')
 
+@login_required
 def kbq_confirmation(request, withdrawal_pk, type):
+    # withdrawal_pk = request.GET.get('withdrawal_pk')
+    # type = request.GET.get('type')
     context = {}
     kbq_form = KBQForm()
     context['kbq_form'] = kbq_form
@@ -1113,6 +1118,7 @@ def kbq_confirmation(request, withdrawal_pk, type):
         if kbq_form.is_valid():
             if type == 'p_f':
                 withdrawal_request = Withdrawal.object.get(pk=withdrawal_pk)
+                context['withdrawal_request'] = withdrawal_request
                 user = withdrawal_request.innovator.user
                 kbq = KBAQuestion.objects.get(user__pk=user.pk)
                 context['kbq'] = kbq
