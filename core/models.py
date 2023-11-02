@@ -161,6 +161,7 @@ class Withdrawal(models.Model):
     kbq_answer_status = models.CharField(max_length=254, null=True, blank=True)
     approved_by = models.ForeignKey(account_models.Moderator, on_delete=models.CASCADE, null=True, blank=True)
     withdrawal_status  = models.CharField(max_length=254, null=True, blank=True)
+    date_approved = models.DateTimeField(auto_now=True, null=True)
     # post_withdrawal_account_balance = models.PositiveBigIntegerField(null=False, blank=False)
 
     @property
@@ -187,6 +188,7 @@ class WithdrawProjectFunds(models.Model):
     kbq_answer_status = models.CharField(max_length=254, null=True, blank=True)
     approved_by = models.ForeignKey(account_models.Moderator, on_delete=models.CASCADE, null=True, blank=True)
     withdrawal_status  = models.CharField(max_length=254, null=True, blank=True)
+    date_approved = models.DateTimeField(auto_now=True, null=True)
     
 class SendMoney(models.Model):
     amount = models.PositiveIntegerField(null=True, blank=True)

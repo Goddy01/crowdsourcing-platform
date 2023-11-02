@@ -221,12 +221,12 @@
                                 <button type="button" class="btn btn-success col-12">Send KBQ Confirmation Email</button>
                             </a>
                             {% endif %}
-                            {% if withdrawal.kbq_answer_status == 'right' %}
-                            <a href="{% url 'approve_withdrawal_request' withdrawal_pk=withdrawal.pk type='p_c_c_f' %}">
+                            {% if withdrawal.kbq_answer_status == 'right' and not withdrawal.is_approved %}
+                            <a href="{% url 'approve_withdrawal_request' withdrawal_pk=withdrawal.pk type='p_f' %}">
                                 <button type="button" class="btn btn-success col-12">APPROVE WITHDRAWAL REQUEST</button>
                             </a>
-                            {% elif withdrawal.kbq_answer_status == 'wrong' %}
-                            <a href="{% url 'reject_withdrawal_request' withdrawal_pk=withdrawal.pk type='p_c_c_f' %}">
+                            {% elif withdrawal.kbq_answer_status == 'wrong' and not withdrawal.is_approved %}
+                            <a href="{% url 'reject_withdrawal_request' withdrawal_pk=withdrawal.pk type='p_f' %}">
                                 <button type="button" class="btn btn-success col-12">REJECT WITHDRAWAL REQUEST</button>
                             </a>
                             {% endif %}
@@ -383,11 +383,11 @@
                                                 <button type="button" class="btn btn-success col-12">Send KBQ Confirmation Email</button>
                                             </a>
                                             {% endif %}
-                                            {% if withdrawal.kbq_answer_status == 'right' %}
+                                            {% if withdrawal.kbq_answer_status == 'right' and not withdrawal.is_approved %}
                                             <a href="{% url 'approve_withdrawal_request' withdrawal_pk=withdrawal.pk type='p_c_c_f' %}">
                                                 <button type="button" class="btn btn-success col-12">APPROVE WITHDRAWAL REQUEST</button>
                                             </a>
-                                            {% elif withdrawal.kbq_answer_status == 'wrong' %}
+                                            {% elif withdrawal.kbq_answer_status == 'wrong' and not withdrawal.is_approved %}
                                             <a href="{% url 'reject_withdrawal_request' withdrawal_pk=withdrawal.pk type='p_c_c_f' %}">
                                                 <button type="button" class="btn btn-success col-12">REJECT WITHDRAWAL REQUEST</button>
                                             </a>
