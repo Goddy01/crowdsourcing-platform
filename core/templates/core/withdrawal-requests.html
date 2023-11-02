@@ -222,11 +222,11 @@
                             </a>
                             {% endif %}
                             {% if withdrawal.kbq_answer_status == 'right' %}
-                            <a href="">
+                            <a href="{% url 'approve_withdrawal_request' withdrawal_pk=withdrawal.pk type='p_c_c_f' %}">
                                 <button type="button" class="btn btn-success col-12">APPROVE WITHDRAWAL REQUEST</button>
                             </a>
                             {% elif withdrawal.kbq_answer_status == 'wrong' %}
-                            <a href="">
+                            <a href="{% url 'reject_withdrawal_request' withdrawal_pk=withdrawal.pk type='p_c_c_f' %}">
                                 <button type="button" class="btn btn-success col-12">REJECT WITHDRAWAL REQUEST</button>
                             </a>
                             {% endif %}
@@ -384,11 +384,11 @@
                                             </a>
                                             {% endif %}
                                             {% if withdrawal.kbq_answer_status == 'right' %}
-                                            <a href="">
+                                            <a href="{% url 'approve_withdrawal_request' withdrawal_pk=withdrawal.pk type='p_c_c_f' %}">
                                                 <button type="button" class="btn btn-success col-12">APPROVE WITHDRAWAL REQUEST</button>
                                             </a>
                                             {% elif withdrawal.kbq_answer_status == 'wrong' %}
-                                            <a href="">
+                                            <a href="{% url 'reject_withdrawal_request' withdrawal_pk=withdrawal.pk type='p_c_c_f' %}">
                                                 <button type="button" class="btn btn-success col-12">REJECT WITHDRAWAL REQUEST</button>
                                             </a>
                                             {% endif %}

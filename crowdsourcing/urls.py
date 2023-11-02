@@ -53,7 +53,7 @@ urlpatterns = [
     path('send-kbq/<type>/<withdrawal_pk>', views.send_kbq, name='send_kbq'),
     path('kbq-confirmation/<type>/<withdrawal_pk>', views.kbq_confirmation, name='kbq_confirmation'),
     path('approve-withdrawal-request/<type>/<withdrawal_pk>', views.approve_withdrawal_request, name='approve_withdrawal_request'),
-    path('approve-withdrawal-request/<type>/<withdrawal_pk>', views.reject_withdrawal_request, name='reject_withdrawal_request'),
+    path('reject-withdrawal-request/<type>/<withdrawal_pk>', views.reject_withdrawal_request, name='reject_withdrawal_request'),
     
     # path('contribution/reply/<innovation_pk>/', views.reply, name='reply'),
 
