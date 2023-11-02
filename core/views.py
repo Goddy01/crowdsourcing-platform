@@ -1144,8 +1144,12 @@ def kbq_confirmation(request, withdrawal_pk, type):
                 
                 
                 if kbq_answer == kbq.answer.lower():
+                    withdrawal_request.kbq_answer_status = 'right'
+                    withdrawal_request.save(update_fields=['kbq_answer_status'])
                     return HttpResponse('Correct, expect payment soon.')
                 else:
+                    withdrawal_request.kbq_answer_status = 'wrong'
+                    withdrawal_request.save(update_fields=['kbq_answer_status'])
                     return HttpResponse('Wrong, your withdrawal request has been declined. Expect refund soon')
             elif type == 'p_c_c_f':
                 withdrawal_request = WithdrawProjectFunds.objects.get(pk=withdrawal_pk)
@@ -1160,8 +1164,12 @@ def kbq_confirmation(request, withdrawal_pk, type):
                 context['kbq'] = kbq
                 
                 if kbq_answer == kbq.answer.lower():
+                    withdrawal_request.kbq_answer_status = 'right'
+                    withdrawal_request.save(update_fields=['kbq_answer_status'])
                     return HttpResponse('Correct, expect payment soon.')
                 else:
+                    withdrawal_request.kbq_answer_status = 'wrong'
+                    withdrawal_request.save(update_fields=['kbq_answer_status'])
                     return HttpResponse('Wrong, your withdrawal request has been declined. Expect refund soon')
             context['kbq_form'] = KBQForm(
                 {
