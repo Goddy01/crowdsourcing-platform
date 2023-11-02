@@ -172,6 +172,18 @@
                                     {% endif %}
                                 </span>
                             </p>
+                            {% if withdrawal.kbq_answer.count > 1 %}
+                            <p>
+                                <span class="fw-bold text-success">Knowledge-Based Question: </span>
+                                <span>
+                                    {% if withdrawal.confirmation_clicked == True %}
+                                    <span style="font-size: 20px;">✅</span>
+                                    {% else %}
+                                    <span style="font-size: 20px;">❌</span>
+                                    {% endif %}
+                                </span>
+                            </p>
+                            {% endif %}
                             
                             <p>
                                 <span class="fw-bold text-success">Requester Confirmation Response: </span>
