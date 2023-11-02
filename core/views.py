@@ -1189,12 +1189,16 @@ def approve_withdrawal_request(request, withdrawal_pk, type):
             withdrawal_request.withdrawal_status = 'APPROVED'
             withdrawal_request.save(update_fields=['approved_by', 'withdrawal_status'])
             context['approved_withdrawal_request'] = withdrawal_request
+            messages.success(request, 'Withdrawal request has been successfully approved')
+            return redirect('withdrawal_requests')
         elif type == 'p_c_c_f':
             withdrawal_request = WithdrawProjectFunds.objects.get(pk=withdrawal_pk)
             withdrawal_request.approved_by = moderator
             withdrawal_request.withdrawal_status = 'APPROVED'
             withdrawal_request.save(update_fields=['approved_by', 'withdrawal_status'])
             context['approved_withdrawal_request'] = withdrawal_request
+            messages.success(request, 'Withdrawal request has been successfully approved')
+            return redirect('withdrawal_requests')
     else:
         return HttpResponse('You do not have the privilege to view this page.')
     return render(request, 'core/withdrawal_requests.html', context)
@@ -1209,12 +1213,16 @@ def reject_withdrawal_request(request, withdrawal_pk, type):
             withdrawal_request.withdrawal_status = 'REJECTED'
             withdrawal_request.save(update_fields=['approved_by', 'withdrawal_status'])
             context['approved_withdrawal_request'] = withdrawal_request
+            messages.success(request, 'Withdrawal request has been successfully approved')
+            return redirect('withdrawal_requests')
         elif type == 'p_c_c_f':
             withdrawal_request = WithdrawProjectFunds.objects.get(pk=withdrawal_pk)
             withdrawal_request.approved_by = moderator
             withdrawal_request.withdrawal_status = 'REJECTED'
             withdrawal_request.save(update_fields=['approved_by', 'withdrawal_status'])
             context['approved_withdrawal_request'] = withdrawal_request
+            messages.success(request, 'Withdrawal request has been successfully approved')
+            return redirect('withdrawal_requests')
     else:
         return HttpResponse('You do not have the privilege to view this page.')
     return render(request, 'core/withdrawal_requests.html', context)
