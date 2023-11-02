@@ -172,18 +172,6 @@
                                     {% endif %}
                                 </span>
                             </p>
-                            {% if withdrawal.kbq_answer.count > 1 %}
-                            <p>
-                                <span class="fw-bold text-success">Knowledge-Based Question: </span>
-                                <span>
-                                    {% if withdrawal.confirmation_clicked == True %}
-                                    <span style="font-size: 20px;">✅</span>
-                                    {% else %}
-                                    <span style="font-size: 20px;">❌</span>
-                                    {% endif %}
-                                </span>
-                            </p>
-                            {% endif %}
                             
                             <p>
                                 <span class="fw-bold text-success">Requester Confirmation Response: </span>
@@ -199,6 +187,19 @@
                                     {% endif %}
                                 </span>
                             </p>
+
+                            {% if withdrawal.kbq_answer|length > 0 %}
+                            <p>
+                                <span class="fw-bold text-success">Knowledge-Based Question: </span>
+                                <span>
+                                    {% if withdrawal.kbq_answer_status == 'right' %}
+                                    <span>Provided the correct answer</span>
+                                    {% else %}
+                                    <span>Provided wrong answer</span>
+                                    {% endif %}
+                                </span>
+                            </p>
+                            {% endif %}
 
                             <p>
                                 <span class="fw-bold text-success">Approved by a Moderator: </span>
@@ -338,7 +339,20 @@
                                                     {% endif %}
                                                 </span>
                                             </p>
-                
+                                            
+                                            {% if withdrawal.kbq_answer|length > 0 %}
+                                            <p>
+                                                <span class="fw-bold text-success">Knowledge-Based Question: </span>
+                                                <span>
+                                                    {% if withdrawal.kbq_answer_status == 'right' %}
+                                                    <span>Provided the correct answer</span>
+                                                    {% else %}
+                                                    <span>Provided wrong answer</span>
+                                                    {% endif %}
+                                                </span>
+                                            </p>
+                                            {% endif %}
+
                                             <p>
                                                 <span class="fw-bold text-success">Approved by a Moderator: </span>
                                                 <span>
