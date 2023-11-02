@@ -1,3 +1,4 @@
+from django.db.models.functions import Length
 from django.template import RequestContext
 from django.db.models import Q
 from django.contrib.auth import login, authenticate, logout
@@ -842,6 +843,7 @@ def withdrawal_requests(request):
             type_list = request.POST.getlist('type')
             confirmation_list = request.POST.getlist('confirmation_clicked')
             kbq_checkbox = request.POST.get('kbq_checkbox')
+            context['kbq_checkbox'] = kbq_checkbox
             context['date_from'] = date_from
             context['date_to'] = date_to
             context['type_list'] = type_list
@@ -869,10 +871,11 @@ def withdrawal_requests(request):
 
             if kbq_checkbox:
                 # Filter for 'kbq_answer' length greater than one
-                withdrawal_filter &= Q(kbq_answer__len__gt=1)
-                project_withdrawal_filter &= Q(kbq_answer__len__gt=1)
-
+                withdrawal_filter &= Q(kbq_answer__isnull=False)  # Filters for non-null 'kbq_answer' field
                 
+                project_withdrawal_filter &= Q(kbq_answer__isnull=False)
+
+
             context['withdrawal_requests'] = Withdrawal.objects.filter(withdrawal_filter).order_by('-date')
             context['project_withdrawal_requests'] = WithdrawProjectFunds.objects.filter(project_withdrawal_filter).order_by('-date')
             
