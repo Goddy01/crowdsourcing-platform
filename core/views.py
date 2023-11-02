@@ -1198,3 +1198,23 @@ def approve_withdrawal_request(request, withdrawal_pk, type):
     else:
         return HttpResponse('You do not have the privilege to view this page.')
     return render(request, 'core/withdrawal_requests.html', context)
+
+def reject_withdrawal_request(request, withdrawal_pk, type):
+    context = {}
+    if request.user.is_moderator:
+        moderator = Moderator.objects.get(user__pk=request.user.pk)
+        if type == 'p_f':
+            withdrawal_request = Withdrawal.objects.get(pk=withdrawal_pk)
+            withdrawal_request.approved_by = moderator
+            withdrawal_request.withdrawal_status = 'REJECTED'
+            withdrawal_request.save(update_fields=['approved_by', 'withdrawal_status'])
+            context['approved_withdrawal_request'] = withdrawal_request
+        elif type == 'p_c_c_f':
+            withdrawal_request = WithdrawProjectFunds.objects.get(pk=withdrawal_pk)
+            withdrawal_request.approved_by = moderator
+            withdrawal_request.withdrawal_status = 'REJECTED'
+            withdrawal_request.save(update_fields=['approved_by', 'withdrawal_status'])
+            context['approved_withdrawal_request'] = withdrawal_request
+    else:
+        return HttpResponse('You do not have the privilege to view this page.')
+    return render(request, 'core/withdrawal_requests.html', context)
