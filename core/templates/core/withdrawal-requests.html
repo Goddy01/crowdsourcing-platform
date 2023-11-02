@@ -211,6 +211,22 @@
                                     {% endif %}
                                 </span>
                             </p>
+                            {% if withdrawal.is_approved %}
+                            <p>
+                                <span class="fw-bold text-success">Date Approved: </span>
+                                <span>
+                                    <span>{{ withdrawal.date_approved }}</span>
+                                </span>
+                            </p>
+                            <p>
+                                <span class="fw-bold text-success">Withdrawal Request Status: </span>
+                                {% if withdrawal.withdrawal_status == 'APPROVED' %}
+                                <span class="fw-bolder text-success">{{ withdrawal.withdrawal_status }}</span>
+                                {% elif withdrawal.withdrawal_status == 'REJECTED' %}
+                                <span class="fw-bolder text-danger">{{ withdrawal.withdrawal_status }}</span>
+                                {% endif %}
+                            </p>
+                            {% endif %}
                             {% if not withdrawal.is_approved and not withdrawal.confirmation_clicked %}
                             <a href="{% url 'send_withdrawal_request_confirmation_email' pk=withdrawal.pk type='personal_funds' %}">
                                 <button type="button" class="btn btn-success col-12">Send Confirmation Email</button>
@@ -372,6 +388,22 @@
                                                     {% endif %}
                                                 </span>
                                             </p>
+                                            {% if withdrawal.is_approved %}
+                                            <p>
+                                                <span class="fw-bold text-success">Date Approved: </span>
+                                                <span>
+                                                    <span>{{ withdrawal.date_approved }}</span>
+                                                </span>
+                                            </p>
+                                            <p>
+                                                <span class="fw-bold text-success">Withdrawal Request Status: </span>
+                                                {% if withdrawal.withdrawal_status == 'APPROVED' %}
+                                                <span class="fw-bolder text-success">{{ withdrawal.withdrawal_status }}</span>
+                                                {% elif withdrawal.withdrawal_status == 'REJECTED' %}
+                                                <span class="fw-bolder text-danger">{{ withdrawal.withdrawal_status }}</span>
+                                                {% endif %}
+                                            </p>
+                                            {% endif %}
                 
                                             {% if not withdrawal.is_approved and not withdrawal.confirmation_clicked %}
                                             <a href="{% url 'send_withdrawal_request_confirmation_email' pk=withdrawal.pk type='project_capital_contribution_funds' %}">

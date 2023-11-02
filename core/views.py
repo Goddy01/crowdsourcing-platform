@@ -1216,21 +1216,21 @@ def reject_withdrawal_request(request, withdrawal_pk, type):
             withdrawal_request = Withdrawal.objects.get(pk=withdrawal_pk)
             withdrawal_request.approved_by = moderator
             withdrawal_request.withdrawal_status = 'REJECTED'
-            withdrawal_request.is_approved = False
+            withdrawal_request.is_approved = True
             withdrawal_request.date_approved = datetime.datetime.now()
             withdrawal_request.save(update_fields=['approved_by', 'withdrawal_status', 'is_approved'])
             context['approved_withdrawal_request'] = withdrawal_request
-            messages.success(request, 'Withdrawal request has been successfully approved')
+            messages.success(request, 'Withdrawal request has been successfully rejected')
             return redirect('withdrawal_requests')
         elif type == 'p_c_c_f':
             withdrawal_request = WithdrawProjectFunds.objects.get(pk=withdrawal_pk)
             withdrawal_request.approved_by = moderator
             withdrawal_request.withdrawal_status = 'REJECTED'
-            withdrawal_request.is_approved = False
+            withdrawal_request.is_approved = True
             withdrawal_request.date_approved = datetime.datetime.now()
             withdrawal_request.save(update_fields=['approved_by', 'withdrawal_status', 'is_approved'])
             context['approved_withdrawal_request'] = withdrawal_request
-            messages.success(request, 'Withdrawal request has been successfully approved')
+            messages.success(request, 'Withdrawal request has been successfully rejected')
             return redirect('withdrawal_requests')
     else:
         return HttpResponse('You do not have the privilege to view this page.')
