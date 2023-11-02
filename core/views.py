@@ -733,6 +733,8 @@ def withdraw_project_funds(request, project_pk):
             return HttpResponse('You cannot withdraw more than what you have.')
     return render(request, 'core/withdraw-project-funds.html', context)
 
+# PAYSTACK REAL-TIME TRANSFER FEATURE
+
 # def create_recipient(request):
 #     # CREATE TRANSFER RECIPIENT
 #     create_recipient_url = "https://api.paystack.co/transferrecipient"
@@ -764,8 +766,6 @@ def withdraw_project_funds(request, project_pk):
 #         print(f"Request failed with status code {response.status_code}")
 #         print(response.text)
 #         return JsonResponse({'error': f"Request failed with status code {response.status_code}"})
-
-# REAL-TIME TRANSFER
 
 # def initiate_single_transfer(request):
 
@@ -1178,3 +1178,11 @@ def kbq_confirmation(request, withdrawal_pk, type):
             )
             
     return render(request, 'core/kbq-confirmation-request.html', context)
+
+def approve_withdrawal_request(request, withdrawal_pk, type):
+    context = {}
+    if type == 'p_f':
+        withdrawal_request = Withdrawal.objects.get(pk=withdrawal_pk)
+    elif type == 'p_c_c_f':
+        withdrawal_request = Withdrawal.objects.get(pk=withdrawal_pk)
+    return render(request, 'core/withdrawal_requests.html', context)
