@@ -841,6 +841,7 @@ def withdrawal_requests(request):
             date_to = parse_datetime(request.POST.get('date_to'))
             type_list = request.POST.getlist('type')
             confirmation_list = request.POST.getlist('confirmation_clicked')
+            kbq_checkbox = request.POST.get('kbq_checkbox')
             context['date_from'] = date_from
             context['date_to'] = date_to
             context['type_list'] = type_list
@@ -866,6 +867,12 @@ def withdrawal_requests(request):
                 withdrawal_filter &= Q(confirmation_clicked__in=confirmation_list)
                 project_withdrawal_filter &= Q(confirmation_clicked__in=confirmation_list)
 
+            if kbq_checkbox:
+                # Filter for 'kbq_answer' length greater than one
+                withdrawal_filter &= Q(kbq_answer__len__gt=1)
+                project_withdrawal_filter &= Q(kbq_answer__len__gt=1)
+
+                
             context['withdrawal_requests'] = Withdrawal.objects.filter(withdrawal_filter).order_by('-date')
             context['project_withdrawal_requests'] = WithdrawProjectFunds.objects.filter(project_withdrawal_filter).order_by('-date')
             

@@ -213,3 +213,8 @@ class KBQForm(forms.ModelForm):
     class Meta:
         model = Withdrawal
         fields = ['kbq_answer']
+
+# class KBQCheckboxForm(forms.ModelForm):
+#     class Meta:
+#         model = Withdrawal
+#         fields = ['kbq_answer']
