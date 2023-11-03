@@ -483,42 +483,42 @@ def statement(request):
     if request.method == 'POST' and 'filter_statement' in request.POST:
         statement_date_from = parse_datetime(request.POST.get('statement_date_from'))
         statement_date_to = parse_datetime(request.POST.get('statement_date_to'))
-        type_list = request.POST.getlist('type')
+        is_approved_list = request.POST.getlist('type')
         context['statement_date_from'] = statement_date_from
         context['statement_date_to'] = statement_date_to
-        # print('TYPE LIST: ', type_list)
-        if statement_date_from != None and statement_date_to != None and len(type_list) > 0:
+        # print('TYPE LIST: ', is_approved_list)
+        if statement_date_from != None and statement_date_to != None and len(is_approved_list) > 0:
             context['transactions'] = Transaction.objects.filter(
-                type__in=type_list,
+                type__in=is_approved_list,
                 owner__user__pk=request.user.pk,
                 date_generated__date__range=(statement_date_from, statement_date_to),
                 ).order_by('-date_generated')
-        elif statement_date_from != None and statement_date_to != None and len(type_list) == 0:
+        elif statement_date_from != None and statement_date_to != None and len(is_approved_list) == 0:
             context['transactions'] = Transaction.objects.filter(
                 owner__user__pk=request.user.pk,
                 date_generated__date__range=(statement_date_from, statement_date_to),
                 ).order_by('-date_generated')
-        elif statement_date_from != None and statement_date_to == None and len(type_list) > 0:
+        elif statement_date_from != None and statement_date_to == None and len(is_approved_list) > 0:
             context['transactions'] = Transaction.objects.filter(
-                type__in=type_list,
+                type__in=is_approved_list,
                 owner__user__pk=request.user.pk,
                 date_generated__gte=(statement_date_from),
                 ).order_by('-date_generated')
-        elif statement_date_from != None and statement_date_to == None and len(type_list) == 0:
+        elif statement_date_from != None and statement_date_to == None and len(is_approved_list) == 0:
             context['transactions'] = Transaction.objects.filter(
                 owner__user__pk=request.user.pk,
                 date_generated__gte=(statement_date_from),
                 ).order_by('-date_generated')
-        elif statement_date_from == None and statement_date_to == None and len(type_list) > 0:
+        elif statement_date_from == None and statement_date_to == None and len(is_approved_list) > 0:
             context['transactions'] = Transaction.objects.filter(
-                type__in=type_list,
+                type__in=is_approved_list,
                 owner__user__pk=request.user.pk
                 ).order_by('-date_generated')
-        elif statement_date_from == None and statement_date_to == None and len(type_list) == 0:
+        elif statement_date_from == None and statement_date_to == None and len(is_approved_list) == 0:
             context['transactions'] = Transaction.objects.filter(
                 owner__user__pk=request.user.pk
                 ).order_by('-date_generated')
-        context['statement_type_form'] = StatementTypeForm({'type': type_list})
+        context['statement_type_form'] = StatementTypeForm({'type': is_approved_list})
     else:
         context['transactions'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')
     return render(request, 'core/statement.html', context)
@@ -841,13 +841,13 @@ def withdrawal_requests(request):
         if request.method == 'POST' and 'filter_withdrawal_requests' in request.POST:
             date_from = parse_datetime(request.POST.get('date_from'))
             date_to = parse_datetime(request.POST.get('date_to'))
-            type_list = request.POST.getlist('type')
+            is_approved_list = request.POST.getlist('is_approved')
             confirmation_list = request.POST.getlist('confirmation_clicked')
             kbq_checkbox = request.POST.get('kbq_checkbox')
             context['kbq_checkbox'] = kbq_checkbox
             context['date_from'] = date_from
             context['date_to'] = date_to
-            context['type_list'] = type_list
+            context['is_approved_list'] = is_approved_list
             context['confirmation_list'] = confirmation_list
             # withdrawal_requests = Withdrawal.objects.filter().order_by('-date')
             # project_withdrawal_requests = WithdrawProjectFunds.objects.filter().order_by('-date')
@@ -862,9 +862,9 @@ def withdrawal_requests(request):
                 withdrawal_filter &= Q(date__date__range=(date_from, date_to))
                 project_withdrawal_filter &= Q(date__date__range=(date_from, date_to))
             
-            if len(type_list) > 0:
-                withdrawal_filter &= Q(is_approved__in=type_list)
-                project_withdrawal_filter &= Q(is_approved__in=type_list)
+            if len(is_approved_list) > 0:
+                withdrawal_filter &= Q(is_approved__in=is_approved_list)
+                project_withdrawal_filter &= Q(is_approved__in=is_approved_list)
 
             if len(confirmation_list) > 0:
                 withdrawal_filter &= Q(confirmation_clicked__in=confirmation_list)
@@ -882,7 +882,7 @@ def withdrawal_requests(request):
             
             context['form'] = FilterWithdrawalRequestForm(
                 {
-                    'type': type_list
+                    'is_approved': is_approved_list
                 }
             )
             context['filter_confirmation_form'] = FilterConfirmationClickedForm(
