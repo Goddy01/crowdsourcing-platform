@@ -1192,6 +1192,24 @@ def approve_withdrawal_request(request, withdrawal_pk, type):
             withdrawal_request.date_approved = datetime.datetime.now()
             withdrawal_request.save(update_fields=['approved_by', 'withdrawal_status', 'is_approved'])
             context['approved_withdrawal_request'] = withdrawal_request
+
+            current_site = get_current_site(request)
+            subject = 'Update about your Withdrawal Request'
+            html_message = loader.render_to_string(
+                'core/withdrawal_request_status.html', {
+                'user': withdrawal_request.innovator.user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(withdrawal_request.innovator.user.pk)),
+                'withdrawal_request': withdrawal_request,
+                'type': 'p_f',
+                'status': 'APPROVED',
+                'pk': withdrawal_pk
+            }, request=request
+            )
+            to_email = f'{withdrawal_request.innovator.user.email}'
+            from_email = settings.EMAIL_HOST_USER
+            send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
+
             messages.success(request, 'Withdrawal request has been successfully approved')
             return redirect('withdrawal_requests')
         elif type == 'p_c_c_f':
@@ -1202,6 +1220,24 @@ def approve_withdrawal_request(request, withdrawal_pk, type):
             withdrawal_request.date_approved = datetime.datetime.now()
             withdrawal_request.save(update_fields=['approved_by', 'withdrawal_status', 'is_approved'])
             context['approved_withdrawal_request'] = withdrawal_request
+
+            current_site = get_current_site(request)
+            subject = 'Update about your Withdrawal Request'
+            html_message = loader.render_to_string(
+                'core/withdrawal_request_status.html', {
+                'user': withdrawal_request.innovator.user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(withdrawal_request.innovator.user.pk)),
+                'withdrawal_request': withdrawal_request,
+                'type': 'p_c_c_f',
+                'status': 'APPROVED',
+                'pk': withdrawal_pk
+            }, request=request
+            )
+            to_email = f'{withdrawal_request.innovator.user.email}'
+            from_email = settings.EMAIL_HOST_USER
+            send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
+
             messages.success(request, 'Withdrawal request has been successfully approved')
             return redirect('withdrawal_requests')
     else:
@@ -1220,6 +1256,24 @@ def reject_withdrawal_request(request, withdrawal_pk, type):
             withdrawal_request.date_approved = datetime.datetime.now()
             withdrawal_request.save(update_fields=['approved_by', 'withdrawal_status', 'is_approved'])
             context['approved_withdrawal_request'] = withdrawal_request
+
+            current_site = get_current_site(request)
+            subject = 'Update about your Withdrawal Request'
+            html_message = loader.render_to_string(
+                'core/withdrawal_request_status.html', {
+                'user': withdrawal_request.innovator.user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(withdrawal_request.innovator.user.pk)),
+                'withdrawal_request': withdrawal_request,
+                'type': 'p_f',
+                'status': 'REJECTED',
+                'pk': withdrawal_pk
+            }, request=request
+            )
+            to_email = f'{withdrawal_request.innovator.user.email}'
+            from_email = settings.EMAIL_HOST_USER
+            send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
+
             messages.success(request, 'Withdrawal request has been successfully rejected')
             return redirect('withdrawal_requests')
         elif type == 'p_c_c_f':
@@ -1230,6 +1284,24 @@ def reject_withdrawal_request(request, withdrawal_pk, type):
             withdrawal_request.date_approved = datetime.datetime.now()
             withdrawal_request.save(update_fields=['approved_by', 'withdrawal_status', 'is_approved'])
             context['approved_withdrawal_request'] = withdrawal_request
+
+            current_site = get_current_site(request)
+            subject = 'Update about your Withdrawal Request'
+            html_message = loader.render_to_string(
+                'core/withdrawal_request_status.html', {
+                'user': withdrawal_request.innovator.user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(withdrawal_request.innovator.user.pk)),
+                'withdrawal_request': withdrawal_request,
+                'type': 'p_c_c_f',
+                'status': 'REJECTED',
+                'pk': withdrawal_pk
+            }, request=request
+            )
+            to_email = f'{withdrawal_request.innovator.user.email}'
+            from_email = settings.EMAIL_HOST_USER
+            send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
+
             messages.success(request, 'Withdrawal request has been successfully rejected')
             return redirect('withdrawal_requests')
     else:
