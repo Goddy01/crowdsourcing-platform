@@ -629,7 +629,7 @@ def send_money(request):
                     current_site = get_current_site(request)
                     subject = 'NIN Confirmation'
                     html_message = loader.render_to_string(
-                        'core/nin-confirmation.html', {
+                        'core/confirm_nin.html', {
                         'user': BaseUser.objects.get(pk=request.user.pk),
                         'domain': current_site.domain,
                         'amount': int(amount_to_send),
@@ -1322,6 +1322,6 @@ def approve_send_money_request(request, sender, recipient, amount_to_send):
     return redirect('deposit')
 
 @login_required
-def reject_send_money_request(request, recipient):
+def reject_send_money_request(request, amount_to_send, recipient):
     messages.error(request, 'Your request to send {} to {} failed due to disapproval from the owner of this account.')
     return redirect('deposit')
