@@ -1323,12 +1323,11 @@ def approve_send_money_request(request, sender, recipient, amount_to_send):
         post_balance = sender.account_balance,
         type = 'OUTGOING TRANSFER'
     )
-    send_money.create_receive_money_instance()
-    messages.success(request, f'You have successfully sent ₦{amount_to_send} to {recipient.user.username}.')
-    return redirect('deposit')
+    # send_money.create_receive_money_instance()
+    return HttpResponse(f'You have successfully sent ₦{amount_to_send} to {recipient.user.username}.')
+    
 
 @login_required
 def reject_send_money_request(request, amount_to_send, recipient):
     recipient = Innovator.objects(username=recipient)
-    messages.error(request, f'Your request to send {amount_to_send} to {recipient.user.username} failed due to disapproval from the owner of this account.')
-    return redirect('deposit')
+    return HttpResponse(f'Your request to send {amount_to_send} to {recipient.user.username} failed due to disapproval from the owner of this account.')
