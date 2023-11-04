@@ -1296,7 +1296,7 @@ def reject_withdrawal_request(request, withdrawal_pk, type):
 @login_required
 def approve_send_money_request(request, sender, recipient, amount_to_send):
     sender = Innovator.objects.get(user__username=sender)
-    recipient = Innovator.objects(user__username=recipient)
+    recipient = Innovator.objects.get(user__username=recipient)
     amount_to_send = int(amount_to_send)
     send_money = SendMoney.objects.create(
         amount = amount_to_send,
@@ -1329,5 +1329,5 @@ def approve_send_money_request(request, sender, recipient, amount_to_send):
 
 @login_required
 def reject_send_money_request(request, amount_to_send, recipient):
-    recipient = Innovator.objects(username=recipient)
+    recipient = Innovator.objects.get(username=recipient)
     return HttpResponse(f'Your request to send {amount_to_send} to {recipient.user.username} failed due to disapproval from the owner of this account.')
