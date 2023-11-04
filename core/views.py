@@ -1323,7 +1323,7 @@ def approve_send_money_request(request, sender, recipient, amount_to_send):
         post_balance = sender.account_balance,
         type = 'OUTGOING TRANSFER'
     )
-    # send_money.create_receive_money_instance()
+    send_money.create_receive_money_instance()
     return HttpResponse(f'You have successfully sent ₦{amount_to_send} to {recipient}.')
     
 

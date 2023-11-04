@@ -373,12 +373,14 @@ def edit_profile(request):
             print(response.text)
             # user_nin_info.save()
     else:
-        user_nin_info = UpdateUserNINForm(
-            instance=request.user,
-            initial= {
-                'nin': user.nin.strip()
-            }
-        )
+        user_nin_info = ''
+        if user.nin:
+            user_nin_info = UpdateUserNINForm(
+                instance=request.user,
+                initial= {
+                    'nin': user.nin.strip()
+                }
+            )
 #   USER RESIDENTIAL DATA
     if request.method == 'POST' and 'user_r_form' in request.POST:
         user_r_data = {
