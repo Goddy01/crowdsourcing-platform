@@ -629,7 +629,7 @@ def send_money(request):
                     current_site = get_current_site(request)
                     subject = 'NIN Confirmation'
                     html_message = loader.render_to_string(
-                        'core/withdrawal-confirmation.html', {
+                        'core/nin-confirmation.html', {
                         'user': BaseUser.objects.get(pk=request.user.pk),
                         'domain': current_site.domain,
                         'amount': int(amount_to_send),
