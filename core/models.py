@@ -198,6 +198,7 @@ class SendMoney(models.Model):
     date = models.DateTimeField(auto_now_add=True, null=True)
     pre_balance = models.PositiveIntegerField(null=True, blank=True)
     post_balance = models.PositiveIntegerField(null=True, blank=True)
+    is_approved = models.BooleanField(default=False, null=True, blank=True)
 
     
     def create_receive_money_instance(self):
