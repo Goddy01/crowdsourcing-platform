@@ -1307,3 +1307,6 @@ def reject_withdrawal_request(request, withdrawal_pk, type):
     else:
         return HttpResponse('You do not have the privilege to view this page.')
     return render(request, 'core/withdrawal_requests.html', context)
+
+def confirm_nin_before_funds_transfer(request):
+    return render(request, 'core/confirm_nin_before_funds_transfer.html')
