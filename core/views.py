@@ -626,8 +626,15 @@ def send_money(request):
             try:
                 recipient = Innovator.objects.get(user__username=recipient_username)
                 if amount_to_send != 0 and amount_to_send is not None and sender.account_balance >= amount_to_send:
-                    unique_token = str(uuid.uuid4())
-                    request.session[unique_token] = True
+                    amount_to_send = int(amount_to_send)
+                    send_money = SendMoney.objects.create(
+                        amount = amount_to_send,
+                        sender = sender,
+                        recipient = recipient,
+                        pre_balance = sender.account_balance,
+                        post_balance = sender.account_balance - amount_to_send,
+                        is_approved = False
+                    )
                     current_site = get_current_site(request)
                     subject = 'NIN Confirmation'
                     html_message = loader.render_to_string(
@@ -1298,49 +1305,37 @@ def reject_withdrawal_request(request, withdrawal_pk, type):
     return render(request, 'core/withdrawal_requests.html', context)
 
 @login_required
-def approve_send_money_request(request, sender, recipient, amount_to_send, token):
-    token_data = request.session.get(token, None)
-    if token_data:
-        sender = Innovator.objects.get(user__username=sender)
-        recipient = Innovator.objects.get(user__username=recipient)
-        amount_to_send = int(amount_to_send)
-        send_money = SendMoney.objects.create(
-            amount = amount_to_send,
-            sender = sender,
-            recipient = recipient,
-            pre_balance = sender.account_balance,
-            post_balance = sender.account_balance - amount_to_send,
-            is_approved = True
-        )
-        sender.account_balance -= amount_to_send
-        sender.save()
-        
-        if recipient.account_balance == None:
-            recipient.account_balance = 0
-        recipient.account_balance += amount_to_send
-        recipient.save()
-        Transaction.objects.create(
-            owner=sender,
-            description= f"You sent ₦{amount_to_send} to {send_money.recipient.user.username} on {send_money.date}",
-            successful = not False,
-            reference_code = send_money.reference_code,
-            amount = amount_to_send,
-            pre_balance = sender.account_balance + amount_to_send,
-            post_balance = sender.account_balance,
-            type = 'OUTGOING TRANSFER'
-        )
-        send_money.create_receive_money_instance()
-        request.session[token] = None
-    else:
-        return HttpResponseForbidden("Link is expired or invalid.")
+def approve_send_money_request(request, sender, recipient, amount_to_send, send_money_pk):
+    sender = Innovator.objects.get(user__username=sender)
+    recipient = Innovator.objects.get(user__username=recipient)
+    amount_to_send = int(amount_to_send)
+    send_money = SendMoney.objects.get(pk=send_money_pk)
+    
+    send_money.is_approved = True
+    send_money.save(update_fields=['is_approved'])
+
+    sender.account_balance -= amount_to_send
+    sender.save(update_fields=['account_balance'])
+    
+    if recipient.account_balance == None:
+        recipient.account_balance = 0
+    recipient.account_balance += amount_to_send
+    recipient.save(update_fields=['account_balance'])
+    Transaction.objects.create(
+        owner=sender,
+        description= f"You sent ₦{amount_to_send} to {send_money.recipient.user.username} on {send_money.date}",
+        successful = not False,
+        reference_code = send_money.reference_code,
+        amount = amount_to_send,
+        pre_balance = sender.account_balance + amount_to_send,
+        post_balance = sender.account_balance,
+        type = 'OUTGOING TRANSFER'
+    )
+    send_money.create_receive_money_instance()
     return HttpResponse(f'You have successfully sent ₦{amount_to_send} to {recipient}.')
     
 
 @login_required
 def reject_send_money_request(request, amount_to_send, recipient, token):
-    token_data = request.session.get(token, None)
-    if token_data:
-        recipient = Innovator.objects.get(user__username=recipient)
-    else:
-        return HttpResponseForbidden("Link is expired or invalid.")
+    recipient = Innovator.objects.get(user__username=recipient)
     return HttpResponse(f'Your request to send  ₦{amount_to_send} to {recipient.user.username} failed due to disapproval from the owner of this account.')
