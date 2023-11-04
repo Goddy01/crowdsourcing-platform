@@ -639,40 +639,6 @@ def send_money(request):
                     to_email = f'{request.user.email}'
                     from_email = settings.EMAIL_HOST_USER
                     send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
-
-
-                    amount_to_send = int(amount_to_send)
-                    send_money = SendMoney.objects.create(
-                        amount = amount_to_send,
-                        sender = sender,
-                        recipient = recipient,
-                        pre_balance = sender.account_balance,
-                        post_balance = sender.account_balance - amount_to_send,
-                    )
-                    sender.account_balance -= amount_to_send
-                    sender.save()
-                    
-                    if recipient.account_balance == None:
-                        recipient.account_balance = 0
-                    recipient.account_balance += amount_to_send
-                    recipient.save()
-                    Transaction.objects.create(
-                        owner=sender,
-                        description= f"You sent ₦{amount_to_send} to {recipient_username} on {send_money.date}",
-                        successful = not False,
-                        reference_code = send_money.reference_code,
-                        amount = amount_to_send,
-                        pre_balance = sender.account_balance + amount_to_send,
-                        post_balance = sender.account_balance,
-                        type = 'OUTGOING TRANSFER'
-                    )
-                    send_money.create_receive_money_instance()
-                    messages.success(request, f'You have successfully sent ₦{amount_to_send} to {recipient.user.username}.')
-                    context['send_money_obj'] = send_money
-                    context['money_sent'] = 'yes'
-                    # del request.session['amount_to_send']
-                    # del request.session['recipient_username']
-                    return redirect('deposit')
                 else:
                     messages.error(request, 'Insufficient Balance')
                     context['money_sent'] = False
@@ -1324,5 +1290,32 @@ def reject_withdrawal_request(request, withdrawal_pk, type):
     return render(request, 'core/withdrawal_requests.html', context)
 
 @login_required
-def send_nin_confirmation_request(request):                
-    return render(request, 'core/send_nin_confirmation_request.html')
+def approve_send_money_request(request, sender, recipient):
+    amount_to_send = int(amount_to_send)
+    send_money = SendMoney.objects.create(
+        amount = amount_to_send,
+        sender = sender,
+        recipient = recipient,
+        pre_balance = sender.account_balance,
+        post_balance = sender.account_balance - amount_to_send,
+    )
+    sender.account_balance -= amount_to_send
+    sender.save()
+    
+    if recipient.account_balance == None:
+        recipient.account_balance = 0
+    recipient.account_balance += amount_to_send
+    recipient.save()
+    Transaction.objects.create(
+        owner=sender,
+        description= f"You sent ₦{amount_to_send} to {send_money.recipient.user.username} on {send_money.date}",
+        successful = not False,
+        reference_code = send_money.reference_code,
+        amount = amount_to_send,
+        pre_balance = sender.account_balance + amount_to_send,
+        post_balance = sender.account_balance,
+        type = 'OUTGOING TRANSFER'
+    )
+    send_money.create_receive_money_instance()
+    messages.success(request, f'You have successfully sent ₦{amount_to_send} to {recipient.user.username}.')
+    return redirect('deposit')
