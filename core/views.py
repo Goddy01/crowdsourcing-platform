@@ -1324,7 +1324,7 @@ def approve_send_money_request(request, sender, recipient, amount_to_send):
         type = 'OUTGOING TRANSFER'
     )
     # send_money.create_receive_money_instance()
-    return HttpResponse(f'You have successfully sent ₦{amount_to_send} to {recipient.user.username}.')
+    return HttpResponse(f'You have successfully sent ₦{amount_to_send} to {recipient}.')
     
 
 @login_required

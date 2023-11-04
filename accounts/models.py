@@ -171,7 +171,7 @@ class Innovator(models.Model):
 
     def __str__(self):
         if self.user:
-            return f"Innovator: {self.user.username}"
+            return self.user.username
         
         return "Innovator"
 
