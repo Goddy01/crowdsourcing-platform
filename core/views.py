@@ -646,6 +646,7 @@ def send_money(request):
                 else:
                     messages.error(request, 'Insufficient Balance')
                     context['money_sent'] = False
+                return redirect('deposit')
             except Innovator.DoesNotExist:
                 messages.error(request, 'User does not exist')
             # if not recipient_username:
@@ -1329,5 +1330,5 @@ def approve_send_money_request(request, sender, recipient, amount_to_send):
 
 @login_required
 def reject_send_money_request(request, amount_to_send, recipient):
-    recipient = Innovator.objects.get(username=recipient)
-    return HttpResponse(f'Your request to send {amount_to_send} to {recipient.user.username} failed due to disapproval from the owner of this account.')
+    recipient = Innovator.objects.get(user__username=recipient)
+    return HttpResponse(f'Your request to send  ₦{amount_to_send} to {recipient.user.username} failed due to disapproval from the owner of this account.')
