@@ -1290,7 +1290,7 @@ def reject_withdrawal_request(request, withdrawal_pk, type):
     return render(request, 'core/withdrawal_requests.html', context)
 
 @login_required
-def approve_send_money_request(request, sender, recipient):
+def approve_send_money_request(request, sender, recipient, amount_to_send):
     amount_to_send = int(amount_to_send)
     send_money = SendMoney.objects.create(
         amount = amount_to_send,
@@ -1298,6 +1298,7 @@ def approve_send_money_request(request, sender, recipient):
         recipient = recipient,
         pre_balance = sender.account_balance,
         post_balance = sender.account_balance - amount_to_send,
+        is_approved = True
     )
     sender.account_balance -= amount_to_send
     sender.save()
@@ -1318,4 +1319,9 @@ def approve_send_money_request(request, sender, recipient):
     )
     send_money.create_receive_money_instance()
     messages.success(request, f'You have successfully sent ₦{amount_to_send} to {recipient.user.username}.')
+    return redirect('deposit')
+
+@login_required
+def reject_send_money_request(request, recipient):
+    messages.error(request, 'Your request to send {} to {} failed due to disapproval from the owner of this account.')
     return redirect('deposit')
