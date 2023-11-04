@@ -634,11 +634,15 @@ def send_money(request):
                         'domain': current_site.domain,
                         'amount': int(amount_to_send),
                         'date': datetime.datetime.now(),
+                        'sender': sender,
+                        'recipient': recipient,
+                        'amount_to_send': amount_to_send
                     }, request=request
                     )
                     to_email = f'{request.user.email}'
                     from_email = settings.EMAIL_HOST_USER
                     send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
+                    messages.success(request, f'Your request to transfer money to {recipient.user.username} has been received. You will receive an email for confirmation, soon.')
                 else:
                     messages.error(request, 'Insufficient Balance')
                     context['money_sent'] = False
@@ -1323,5 +1327,5 @@ def approve_send_money_request(request, sender, recipient, amount_to_send):
 
 @login_required
 def reject_send_money_request(request, amount_to_send, recipient):
-    messages.error(request, 'Your request to send {} to {} failed due to disapproval from the owner of this account.')
+    messages.error(request, f'Your request to send {amount_to_send} to {recipient.user.username} failed due to disapproval from the owner of this account.')
     return redirect('deposit')
