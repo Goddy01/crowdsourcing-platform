@@ -17,7 +17,7 @@ from django.db.models import Q
 from .models import Project, Innovation, Contribution, Reward_Payment, Make_Investment, Transaction, DepositMoney, Withdrawal, SendMoney, WithdrawProjectFunds
 from accounts.models import KBAQuestion
 from django_countries import countries
-from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm, MyInvestmentForm, InvestmentStatusForm, StatementTypeForm, WithdrawalRequestAuthorizationForm, FilterWithdrawalRequestForm, FilterConfirmationClickedForm, KBQForm
+from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm, MyInvestmentForm, InvestmentStatusForm, StatementTypeForm, WithdrawalRequestAuthorizationForm, FilterWithdrawalRequestForm, FilterConfirmationClickedForm, KBQForm, ConfirmNINForm
 from accounts.models import Innovator, Moderator, BaseUser
 from django.utils import timezone
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -626,6 +626,21 @@ def send_money(request):
             try:
                 recipient = Innovator.objects.get(user__username=recipient_username)
                 if amount_to_send != 0 and amount_to_send is not None and sender.account_balance >= amount_to_send:
+                    current_site = get_current_site(request)
+                    subject = 'NIN Confirmation'
+                    html_message = loader.render_to_string(
+                        'core/withdrawal-confirmation.html', {
+                        'user': BaseUser.objects.get(pk=request.user.pk),
+                        'domain': current_site.domain,
+                        'amount': int(amount_to_send),
+                        'date': datetime.datetime.now(),
+                    }, request=request
+                    )
+                    to_email = f'{request.user.email}'
+                    from_email = settings.EMAIL_HOST_USER
+                    send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
+
+
                     amount_to_send = int(amount_to_send)
                     send_money = SendMoney.objects.create(
                         amount = amount_to_send,
@@ -1308,5 +1323,6 @@ def reject_withdrawal_request(request, withdrawal_pk, type):
         return HttpResponse('You do not have the privilege to view this page.')
     return render(request, 'core/withdrawal_requests.html', context)
 
-def confirm_nin_before_funds_transfer(request):
-    return render(request, 'core/confirm_nin_before_funds_transfer.html')
+@login_required
+def send_nin_confirmation_request(request):                
+    return render(request, 'core/send_nin_confirmation_request.html')
