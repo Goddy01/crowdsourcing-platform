@@ -2,6 +2,7 @@ from .models import Project, Innovation, Contribution, Transaction, Withdrawal, 
 from accounts.models import KBAQuestion
 from django import forms
 from ckeditor.fields import RichTextFormField
+from accounts import forms as account_forms
 
 class CreateProjectForm(forms.ModelForm):
     name = forms.CharField(error_messages={
@@ -214,7 +215,8 @@ class KBQForm(forms.ModelForm):
         model = Withdrawal
         fields = ['kbq_answer']
 
-# class KBQCheckboxForm(forms.ModelForm):
-#     class Meta:
-#         model = Withdrawal
-#         fields = ['kbq_answer']
+class ConfirmNINForm(forms.ModelForm):
+    nin = forms.CharField(error_messages={'required': 'Please enter you NIN Number'})
+    class Meta:
+        model = account_forms.BaseUser
+        fields = ['nin']
