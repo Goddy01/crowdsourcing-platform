@@ -397,6 +397,9 @@ def invest(request, investment_pk):
             if investment.fund_raised is None:
                 investment.fund_raised = 0
             investment.fund_raised += amount
+            if investment.amount_left is None:
+                investment.amount_left = 0
+            investment.amount_left = investment.target - investment.fund_raised
             if investment.amount_left == 0 and investment.fund_raised:
                 investment.complete = True
             investment.save()
