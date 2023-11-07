@@ -177,7 +177,7 @@
                     {% for project in new_projects %}
                     <div class="entry-project project-status-active">
                         <div class="project-media">
-                            <a href="single-project.html">
+                            <a href="{% url 'project_details' project.pk %}">
                                 <img src="{{ project.image_1.url }}" width="800" height="600" alt="">
                                 <span class="project-industry" title="Investment type"><em class="mdi mdi-information"></em> Business &mdash; {{project.business_type}}</span>
                                 <!-- <span class="project-country" title="Estonia"><img class="office-country" src="{% static 'images/ee.svg' %}" width="24" alt=""> <em class="screen-reader-text">Estonia</em></span> -->
@@ -270,19 +270,21 @@
                     </div> -->
                 </div>
                 <div class="spacing1"></div>
-                <h2 class="entry-title">Recently funded projects</h2>
+                <h2 class="entry-title">Popular Projects</h2>
                 <div class="project-listing grid-format">
+                    {% for project in popular_projects %}
+                    {% if project.num_investors > 0 %}
                     <div class="entry-project project-status-funded">
                         <div class="project-media">
-                            <a href="single-project.html">
-                                <img src="{% static 'tmp/sample-project.jpg' %}" width="800" height="600" alt="">
-                                <span class="project-industry" title="Investment type"><em class="mdi mdi-information"></em> Business &mdash; Mining</span>
-                                <span class="project-country" title="Latvia"><img class="office-country" src="{% static 'images/lv.svg' %}" width="33" alt=""> <em class="screen-reader-text">Latvia</em></span>
+                            <a href="{% url 'project_details' project.pk %}">
+                                <img src="{{ project.image_1.url }}" alt="" style="width: 800px;height: 300px;">
+                                <span class="project-industry" title="Investment type"><em class="mdi mdi-information"></em> Business &mdash; {{ project.business_type }}</span>
+                                <!-- <span class="project-country" title="Latvia"><img class="office-country" src="{% static 'images/lv.svg' %}" width="33" alt=""> <em class="screen-reader-text">Latvia</em></span> -->
                             </a>
-                            <span class="project-status"><em class="mdi mdi-check-bold"></em> Funded</span>
+                            <span class="project-status">Investments Made: {{ project.num_investors }}</span>
                         </div>
                         <div class="project-details">
-                            <h4 class="project-title"><a href="single-project.html">Working capital in mining</a></h4>
+                            <h4 class="project-title"><a href="{% url 'project_details' project.pk %}">Working capital in mining</a></h4>
                             <div class="project-specs">
                                 <div class="project-total-invested">
                                     <strong><span class="currency-sign">₦</span>190 000</strong>
@@ -302,156 +304,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="entry-project project-status-funded">
-                        <div class="project-media">
-                            <a href="single-project.html">
-                                <img src="{% static 'tmp/sample-project.jpg' %}" width="800" height="600" alt="">
-                                <span class="project-industry" title="Investment type"><em class="mdi mdi-information"></em> Real Estate</span>
-                                <span class="project-country" title="Estonia"><img class="office-country" src="{% static 'images/ee.svg' %}" width="33" alt=""> <em class="screen-reader-text">Estonia</em></span>
-                            </a>
-                            <span class="project-status"><em class="mdi mdi-check-bold"></em> Funded</span>
-                        </div>
-                        <div class="project-details">
-                            <h4 class="project-title"><a href="single-project.html">Shop rebranding and selling</a></h4>
-                            <div class="project-specs">
-                                <div class="project-total-invested">
-                                    <strong><span class="currency-sign">₦</span>15 000</strong>
-                                    <span>Invested</span>
-                                </div>
-                                <div class="project-return">
-                                    <strong>14%</strong>
-                                    <span>Expected return</span>
-                                </div>
-                                <div class="project-term">
-                                    <strong>6 months</strong>
-                                    <span>Term</span>
-                                </div>
-                            </div>
-                            <div class="project-actions">
-                                <a href="single-project.html" class="button button-primary button-outline">2 offers on the secondary market</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="entry-project project-status-funded">
-                        <div class="project-media">
-                            <a href="single-project.html">
-                                <img src="{% static 'tmp/sample-project.jpg' %}" width="800" height="600" alt="">
-                                <span class="project-industry" title="Investment type"><em class="mdi mdi-information"></em> Real Estate</span>
-                                <span class="project-country" title="Latvia"><img class="office-country" src="{% static 'images/lv.svg' %}" width="33" alt=""> <em class="screen-reader-text">Latvia</em></span>
-                            </a>
-                            <span class="project-status"><em class="mdi mdi-check-bold"></em> Funded</span>
-                        </div>
-                        <div class="project-details">
-                            <h4 class="project-title"><a href="single-project.html">Building renovation</a></h4>
-                            <div class="project-specs">
-                                <div class="project-total-invested">
-                                    <strong><span class="currency-sign">₦</span>225 000</strong>
-                                    <span>Invested</span>
-                                </div>
-                                <div class="project-return">
-                                    <strong>13%</strong>
-                                    <span>Expected return</span>
-                                </div>
-                                <div class="project-term">
-                                    <strong>23 months</strong>
-                                    <span>Term</span>
-                                </div>
-                            </div>
-                            <div class="project-actions">
-                                <a href="single-project.html" class="button button-primary button-outline">3 offers on the secondary market</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="entry-project project-status-funded">
-                        <div class="project-media">
-                            <a href="single-project.html">
-                                <img src="{% static 'tmp/sample-project.jpg' %}" width="800" height="600" alt="">
-                                <span class="project-industry" title="Investment type"><em class="mdi mdi-information"></em> Business &mdash; Construction</span>
-                                <span class="project-country" title="Lithuania"><img class="office-country" src="{% static 'images/lt.svg' %}" width="33" alt=""> <em class="screen-reader-text">Lithuania</em></span>
-                            </a>
-                            <span class="project-status"><em class="mdi mdi-check-bold"></em> Funded</span>
-                        </div>
-                        <div class="project-details">
-                            <h4 class="project-title"><a href="single-project.html">Crane company capital</a></h4>
-                            <div class="project-specs">
-                                <div class="project-total-invested">
-                                    <strong><span class="currency-sign">₦</span>90 000</strong>
-                                    <span>Invested</span>
-                                </div>
-                                <div class="project-return">
-                                    <strong>14%</strong>
-                                    <span>Expected return</span>
-                                </div>
-                                <div class="project-term">
-                                    <strong>16 months</strong>
-                                    <span>Term</span>
-                                </div>
-                            </div>
-                            <div class="project-actions">
-                                <a class="button button-outline button-disabled">No offers on the secondary market</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="entry-project project-status-repaid">
-                        <div class="project-media">
-                            <a href="single-project.html">
-                                <img src="{% static 'tmp/sample-project.jpg' %}" width="800" height="600" alt="">
-                                <span class="project-industry" title="Investment type"><em class="mdi mdi-information"></em> Business &mdash; Agriculture</span>
-                                <span class="project-country" title="Latvia"><img class="office-country" src="{% static 'images/lv.svg' %}" width="33" alt=""> <em class="screen-reader-text">Latvia</em></span>
-                            </a>
-                            <span class="project-status"><em class="mdi mdi-credit-card-check"></em> Repaid</span>
-                        </div>
-                        <div class="project-details">
-                            <h4 class="project-title"><a href="single-project.html">Agriculture company rental</a></h4>
-                            <div class="project-specs">
-                                <div class="project-total-invested">
-                                    <strong><span class="currency-sign">₦</span>65 000</strong>
-                                    <span>Invested</span>
-                                </div>
-                                <div class="project-return">
-                                    <strong>15%</strong>
-                                    <span>Expected return</span>
-                                </div>
-                                <div class="project-term">
-                                    <strong>3 months</strong>
-                                    <span>Term</span>
-                                </div>
-                            </div>
-                            <div class="project-actions">
-                                <a class="button button-primary button-outline button-disabled">Project loan repaid succesfully</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="entry-project project-status-repaid">
-                        <div class="project-media">
-                            <a href="single-project.html">
-                                <img src="{% static 'tmp/sample-project.jpg' %}" width="800" height="600" alt="">
-                                <span class="project-industry" title="Investment type"><em class="mdi mdi-information"></em> Real Estate</span>
-                                <span class="project-country" title="Latvia"><img class="office-country" src="{% static 'images/lv.svg' %}" width="33" alt=""> <em class="screen-reader-text">Latvia</em></span>
-                            </a>
-                            <span class="project-status"><em class="mdi mdi-credit-card-check"></em> Repaid</span>
-                        </div>
-                        <div class="project-details">
-                            <h4 class="project-title"><a href="single-project.html">Victorian style house</a></h4>
-                            <div class="project-specs">
-                                <div class="project-total-invested">
-                                    <strong><span class="currency-sign">₦</span>80 000</strong>
-                                    <span>Invested</span>
-                                </div>
-                                <div class="project-return">
-                                    <strong>14%</strong>
-                                    <span>Expected return</span>
-                                </div>
-                                <div class="project-term">
-                                    <strong>6 months</strong>
-                                    <span>Term</span>
-                                </div>
-                            </div>
-                            <div class="project-actions">
-                                <a class="button button-primary button-outline button-disabled">Project loan repaid succesfully</a>
-                            </div>
-                        </div>
-                    </div>
+                    {% endif %}
+                    {% endfor %}
                 </div>
                 <div class="pagination">
                     <a href="projects.html" class="button"><em class="mdi mdi-dots-horizontal"></em> Browse more projects</a>
