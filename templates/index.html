@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load mathfilters %}
 {% block title %}Home{% endblock title %}
 {% block content %}
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -109,7 +110,16 @@
                                 </div>
                                 <div class="step-list-content">
                                     <h4 class="step-list-title">Register</h4>
-                                    <p>To start investing in our platform by filling in the registration form.</p>
+                                    <p>To start investing on our platform, either sign up with Google or fill the registration form.</p>
+                                </div>
+                            </div>
+                            <div class="step-list-item">
+                                <div class="step-list-digit">
+                                    <span>02.</span>
+                                </div>
+                                <div class="step-list-content">
+                                    <h4 class="step-list-title">Update Profile</h4>
+                                    <p>Update all your details on the 'Edit Profile' page in order to have access to all the fantastic features on our platform.</p>
                                 </div>
                             </div>
                             <div class="step-list-item">
@@ -118,7 +128,7 @@
                                 </div>
                                 <div class="step-list-content">
                                     <h4 class="step-list-title">Add funds to your account</h4>
-                                    <p>Become an active investor by adding funds to your investor account, as little as €30.</p>
+                                    <p>Become an active investor by adding funds to your investor account.</p>
                                 </div>
                             </div>
                             <div class="step-list-item">
@@ -164,99 +174,68 @@
             <div class="container">
                 <h2 class="entry-title">New projects</h2>
                 <div class="project-listing">
+                    {% for project in new_projects %}
                     <div class="entry-project project-status-active">
                         <div class="project-media">
                             <a href="single-project.html">
-                                <img src="{% static 'tmp/sample-project.jpg' %}" width="800" height="600" alt="">
-                                <span class="project-industry" title="Investment type"><em class="mdi mdi-information"></em> Business &mdash; Transportation</span>
-                                <span class="project-country" title="Estonia"><img class="office-country" src="{% static 'images/ee.svg' %}" width="24" alt=""> <em class="screen-reader-text">Estonia</em></span>
+                                <img src="{{ project.image_1.url }}" width="800" height="600" alt="">
+                                <span class="project-industry" title="Investment type"><em class="mdi mdi-information"></em> Business &mdash; {{project.business_type}}</span>
+                                <!-- <span class="project-country" title="Estonia"><img class="office-country" src="{% static 'images/ee.svg' %}" width="24" alt=""> <em class="screen-reader-text">Estonia</em></span> -->
                             </a>
-                            <span class="project-status"><em class="mdi mdi-plus"></em> Active</span>
+                            <span class="project-status"><em class="mdi mdi-plus"></em> 
+                                {% if project.status is None %}
+                                YET TO BE REVIEWED
+                                {% else %}
+                                {{project.status}}
+                                {% endif %}
+                            </span>
                         </div>
                         <div class="project-details">
-                            <h3 class="project-title"><a href="single-project.html">Road freight transport</a></h3>
-                            <p class="project-summary">Capital for buying and transporting goods accessible in your investor account as soon as the project repayment is completed.</p>
+                            <h3 class="project-title"><a href="single-project.html">{{ project.name }}</a></h3>
+                            <p class="project-summary">{{ project.description|truncatewords:50 }}</p>
                             <div class="project-specs">
                                 <div class="project-return">
-                                    <strong>14%</strong>
+                                    <strong>{{ project.expected_return }}%</strong>
                                     <span>Expected return</span>
                                 </div>
                                 <div class="project-term">
-                                    <strong>8 months</strong>
+                                    <strong>{{ project.term_months }} months</strong>
                                     <span>Term</span>
                                 </div>
                                 <div class="project-countdown">
-                                    <strong>21 days</strong>
-                                    <span>To invest</span>
+                                    <strong>{{ project.investment_deadline }}</strong>
+                                    <span>Investment Deadline</span>
                                 </div>
                             </div>
                             <div class="project-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-current" style="width:48.665%"></div>
-                                    <div class="progress-minimum" style="width:62.5%">
-                                        <div class="progress-minimum-pointer">
-                                            <span class="project-minimum-goal-info">Min<span class="screen-reader-text">imum</span> goal</span>
-                                            <span class="project-minimum-goal-amount"><span class="currency-sign">€</span>25 000</span>
-                                        </div>
-                                    </div>
+                                <div class="progress-bar" style="background-color: red;">
+                                    <div class="progress-current" style="width:{{ project.fund_raised_percentage }}%;background-color: green;"></div>
                                 </div>
                                 <div class="progress-info">
-                                    <div class="progress-current-amount"><strong><span class="currency-sign">€</span>19 466</strong> invested</div>
-                                    <div class="progress-amount-left"><strong><span class="currency-sign">€</span>20 534</strong> left</div>
+                                    <div class="progress-current-amount">
+                                        <strong><span class="currency-sign">₦</span>
+                                            {% if project.fund_raised is None or project.fund_raised == 0 %}
+                                            0
+                                            {% else %}
+                                            {{ project.fund_raised }}
+                                            {% endif %}
+                                        </strong> invested</div>
+                                    <div class="progress-amount-left"><strong><span class="currency-sign">₦</span>
+                                        {% if project.fund_raised is None or project.fund_raised == 0 %}
+                                        {{ project.target }}
+                                        {% else %}
+                                        {{ project.target|sub:project.fund_raised }}
+                                        {% endif %}
+                                    </strong>Amount Left</div>
                                 </div>
                             </div>
                             <div class="project-actions">
-                                <a href="single-project.html" class="button button-primary">Details</a>
+                                <a href="{% url 'project_details' project.pk %}" class="button button-primary">Details</a>
                             </div>
                         </div>
                     </div>
-                    <div class="entry-project project-status-active">
-                        <div class="project-media">
-                            <a href="single-project.html">
-                                <img src="{% static 'tmp/sample-project.jpg' %}" width="800" height="600" alt="">
-                                <span class="project-industry" title="Investment type"><em class="mdi mdi-information"></em> Business &mdash; Construction</span>
-                                <span class="project-country" title="Latvia"><img class="office-country" src="{% static 'images/lv.svg' %}" width="24" alt=""> <em class="screen-reader-text">Estonia</em></span>
-                            </a>
-                            <span class="project-status"><em class="mdi mdi-plus"></em> Active</span>
-                        </div>
-                        <div class="project-details">
-                            <h3 class="project-title"><a href="single-project.html">Construction company capital</a></h3>
-                            <p class="project-summary">Cover remaining 30% hotel construction costs growth of your investments daily and track your portfolio and returns.</p>
-                            <div class="project-specs">
-                                <div class="project-return">
-                                    <strong>13%</strong>
-                                    <span>Expected return</span>
-                                </div>
-                                <div class="project-term">
-                                    <strong>20 months</strong>
-                                    <span>Term</span>
-                                </div>
-                                <div class="project-countdown">
-                                    <strong>27 days</strong>
-                                    <span>To invest</span>
-                                </div>
-                            </div>
-                            <div class="project-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-current" style="width:57.5614458%"></div>
-                                    <div class="progress-minimum" style="width:36.1445783%">
-                                        <div class="progress-minimum-pointer">
-                                            <span class="project-minimum-goal-info">Min<span class="screen-reader-text">imum</span> goal</span>
-                                            <span class="project-minimum-goal-amount"><span class="currency-sign">€</span>30 000</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="progress-info">
-                                    <div class="progress-current-amount"><strong><span class="currency-sign">€</span>47 776</strong> invested</div>
-                                    <div class="progress-amount-left"><strong><span class="currency-sign">€</span>35 224</strong> left</div>
-                                </div>
-                            </div>
-                            <div class="project-actions">
-                                <a href="single-project.html" class="button button-primary">Details</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="entry-project project-status-coming-soon">
+                    {% endfor %}
+                    <!-- <div class="entry-project project-status-coming-soon">
                         <div class="project-media">
                             <a href="single-project.html">
                                 <img src="{% static 'tmp/sample-project.jpg' %}" width="800" height="600" alt="">
@@ -280,15 +259,15 @@
                             </div>
                             <div class="project-progress">
                                 <div class="progress-info">
-                                    <div class="progress-amount-minimum"><strong><span class="currency-sign">€</span>100 000</strong> minimum</div>
-                                    <div class="progress-amount-target"><strong><span class="currency-sign">€</span>300 000</strong> target</div>
+                                    <div class="progress-amount-minimum"><strong><span class="currency-sign">₦</span>100 000</strong> minimum</div>
+                                    <div class="progress-amount-target"><strong><span class="currency-sign">₦</span>300 000</strong> target</div>
                                 </div>
                             </div>
                             <div class="project-actions">
                                 <a class="button button-outline button-disabled">Active in 2 days, 3 hours</a>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="spacing1"></div>
                 <h2 class="entry-title">Recently funded projects</h2>
@@ -306,7 +285,7 @@
                             <h4 class="project-title"><a href="single-project.html">Working capital in mining</a></h4>
                             <div class="project-specs">
                                 <div class="project-total-invested">
-                                    <strong><span class="currency-sign">€</span>190 000</strong>
+                                    <strong><span class="currency-sign">₦</span>190 000</strong>
                                     <span>Invested</span>
                                 </div>
                                 <div class="project-return">
@@ -336,7 +315,7 @@
                             <h4 class="project-title"><a href="single-project.html">Shop rebranding and selling</a></h4>
                             <div class="project-specs">
                                 <div class="project-total-invested">
-                                    <strong><span class="currency-sign">€</span>15 000</strong>
+                                    <strong><span class="currency-sign">₦</span>15 000</strong>
                                     <span>Invested</span>
                                 </div>
                                 <div class="project-return">
@@ -366,7 +345,7 @@
                             <h4 class="project-title"><a href="single-project.html">Building renovation</a></h4>
                             <div class="project-specs">
                                 <div class="project-total-invested">
-                                    <strong><span class="currency-sign">€</span>225 000</strong>
+                                    <strong><span class="currency-sign">₦</span>225 000</strong>
                                     <span>Invested</span>
                                 </div>
                                 <div class="project-return">
@@ -396,7 +375,7 @@
                             <h4 class="project-title"><a href="single-project.html">Crane company capital</a></h4>
                             <div class="project-specs">
                                 <div class="project-total-invested">
-                                    <strong><span class="currency-sign">€</span>90 000</strong>
+                                    <strong><span class="currency-sign">₦</span>90 000</strong>
                                     <span>Invested</span>
                                 </div>
                                 <div class="project-return">
@@ -426,7 +405,7 @@
                             <h4 class="project-title"><a href="single-project.html">Agriculture company rental</a></h4>
                             <div class="project-specs">
                                 <div class="project-total-invested">
-                                    <strong><span class="currency-sign">€</span>65 000</strong>
+                                    <strong><span class="currency-sign">₦</span>65 000</strong>
                                     <span>Invested</span>
                                 </div>
                                 <div class="project-return">
@@ -456,7 +435,7 @@
                             <h4 class="project-title"><a href="single-project.html">Victorian style house</a></h4>
                             <div class="project-specs">
                                 <div class="project-total-invested">
-                                    <strong><span class="currency-sign">€</span>80 000</strong>
+                                    <strong><span class="currency-sign">₦</span>80 000</strong>
                                     <span>Invested</span>
                                 </div>
                                 <div class="project-return">

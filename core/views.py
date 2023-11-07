@@ -30,14 +30,18 @@ from django.utils.dateparse import parse_datetime
 from itertools import chain
 from django.urls import reverse
 import datetime
+from django.db.models import Count
 
 load_dotenv()
 
 
 # Create your views here.
 def home(request):
-    
-    return render(request, 'index.html')
+    context = {}
+    context['new_projects'] = Project.objects.filter().order_by('-date_created')[:5]
+    context['popular_projects'] = Project.objects.annotate(num_investors=Count('the_investment')).order_by('-num_investors')[:8]
+    # .num_investors
+    return render(request, 'index.html', context)
 
 def add_project(request):
     project_creation_request = ''
@@ -116,8 +120,11 @@ def project_details(request, project_pk):
     context = {}
     project = Project.objects.get(pk=project_pk)
     context['project'] = project
+    date_now = datetime.datetime.now().date()
+    context['is_past_deadline'] = date_now > project.investment_deadline
     # if not request.user.is_authenticated:
     #     return redirect('accounts:innovator_login')
+    
     try:
         if request.user.is_innovator:
             # print('2')

@@ -56,6 +56,15 @@ class Project(models.Model):
     business_type = models.CharField(max_length=255)
     approved_by = models.ForeignKey(account_models.Moderator, on_delete=models.SET_NULL, null=True, related_name='approved_name', blank=True)
 
+    @property
+    def fund_raised_percentage(self):
+        if self.fund_raised is None:
+            self.fund_raised = 0
+        if self.target > 0:
+            return (self.fund_raised / self.target) * 100
+        else:
+            return 0  # To handle the case where target is 0 (to avoid division by zero)
+
     def __str__(self):
         return f"Project: {self.name} by {self.innovator.user.username}"
     

@@ -239,20 +239,25 @@
 								
 								<div class="clear"></div>
 							</form> -->
-						{% if project.status.title == 'Approved' %}
-							<form method="POST" id="payForm" action="{% url 'invest' project.pk %}">
-							{% csrf_token %}
-							<div class="mb-3">
-							  <label for="exampleInputPassword1" class="form-label">Amount</label>
-							  <input type="number" class="form-control" id="amount" name="amount">
-							  <button type="submit" name="invest" class="mb-5">Invest</button>
-							</div>
-						  </form>
-						  {% elif project.status.title == 'Declined' %}
-						  <button type="submit" name="invest" class="mb-5">This project has been declined because it does not adhere to the platform's policy.</button>
-						  {% else %}
-						  <button type="submit" name="invest" class="mb-5">Wait till the project is approved before you can invest</button>
-						  {% endif %}
+							
+							{% if is_past_deadline %}
+								<button type="submit" name="invest" class="mb-5">The investment deadline of this investment has passed.</button>
+							{% else %}
+								{% if project.status.title == 'Approved' %}
+								<form method="POST" id="payForm" action="{% url 'invest' project.pk %}">
+								{% csrf_token %}
+								<div class="mb-3">
+								<label for="exampleInputPassword1" class="form-label">Amount</label>
+								<input type="number" class="form-control" id="amount" name="amount">
+								<button type="submit" name="invest" class="mb-5">Invest</button>
+								</div>
+								</form>
+								{% elif project.status.title == 'Declined' %}
+								<button type="submit" name="invest" class="mb-5">This project has been declined because it does not adhere to the platform's policy.</button>
+								{% else %}
+								<button type="submit" name="invest" class="mb-5">Wait till the project is approved before you can invest</button>
+								{% endif %}
+							{% endif %}
 					</div>
 					{% elif request.user.is_moderator %}
 					<form method="POST" action="{% url 'project_details' project.pk %}">

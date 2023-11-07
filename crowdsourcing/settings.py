@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'jazzmin',
     'django_countries',
+    'mathfilters',
     'ckeditor',
     'import_export',
     'core',
