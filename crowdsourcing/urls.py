@@ -56,6 +56,7 @@ urlpatterns = [
     path('reject-withdrawal-request/<type>/<withdrawal_pk>', views.reject_withdrawal_request, name='reject_withdrawal_request'),
     path('approve-money-transer/<send_money_pk>/<sender>/<recipient>/<amount_to_send>', views.approve_send_money_request, name='approve_send_money'),
     path('reject-money-transer/<send_money_pk>/<recipient>/<amount_to_send>', views.reject_send_money_request, name='reject_send_money'),
+    path('contact-us', views.contact_us, name='contact_us'),
     
     # path('contribution/reply/<innovation_pk>/', views.reply, name='reply'),
 
