@@ -39,7 +39,7 @@ jQuery( function() { "use strict";
 		e.preventDefault();
 	});
 
-	
+	jQuery( "#menu-main .current-menu-parent" ).addClass( "collapse" );
 
 	jQuery( document ).on({
 		mouseenter: function() {
@@ -81,7 +81,12 @@ jQuery( function() { "use strict";
 		});
 	}
 
-	
+	jQuery( ".site-header .menu .menu-item-has-children > a" ).on( "click.crowdinvest", function (e) {
+		if ( jQuery( "#menu-toggle" ).is( ":visible" ) ) {
+			jQuery( this ).parent().toggleClass( "collapse" );
+			e.preventDefault();
+		}
+	});
 
 	// Toggle visibility of dropdowns if touched outside the menu area.
 	jQuery( document ).on( "click.crowdinvest", function(e) {

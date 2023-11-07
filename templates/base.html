@@ -50,14 +50,14 @@
 			</nav>
 			<nav class="main-navigation">
 				<ul id="menu-main" class="menu px-3">
-                    <li class="menu-item-has-children" style="display: block;">
+                    <li class="menu-item-has-children" style="display: inline;">
 						<a href="{% url 'contact_us' %}" style="font-weight: 600;">Help<em class="mdi mdi-chevron-down"></em></a>
 						<ul class="sub-menu">
 							<li><a href="">Help &amp; Support</a></li>
 							<li><a href="{% url 'contact_us' %}">Contact Us</a></li>
 						</ul>
 					</li>
-                    <li class="menu-item-has-children" style="display: block;">
+                    <li class="menu-item-has-children" style="display: inline;">
 						<a href="{% url 'innovations_list' %}"  style="font-weight: 600;">
                             {% if request.user.is_innovator %}
                             Innovate
@@ -94,7 +94,7 @@
 						</ul>
 					</li> -->
                     {% if request.user.is_innovator %}
-					<li class="menu-item-has-children" style="cursor: pointer;display: block;">
+					<li class="menu-item-has-children" style="cursor: pointer;display: inline;">
 						<a href=""  style="font-weight: 600;">Account Balance<em class="mdi mdi-chevron-down"></em></a>
 						<ul class="sub-menu">
 							<li data-bs-toggle="modal" data-bs-target="#staticBackdrop">
@@ -107,7 +107,7 @@
 					</li>
                     {%  endif %}
                     {% if not request.user.is_authenticated %}
-                    <li class="menu-item-has-children" style="display: block;">
+                    <li class="menu-item-has-children" style="display: inline;">
 						<a  style="font-weight: 600;">Login<em class="mdi mdi-chevron-down"></em></a>
 						<ul class="sub-menu">
 							<li><a href="{% url 'accounts:innovator_login' %}">Login as an Innovator</a></li>
@@ -115,7 +115,7 @@
 						</ul>
 					</li>
                     {% endif %}
-					<li class="menu-item-has-children" style="display: block;">
+					<li class="menu-item-has-children" style="display: inline;">
 						<a href="account-overview.html">
                             <em class="mdi mdi-account-outline"></em> 
                             <span class="account-details">
@@ -148,13 +148,13 @@
 						</ul>
 					</li>
                     {% if request.user.is_authenticated %}
-                    <li style="display: block;">
+                    <li style="display: inline;">
                         <a href="{% url 'chats:message' %}">
                             Chat
                             <i class="fa-solid fa-message"></i>
                         </a>
                     </li>
-                    <li class="account-logout" style="margin-left: 20px;display: block;">
+                    <li class="account-logout" style="margin-left: 20px;display: inline;">
                         <a href="{% url 'accounts:sign_out' %}"  style="font-weight: 600;">
                             <i style="font-size: 24px;" class="fa-solid fa-right-from-bracket"></i>
                             Logout
