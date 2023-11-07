@@ -20,7 +20,7 @@
                     <p class="tagline">Invest and earn passive income starting today!</p>
                     <p class="no-margin-bottom">
                         <a href="https://www.youtube.com/embed/UBufeh1yv2c?autoplay=1" class="button button-filled button-primary no-margin-bottom" data-fancybox="featured-video"><span class="mdi mdi-play-circle-outline"></span> Watch our video</a>
-                        <span class="home-start-intro">Want to start? <a href="projects.html">Invest now</a></span>
+                        <span class="home-start-intro">Want to start? <a href="{% url 'projects' %}">Invest now</a></span>
                     </p>
                     {% if request.user.is_admin %}
                     <p class="mt-3">
@@ -40,34 +40,35 @@
                     <div class="row">
                         <div class="col-12 col-sm-6 col-lg-3">
                             <div class="featured-box">
+                                <!-- <em class="featured-box-icon mdi mdi-currency-nair"></em> -->
+                                <h2 class="featured-box-icon text-success">₦</h2>
+                                <h5 class="featured-box-title">Earn</h5>
+                                <p class="featured-box-content text-success">At our platform, there is opportunity to earn while you contribute. We believe in rewarding your valuable contributions. By supporting innovations and making a positive impact, you have the opportunity to be rewarded.</p>
+                                <!-- <a href="about.html" class="button button-primary button-small button-outline">Learn more <em class="mdi mdi-trending-neutral"></em></a> -->
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-3">
+                            <div class="featured-box">
                                 <em class="featured-box-icon mdi mdi-briefcase-outline"></em>
                                 <h5 class="featured-box-title">Simplicity</h5>
-                                <p class="featured-box-content">Gumbo beet greens corn soko endive gumbo gourd pea sprouts fava bean greens dandelion okra wakame tomato.</p>
-                                <a href="about.html" class="button button-primary button-small button-outline">Learn more <em class="mdi mdi-trending-neutral"></em></a>
+                                <p class="featured-box-content text-success">Simplicity is the cornerstone of our platform. We're dedicated to simplifying the crowdsourcing and crowdfunding experience, making it accessible to everyone. Join us and discover the ease of making a difference.</p>
+                                <!-- <a href="about.html" class="button button-primary button-small button-outline">Learn more <em class="mdi mdi-trending-neutral"></em></a> -->
                             </div>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-3">
                             <div class="featured-box">
-                                <em class="featured-box-icon mdi mdi-currency-eur"></em>
+                                <em class="featured-box-icon mdi mdi-account-tie-hat"></em>
                                 <h5 class="featured-box-title">Transparency</h5>
-                                <p class="featured-box-content">Beetroot water spinach okra water chestnut pea catsear courgette summer purslane pea tatsoi onion.</p>
-                                <a href="about.html" class="button button-primary button-small button-outline">Learn more <em class="mdi mdi-trending-neutral"></em></a>
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-6 col-lg-3">
-                            <div class="featured-box">
-                                <em class="featured-box-icon mdi mdi-account-tie-outline"></em>
-                                <h5 class="featured-box-title">Professionalism</h5>
-                                <p class="featured-box-content">Celery quandong swiss chard chicory earthnut wattle seed greens nori wattle seed carrot squash brussels sprout.</p>
-                                <a href="about.html" class="button button-primary button-small button-outline">Learn more <em class="mdi mdi-trending-neutral"></em></a>
+                                <p class="featured-box-content text-success">Transparency is at the heart of our platform. We prioritize clear and open communication in every aspect of our crowdsourcing and crowdfunding journey, from project funding to financial transactions.</p>
+                                <!-- <a href="about.html" class="button button-primary button-small button-outline">Learn more <em class="mdi mdi-trending-neutral"></em></a> -->
                             </div>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-3">
                             <div class="featured-box">
                                 <em class="featured-box-icon mdi mdi-security"></em>
                                 <h5 class="featured-box-title">Security</h5>
-                                <p class="featured-box-content">Aquandong swiss chard chicory earthnut pea potato catsear garlic gram celery wattle seed collard kombu tatsoi.</p>
-                                <a href="about.html" class="button button-primary button-small button-outline">Learn more <em class="mdi mdi-trending-neutral"></em></a>
+                                <p class="featured-box-content text-success">At our platform, we have implemented robust security measures to safeguard your data and transactions. You can trust us to protect your information and ensure a worry-free experience as you engage in crowdsourcing and crowdfunding activities.</p>
+                                <!-- <a href="about.html" class="button button-primary button-small button-outline">Learn more <em class="mdi mdi-trending-neutral"></em></a> -->
                             </div>
                         </div>
                     </div>

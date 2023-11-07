@@ -36,7 +36,7 @@ load_dotenv()
 
 # Create your views here.
 def home(request):
-    print('TIME: ', timezone.now())
+    
     return render(request, 'index.html')
 
 def add_project(request):
