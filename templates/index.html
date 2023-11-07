@@ -284,32 +284,38 @@
                             <span class="project-status">Investments Made: {{ project.num_investors }}</span>
                         </div>
                         <div class="project-details">
-                            <h4 class="project-title"><a href="{% url 'project_details' project.pk %}">Working capital in mining</a></h4>
+                            <h4 class="project-title"><a href="{% url 'project_details' project.pk %}">{{ project.name }}</a></h4>
                             <div class="project-specs">
                                 <div class="project-total-invested">
-                                    <strong><span class="currency-sign">₦</span>190 000</strong>
+                                    <strong><span class="currency-sign">₦</span>
+                                        {% if project.fund_raised is None %}
+                                        0
+                                        {% else %}
+                                        {{ project.fund_raised }}
+                                        {% endif %}
+                                    </strong>
                                     <span>Invested</span>
                                 </div>
                                 <div class="project-return">
-                                    <strong>16%</strong>
+                                    <strong>{{ project.expected_return }}%</strong>
                                     <span>Expected return</span>
                                 </div>
                                 <div class="project-term">
-                                    <strong>12 months</strong>
+                                    <strong>{{ project.term_months }} months</strong>
                                     <span>Term</span>
                                 </div>
                             </div>
                             <div class="project-actions">
-                                <a class="button button-outline button-disabled">No offers on the secondary market</a>
+                                <a href="{% url 'project_details' project.pk %}" class="button button-outline">See Details</a>
                             </div>
                         </div>
                     </div>
                     {% endif %}
                     {% endfor %}
                 </div>
-                <div class="pagination">
+                <!-- <div class="pagination">
                     <a href="projects.html" class="button"><em class="mdi mdi-dots-horizontal"></em> Browse more projects</a>
-                </div>
+                </div> -->
             </div>
         </main>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
