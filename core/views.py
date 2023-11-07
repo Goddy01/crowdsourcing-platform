@@ -43,6 +43,9 @@ def home(request):
     # .num_investors
     return render(request, 'index.html', context)
 
+def contact_us(request):
+    return render(request, 'core/contact.html')
+
 def add_project(request):
     project_creation_request = ''
     if request.method == 'POST':
