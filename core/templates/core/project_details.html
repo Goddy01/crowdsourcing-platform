@@ -99,7 +99,11 @@
 					<div class="col-3 mb-5 d-inline">
 						Status: 
 						<span class="badge bg-success text-decoration-none link-light">
+							{% if project.status is None %}
+							YET TO BE REVIEWED
+							{% else %}
 							{{ project.status }}
+							{% endif %}
 						</span>
 					</div>
 					<div class="col-12 mb-5 d-inline">
