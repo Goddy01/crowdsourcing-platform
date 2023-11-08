@@ -1399,6 +1399,7 @@ def milestone_detail(request, milestone_pk):
     context['milestone'] = milestone
     return render(request, 'core/milestone-detail.html', context)
 
-def update_milestone(request, milestone_id):
+def update_milestone(request, milestone_pk):
     context = {}
+    milestone = get_object_or_404(ProjectMilestone, pk=milestone_pk)
     return render(request, 'core/update-milestone-details.html', context)

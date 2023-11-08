@@ -258,3 +258,8 @@ class AddMilestoneForm(forms.ModelForm):
     class Meta:
         model = ProjectMilestone
         fields = ('title', 'description', 'target_date', 'progress_report', 'image_1', 'image_2', 'image_3', 'video', 'status')
+
+class UpdateMilestoneDetailsForm(forms.ModelForm):
+    class Meta:
+        model = ProjectMilestone
+        fields = ('status', )
