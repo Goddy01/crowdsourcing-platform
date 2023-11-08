@@ -260,6 +260,15 @@ class AddMilestoneForm(forms.ModelForm):
         fields = ('title', 'description', 'target_date', 'progress_report', 'image_1', 'image_2', 'image_3', 'video', 'status')
 
 class UpdateMilestoneDetailsForm(forms.ModelForm):
+    MILESTONE_STATUS = (
+        ('DELAYED', 'Delayed'),
+        ('IN PROGRESS', 'In Progress'),
+        ('COMPLETED', 'Completed'),
+
+    )
+    status = forms.ChoiceField(error_messages={
+        'required': 'Please the status of the milestone'
+    }, choices=MILESTONE_STATUS)
     class Meta:
         model = ProjectMilestone
         fields = ('status',)
