@@ -123,6 +123,7 @@ def project_details(request, project_pk):
     context = {}
     request.session['project_pk'] = project_pk
     project = Project.objects.get(pk=project_pk)
+    context['project_milestones'] = ProjectMilestone.objects.filter(project__pk=project.pk)
     context['project'] = project
     date_now = datetime.datetime.now().date()
     context['is_past_deadline'] = date_now > project.investment_deadline
@@ -1384,3 +1385,10 @@ def add_milestone(request, project_pk):
     else:
         return HttpResponse('You do not have the privilege to access this page')
     return render(request, 'core/add-milestone.html', context)
+
+def project_milestones(request, project_pk):
+    context = {}
+    project = Project.objects.get(pk=project_pk)
+    project_milestones = ProjectMilestone.objects.filter(project__pk=project_pk)
+    context['project_milestones'] = project_milestones
+    return render(request, 'core/project-milestones.html', context)
