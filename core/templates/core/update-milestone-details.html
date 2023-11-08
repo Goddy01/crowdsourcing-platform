@@ -53,10 +53,11 @@
                     <!-- <div class="col-12 col-md-4 col-lg-3">
                         <h5>Personal information</h5>
                     </div> -->
+                    {{ update_milestone_details_form }}
                     <div class="col-12 col-md-12 col-lg-12">
                         <div class="mb-5">
                             <label for="name">Milestone Title</label>
-                            <input type="text" name="title" class="underline" required readonly>
+                            <input type="text" name="title" class="underline" required readonly value="{{ update_milestone_details_form.title }}">
                         </div>
                         <div class="mb-5">
                             <label for="name">Description</label>
@@ -105,7 +106,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-8 col-lg-6">
-                        <button type="submit">Add Milestone</button>
+                        <button type="submit">Update Milestone</button>
                     </div>
                 </div>
             </form>

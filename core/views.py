@@ -1402,9 +1402,25 @@ def milestone_detail(request, milestone_pk):
 def update_milestone(request, milestone_pk):
     context = {}
     milestone = get_object_or_404(ProjectMilestone, pk=milestone_pk)
-    update_milestone_details_form = UpdateMilestoneDetailsForm(request.POST or None, instance=milestone)
-    if update_milestone_details_form.is_valid():
-        update_milestone_details_form.save()
-        return redirect('milestone_details', milestone_pk)
-    context['update_milestone_details_form'] = update_milestone_details_form
+    if request.method == 'POST':
+        update_milestone_details_form_data = request.POST.get('status')
+        update_milestone_details_form = UpdateMilestoneDetailsForm(update_milestone_details_form_data or None, instance=milestone)
+        if update_milestone_details_form.is_valid():
+            update_milestone_details_form.save()
+            return redirect('milestone_details', milestone_pk)
+    else:
+        update_milestone_details_form = UpdateMilestoneDetailsForm(
+            instance=milestone, initial= {
+                'title': milestone.title,
+                'description': milestone.description,
+                'target_date': milestone.target_date,
+                'progress_report': milestone.progress_report,
+                'image_1': milestone.image_1,
+                'image_2': milestone.image_2,
+                'image_3': milestone.image_3,
+                'video': milestone.video,
+                'date_added': milestone.date_added,
+                'status': milestone.status,
+            }
+        )
     return render(request, 'core/update-milestone-details.html', context)
