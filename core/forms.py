@@ -271,4 +271,4 @@ class UpdateMilestoneDetailsForm(forms.ModelForm):
     }, choices=MILESTONE_STATUS)
     class Meta:
         model = ProjectMilestone
-        fields = ('status',)
+        fields = ('status', )

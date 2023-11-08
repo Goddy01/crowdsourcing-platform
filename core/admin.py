@@ -27,7 +27,7 @@ class SendMoneyAdmin(ImportExportModelAdmin):
 class WithdrawProjectFundsAdmin(ImportExportModelAdmin):
     readonly_fields = ('date',)
 class ProjectMilestoneAdmin(ImportExportModelAdmin):
-    readonly_fields = ('date_added',)
+    readonly_fields = ('date_added', 'date_updated')
 
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Innovation, InnovationAdmin)

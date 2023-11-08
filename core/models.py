@@ -248,5 +248,5 @@ class ProjectMilestone(models.Model):
     image_3 = models.ImageField(upload_to=upload_project_milestone_gallery, blank=True, null=True, max_length=254)
     video = models.FileField(upload_to=upload_project_milestone_gallery, null=True, validators=[FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv'])], max_length=254)    
     date_added = models.DateTimeField(auto_now_add=True)
-    date_updated = models.DateTimeField(auto_now=True)
+    date_updated = models.DateTimeField(auto_now=True, null=True)
     status = models.CharField(max_length=254, blank=False, null=True, choices=MILESTONE_STATUS)

@@ -74,6 +74,7 @@
                             <th>Description</th>
                             <th>Target Date</th>
                             <th>Date Added</th>
+                            <th>Date Updated</th>
                             <th>Status</th>
                             <th></th>
                             
@@ -88,6 +89,11 @@
                             <td>{{ project_milestone.description }}</td>
                             <td class="col-3">{{ project_milestone.target_date }}</td>
                             <td>{{ project_milestone.date_added }}</td>
+                            {% if project_milestone.date_updated is None %}
+                            Not Yet
+                            {% else %}
+                            <td>{{ project_milestone.date_updated }}</td>
+                            {% endif %}
                             {% if project_milestone.status|upper == 'IN PROGRESS' %}
                             <td class="fw-bold text-info">{{ project_milestone.status|upper }}</td>
                             {% elif project_milestone.status|upper == 'COMPLETED' %}
