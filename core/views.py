@@ -17,7 +17,7 @@ from django.db.models import Q
 from .models import Project, Innovation, Contribution, Reward_Payment, Make_Investment, Transaction, DepositMoney, Withdrawal, SendMoney, WithdrawProjectFunds, ProjectMilestone
 from accounts.models import KBAQuestion
 from django_countries import countries
-from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm, MyInvestmentForm, InvestmentStatusForm, StatementTypeForm, WithdrawalRequestAuthorizationForm, FilterWithdrawalRequestForm, FilterConfirmationClickedForm, KBQForm, ConfirmNINForm, AddMilestoneForm
+from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm, MyInvestmentForm, InvestmentStatusForm, StatementTypeForm, WithdrawalRequestAuthorizationForm, FilterWithdrawalRequestForm, FilterConfirmationClickedForm, KBQForm, ConfirmNINForm, AddMilestoneForm, UpdateMilestoneDetailsForm
 from accounts.models import Innovator, Moderator, BaseUser
 from django.utils import timezone
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseForbidden
@@ -1402,4 +1402,8 @@ def milestone_detail(request, milestone_pk):
 def update_milestone(request, milestone_pk):
     context = {}
     milestone = get_object_or_404(ProjectMilestone, pk=milestone_pk)
+    update_milestone_details_form = UpdateMilestoneDetailsForm(request.POST or None, instance=milestone)
+    if update_milestone_details_form.is_valid():
+        update_milestone_details_form.save()
+        return redirect('milestone_details', milestone_pk)
     return render(request, 'core/update-milestone-details.html', context)

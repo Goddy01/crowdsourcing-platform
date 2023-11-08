@@ -37,41 +37,12 @@
         <div id="featured-media" class="featured-media">
             <div class="featured-text">
                 <div class="container">
-                    <h2 class="entry-title">Add Project Milestone</h2>
+                    <h2 class="entry-title">Update Project Milestone</h2>
                 </div>
             </div>
         </div>
     </header>
 
-    <div class="col-lg-8 col-xl-5 toastDiv mt-5 mx-auto">
-                    
-        <!-- Then put toasts within -->
-        <div class="card toast mb-2 bg-gray animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto">
-        <div class="toast-body text-white m-2">
-            {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                <li {% if message.tags == 'alert-success' %} class="text-success" {% endif %} style="list-style: disc;">{{ message }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}
-
-
-            {% if add_milestone_form.errors %}
-                <ul class="" style="">
-                {% for field in add_milestone_form %}
-                {% for error in field.errors %}
-                <li class="text-danger " style="font-weight: 500;">{{ error }}</li>
-                {% endfor %}
-                {% endfor %}
-                </ul>        
-            {% endif %}
-            {% if add_milestone_form.non_field_errors %}
-                <li class="ml-2 text-danger " style="font-weight: bold;">{{ add_milestone_form.non_field_errors }}</li>
-            {% endif %}
-        </div>
-        </div>
-</div>
     <div id="content" class="site-content">
         <main class="site-section section-main">
             <div class="container">
@@ -85,15 +56,15 @@
                     <div class="col-12 col-md-12 col-lg-12">
                         <div class="mb-5">
                             <label for="name">Milestone Title</label>
-                            <input type="text" name="title" class="underline" required>
+                            <input type="text" name="title" class="underline" required readonly>
                         </div>
                         <div class="mb-5">
                             <label for="name">Description</label>
-                            <textarea cols="30" rows="10" id="description" name="description" class="underline"></textarea>
+                            <textarea cols="30" rows="10" id="description" name="description" class="underline" readonly></textarea>
                         </div>
                         <div class="mb-5">
                             <label for="motto">Target Date</label>
-                            <input type="date"  name="target_date" class="underline" required>
+                            <input type="date"  name="target_date" class="underline" required readonly>
                         </div>
                         <div class="mb-5">
                             <p class="label">Progress Report</p>
