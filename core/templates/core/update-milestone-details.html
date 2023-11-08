@@ -53,60 +53,69 @@
                     <!-- <div class="col-12 col-md-4 col-lg-3">
                         <h5>Personal information</h5>
                     </div> -->
-                    {{ update_milestone_details_form }}
                     <div class="col-12 col-md-12 col-lg-12">
                         <div class="mb-5">
-                            <label for="name">Milestone Title</label>
-                            <input type="text" name="title" class="underline" required readonly value="{{ update_milestone_details_form.title }}">
+                            <label class="h4" for="name">Milestone Title</label>
+                            <p>{{ milestone.title }}</p>
                         </div>
                         <div class="mb-5">
-                            <label for="name">Description</label>
-                            <textarea cols="30" rows="10" id="description" name="description" class="underline" readonly></textarea>
+                            <label class="h4" for="name">Description</label>
+                            <p>{{ milestone.description }}</p>
                         </div>
                         <div class="mb-5">
-                            <label for="motto">Target Date</label>
-                            <input type="date"  name="target_date" class="underline" required readonly>
+                            <label class="h4" for="motto">Target Date</label>
+                            <p>{{ milestone.date_added }}</p>
                         </div>
                         <div class="mb-5">
-                            <p class="label">Progress Report</p>
+                            <p class="h4 label">Progress Report</p>
                             {{ add_milestone_form.media }}
-                            {{ add_milestone_form.progress_report }}
+                            {{ milestone.progress_report|safe }}
                         </div>
                         <div class="mb-5">
-                            <p class="label">Status</p>
-                            {{ add_milestone_form.status }}
+                            <p class="h4 label">Status</p>
+                            {{ update_milestone_details_form.status }}
                         </div>
-                        <!-- images -->
-                        <div class="position-relative display-2 mb-3">
-                            <label for="motto">Images 1: </label><br>
-                            <input class="button button-primary button-outline mt-3 bg-success btn btn-block" type="file" name="image_1" id="imageFile1" accept="image/*" style="width: 100px;height: 15px;padding-right: 85px;padding-bottom: 35px;" onchange="previewImage(1)" required>
-                            <img id="imagePreview1" src="" alt="Image 1 preview" style="width: 400px;height: 300px;"><br>
-
-                        </div>
-                        <div class="position-relative display-2 mb-3">
-                            <label for="motto">Images 2: </label><br>
-                            <input class="button button-primary button-outline" type="file" name="image_2" id="imageFile2" accept="image/*" style="width: 100px;height: 15px;padding-right: 85px;padding-bottom: 35px;" onchange="previewImage(2)">
-                            <img id="imagePreview2" src="" alt="Image 2 preview" style="width: 400px;height: 300px;"><br>
-
-                        </div>
-                        <div class="position-relative display-2 mb-3">
-                            <label for="motto">Images 3: </label><br>
-                            <input class="button button-primary button-outline" type="file" name="image_3" id="imageFile3" accept="image/*" style="width: 100px;height: 15px;padding-right: 85px;padding-bottom: 35px;" onchange="previewImage(3)">
-                            <img id="imagePreview3" src="" alt="Image 3 preview" style="width: 400px;height: 300px;"><br>
-
-                        </div>
-                        <div class="position-relative display-2 mb-3">
-                            <label for="motto">Video: </label>
-                            <video width="400" controls>
-                            <source src="" id="video_here">
-                                Your browser does not support HTML5 video.
-                            </video>
-
-                            <input type="file" name="video" class="file_multi_video mt-1" accept="video/*" style="width: 600px;height: 15px;padding-right: 85px;padding-bottom: 35px;" required>
+                        
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <h3>Project Milestone Gallery</h3>
+                                <div class="video-wrapper status-pause">
+                                    <video id="sample-video" src="{{ milestone.video.url }}" poster="{{ milestone.video.url }}"></video>
+                                    <a href="#sample-video" class="video-playback"><span class="progress"></span><em class="mdi mdi-play"></em><em class="mdi mdi-pause"></em></a>
+                                </div>
+                                {% if milestone.image_1 and not milestone.image_2 and not milestone.image_3 %}
+                                <div class="gallery gallery-columns-1 d-flex justify-content-center">
+                                {% elif milestone.image_1 and milestone.image_2 and not milestone.image_3 %}
+                                <div class="gallery gallery-columns-2">
+                                {% elif milestone.image_1 and not milestone.image_2 and milestone.image_3 %}
+                                <div class="gallery gallery-columns-2">
+                                {% elif milestone.image_1 and milestone.image_2 and milestone.image_3 %}
+                                <div class="gallery gallery-columns-3">
+                                {% endif %}
+                                    <figure class="gallery-item">
+                                        <div class="gallery-icon">
+                                            <a href="{{ milestone.image_1.url }}" data-fancybox="test-gallery"><img src="{{ milestone.image_1.url }}" alt="" style="width: 1100px;height: 450px;"></a>
+                                        </div>
+                                    </figure>
+                                    {% if milestone.image_2 %}
+                                    <figure class="gallery-item">
+                                        <div class="gallery-icon">
+                                            <a href="{{ milestone.image_2.url }}" data-fancybox="test-gallery"><img src="{{ milestone.image_2.url }}" alt="" style="width: 1100px;height: 450px;"></a>
+                                        </div>
+                                    </figure>
+                                    {% endif %}
+                                    {% if milestone.image_3 %}
+                                    <figure class="gallery-item">
+                                        <div class="gallery-icon">
+                                            <a href="{{ milestone.image_3.url }}" data-fancybox="test-gallery"><img src="{{ milestone.image_3.url }}" alt="" style="width: 1100px;height: 450px;"></a>
+                                        </div>
+                                    </figure>
+                                    {% endif %}
+                                </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-8 col-lg-6">
-                        <button type="submit">Update Milestone</button>
+                    <div" style="margin-right: 0;float: right;">
+                        <button type="submit" class="button button-primary">Update Milestone</button>
                     </div>
                 </div>
             </form>

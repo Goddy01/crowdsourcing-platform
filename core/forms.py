@@ -262,4 +262,4 @@ class AddMilestoneForm(forms.ModelForm):
 class UpdateMilestoneDetailsForm(forms.ModelForm):
     class Meta:
         model = ProjectMilestone
-        fields = ('status', )
+        fields = ('status',)

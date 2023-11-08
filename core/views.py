@@ -1402,11 +1402,13 @@ def milestone_detail(request, milestone_pk):
 def update_milestone(request, milestone_pk):
     context = {}
     milestone = get_object_or_404(ProjectMilestone, pk=milestone_pk)
+    context['milestone'] = milestone
     if request.method == 'POST':
         update_milestone_details_form_data = request.POST.get('status')
         update_milestone_details_form = UpdateMilestoneDetailsForm(update_milestone_details_form_data or None, instance=milestone)
         if update_milestone_details_form.is_valid():
             update_milestone_details_form.save()
+            messages.success(request, 'The status of the milestone has been updated!')
             return redirect('milestone_details', milestone_pk)
     else:
         update_milestone_details_form = UpdateMilestoneDetailsForm(
@@ -1423,4 +1425,5 @@ def update_milestone(request, milestone_pk):
                 'status': milestone.status,
             }
         )
+    context['update_milestone_details_form'] = update_milestone_details_form
     return render(request, 'core/update-milestone-details.html', context)
