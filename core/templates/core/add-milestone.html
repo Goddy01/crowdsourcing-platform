@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Add Project{% endblock title %}
+{% block title %}Add Milestone{% endblock title %}
 {% block content %}
 <style>
 
@@ -12,30 +12,10 @@
 		<div id="featured-media" class="featured-media">
 			<div class="featured-text">
 				<div class="container">
-					<h2 class="entry-title">Add Investment Project</h2>
+					<h2 class="entry-title">Add Project Milestone</h2>
 				</div>
-            {% if project_creation_request %}
-            <div class="d-flex justify-content-center" style="margin-top: 15px;">
-                <p class="ml-2 text-danger p-3 d-flex justify-content-center" style="background-color: rgb(52, 190, 52);color: white;font-weight: 500;width: 40%;">{{ project_creation_request }}</p>
-            </div>
-            {% endif %}
-            {% if create_project_form.errors %}
-                  <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto;">
-                <div class="toast-body text-white m-2">
-                  <ul class="text-center mx-5" style="list-style: none;">
-                    {% for field in create_project_form %}
-                    {% for error in field.errors %}
-                    <li class="ml-2 text-danger p-3" style="background-color: rgb(239, 59, 59);color: white;font-weight: 500;">{{ error }}</li>
-                    {% endfor %}
-                    {% endfor %}
-                  </ul>        
-                </div>
-              </div>
-            {% endif %}
-            {% if create_project_form.non_field_errors %}
-                <p class="ml-2 text-danger p-3" style="background-color: rgb(239, 59, 59);color: white;font-weight: bold;">{{ create_project_form.non_field_errors }}</p>
-            {% endif %}
-		</div>
+		    </div>
+        </div>
 	</header>
 
 	<div id="content" class="site-content">
@@ -50,16 +30,16 @@
 					</div> -->
 					<div class="col-12 col-md-12 col-lg-12">
                         <div class="mb-5">
-                            <label for="name">Project Name</label>
-                            <input type="text" id="name" name="name" class="underline">
-                        </div>
-                        <div class="mb-5">
-                            <label for="motto">Motto</label>
-                            <input type="text" id="motto" name="motto" class="underline">
+                            <label for="name">Milestone Title</label>
+                            <input type="text" id="name" name="title" class="underline">
                         </div>
                         <div class="mb-5">
                             <label for="name">Description</label>
                             <textarea cols="30" rows="10" id="description" name="description" class="underline"></textarea>
+                        </div>
+                        <div class="mb-5">
+                            <label for="motto">Target Date</label>
+                            <input type="date" id="investment_deadline" name="target_date" class="underline">
                         </div>
                         <div class="mb-5">
 						    <label for="target">Target Amount(₦)</label>
@@ -74,16 +54,6 @@
                             <input type="text" id="term_months" name="term_months" class="underline">
                         </div>
                         <div class="mb-5">
-                            <label for="name">Country</label>
-                            <select id="country" name="country" class="underline">
-                                {% for c in countries %}
-                                {% if c.1 == 'Nigeria' %}
-                                <option value="{{ c.code }}">{{ c.1 }}</option>
-                                {% endif %}
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="mb-5">
                             <label for="name">Business Category</label>
                             {{ create_project_form.business_type}}
                             <!-- <select id="business_type" name="business_type" class="underline">
@@ -91,10 +61,6 @@
                                 <option value="{{ b }}"></option>
                                 {% endfor %}
                             </select> -->
-                        </div>
-                        <div class="mb-5">
-                            <label for="motto">Investment Deadline</label>
-                            <input type="date" id="investment_deadline" name="investment_deadline" class="underline">
                         </div>
 
                         <!-- images -->
@@ -126,18 +92,6 @@
                             <input type="file" name="video" class="file_multi_video mt-1" accept="video/*" style="width: 600px;height: 15px;padding-right: 85px;padding-bottom: 35px;">
                         </div>
 					</div>
-                    <!-- <div> -->
-                        <div class="w100 spacing1"></div>
-					<div class="col-12 col-md-6 col-lg-6 d-inline">
-						<h5 class="d-inline">User agreement: </h5>
-                        <a class="d-inline" href="#">InnovatorUserAgreement.pdf</a>
-					</div>
-                        <p class="input-checkbox"><input type="checkbox" id="innovator_user_agreement" name="innovator_user_agreement" checked> <label for="innovator_user_agreement" style="font-weight: 300;">I have read and agree to the Innovator User Agreement.</label></p>
-                    <!-- </div> -->
-					<div class="w100 spacing1 mt-2"></div>
-					<!-- <div class="col-12 col-md-4 col-lg-3">
-						<h5>Contact information</h5>
-					</div> -->
 					<div class="col-12 col-md-8 col-lg-6">
 						<button type="submit">Create Project</button>
 					</div>
