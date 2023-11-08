@@ -11,7 +11,7 @@ from django.core.mail import send_mail
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from .models import Project, Innovation, Contribution, Reward_Payment, Make_Investment, Transaction, DepositMoney, Withdrawal, SendMoney, WithdrawProjectFunds, ProjectMilestone
@@ -1393,9 +1393,12 @@ def project_milestones(request, project_pk):
     context['project_milestones'] = project_milestones
     return render(request, 'core/project-milestones.html', context)
 
-
 def milestone_detail(request, milestone_pk):
     context = {}
     milestone = ProjectMilestone.objects.get(pk=milestone_pk)
     context['milestone'] = milestone
     return render(request, 'core/milestone-detail.html', context)
+
+def update_milestone(request, milestone_id):
+    context = {}
+    return render(request, 'core/update-milestone-details.html', context)
