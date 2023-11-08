@@ -1409,7 +1409,9 @@ def update_milestone(request, milestone_pk):
         }
         update_milestone_details_form = UpdateMilestoneDetailsForm(update_milestone_details_form_data, instance=milestone)
         if update_milestone_details_form.is_valid():
-            update_milestone_details_form.save()
+            milestone_obj = update_milestone_details_form.save(commit=False)
+            milestone_obj.date_updated = datetime.datetime.now()
+            update_milestone_details_form.save(update_fields=['status', 'date_updated'])
             messages.success(request, 'The status of the milestone has been updated!')
             return redirect('milestone_details', milestone.pk)
     else:
