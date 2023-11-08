@@ -1406,4 +1406,5 @@ def update_milestone(request, milestone_pk):
     if update_milestone_details_form.is_valid():
         update_milestone_details_form.save()
         return redirect('milestone_details', milestone_pk)
+    context['update_milestone_details_form'] = update_milestone_details_form
     return render(request, 'core/update-milestone-details.html', context)
