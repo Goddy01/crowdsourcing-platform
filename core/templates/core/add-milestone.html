@@ -31,7 +31,7 @@
 					<div class="col-12 col-md-12 col-lg-12">
                         <div class="mb-5">
                             <label for="name">Milestone Title</label>
-                            <input type="text" id="name" name="title" class="underline">
+                            <input type="text" id="name" name="title" class="underline" required>
                         </div>
                         <div class="mb-5">
                             <label for="name">Description</label>
@@ -39,34 +39,12 @@
                         </div>
                         <div class="mb-5">
                             <label for="motto">Target Date</label>
-                            <input type="date" id="investment_deadline" name="target_date" class="underline">
+                            <input type="date" id="investment_deadline" name="target_date" class="underline" required>
                         </div>
-                        <div class="mb-5">
-						    <label for="target">Target Amount(₦)</label>
-						    <input type="number" id="target" name="target" class="underline">
-                        </div>
-                        <div class="mb-5">
-                            <label for="name">Expected Return(%)</label>
-                            <input type="text" id="expected_return" name="expected_return" class="underline">
-                        </div>
-                        <div class="mb-5">
-                            <label for="motto">Term (In Months)</label>
-                            <input type="text" id="term_months" name="term_months" class="underline">
-                        </div>
-                        <div class="mb-5">
-                            <label for="name">Business Category</label>
-                            {{ create_project_form.business_type}}
-                            <!-- <select id="business_type" name="business_type" class="underline">
-                                {% for b in create_project_form.business_type %}
-                                <option value="{{ b }}"></option>
-                                {% endfor %}
-                            </select> -->
-                        </div>
-
                         <!-- images -->
                         <div class="position-relative display-2 mb-3">
                             <label for="motto">Images 1: </label><br>
-                            <input class="button button-primary button-outline mt-3 bg-success btn btn-block" type="file" name="image_1" id="imageFile1" accept="image/*" style="width: 100px;height: 15px;padding-right: 85px;padding-bottom: 35px;" onchange="previewImage(1)">
+                            <input class="button button-primary button-outline mt-3 bg-success btn btn-block" type="file" name="image_1" id="imageFile1" accept="image/*" style="width: 100px;height: 15px;padding-right: 85px;padding-bottom: 35px;" onchange="previewImage(1)" required>
                             <img id="imagePreview1" src="" alt="Image 1 preview" style="width: 400px;height: 300px;"><br>
 
                         </div>
@@ -89,7 +67,7 @@
                                 Your browser does not support HTML5 video.
                             </video>
 
-                            <input type="file" name="video" class="file_multi_video mt-1" accept="video/*" style="width: 600px;height: 15px;padding-right: 85px;padding-bottom: 35px;">
+                            <input type="file" name="video" class="file_multi_video mt-1" accept="video/*" style="width: 600px;height: 15px;padding-right: 85px;padding-bottom: 35px;" required>
                         </div>
 					</div>
 					<div class="col-12 col-md-8 col-lg-6">

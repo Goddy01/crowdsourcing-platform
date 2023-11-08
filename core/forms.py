@@ -1,4 +1,4 @@
-from .models import Project, Innovation, Contribution, Transaction, Withdrawal, WithdrawProjectFunds
+from .models import Project, Innovation, Contribution, Transaction, Withdrawal, WithdrawProjectFunds, ProjectMilestone
 from accounts.models import KBAQuestion
 from django import forms
 from ckeditor.fields import RichTextFormField
@@ -220,3 +220,32 @@ class ConfirmNINForm(forms.ModelForm):
     class Meta:
         model = account_forms.BaseUser
         fields = ['nin']
+
+class AddMilestoneForm(forms.ModelForm):
+    title = forms.CharField(error_messages={
+        'required': 'Please enter the title of the milestone'
+    })
+    description = forms.CharField(error_messages={
+        'required': 'Please enter the description of the milestone'
+    })
+    target_date = forms.DateField(error_messages={
+        'required': 'Please enter the target date of the milestone'
+    })
+    progress_report = RichTextFormField(error_messages={
+        'required': 'Please give progress report about the project'
+        })
+    image_1 = forms.ImageField(error_messages={
+        'required': 'Please attach the first image about the milestone'
+    })
+    image_2 = forms.ImageField(error_messages={
+        'required': 'Please attach the second image about the milestone'
+    })
+    image_3 = forms.ImageField(error_messages={
+        'required': 'Please attach the third image about the milestone'
+    })
+    video = forms.FileField(error_messages={
+        'required': 'Please attach a video about the milestone'
+    })
+    class Meta:
+        model = ProjectMilestone
+        fields = ('title', 'description', 'target_date', 'progress_report', 'image_1', 'image_2', 'image_3', 'video')
