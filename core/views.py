@@ -14,10 +14,10 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
-from .models import Project, Innovation, Contribution, Reward_Payment, Make_Investment, Transaction, DepositMoney, Withdrawal, SendMoney, WithdrawProjectFunds
+from .models import Project, Innovation, Contribution, Reward_Payment, Make_Investment, Transaction, DepositMoney, Withdrawal, SendMoney, WithdrawProjectFunds, ProjectMilestone
 from accounts.models import KBAQuestion
 from django_countries import countries
-from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm, MyInvestmentForm, InvestmentStatusForm, StatementTypeForm, WithdrawalRequestAuthorizationForm, FilterWithdrawalRequestForm, FilterConfirmationClickedForm, KBQForm, ConfirmNINForm
+from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm, MyInvestmentForm, InvestmentStatusForm, StatementTypeForm, WithdrawalRequestAuthorizationForm, FilterWithdrawalRequestForm, FilterConfirmationClickedForm, KBQForm, ConfirmNINForm, AddMilestoneForm
 from accounts.models import Innovator, Moderator, BaseUser
 from django.utils import timezone
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseForbidden
@@ -1363,4 +1363,17 @@ def reject_send_money_request(request, amount_to_send, recipient, send_money_pk)
 
 def add_milestone(request, project_pk):
     context = {}
+    project = Project.objects.get(pk=project_pk)
+    if request.user.username == project.innovator.username:
+        add_milestone_form = AddMilestoneForm()
+        context['add_milestone_form'] = add_milestone_form
+        if request.method == 'POST':
+            add_milestone_form = AddMilestoneForm(request.POST)
+            if add_milestone_form.is_valid():
+                add_milestone_form_obj = add_milestone_form.save(commit=False)
+                add_milestone_form_obj.project = project
+            else:
+                print(add_milestone_form.errors.as_data())
+    else:
+        return HttpResponse('You do not have the privilege to access this page')
     return render(request, 'core/add-milestone.html', context)
