@@ -1392,3 +1392,10 @@ def project_milestones(request, project_pk):
     project_milestones = ProjectMilestone.objects.filter(project__pk=project_pk)
     context['project_milestones'] = project_milestones
     return render(request, 'core/project-milestones.html', context)
+
+
+def milestone_detail(request, milestone_pk):
+    context = {}
+    milestone = ProjectMilestone.objects.get(pk=milestone_pk)
+    context['milestone'] = milestone
+    return render(request, 'core/milestone-detail.html', context)
