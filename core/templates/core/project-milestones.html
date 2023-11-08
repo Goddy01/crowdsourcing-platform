@@ -15,6 +15,26 @@
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
+<style>
+    @media (min-width: 1200px) {
+       .toastDiv {
+       position: absolute;
+       right: -110px;
+       top: 3rem;
+       z-index: 5
+       }
+       
+   }
+   @media (min-width: 1200px) {
+    .account-errors {
+    position: absolute;
+    right: -110px;
+    top: 11rem;
+    z-index: 5
+    }
+    
+}
+</style>
 </head>
 <body>
     <header id="featured" class="site-featured">
@@ -26,6 +46,21 @@
             </div>
         </div>
     </header>
+    <div class="col-lg-8 col-xl-5 toastDiv mt-5 mx-auto">
+                    
+        <!-- Then put toasts within -->
+        {% if messages %}
+        <div class="card toast mb-2 bg-gray animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto">
+        <div class="toast-body text-white m-2">
+            <ul class="messages">
+                {% for message in messages %}
+                <li {% if message.tags == 'alert-success' %} class="text-success" {% endif %} style="list-style: disc;">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        </div>
+        {% endif %}
+</div>
     <div class="container" style="margin-top: 100px;margin-bottom: 50px;">
         <div class="row">
             <div class="col-12 col-md-12 col-lg-12 col-xl-12">
@@ -88,5 +123,14 @@
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script>
+$(document).ready(function(){
+    $('.toast').toast('show');
+});
+
+setTimeout(function() {
+    $('.toast').toast('hide')
+}, 8000)
+</script>
 </html>
 {% endblock content %}
