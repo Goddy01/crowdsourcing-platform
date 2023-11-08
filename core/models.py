@@ -29,6 +29,8 @@ def upload_project_gallery(instance, filename):
 def upload_innovation_images(instance, filename):
     return f'innovation_images/{instance.owner.user.last_name}-{instance.owner.user.first_name}-{instance.owner.user.middle_name}/innovation-{instance.title}/-{filename}'
 
+def upload_project_milestone_gallery(instance, filename):
+    return f'project_milestone_gallery/{instance.project.innovator.user.last_name}-{instance.project.innovator.user.first_name}-{instance.project.innovator.user.middle_name}/project-{instance.title}/-{filename}'
 
 # PROJECT
 class Project(models.Model):
@@ -227,3 +229,16 @@ class SendMoney(models.Model):
 
     def __str__(self) -> str:
         return f"{self.sender.user.username} sent ₦{self.amount} to {self.recipient.user.username}"
+    
+class ProjectMilestone(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
+    title = models.CharField(max_length=254, null=True, blank=True)
+    description = models.TextField(null=True, blank=True, max_length=10000)
+    target_date = models.DateField()
+    progress_report = RichTextField(null=True, blank=True)
+    # PROJECT MILESTONE GALLERY
+    image_1 = models.ImageField(upload_to=upload_project_milestone_gallery, blank=True, null=True)
+    image_2 = models.ImageField(upload_to=upload_project_milestone_gallery, blank=True, null=True)
+    image_3 = models.ImageField(upload_to=upload_project_milestone_gallery, blank=True, null=True)
+    video = models.FileField(upload_to=upload_project_milestone_gallery, null=True, validators=[FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv'])])    
+    date_added = models.DateTimeField(auto_now_add=True)
