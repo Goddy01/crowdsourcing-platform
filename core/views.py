@@ -1360,3 +1360,7 @@ def reject_send_money_request(request, amount_to_send, recipient, send_money_pk)
     else:
         return HttpResponseForbidden('You have already responded to this request')
     return HttpResponse(f'Your request to send  ₦{amount_to_send} to {recipient.user.username} failed due to disapproval from the owner of this account.')
+
+def add_milestone(request, project_pk):
+    context = {}
+    return render(request, 'core/add-milestone.html', context)
