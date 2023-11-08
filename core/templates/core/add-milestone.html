@@ -31,7 +31,7 @@
 					<div class="col-12 col-md-12 col-lg-12">
                         <div class="mb-5">
                             <label for="name">Milestone Title</label>
-                            <input type="text" id="name" name="title" class="underline" required>
+                            <input type="text" name="title" class="underline" required>
                         </div>
                         <div class="mb-5">
                             <label for="name">Description</label>
@@ -39,7 +39,12 @@
                         </div>
                         <div class="mb-5">
                             <label for="motto">Target Date</label>
-                            <input type="date" id="investment_deadline" name="target_date" class="underline" required>
+                            <input type="date"  name="target_date" class="underline" required>
+                        </div>
+                        <div class="mb-5">
+                            <label for="progress_report">Progress Report</label>
+                            {{ add_milestone_form.media }}
+                            {{ add_milestone_form.progress_report }}
                         </div>
                         <!-- images -->
                         <div class="position-relative display-2 mb-3">

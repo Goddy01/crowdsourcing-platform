@@ -1364,6 +1364,7 @@ def reject_send_money_request(request, amount_to_send, recipient, send_money_pk)
 def add_milestone(request, project_pk):
     context = {}
     project = Project.objects.get(pk=project_pk)
+    context['project'] = project
     if request.user.username == project.innovator.username:
         add_milestone_form = AddMilestoneForm()
         context['add_milestone_form'] = add_milestone_form
