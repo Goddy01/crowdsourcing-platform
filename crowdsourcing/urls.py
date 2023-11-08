@@ -57,6 +57,7 @@ urlpatterns = [
     path('approve-money-transer/<send_money_pk>/<sender>/<recipient>/<amount_to_send>', views.approve_send_money_request, name='approve_send_money'),
     path('reject-money-transer/<send_money_pk>/<recipient>/<amount_to_send>', views.reject_send_money_request, name='reject_send_money'),
     path('contact-us', views.contact_us, name='contact_us'),
+    path('<project_pk>/add-milestone', views.add_milestone, name='add_milestone'),
     
     # path('contribution/reply/<innovation_pk>/', views.reply, name='reply'),
 
