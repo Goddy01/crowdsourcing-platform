@@ -67,7 +67,7 @@
                                     </svg>
                 
                                     <ul class="dropdown-menu m-0" aria-labelledby="dropdownMenuButton1" style="margin-left: 0;float: left;padding: 0px;margin: 0px;">
-                                        <li><a class="dropdown-item px-3 m-0 " href="">View Details</a></li>
+                                        <li><a class="dropdown-item px-3 m-0 " href="{% url 'milestone_details' project_milestone.pk %}">View Details</a></li>
                                         {% if project_milestone.project.innovator.user.pk == request.user.pk %}
                                         <li><a class="dropdown-item px-3 m-0 " href="">Update</a></li>
                                         {% endif %}

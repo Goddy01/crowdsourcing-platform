@@ -9,10 +9,11 @@
 		<div id="featured-media" class="featured-media has-media">
 			<div class="featured-text">
 				<div class="container">
-					<h2 class="entry-title">{{ project_milestone.title }}</h2>
+					<h2 class="entry-title">{{ milestone.title }}</h2>
+                    <div class="tagline fw-bold">{{ milestone.description }}</div>
 				</div>
 			</div>
-			
+			<img src="{{ milestone.project.image_1.url }}" alt="">
 		</div>
 	</header>
 
@@ -20,70 +21,74 @@
 		<main class="site-section section-main">
 			<div class="container">
 				<div class="row">
-					<div class="text-muted fst-italic mb-4">Posted on {{ project_milestone.date_added }} by <a href="{% url 'accounts:profile_with_arg' project_milestone.project.innovator.pk %}">
-						{% if project_milestone.project.innovator.user.middle_name %}
-						{{ project_milestone.project.innovator.user.last_name }}, {{ project_milestone.project.innovator.user.first_name }} {{ project_milestone.project.innovator.user.middle_name }}
+					<div class="text-muted fst-italic mb-4">Posted on {{ milestone.date_added }} by <a href="{% url 'accounts:profile_with_arg' milestone.project.innovator.pk %}">
+						{% if milestone.project.innovator.user.middle_name %}
+						{{ milestone.project.innovator.user.last_name }}, {{ milestone.project.innovator.user.first_name }} {{ milestone.project.innovator.user.middle_name }}
 						{% else %}
-						{{ project_milestone.project.innovator.user.first_name }} {{ project_milestone.project.innovator.user.last_name }}
+						{{ milestone.project.innovator.user.first_name }} {{ milestone.project.innovator.user.last_name }}
 						{% endif %}
 					</a>
 					</div>
 					
-					<div class="col-3 mb-5 d-inline">
-						Status: 
-						<span class="badge bg-success text-decoration-none link-light">
-							{{ project_milestone.status }}
-						</span>
+					
+                    <div class="col-6 col-lg-6">
+						<div class="featured-box">
+							<h5 class="featured-box-title">{{ milestone.target_date }}</h5>
+							<p class="featured-box-content">Target Date</p>
+						</div>
 					</div>
-					<div class="col-12">
-						<h3>Project Milestone Description</h3>
-						<span>
-                            <h4>Description</h4>
-                            : {{ project_milestone.description }}
-                        </span>
-						<span>
-                            <h4>Target Date</h4>
-                            : {{ project_milestone.target_date }}
-                        </span>
+					<div class="col-6 col-lg-6">
+						<div class="featured-box">
+                            {% if milestone.status|upper == 'COMPLETED' %}
+							<h5 class="featured-box-title text-success">{{ milestone.status|title }}</h5>
+                            {% elif milestone.status|upper == 'IN PROGRESS' %}
+                            <h5 class="featured-box-title text-info">{{ milestone.status|title }}</h5>
+                            {% else %}
+                            <h5 class="featured-box-title text-danger">{{ milestone.status|title }}</h5>
+                            {% endif %}
+							<p class="featured-box-content">Status</p>
+						</div>
 					</div>
-					<div class="col-12">
-						<h3>Project Progress Report</h3>
-						<p>{{ project_milestone.progress_report }}</p>
+					<div class="col-12 mt-1">
+                        <span class="fw-bold h4">Project Progress Report</span>
+                        <p>
+                            <span>{{ milestone.progress_report|safe }}</span>
+                        </p>
 					</div>
 					
 				</div>
-				<div class="row">
+				<div class="row mt-3">
 					<div class="col-12">
 						<h3>Project Milestone Gallery</h3>
 						<div class="video-wrapper status-pause">
-							<video id="sample-video" src="{{ project_milestone.video.url }}" poster="{{ project_milestone.video.url }}"></video>
+							<video id="sample-video" src="{{ milestone.video.url }}" poster="{{ milestone.video.url }}"></video>
 							<a href="#sample-video" class="video-playback"><span class="progress"></span><em class="mdi mdi-play"></em><em class="mdi mdi-pause"></em></a>
 						</div>
-                        {% if project_milestone.image_1.url and not project_milestone.image_2.url and not project_milestone.image_3.url %}
-						<div class="gallery gallery-columns-1">
-                        {% elif project_milestone.image_1.url and project_milestone.image_2.url and not project_milestone.image_3.url %}
+                        {% if milestone.image_1 and not milestone.image_2 and not milestone.image_3 %}
+						<div class="gallery gallery-columns-1 d-flex justify-content-center">
+                        {% elif milestone.image_1 and milestone.image_2 and not milestone.image_3 %}
                         <div class="gallery gallery-columns-2">
-                        {% elif project_milestone.image_1.url and not project_milestone.image_2.url and project_milestone.image_3.url %}
+                        {% elif milestone.image_1 and not milestone.image_2 and milestone.image_3 %}
                         <div class="gallery gallery-columns-2">
-                        {% elif project_milestone.image_1.url and project_milestone.image_2.url and project_milestone.image_3.url %}
+                        {% elif milestone.image_1 and milestone.image_2 and milestone.image_3 %}
                         <div class="gallery gallery-columns-3">
                         {% endif %}
 							<figure class="gallery-item">
 								<div class="gallery-icon">
-									<a href="{{ project_milestone.image_1.url }}" data-fancybox="test-gallery"><img src="{{ project_milestone.image_1.url }}" alt="" style="width: 1100px;height: 350px;"></a>
+									<a href="{{ milestone.image_1.url }}" data-fancybox="test-gallery"><img src="{{ milestone.image_1.url }}" alt="" style="width: 1100px;height: 450px;"></a>
 								</div>
 							</figure>
-                            {% if project_milestone.image_2.url %}
+                            {% if milestone.image_2 %}
                             <figure class="gallery-item">
 								<div class="gallery-icon">
-									<a href="{{ project_milestone.image_2.url }}" data-fancybox="test-gallery"><img src="{{ project_milestone.image_2.url }}" alt="" style="width: 1100px;height: 350px;"></a>
+									<a href="{{ milestone.image_2.url }}" data-fancybox="test-gallery"><img src="{{ milestone.image_2.url }}" alt="" style="width: 1100px;height: 450px;"></a>
 								</div>
 							</figure>
                             {% endif %}
-                            {% if project_milestone.image_3.url %}
+                            {% if milestone.image_3 %}
                             <figure class="gallery-item">
 								<div class="gallery-icon">
-									<a href="{{ project_milestone.image_3.url }}" data-fancybox="test-gallery"><img src="{{ project_milestone.image_3.url }}" alt="" style="width: 1100px;height: 350px;"></a>
+									<a href="{{ milestone.image_3.url }}" data-fancybox="test-gallery"><img src="{{ milestone.image_3.url }}" alt="" style="width: 1100px;height: 450px;"></a>
 								</div>
 							</figure>
                             {% endif %}
