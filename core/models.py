@@ -231,6 +231,12 @@ class SendMoney(models.Model):
         return f"{self.sender.user.username} sent ₦{self.amount} to {self.recipient.user.username}"
     
 class ProjectMilestone(models.Model):
+    MILESTONE_STATUS = (
+        ('DELAYED', 'Delayed'),
+        ('IN PROGRESS', 'In Progress'),
+        ('COMPLETED', 'Completed'),
+
+    )
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=254, null=True, blank=True)
     description = models.TextField(null=True, blank=True, max_length=10000)
@@ -242,3 +248,4 @@ class ProjectMilestone(models.Model):
     image_3 = models.ImageField(upload_to=upload_project_milestone_gallery, blank=True, null=True)
     video = models.FileField(upload_to=upload_project_milestone_gallery, null=True, validators=[FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv'])])    
     date_added = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=254, blank=True, null=True, choices=MILESTONE_STATUS)

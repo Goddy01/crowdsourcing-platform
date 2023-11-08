@@ -13,12 +13,13 @@
 <body>
     <div class="container">
         <div class="row">
-            <div class="col-12 col-md-8 col-lg-10">
+            <div class="col-12 col-md-12 col-lg-12 col-xl-12">
                 {% if project_milestones|length > 0 %}
                 <table class="text-center">
                     <thead>
                         <tr>
                             <!-- <th>ID</th> -->
+                            <th>No</th>
                             <th><span class="d-none d-xl-inline">Title</span>
                             <th>Description</th>
                             <th>Target Date</th>
@@ -30,7 +31,7 @@
                     <tbody>
                         {% for project_milestone in project_milestones %}
                         <tr>
-                            <!-- <td><a href="{% url 'accounts:profile_with_arg' investor.sender.pk %}" class="project-id">{{ investor.pk }}</a></td> -->
+                            <td>{{ forloop.counter }}</td>
                             <td>
                                 <a href="" class="text-decoration-none">{{ project_milestone.title }}</a></td>
                             <td>{{ project_milestone.description }}</td>
