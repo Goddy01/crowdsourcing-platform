@@ -1411,7 +1411,7 @@ def update_milestone(request, milestone_pk):
         if update_milestone_details_form.is_valid():
             update_milestone_details_form.save()
             messages.success(request, 'The status of the milestone has been updated!')
-            return redirect('view_milestones', milestone.project.pk)
+            return redirect('milestone_details', milestone.pk)
     else:
         update_milestone_details_form = UpdateMilestoneDetailsForm(
             instance=milestone, initial= {
