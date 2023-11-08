@@ -121,6 +121,7 @@ def projects_list(request):
 
 def project_details(request, project_pk):
     context = {}
+    request.session['project_pk'] = project_pk
     project = Project.objects.get(pk=project_pk)
     context['project'] = project
     date_now = datetime.datetime.now().date()
@@ -1365,14 +1366,19 @@ def add_milestone(request, project_pk):
     context = {}
     project = Project.objects.get(pk=project_pk)
     context['project'] = project
-    if request.user.username == project.innovator.username:
+    if request.user.username == project.innovator.user.username:
         add_milestone_form = AddMilestoneForm()
         context['add_milestone_form'] = add_milestone_form
         if request.method == 'POST':
-            add_milestone_form = AddMilestoneForm(request.POST)
+            add_milestone_form = AddMilestoneForm(request.POST or None, request.FILES or None)
+            context['add_milestone_form'] = add_milestone_form
             if add_milestone_form.is_valid():
                 add_milestone_form_obj = add_milestone_form.save(commit=False)
                 add_milestone_form_obj.project = project
+                add_milestone_form.save()
+                messages.success(request, 'Milestone added successfully.')
+                return redirect('project_details', project_pk)
+
             else:
                 print(add_milestone_form.errors.as_data())
     else:

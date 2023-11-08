@@ -270,6 +270,13 @@
 						<button type="submit" name="status_form">Submit</button>
 					</form>
 					{% endif %}
+					{% if project.innovator.user.username == request.user.username %}
+					<div style="margin-right: 0;float: right;">
+						<a href="{% url 'add_milestone' project.pk %}">
+							<button type="button" name="add_milestone_btn" class="button button-primary button-default">Add Milestone</button>
+						</a>
+					</div>
+					{% endif %}
 				</div>
 			</div>
 		</main>	

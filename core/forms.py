@@ -237,12 +237,12 @@ class AddMilestoneForm(forms.ModelForm):
     image_1 = forms.ImageField(error_messages={
         'required': 'Please attach the first image about the milestone'
     })
-    image_2 = forms.ImageField(error_messages={
-        'required': 'Please attach the second image about the milestone'
-    })
-    image_3 = forms.ImageField(error_messages={
-        'required': 'Please attach the third image about the milestone'
-    })
+    # image_2 = forms.ImageField(error_messages={
+    #     'required': 'Please attach the second image about the milestone'
+    # })
+    # image_3 = forms.ImageField(error_messages={
+    #     'required': 'Please attach the third image about the milestone'
+    # })
     video = forms.FileField(error_messages={
         'required': 'Please attach a video about the milestone'
     })
