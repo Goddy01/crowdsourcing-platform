@@ -222,6 +222,12 @@ class ConfirmNINForm(forms.ModelForm):
         fields = ['nin']
 
 class AddMilestoneForm(forms.ModelForm):
+    MILESTONE_STATUS = (
+        ('DELAYED', 'Delayed'),
+        ('IN PROGRESS', 'In Progress'),
+        ('COMPLETED', 'Completed'),
+
+    )
     title = forms.CharField(error_messages={
         'required': 'Please enter the title of the milestone'
     })
@@ -234,6 +240,9 @@ class AddMilestoneForm(forms.ModelForm):
     progress_report = RichTextFormField(error_messages={
         'required': 'Please give progress report about the project'
         })
+    status = forms.ChoiceField(error_messages={
+        'required': 'Please the status of the milestone'
+    }, choices=MILESTONE_STATUS)
     image_1 = forms.ImageField(error_messages={
         'required': 'Please attach the first image about the milestone'
     })
