@@ -1434,7 +1434,7 @@ def update_milestone(request, milestone_pk):
             update_milestone_details_form.save()
 
             current_site = get_current_site(request)
-            subject = f'Update: New Milestone Added to "{milestone.project.name}" Investment Project'
+            subject = f'Update: "{milestone.project.name}" Milestone was Updated from "{milestone.project.name}" Investment Project'
             # investments = Make_Investment.objects.filter(investment__pk=project_pk)
             investors = Innovator.objects.filter(send_from__investment=milestone.project)
             for investor in investors:
