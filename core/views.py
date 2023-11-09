@@ -1432,6 +1432,22 @@ def update_milestone(request, milestone_pk):
             milestone.date_updated = datetime.datetime.now()
             milestone.save()
             update_milestone_details_form.save()
+
+            current_site = get_current_site(request)
+            subject = f'Update: New Milestone Added to "{milestone.project.name}" Investment Project'
+            # investments = Make_Investment.objects.filter(investment__pk=project_pk)
+            investors = Innovator.objects.filter(send_from__investment=milestone.project)
+            for investor in investors:
+                html_message = loader.render_to_string(
+                    'core/send-milestone-update-notification.html', {
+                    'user': investor.user,
+                    'domain': current_site.domain,
+                    'milestone': milestone,
+                }, request=request
+                )
+                to_email = f'{investor.user.email}'
+                from_email = settings.EMAIL_HOST_USER
+                send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
             messages.success(request, 'The status of the milestone has been updated!')
             return redirect('milestone_details', milestone.pk)
     else:
