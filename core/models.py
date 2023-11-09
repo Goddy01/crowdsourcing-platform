@@ -120,9 +120,9 @@ class Reward_Payment(models.Model):
 
 
 class Make_Investment(models.Model):
-    send_to = models.ForeignKey(account_models.Innovator, null=False, blank=False, on_delete=models.CASCADE, related_name='send_to')
+    send_to = models.ForeignKey(account_models.Innovator, null=False, blank=False, on_delete=models.CASCADE, related_name='receiver')
     send_from = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE, blank=False, null=False, related_name='send_from')
-    sender = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE, null=False, blank=False, related_name='initiator')
+    sender = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE, null=False, blank=False, related_name='investor')
     amount = models.IntegerField()
     investment = models.ForeignKey(Project, on_delete=models.CASCADE, null=False, blank=False, related_name='the_investment')
     expected_return = models.DecimalField(max_digits=255, decimal_places=2, blank=False, null=True)

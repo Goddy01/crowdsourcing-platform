@@ -1377,17 +1377,18 @@ def add_milestone(request, project_pk):
                 add_milestone_form_obj = add_milestone_form.save(commit=False)
                 add_milestone_form_obj.project = project
                 add_milestone_form.save()
-                milestone = ProjectMilestone.objects.get(pk=add_milestone_form.cleaned_data['pk'])
+                milestone = ProjectMilestone.objects.filter(project__pk=project_pk).latest('date_added')
                 current_site = get_current_site(request)
                 subject = f'Update: New Milestone Added to "{milestone.project.name}" Investment Project'
-                for investor in Make_Investment.objects.filter(investment_pk=project_pk).sender.distinct():
+                # investments = Make_Investment.objects.filter(investment__pk=project_pk)
+                investors = Innovator.objects.filter(send_from__investment=project)
+                for investor in investors:
                     html_message = loader.render_to_string(
                         'core/send-milestone-addition-notification.html', {
                         'user': investor.user,
                         'domain': current_site.domain,
                         'project': project,
                         'milestone_title': add_milestone_form.cleaned_data['title'],
-                        'milestone_date_added': add_milestone_form.cleaned_data['date_added'],
                         'milestone': milestone,
                     }, request=request
                     )
