@@ -1379,10 +1379,10 @@ def add_milestone(request, project_pk):
                 add_milestone_form.save()
                 milestone = ProjectMilestone.objects.get(pk=add_milestone_form.cleaned_data['pk'])
                 current_site = get_current_site(request)
-                subject = 'Update about a investment project you invested in'
+                subject = f'Update: New Milestone Added to "{milestone.project.name}" Investment Project'
                 for investor in Make_Investment.objects.filter(investment_pk=project_pk).sender.distinct():
                     html_message = loader.render_to_string(
-                        'core/send-milestone-addittion-notification.html', {
+                        'core/send-milestone-addition-notification.html', {
                         'user': investor.user,
                         'domain': current_site.domain,
                         'project': project,
