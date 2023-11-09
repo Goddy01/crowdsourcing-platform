@@ -1378,6 +1378,8 @@ def add_milestone(request, project_pk):
                 add_milestone_form_obj.project = project
                 add_milestone_form.save()
                 milestone = ProjectMilestone.objects.filter(project__pk=project_pk).latest('date_added')
+
+                # SENDS EMAIL TO EVERY INVESTOR ABOUT THE ADDITION OF A NEW MILESTONE
                 current_site = get_current_site(request)
                 subject = f'Update: New Milestone Added to "{milestone.project.name}" Investment Project'
                 # investments = Make_Investment.objects.filter(investment__pk=project_pk)
@@ -1433,6 +1435,7 @@ def update_milestone(request, milestone_pk):
             milestone.save()
             update_milestone_details_form.save()
 
+            # SENDS EMAIL TO EVERY INVESTOR ABOUT THE UPDATE OF THE MILESTONE
             current_site = get_current_site(request)
             subject = f'Update: "{milestone.project.name}" Milestone was Updated from "{milestone.project.name}" Investment Project'
             # investments = Make_Investment.objects.filter(investment__pk=project_pk)

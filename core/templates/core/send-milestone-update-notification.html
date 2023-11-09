@@ -156,9 +156,12 @@
                                                                     <p>
                                                                         <p>Dear {{ user.username|title }},</p>
                                                                         <p>
-                                                                        We hope this message finds you well. We are writing to inform you that {{ milestone.title }} milestone from {{ milesto.project.name }} investment project was updated
-                                                                            <span>{{ milestone.project.name }}</span> on 
-                                                                             <span>{{ milestone.date_added }}</span>
+                                                                        We hope this message finds you well. We are writing to inform you that 
+                                                                        <span style="font-weight: bold;">{{ milestone.title }} </span>
+                                                                        milestone from 
+                                                                        <span style="font-weight: bold;">{{ milestone.project.name }}</span>
+                                                                         investment project was updated on 
+                                                                             <span style="font-weight: bold;">{{ milestone.date_updated }}</span>
                                                                              <span>
                                                                                 Click 
                                                                                 <a href="http://{{domain}}{% url 'milestone_details' milestone.pk %}">here</a> to view the milestone details.
