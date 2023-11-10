@@ -3774,7 +3774,7 @@ input[type=search]::-webkit-search-decoration {
 }
 
 .entry-project.project-status-active .project-media .project-status {
-	background-color: green;
+	background-color: #00B951;
 	color: var(--project-status-active-alt);
 }
 
