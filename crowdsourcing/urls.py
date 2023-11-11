@@ -23,7 +23,7 @@ from core import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls', 'accounts')), # For social-auth
-    path('chat/', include('chat.urls', 'chat')), # For social-auth
+    # path('chat/', include('chat.urls', 'chat')), # For social-auth
     path('social-auth/', include('social_django.urls', namespace='social')),
     path('', views.home, name='home'),
     path('add-project', views.add_project, name='add_project'),
