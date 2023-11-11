@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'import_export',
     'core',
     'accounts',
-    'chat',
+    # 'chat',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
