@@ -149,7 +149,7 @@
 					</li>
                     {% if request.user.is_authenticated %}
                     <li style="display: inline;">
-                        <a href="">
+                        <a href="{% url 'chat:chat_home' %}">
                             Chat
                             <i class="fa-solid fa-message"></i>
                         </a>
@@ -294,7 +294,7 @@
         <input type="text" class="input-message" autocomplete="off" placeholder="Type your message here&hellip;">
         <span class="chat-powered-by"> Can be powered By <a href="https://chatcreate.com">ChatCreate</a></span>
     </div>
-    <a href="{% url 'chats:message' %}" class="chat-toggle"><span class="badge">1</span></a>
+    <a href="" class="chat-toggle"><span class="badge">1</span></a>
 </div>
 
 <script src="{% static 'js/modernizr-custom.js' %}"></script>

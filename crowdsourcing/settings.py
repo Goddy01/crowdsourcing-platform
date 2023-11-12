@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'core',
     'accounts',
     'chat',
+    'daphne',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -106,6 +107,13 @@ TEMPLATES = [
     },
 ]
 
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    }
+}
+
 # For SOCIAL-AUTH
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -117,6 +125,7 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
 
 WSGI_APPLICATION = 'crowdsourcing.wsgi.application'
+ASGI_APPLICATION = 'crowdsourcing.asgi.application'
 
 
 # Database
