@@ -1,127 +1,139 @@
 {% load static %}
-<html>
-  <head>
-    <title>Chat Box UI Design</title>
-    <link rel="stylesheet" href="{% static 'chat/css/style.css' %}" />
 
-    <!-- Import this CDN to use icons -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"
-    />
-  </head>
-
-  <body>
-    <!-- Main container -->
-    <div class="container">
-      <!-- msg-header section starts -->
-      <div class="msg-header">
-        <div class="container1">
-          <img src="user1.png" class="msgimg" />
-          <div class="active">
-            <p>User name</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <title>Document</title> -->
+    <link rel="stylesheet" href="{% static 'chat/css/style.css' %}">
+</head>
+<body>
+    <section class="msger">
+        <header class="msger-header">
+          <div class="msger-header-title">
+            <i class="fas fa-comment-alt"></i> SimpleChat
           </div>
-        </div>
-      </div>
-      <!-- msg-header section ends -->
-
-      <!-- Chat inbox  -->
-      <div class="chat-page">
-        <div class="msg-inbox">
-          <div class="chats">
-            <!-- Message container -->
-            <div class="msg-page">
-              <!-- Incoming messages -->
-
-              <div class="received-chats">
-                <div class="received-chats-img">
-                  <img src="user2.png" />
-                </div>
-                <div class="received-msg">
-                  <div class="received-msg-inbox">
-                    <p>
-                      Hi !! This is message from Riya . Lorem ipsum, dolor sit
-                      amet consectetur adipisicing elit. Non quas nemo eum,
-                      earum sunt, nobis similique quisquam eveniet pariatur
-                      commodi modi voluptatibus iusto omnis harum illum iste
-                      distinctio expedita illo!
-                    </p>
-                    <span class="time">18:06 PM | July 24</span>
-                  </div>
-                </div>
+          <div class="msger-header-options">
+            <span><i class="fas fa-cog"></i></span>
+          </div>
+        </header>
+      
+        <main class="msger-chat">
+          <div class="msg left-msg">
+            
+      
+            <div class="msg-bubble">
+              <div class="msg-info">
+                <div class="msg-info-name">allan</div>
+                <div class="msg-info-time">12:45</div>
               </div>
-              <!-- Outgoing messages -->
-              <div class="outgoing-chats">
-                <div class="outgoing-chats-img">
-                  <img src="user1.png" />
-                </div>
-                <div class="outgoing-msg">
-                  <div class="outgoing-chats-msg">
-                    <p class="multi-msg">
-                      Hi riya , Lorem ipsum dolor sit amet consectetur
-                      adipisicing elit. Illo nobis deleniti earum magni
-                      recusandae assumenda.
-                    </p>
-                    <p class="multi-msg">
-                      Lorem ipsum dolor sit amet consectetur.
-                    </p>
-
-                    <span class="time">18:30 PM | July 24</span>
-                  </div>
-                </div>
-              </div>
-              <div class="received-chats">
-                <div class="received-chats-img">
-                  <img src="user2.png" />
-                </div>
-                <div class="received-msg">
-                  <div class="received-msg-inbox">
-                    <p class="single-msg">
-                      Hi !! This is message from John Lewis. Lorem ipsum, dolor
-                      sit amet consectetur adipisicing elit. iste distinctio
-                      expedita illo!
-                    </p>
-                    <span class="time">18:31 PM | July 24</span>
-                  </div>
-                </div>
-              </div>
-              <div class="outgoing-chats">
-                <div class="outgoing-chats-img">
-                  <img src="user1.png" />
-                </div>
-                <div class="outgoing-msg">
-                  <div class="outgoing-chats-msg">
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Velit, sequi.
-                    </p>
-
-                    <span class="time">18:34 PM | July 24</span>
-                  </div>
-                </div>
+      
+              <div class="msg-text">
+                Hi, welcome to SimpleChat! Go ahead and send me a message. 😄
               </div>
             </div>
           </div>
-
-          <!-- msg-bottom section -->
-
-          <div class="msg-bottom">
-            <div class="input-group">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Write message..."
-              />
-
-              <span class="input-group-text send-icon">
-                <i class="bi bi-send"></i>
-              </span>
+      
+          <div class="msg right-msg">
+      
+            <div class="msg-bubble">
+              <div class="msg-info">
+                <div class="msg-info-name">toshiro</div>
+                <div class="msg-info-time">12:46</div>
+              </div>
+      
+              <div class="msg-text">
+                You can change your name in JS section!
+              </div>
             </div>
           </div>
+        </main>
+      
+        <form class="msger-inputarea">
+          <input type="text" class="msger-input" placeholder="Enter your message...">
+          <button type="submit" class="msger-send-btn">Send</button>
+        </form>
+      </section>
+    
+</body>
+<script>
+    const msgerForm = get(".msger-inputarea");
+const msgerInput = get(".msger-input");
+const msgerChat = get(".msger-chat");
+
+const BOT_MSGS = [
+  "Hi, how are you?",
+  "Ohh... I can't understand what you trying to say. Sorry!",
+  "I like to play games... But I don't know how to play!",
+  "Sorry if my answers are not relevant. :))",
+  "I feel sleepy! :("
+];
+
+// Icons made by Freepik from www.flaticon.com
+// const BOT_IMG = "https://image.flaticon.com/icons/svg/327/327779.svg";
+// const PERSON_IMG = "https://image.flaticon.com/icons/svg/145/145867.svg";
+const BOT_NAME = "allan";
+const PERSON_NAME = "toshiro";
+
+msgerForm.addEventListener("submit", event => {
+  event.preventDefault();
+
+  const msgText = msgerInput.value;
+  if (!msgText) return;
+
+//   appendMessage(PERSON_NAME, PERSON_IMG, "right", msgText);
+//   msgerInput.value = "";
+
+  botResponse();
+});
+
+function appendMessage(name, img, side, text) {
+  //   Simple solution for small apps
+  const msgHTML = `
+    <div class="msg ${side}-msg">
+      <div class="msg-img" style="background-image: url(${img})"></div>
+
+      <div class="msg-bubble">
+        <div class="msg-info">
+          <div class="msg-info-name">${name}</div>
+          <div class="msg-info-time">${formatDate(new Date())}</div>
         </div>
+
+        <div class="msg-text">${text}</div>
       </div>
     </div>
-  </body>
+  `;
+
+  msgerChat.insertAdjacentHTML("beforeend", msgHTML);
+  msgerChat.scrollTop += 500;
+}
+
+function botResponse() {
+  const r = random(0, BOT_MSGS.length - 1);
+  const msgText = BOT_MSGS[r];
+  const delay = msgText.split(" ").length * 100;
+
+  setTimeout(() => {
+    appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
+  }, delay);
+}
+
+// Utils
+function get(selector, root = document) {
+  return root.querySelector(selector);
+}
+
+function formatDate(date) {
+  const h = "0" + date.getHours();
+  const m = "0" + date.getMinutes();
+
+  return `${h.slice(-2)}:${m.slice(-2)}`;
+}
+
+function random(min, max) {
+  return Math.floor(Math.random() * (max - min) + min);
+}
+
+  </script>
 </html>
-
-
