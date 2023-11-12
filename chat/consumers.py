@@ -10,3 +10,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # JOIN ROOM GROUP
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
         await self.accept()
+
+    async def diconnect(self):
+        # LEAVE ROOM
+        self.channel_layer.group_discard(self.room_group_name, self.channel_name)
