@@ -36,7 +36,9 @@ class ChatTests(ChannelsLiveServerTestCase):
             )
             self._switch_to_window(1)
             WebDriverWait(self.driver, 2).until(
-            lambda _: "hello" in self._chat_log_value,"Message was not received by window 2 from window 1",)
+            lambda _: "hello" in self._chat_log_value,
+            "Message was not received by window 2 from window 1",
+            )
         finally:
             self._close_all_new_windows()
     def test_when_chat_message_posted_then_not_seen_by_anyone_in_different_room(self):
