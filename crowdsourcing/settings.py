@@ -34,6 +34,8 @@ DEBUG = True
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
+    'channels',
     'corsheaders',
     'django_cleanup.apps.CleanupConfig',
     'jazzmin',
@@ -44,7 +46,6 @@ INSTALLED_APPS = [
     'core',
     'accounts',
     'chat',
-    'daphne',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -109,9 +110,12 @@ TEMPLATES = [
 
 
 CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
-    }
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+        },
 }
 
 # For SOCIAL-AUTH
