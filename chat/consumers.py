@@ -2,6 +2,7 @@ import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import AsyncWebsocketConsumer, WebsocketConsumer
 from .models import Chat, GroupChat
+from accounts.models import BaseUser
 
 
 class ChatConsumer(WebsocketConsumer):
@@ -13,7 +14,17 @@ class ChatConsumer(WebsocketConsumer):
         self.send_message(content)
 
     def new_message(self, data):
-        print('NEW MESSAGE')
+        sender = data['from']
+        sender_user = BaseUser.objects.get(username=sender)
+        message = Chat.objects.create(
+            sender=sender_user,
+            content=data['message']
+        )
+        content = {
+            'command': 'new_message',
+            'message': self.message_to_json(message)
+        }
+        return self.send_chat_message(content)
 
     def messages_to_json(self, messages):
         result = []
