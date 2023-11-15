@@ -840,7 +840,8 @@
       var imgTag = document.createElement('img');
       var pTag = document.createElement('p');
       pTag.textContent = data.content;
-      imgTag.src = '{{ request.user.pfp.url }}';
+      console.log(data['sender']['pfp'])
+      imgTag.src = data['sender_pfp_url'];
       
       if (sender === username) {
         msgListTag.className = 'sent';

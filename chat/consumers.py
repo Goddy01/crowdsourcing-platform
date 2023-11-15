@@ -20,6 +20,7 @@ class ChatConsumer(WebsocketConsumer):
             sender=sender_user,
             content=data['message']
         )
+
         content = {
             'command': 'new_message',
             'message': self.message_to_json(message)
@@ -36,7 +37,8 @@ class ChatConsumer(WebsocketConsumer):
         return {
             'sender': message.sender.username,
             'content': message.content,
-            'timestamp': str(message.timestamp)
+            'timestamp': str(message.timestamp),
+            'sender_pfp_url': message.sender.pfp.url
 
         }
     commands = {
