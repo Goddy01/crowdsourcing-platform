@@ -8,7 +8,7 @@ class Chat(models.Model):
     content = models.TextField()
 
     class Meta:
-        ordering = ('-timestamp')
+        ordering = ('-timestamp', )
 
     def __str__(self):
         return self.sender.username
@@ -28,7 +28,7 @@ class GroupChat(models.Model):
     content = models.TextField()
 
     class Meta:
-        ordering = ('-timestamp')
+        ordering = ('-timestamp', )
 
     def __str__(self):
         return self.sender.username
