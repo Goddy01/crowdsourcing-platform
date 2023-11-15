@@ -13,7 +13,6 @@ class Chat(models.Model):
     def __str__(self):
         return self.sender.username
     
-    @property
     def last_10_messages(self):
         return Chat.objects.all().order_by('-timestamp')[:10]
     
@@ -37,6 +36,5 @@ class GroupChat(models.Model):
     def __str__(self):
         return self.sender.username
     
-    @property
     def last_20_messages(self):
         return GroupChat.objects.all().order_by('-timestamp')[:20]
