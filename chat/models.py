@@ -7,9 +7,10 @@ class Chat(models.Model):
     sender = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
     content = models.TextField()
 
+    class Meta:
+        ordering = ('-timestamp')
+
     def __str__(self):
-        if self.content:
-            return f"{self.content[:15]}"
         return self.sender.username
     
 class Group(models.Model):
@@ -19,3 +20,16 @@ class Group(models.Model):
 
     def __str__(self):
         return self.name
+    
+class GroupChat(models.Model):
+    timestamp = models.DateTimeField(auto_now_add=True)
+    sender = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    content = models.TextField()
+
+    class Meta:
+        ordering = ('-timestamp')
+
+    def __str__(self):
+        return self.sender.username
+    
