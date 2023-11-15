@@ -839,11 +839,13 @@
       var msgListTag = document.createElement('li');
       var imgTag = document.createElement('img');
       var pTag = document.createElement('p');
+      var nameTag = document.createElement('small');
       pTag.textContent = data.content;
       console.log(data['sender']['pfp'])
       imgTag.src = data['sender_pfp_url'];
+      // nameTag.textContent = data.sender.username;
       
-      if (sender === username) {
+      if (sender !== username) {
         msgListTag.className = 'sent';
       } else {
         msgListTag.className = 'replies';
