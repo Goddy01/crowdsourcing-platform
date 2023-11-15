@@ -2,15 +2,12 @@ from django.db import models
 from accounts.models import BaseUser
 # Create your models here.
 
-
-class Message(models.Model):
-    body = models.TextField()
-    sent_by = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(BaseUser, on_delete=models.SET_NULL, null=True, blank=True)
-
-    class Meta:
-        ordering = ('created_at',)
+class Chat(models.Model):
+    timestamp = models.DateTimeField(auto_now_add=True)
+    sender = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
+    content = models.TextField()
 
     def __str__(self):
-        return f"{self.sent_by}"
+        if self.content:
+            return f"{self.content[:15]}"
+        return self.sender.username
