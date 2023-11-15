@@ -11,3 +11,11 @@ class Chat(models.Model):
         if self.content:
             return f"{self.content[:15]}"
         return self.sender.username
+    
+class Group(models.Model):
+    name = models.CharField(max_length=128, unique=True, null=False, blank=False)
+    description = models.TextField(max_length=1000)
+    members = models.ManyToManyField(BaseUser)
+
+    def __str__(self):
+        return self.name
