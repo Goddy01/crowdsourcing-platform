@@ -279,7 +279,8 @@ def edit_profile(request):
             'pfp': request.POST.get('pfp'),
             'phone_num': request.POST.get('phone_num'),
             'date_of_birth': request.POST.get('date_of_birth'),
-            'bio': request.POST.get('bio')
+            'bio': request.POST.get('bio'),
+            'job_title': request.POST.get('job_title'),
         }
         user_p_info = UpdatePersonalProfileForm(user_p_data, request.FILES, instance=request.user)
         if user_p_info.is_valid():
@@ -291,7 +292,7 @@ def edit_profile(request):
             if user_p_info.cleaned_data['about_me']:
                 user_obj.about_me = user_p_info.cleaned_data['about_me']
             user_obj.save()
-            print('ABOUT: ', user_obj.about_me)
+            
             return redirect('accounts:profile')
         else:
             print(user_p_info.errors.as_data())
@@ -507,6 +508,7 @@ def moderator_edit_profile(request):
     
         # USER PERSONAL DATA
     if request.method == 'POST' and 'user_p_form' in request.POST:
+        print('YOOOOO: ', request.POST.get('job_title'))
         user_p_data = {
             'about_me': request.POST.get('about_me'),
             'username': request.POST.get('username'),
@@ -517,7 +519,8 @@ def moderator_edit_profile(request):
             'pfp': request.POST.get('pfp'),
             'phone_num': request.POST.get('phone_num'),
             'date_of_birth': request.POST.get('date_of_birth'),
-            'bio': request.POST.get('bio')
+            'bio': request.POST.get('bio'),
+            'job_title': request.POST.get('job_title'),
         }
         user_p_info = UpdatePersonalProfileForm(user_p_data, request.FILES, instance=request.user)
         if user_p_info.is_valid():
@@ -528,8 +531,9 @@ def moderator_edit_profile(request):
                 user_obj.date_of_birth = user_p_info.cleaned_data['date_of_birth']
             if user_p_info.cleaned_data['about_me']:
                 user_obj.about_me = user_p_info.cleaned_data['about_me']
+            
             user_obj.save()
-            print('ABOUT: ', user_obj.about_me)
+            print('BREVVVVVVVV', user_obj.job_title)
             return redirect('accounts:mod_profile')
         else:
             print(user_p_info.errors.as_data())
