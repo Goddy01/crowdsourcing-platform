@@ -1,4 +1,5 @@
 from datetime import datetime
+from django.utils.safestring import mark_safe
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm, UpdateUserResidentialInfoForm, UpdateUserSocialsForm, ChangePasswordForm, UpdateUserSkillsForm, UpdateInnovatorServicesForm, UpdateUserServiceForm, UpdateUserNINForm, UpdateKBAQuestionForm
 from django.contrib.auth import login, authenticate, logout
@@ -19,7 +20,7 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.forms import formset_factory
 from django.forms.models import modelformset_factory
-from .models import InnovatorSkill, Service
+from .models import InnovatorSkill, Service, ConnectionRequest
 from django import forms
 from django.contrib import messages
 from core.models import Project
@@ -673,3 +674,20 @@ def error404View(request):
 def payment(request):
     return redirect('accounts:make_payment')
     # return render(request, 'accounts/payment.html')
+
+def send_connection_request(request, recipient_pk):
+    recipient = get_object_or_404(Innovator, pk=BaseUser.objects.get(pk=recipient_pk))
+    requester = get_object_or_404(Innovator, pk=BaseUser.objects.get(pk=request.user.pk))
+    if ConnectionRequest.objects.filter(
+        requester = requester,
+        recipient = recipient
+    ).exists():
+        messages.info(request, mark_safe('You have already sent a connection request to this user.<br/>Kindly wait for their response.'))
+    else:
+        ConnectionRequest.objects.create(
+            recipient=recipient,
+            requester=requester,
+        )
+        messages.success(request, 'Connection Request sent. Kindly wait for their response.')
+    
+    return render(request, 'accounts/others_profile.html')
