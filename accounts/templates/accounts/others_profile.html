@@ -120,7 +120,9 @@
                             {% endif %}
                         </p>
                         <div>
-                            <button class="button button-primary" id="triggerButton">Send Connection Request</button>
+                            <a href="{% url 'accounts:send_conn_request' innovator.user.pk %}" class="text-decoration-none">
+                                <button class="button button-primary" id="triggerButton">Send Connection Request</button>
+                            </a>
                         </div>
                         <ul>
                             <li></li>
@@ -387,34 +389,6 @@
     setTimeout(function() {
       $('.toast').toast('hide')
     }, 8000)
-</script>
-<script>
-document.getElementById('triggerButton').addEventListener('click', function() {
-    // Replace 'your_django_url_here' with the actual Django URL
-    var djangoUrl = "";
-
-    // Use the Fetch API to send a GET request
-    fetch(djangoUrl, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            // Add any additional headers if needed
-        },
-        // Add any additional options if needed
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json(); // or response.text(), etc., depending on your server's response
-    })
-    .then(data => {
-        console.log(data); // Handle the response data as needed
-    })
-    .catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
-    });
-});
 </script>
 
 
