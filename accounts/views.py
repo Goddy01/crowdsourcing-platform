@@ -683,14 +683,14 @@ def send_connection_request(request, recipient_pk):
     recipient = get_object_or_404(Innovator, pk=BaseUser.objects.get(pk=recipient_pk))
     requester = get_object_or_404(Innovator, pk=BaseUser.objects.get(pk=request.user.pk))
     if ConnectionRequest.objects.filter(
-        requester = requester,
-        recipient = recipient
+        connection_requester = requester,
+        connection_recipient = recipient
     ).exists():
         messages.info(request, mark_safe('You have already sent a connection request to this user.<br/>Kindly wait for their response.'))
     else:
         ConnectionRequest.objects.create(
-            recipient=recipient,
-            requester=requester,
+            connection_recipient=recipient,
+            connection_requester=requester,
         )
         messages.success(request, 'Connection Request sent. Kindly wait for their response.')
     
