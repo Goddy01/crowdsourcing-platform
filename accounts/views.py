@@ -705,3 +705,11 @@ def friend_requests(request):
         recipient__user__pk=request.user.pk,
     )
     return render(request, 'accounts/friend_requests.html', {'friend_requests': friend_requests})
+
+@login_required
+def accept_conn_request(self, conn_request_pk):
+    conn_request = ConnectionRequest.objects.get(pk=conn_request_pk)
+    conn_request.is_accpeted = True
+    conn_request.recipient_has_responded = True
+    conn_request.save(update_fields=['is_accepted', 'recipient_has_responded'])
+    return JsonResponse(data=conn_request)
