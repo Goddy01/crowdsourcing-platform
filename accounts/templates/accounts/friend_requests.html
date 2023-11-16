@@ -175,8 +175,10 @@
                         <p style="margin-top: -10px;">{{ f_r.requester.user.job_title }}</p>
                       </div>
                       <div class="col-md-3 col-sm-3 mt-2">
-                        <span class="btn btn-success pull-left">Accept</span>
-                        <span class="btn btn-danger pull-right">Decline</span>
+                        <span class="accept-btn btn btn-success pull-left" data-fr-pk="{{ f_r.pk }}" >Accept</span>
+                        <span class="decline-btn btn btn-danger pull-right" data-fr-pk="{{ f_r.pk }}">Decline</span>
+                        <span id="acceptedBtn_{{ f_r.pk }}" class="btn btn-success pull-left" style="display: none;">Request Accepted</span>
+                        <span id="declinedBtn_{{ f_r.pk }}" class="btn btn-danger pull-right" style="display: none;">Request Declined</span>
                       </div>
                     </div>
                   </div>
@@ -186,5 +188,59 @@
         </div>
     </div>
 </body>
+<script>
+    // Function to get the value of a cookie by name
+        var acceptURL = "{% url 'accounts:accept_conn_request' conn_request_pk=0 %}"; // Use '0' as a placeholder
+        var declineURL = "{% url 'accounts:decline_conn_request' conn_request_pk=0 %}"; // Use '0' as a placeholder
+        var csrfToken = "{{ csrf_token }}";
+    
+        $(document).ready(function () {
+            // Function to get CSRF token from cookies
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+    
+            // Upvote button click handler
+            $('.accept-btn').on('click', function () {
+                var frPk = $(this).data('fr-pk');
+                var csrftoken = getCookie('csrftoken');
+    
+                $.ajax({
+                    type: 'POST',
+                    url: acceptURL.replace('0', frPk),
+                    data: {
+                        csrfmiddlewaretoken: csrftoken
+                    },
+                });
+            });
+
+            $('.decline-btn').on('click', function () {
+                var frPk = $(this).data('fr-pk');
+                var csrftoken = getCookie('csrftoken');
+    
+                $.ajax({
+                    type: 'POST',
+                    url: declineURL.replace('0', frPk),
+                    data: {
+                        csrfmiddlewaretoken: csrftoken
+                    },
+                });
+            });
+    
+
+        });
+    </script>
+    
 </html>
 {% endblock content %}

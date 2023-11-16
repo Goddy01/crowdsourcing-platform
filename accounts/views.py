@@ -709,16 +709,16 @@ def friend_requests(request):
 @login_required
 def accept_conn_request(request, conn_request_pk):
     conn_request = ConnectionRequest.objects.get(pk=conn_request_pk)
-    conn_request.is_accpeted = True
+    conn_request.is_accepted = True
     conn_request.recipient_has_responded = True
     conn_request.save(update_fields=['is_accepted', 'recipient_has_responded'])
-    return JsonResponse(data=conn_request)
+    return JsonResponse(data={'status': 'success'})
 
 
 @login_required
 def decline_conn_request(request, conn_request_pk):
     conn_request = ConnectionRequest.objects.get(pk=conn_request_pk)
-    conn_request.is_accpeted = False
+    conn_request.is_accepted = False
     conn_request.recipient_has_responded = True
     conn_request.save(update_fields=['is_accepted', 'recipient_has_responded'])
-    return JsonResponse(data=conn_request)
+    return JsonResponse(data={'status': 'success'})
