@@ -1,5 +1,5 @@
 from django.db import models
-from accounts.models import BaseUser
+from accounts.models import BaseUser, Innovator
 # Create your models here.
 
 class Chat(models.Model):
@@ -7,14 +7,14 @@ class Chat(models.Model):
     sender = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
     content = models.TextField()
 
-    class Meta:
-        ordering = ('-timestamp', )
+    # class Meta:
+    #     ordering = ('-timestamp', )
 
     def __str__(self):
         return self.sender.username
     
     def last_10_messages():
-        return Chat.objects.all().order_by('-timestamp')[:10]
+        return Chat.objects.order_by('timestamp').all()[:10]
     
 class Group(models.Model):
     name = models.CharField(max_length=128, unique=True, null=False, blank=False)
@@ -30,11 +30,21 @@ class GroupChat(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     content = models.TextField()
 
-    class Meta:
-        ordering = ('-timestamp', )
+    # class Meta:
+    #     ordering = ('-timestamp', )
 
     def __str__(self):
         return self.sender.username
     
     def last_20_messages():
-        return GroupChat.objects.all().order_by('-timestamp')[:20]
+        return GroupChat.objects.order_by('-timestamp').all()[:10]
+    
+class ConnectionRequest(models.Model):
+    requester = models.ForeignKey(Innovator, on_delete=models.CASCADE)
+    recipient = models.ForeignKey(Innovator, on_delete=models.CASCADE)
+    is_accpeted = models.BooleanField(default=False)
+    recipient_has_responded = models.BooleanField(default=False)
+    date_sent = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.requester.user.username} sent a connection request to {self.recipient.user.username}"
