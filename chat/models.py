@@ -40,8 +40,8 @@ class GroupChat(models.Model):
         return GroupChat.objects.order_by('-timestamp').all()[:10]
     
 class ConnectionRequest(models.Model):
-    requester = models.ForeignKey(Innovator, on_delete=models.CASCADE)
-    recipient = models.ForeignKey(Innovator, on_delete=models.CASCADE)
+    requester = models.ForeignKey(Innovator, on_delete=models.CASCADE, related_name="connection_requester")
+    recipient = models.ForeignKey(Innovator, on_delete=models.CASCADE, related_name="connection_recipient")
     is_accpeted = models.BooleanField(default=False)
     recipient_has_responded = models.BooleanField(default=False)
     date_sent = models.DateTimeField(auto_now_add=True)
