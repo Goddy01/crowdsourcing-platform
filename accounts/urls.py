@@ -25,6 +25,7 @@ urlpatterns = [
     path('remove-service/<pk>', views.remove_service, name='remove_service'),
     path('send-connection-request/<recipient_pk>', views.send_connection_request, name='send_conn_request'),
     path('friend-requests', views.friend_requests, name='friend_requests'),
+    path('<conn_request_pk>/accept-request', views.accept_conn_request, name='accept_conn_request'),
     # path('make-payment/', views.deposit_money, name='make_payment'),
     # path('password-change', views.change_password, name='change_password'),
 ]
