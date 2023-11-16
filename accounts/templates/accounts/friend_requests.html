@@ -157,6 +157,7 @@
                 <div class="people-nearby">
                     
                   {% for f_r in friend_requests %}
+                  {% if not f_r.recipient_has_responded %}
                   <div class="nearby-user" style="margin-bottom: 50px;background-color: #EDF5FD;padding: 30px;border-radius: 5px;">
                     <div class="row">
                       <div class="col-md-2 col-sm-2">
@@ -177,11 +178,12 @@
                       <div class="col-md-3 col-sm-3 mt-2">
                         <span class="accept-btn btn btn-success pull-left" data-fr-pk="{{ f_r.pk }}" >Accept</span>
                         <span class="decline-btn btn btn-danger pull-right" data-fr-pk="{{ f_r.pk }}">Decline</span>
-                        <span id="acceptedBtn_{{ f_r.pk }}" class="btn btn-success pull-left" style="display: none;">Request Accepted</span>
-                        <span id="declinedBtn_{{ f_r.pk }}" class="btn btn-danger pull-right" style="display: none;">Request Declined</span>
+                        <span id="accepted" class="btn btn-success pull-left" style="display: none;">Request Accepted</span>
+                        <span id="declined" class="btn btn-danger pull-right" style="display: none;">Request Declined</span>
                       </div>
                     </div>
                   </div>
+                  {% endif %}
                   {% endfor %}
                 </div>
             </div>
@@ -222,6 +224,13 @@
                     data: {
                         csrfmiddlewaretoken: csrftoken
                     },
+                    success: function () {
+                    // Update visibility after successful request
+                    $('#accepted').show();
+                    $('#declined').hide();
+                    $('.accept-btn').hide();
+                    $('.decline-btn').hide();
+                }
                 });
             });
 
@@ -235,6 +244,13 @@
                     data: {
                         csrfmiddlewaretoken: csrftoken
                     },
+                    success: function () {
+                    // Update visibility after successful request
+                    $('#accepted').hide();
+                    $('#declined').show();
+                    $('.accept-btn').hide();
+                    $('.decline-btn').hide();
+                }
                 });
             });
     
