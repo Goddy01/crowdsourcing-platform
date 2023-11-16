@@ -145,9 +145,13 @@
                             {% endif %}
                         </p>
                         <div>
-                            <a href="{% url 'accounts:send_conn_request' innovator.user.pk %}" class="text-decoration-none">
+                            {% if not conn_already_sent %}
+                            <a href="{% url 'accounts:send_conn_request' innovator.pk %}" class="text-decoration-none">
                                 <button class="button button-primary" id="triggerButton">Send Connection Request</button>
                             </a>
+                            {% else %}
+                            <button class="button button-primary button-disabled">Connection Request Already Sent</button>
+                            {% endif %}
                         </div>
                         <ul>
                             <li></li>

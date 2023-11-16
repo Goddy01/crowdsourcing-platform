@@ -234,8 +234,8 @@ def others_profile(request, innovator_pk):
     innovator_services = Service.objects.filter(user__pk=innovator_pk)
     projects = Project.objects.filter(innovator=innovator)[:3]
     conn_already_sent = ConnectionRequest.objects.filter(
-        connection_requester__pk=request.user.pk,
-        connection_recipient__pk=innovator.user.pk,
+        requester__pk=Innovator.objects.get(user__pk=request.user.pk).pk,
+        recipient__pk=innovator_pk,
     ).exists()
     return render(request, 'accounts/others_profile.html', {'innovator': innovator, 'innovator_skills': innovator_skills, 'innovator_services': innovator_services, 'projects': projects, 'conn_already_sent': conn_already_sent})
 
@@ -680,18 +680,18 @@ def payment(request):
     # return render(request, 'accounts/payment.html')
 
 def send_connection_request(request, recipient_pk):
-    recipient = get_object_or_404(Innovator, pk=BaseUser.objects.get(pk=recipient_pk))
-    requester = get_object_or_404(Innovator, pk=BaseUser.objects.get(pk=request.user.pk))
+    recipient = get_object_or_404(Innovator, pk=recipient_pk)
+    requester = get_object_or_404(Innovator, user__pk=request.user.pk)
     if ConnectionRequest.objects.filter(
-        connection_requester = requester,
-        connection_recipient = recipient
+        requester = requester,
+        recipient = recipient
     ).exists():
         messages.info(request, mark_safe('You have already sent a connection request to this user.<br/>Kindly wait for their response.'))
     else:
         ConnectionRequest.objects.create(
-            connection_recipient=recipient,
-            connection_requester=requester,
+            recipient=recipient,
+            requester=requester,
         )
         messages.success(request, 'Connection Request sent. Kindly wait for their response.')
-    
+        return redirect('accounts:profile_with_arg', recipient_pk)
     return render(request, 'accounts/others_profile.html')
