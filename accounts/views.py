@@ -703,23 +703,31 @@ def send_connection_request(request, recipient_pk):
 def friend_requests(request):
     friend_requests = ConnectionRequest.objects.filter(
         recipient__user__pk=request.user.pk,
-        
+        recipient_has_responded=False
     )
     return render(request, 'accounts/friend_requests.html', {'friend_requests': friend_requests})
 
 @login_required
 def accept_conn_request(request, conn_request_pk):
     conn_request = ConnectionRequest.objects.get(pk=conn_request_pk)
-    conn_request.is_accepted = True
-    conn_request.recipient_has_responded = True
-    conn_request.save(update_fields=['is_accepted', 'recipient_has_responded'])
-    return JsonResponse(data={'status': 'success'})
+    if conn_request.recipient.user.pk == request.user.pk:
+        if not conn_request.recipient_has_responded:
+            conn_request.is_accepted = True
+            conn_request.recipient_has_responded = True
+            conn_request.save(update_fields=['is_accepted', 'recipient_has_responded'])
+            return JsonResponse(data={'status': 'success'})
+        return HttpResponse('You have already responded to the request.')
+    return HttpResponse('You do not have the privilege to view this page.')
 
 
 @login_required
 def decline_conn_request(request, conn_request_pk):
     conn_request = ConnectionRequest.objects.get(pk=conn_request_pk)
-    conn_request.is_accepted = False
-    conn_request.recipient_has_responded = True
-    conn_request.save(update_fields=['is_accepted', 'recipient_has_responded'])
-    return JsonResponse(data={'status': 'success'})
+    if conn_request.recipient.user.pk == request.user.pk:
+        if not conn_request.recipient_has_responded:
+            conn_request.is_accepted = False
+            conn_request.recipient_has_responded = True
+            conn_request.save(update_fields=['is_accepted', 'recipient_has_responded'])
+            return JsonResponse(data={'status': 'success'})
+        return HttpResponse('You have already responded to the request.')
+    return HttpResponse('You do not have the privilege to view this page.')
