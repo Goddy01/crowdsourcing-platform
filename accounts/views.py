@@ -700,4 +700,4 @@ def friend_requests(request):
     friend_requests = ConnectionRequest.objects.filter(
         recipient__user__pk=request.user.pk,
     )
-    return render(request, 'accounts/friend_requests', {'friend_requests': friend_requests})
+    return render(request, 'accounts/friend_requests.html', {'friend_requests': friend_requests})
