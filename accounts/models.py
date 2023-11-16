@@ -212,3 +212,13 @@ class Moderator(models.Model):
 class Follow(models.Model):
     follower = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='follower')
     following = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='following')
+
+class ConnectionRequest(models.Model):
+    requester = models.ForeignKey(Innovator, on_delete=models.CASCADE, related_name="connection_requester")
+    recipient = models.ForeignKey(Innovator, on_delete=models.CASCADE, related_name="connection_recipient")
+    is_accpeted = models.BooleanField(default=False)
+    recipient_has_responded = models.BooleanField(default=False)
+    date_sent = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.requester.user.username} sent a connection request to {self.recipient.user.username}"
