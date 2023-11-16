@@ -91,10 +91,6 @@
             background-color: #000;
             border: 1px solid #000;
         }
-        body{
-            margin-top:20px;
-            background:#FAFAFA;    
-        }
         /*==================================================
         Nearby People CSS
         ==================================================*/
@@ -129,7 +125,7 @@
 </head>
 <body>
     <div class="container" style="margin: 0 auto; padding: 30px;margin-top: 100px;">
-        <h2>Friend Requests</h2>
+        <h2>Friend Requests({{ friend_requests|length }})</h2>
         
         {% if messages %}
                 <ul>
