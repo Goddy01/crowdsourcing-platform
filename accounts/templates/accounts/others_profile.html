@@ -145,8 +145,6 @@
                             {% endif %}
                         </p>
                         <div>
-                            CONN ALREADY SENT: {{ conn_already_sent }}
-                            CONN REQUEST: {{ conn_request }}
                             {% if conn_already_sent == False %}
                             <a href="{% url 'accounts:send_conn_request' innovator.pk %}" class="text-decoration-none">
                                 <button class="button button-primary" id="triggerButton">Send Connection Request</button>
@@ -157,8 +155,12 @@
                             {% endif %}
                             {% if conn_request.0.are_friends %}
                             <button class="button button-primary">Friends ✅</button>
-                            {% elif conn_request.0.remote_response and conn_request.0.is_accepted == False %}
+                            {% endif %}
+                            {% if conn_request.0.remote_response and conn_request.0.is_accepted == False %}
                             <button class="button button-danger">Declined</button>
+                            {% endif %}
+                            {% if conn_request.0.recipient_has_responded == True and conn_request.0.is_accepted == False %}
+                            <button class="button button-primary">Connection Request was Declined</button>
                             {% endif %}
                         </div>
                         <ul>

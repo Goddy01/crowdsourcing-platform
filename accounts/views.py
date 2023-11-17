@@ -237,10 +237,6 @@ def others_profile(request, innovator_pk):
         requester=Innovator.objects.get(user__pk=request.user.pk),
         recipient=innovator
     )
-    print(ConnectionRequest.objects.all())
-    for i in ConnectionRequest.objects.all():
-        print('Req: ', request.user.pk, 'Recip: ', innovator.user.pk, 'db_req: ', i.requester.user.pk, 'db_recipi: ', i.recipient.user.pk)
-    # print(ConnectionRequest.objects.get(requester__user__pk=request.user.pk, recipient__user__pk=innovator.user.pk))
     return render(request, 'accounts/others_profile.html', {'innovator': innovator, 'innovator_skills': innovator_skills, 'innovator_services': innovator_services, 'projects': projects, 'conn_request': conn_request,  'conn_already_sent': conn_request.exists()})
 
 def edit_profile(request):
