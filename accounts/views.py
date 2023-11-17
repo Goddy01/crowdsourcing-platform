@@ -20,7 +20,7 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.forms import formset_factory
 from django.forms.models import modelformset_factory
-from .models import InnovatorSkill, Service, ConnectionRequest
+from .models import InnovatorSkill, Service, ConnectionRequest, Connection
 from django import forms
 from django.contrib import messages
 from core.models import Project
@@ -745,17 +745,24 @@ def accept_conn_request(request, conn_request_pk):
             conn_request.are_friends = True
             conn_request.save(update_fields=['is_accepted', 'recipient_has_responded', 'are_friends'])
 
-
-            conn_request_2 = ConnectionRequest.objects.get(
+            if ConnectionRequest.objects.filter(
                 requester__pk=conn_request.recipient.pk, recipient__pk=conn_request.requester.pk,
                 recipient_has_responded=False,
                 are_friends=False
-                )
-            conn_request_2.is_accepted = True
-            conn_request_2.are_friends = True
-            conn_request_2.remote_response = True
-            conn_request_2.save(update_fields=['is_accepted', 'are_friends', 'remote_response'])
-
+                ).exists():
+                conn_request_2 = ConnectionRequest.objects.get(
+                    requester__pk=conn_request.recipient.pk, recipient__pk=conn_request.requester.pk,
+                    recipient_has_responded=False,
+                    are_friends=False
+                    )
+                conn_request_2.is_accepted = True
+                conn_request_2.are_friends = True
+                conn_request_2.remote_response = True
+                conn_request_2.save(update_fields=['is_accepted', 'are_friends', 'remote_response'])
+            Connection.objects.create(
+                user1=conn_request.recipient,
+                user2=conn_request.requester
+            )
             return JsonResponse(data={'status': 'success'})
         return HttpResponse('You have already responded to the request.')
     return HttpResponse('You do not have the privilege to view this page.')
