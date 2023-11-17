@@ -157,7 +157,6 @@
                 <div class="people-nearby">
                     
                   {% for f_r in friend_requests %}
-                  {% if not f_r.recipient_has_responded %}
                   <div class="nearby-user" style="margin-bottom: 50px;background-color: #EDF5FD;padding: 30px;border-radius: 5px;">
                     <div class="row">
                       <div class="col-md-2 col-sm-2">
@@ -183,7 +182,6 @@
                       </div>
                     </div>
                   </div>
-                  {% endif %}
                   {% endfor %}
                 </div>
             </div>

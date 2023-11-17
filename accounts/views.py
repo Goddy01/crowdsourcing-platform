@@ -703,7 +703,8 @@ def send_connection_request(request, recipient_pk):
 def friend_requests(request):
     friend_requests = ConnectionRequest.objects.filter(
         recipient__user__pk=request.user.pk,
-        recipient_has_responded=False
+        recipient_has_responded=False,
+        remote_response=False,
     )
     return render(request, 'accounts/friend_requests.html', {'friend_requests': friend_requests})
 
@@ -711,7 +712,7 @@ def friend_requests(request):
 def accept_conn_request(request, conn_request_pk):
     conn_request = ConnectionRequest.objects.get(pk=conn_request_pk)
     if conn_request.recipient.user.pk == request.user.pk:
-        if not conn_request.recipient_has_responded:
+        if not conn_request.recipient_has_responded and conn_request.remote_response == False:
             conn_request.is_accepted = True
             conn_request.recipient_has_responded = True
             conn_request.are_friends = True
@@ -724,7 +725,8 @@ def accept_conn_request(request, conn_request_pk):
                 )
             conn_request_2.is_accepted = True
             conn_request_2.are_friends = True
-            conn_request_2.save(update_fields=['is_accepted', 'are_friends'])
+            conn_request_2.remote_response = True
+            conn_request_2.save(update_fields=['is_accepted', 'are_friends', 'remote_response'])
 
             return JsonResponse(data={'status': 'success'})
         return HttpResponse('You have already responded to the request.')
@@ -735,7 +737,7 @@ def accept_conn_request(request, conn_request_pk):
 def decline_conn_request(request, conn_request_pk):
     conn_request = ConnectionRequest.objects.get(pk=conn_request_pk)
     if conn_request.recipient.user.pk == request.user.pk:
-        if not conn_request.recipient_has_responded:
+        if not conn_request.recipient_has_responded and conn_request.remote_response == False:
             conn_request.is_accepted = False
             conn_request.recipient_has_responded = True
             conn_request.save(update_fields=['is_accepted', 'recipient_has_responded'])
@@ -744,10 +746,9 @@ def decline_conn_request(request, conn_request_pk):
                 requester__pk=conn_request.requester.pk, recipient__pk=conn_request.recipient.pk,
                 recipient_has_responded=False
                 )
-            conn_request_2.is_accepted = True
-            conn_request_2.are_friends = True
-            conn_request_2.save(update_fields=['is_accepted', 'are_friends'])
-            
+            conn_request_2.remote_response = True
+            conn_request_2.save(update_fields=['remote_response'])
+
             return JsonResponse(data={'status': 'success'})
         return HttpResponse('You have already responded to the request.')
     return HttpResponse('You do not have the privilege to view this page.')
