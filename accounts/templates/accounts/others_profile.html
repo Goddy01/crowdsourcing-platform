@@ -137,13 +137,22 @@
                             <img id="pfpImg" src="{% static 'images/default_profile_image.jpg' %}" class="img-responsive thumbnail rounded-pill bg-white p-2 shadow" style="height: 250px;width: 250px;">
                             {% endif %}
                         </div>
-                        <b class="fs-6">Hello I am, {{innovator.user.last_name}} {{innovator.user.first_name}}</b>
-                        <h1 class="fw-bold mb-4 fs-1">Full Stack Developer</h1>
+                        <!-- <p class="fw-bold">@{{ innovator.user.username }}</p> -->
                         <p>
-                            {% if innovator.user.bio %}
-                            <b>{{ innovator.user.bio }}</b>
+                            {% if innovator.user.middle_name %}
+                            <span class="fw-bold">
+                                {{ innovator.user.last_name }}, {{innovator.user.first_name}} {{ innovator.user.middle_name}}
+                            </span>
+                            <span>(@{{ innovator.user.username }})</span>
+                            {% else %}
+                            <span class="fw-bold">
+                                {{innovator.user.first_name}} {{ innovator.user.last_name }}
+                            </span>
+                            <span>(@{{ innovator.user.username }})</span>
                             {% endif %}
                         </p>
+                        
+                        <p class="fw-bold mb-2 fs-1">{{ innovator.user.job_title }}</p>
                         <div>
                             {% if conn_already_sent == False and not friends %}
                             <a href="{% url 'accounts:send_conn_request' innovator.pk %}" class="text-decoration-none">
@@ -168,7 +177,15 @@
                             {% endif %}
 
                             {% if friends %}
-                            <button class="button button-primary">Friends ✅</button>
+                            <!-- <button class="btn btn-outline-success fw-bolder fs-7 px-4 py-2">
+                                Friends ✅
+                            </button> -->
+                            <small>
+                                <button class="btn btn-success text-white btn-outline-success fw-bolder fs-7 px-4 py-2 ">
+                                    <span class="mx-2">Send a Message</span>
+                                    <i class="fa-solid text-white fa-message"></i>
+                                </button>
+                            </small>
                             {% endif %}
                             
 
