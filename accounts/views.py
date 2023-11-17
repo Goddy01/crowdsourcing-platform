@@ -770,7 +770,8 @@ def accept_conn_request(request, conn_request_pk):
                 conn_request_2.save(update_fields=['is_accepted', 'are_friends', 'remote_response'])
             Connection.objects.create(
                 user1=conn_request.recipient,
-                user2=conn_request.requester
+                user2=conn_request.requester,
+                conn_request=conn_request
             )
             return JsonResponse(data={'status': 'success'})
         return HttpResponse('You have already responded to the request.')
