@@ -801,4 +801,7 @@ def decline_conn_request(request, conn_request_pk):
 
 @login_required
 def friends_list(request):
-    return render(request, 'core/friends-list.html')
+    user = Innovator.objects.get(user__pk=request.user.pk)
+    friends = Connection.objects.filter(Q(user1=user) |Q(user1=user)
+    )
+    return render(request, 'core/friends-list.html', {'friends': friends})
