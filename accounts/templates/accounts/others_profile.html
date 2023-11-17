@@ -147,21 +147,35 @@
                         <div>
                             {% if conn_already_sent == False %}
                             <a href="{% url 'accounts:send_conn_request' innovator.pk %}" class="text-decoration-none">
-                                <button class="button button-primary" id="triggerButton">Send Connection Request</button>
+                                <button class="button button-primary" id="triggerButton3">Send Connection Request</button>
                             </a>
                             {% endif %}
-                            {% if conn_request.0.recipient_has_responded == False and conn_request.0.remote_response == False %}
+
+                            {% if conn_request.0.is_accepted == False and conn_request.0.remote_response == False and conn_request.0.recipient_has_responded == False %}
                             <button class="button button-primary button-disabled">Connection Request Already Sent</button>
                             {% endif %}
+
+                            {% if conn_request.0.is_accepted == False and conn_request.0.recipient_has_responded == True %}
+                            <a href="{% url 'accounts:send_conn_request' innovator.pk %}" class="text-decoration-none">
+                                <button class="button button-primary" id="triggerButton3">Send Connection Request</button>
+                            </a>
+                            {% endif %}
+                            
+                            {% if conn_request.0.is_accepted == False and conn_request.0.remote_response == True %}
+                            <a href="{% url 'accounts:send_conn_request' innovator.pk %}" class="text-decoration-none">
+                                <button class="button button-primary" id="triggerButton3">Send Connection Request</button>
+                            </a>
+                            {% endif %}
+
                             {% if conn_request.0.are_friends %}
                             <button class="button button-primary">Friends ✅</button>
                             {% endif %}
-                            {% if conn_request.0.remote_response and conn_request.0.is_accepted == False %}
-                            <button class="button button-danger">Declined</button>
+                            <p>{{conn_request.0}} {{request.user.username}}</p>
+                            
+                            {% if conn_request.0.are_friends and conn_request.0.recipient.user.pk == request.user.pk %}
+                            <button class="button button-primary">Friends ✅</button>
                             {% endif %}
-                            {% if conn_request.0.recipient_has_responded == True and conn_request.0.is_accepted == False %}
-                            <button class="button button-primary">Connection Request was Declined</button>
-                            {% endif %}
+
                         </div>
                         <ul>
                             <li></li>

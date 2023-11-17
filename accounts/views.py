@@ -235,7 +235,7 @@ def others_profile(request, innovator_pk):
     projects = Project.objects.filter(innovator=innovator)[:3]
     conn_request = ConnectionRequest.objects.filter(
         requester=Innovator.objects.get(user__pk=request.user.pk),
-        recipient=innovator
+        recipient=innovator,
     )
     return render(request, 'accounts/others_profile.html', {'innovator': innovator, 'innovator_skills': innovator_skills, 'innovator_services': innovator_services, 'projects': projects, 'conn_request': conn_request,  'conn_already_sent': conn_request.exists()})
 
@@ -692,14 +692,36 @@ def send_connection_request(request, recipient_pk):
     else:
         if ConnectionRequest.objects.filter(
             requester = requester,
-            recipient = recipient
+            recipient = recipient,
+            remote_response = False,
+            recipient_has_responded=False
         ).exists():
             messages.info(request, mark_safe('You have already sent a connection request to this user.<br/>Kindly wait for their response.'))
         else:
-            ConnectionRequest.objects.create(
-                recipient=recipient,
-                requester=requester,
-            )
+            if ConnectionRequest.objects.filter(
+                        requester = requester,
+                        recipient = recipient,
+                        remote_response = True,
+                        are_friends = False
+                    ).exists() or ConnectionRequest.objects.filter(
+                        requester = requester,
+                        recipient = recipient,
+                        recipient_has_responded=True,
+                        are_friends=False
+                    ).exists():
+                conn_request = ConnectionRequest.objects.get(
+                                    requester = requester,
+                                    recipient = recipient,
+                                    are_friends=False)
+                conn_request.recipient_has_responded = False
+                conn_request.remote_response  = False
+                conn_request.save(update_fields=['recipient_has_responded', 'remote_response'])
+            else:
+                
+                ConnectionRequest.objects.create(
+                    recipient=recipient,
+                    requester=requester,
+                )
             messages.success(request, 'Connection Request sent. Kindly wait for their response.')
             return redirect('accounts:profile_with_arg', recipient_pk)
     return render(request, 'accounts/others_profile.html')
@@ -708,6 +730,7 @@ def friend_requests(request):
     friend_requests = ConnectionRequest.objects.filter(
         recipient__user__pk=request.user.pk,
         recipient_has_responded=False,
+        are_friends=False,
         remote_response=False,
     )
     return render(request, 'accounts/friend_requests.html', {'friend_requests': friend_requests})
@@ -716,7 +739,7 @@ def friend_requests(request):
 def accept_conn_request(request, conn_request_pk):
     conn_request = ConnectionRequest.objects.get(pk=conn_request_pk)
     if conn_request.recipient.user.pk == request.user.pk:
-        if not conn_request.recipient_has_responded and conn_request.remote_response == False:
+        if conn_request.recipient_has_responded == False and conn_request.remote_response == False:
             conn_request.is_accepted = True
             conn_request.recipient_has_responded = True
             conn_request.are_friends = True
@@ -726,7 +749,7 @@ def accept_conn_request(request, conn_request_pk):
             conn_request_2 = ConnectionRequest.objects.get(
                 requester__pk=conn_request.recipient.pk, recipient__pk=conn_request.requester.pk,
                 recipient_has_responded=False,
-                remote_response=False
+                are_friends=False
                 )
             conn_request_2.is_accepted = True
             conn_request_2.are_friends = True
@@ -750,7 +773,7 @@ def decline_conn_request(request, conn_request_pk):
             conn_request_2 = ConnectionRequest.objects.get(
                 requester__pk=conn_request.recipient.pk, recipient__pk=conn_request.requester.pk,
                 recipient_has_responded=False,
-                remote_response=False
+                are_friends=False
                 )
             conn_request_2.remote_response = True
             conn_request_2.save(update_fields=['remote_response'])
