@@ -226,5 +226,6 @@ class ConnectionRequest(models.Model):
         return f"{self.requester.user.username} sent a connection request to {self.recipient.user.username}"
     
 class Connection(models.Model):
+    conn_request = models.ForeignKey(ConnectionRequest, on_delete=models.CASCADE, null=True, blank=True)
     user1 = models.ForeignKey(Innovator, on_delete=models.CASCADE, related_name='conn_user1')
     user2 = models.ForeignKey(Innovator, on_delete=models.CASCADE, related_name='conn_user2')
