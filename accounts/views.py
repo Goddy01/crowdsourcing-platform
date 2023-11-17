@@ -1,3 +1,4 @@
+from django.db.models import Q
 from datetime import datetime
 from django.utils.safestring import mark_safe
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
@@ -237,6 +238,14 @@ def others_profile(request, innovator_pk):
         requester=Innovator.objects.get(user__pk=request.user.pk),
         recipient=innovator,
     )
+    
+    user1 = innovator
+    user2 = Innovator.objects.get(user__pk=request.user.pk)
+    friends = Connection.objects.filter(
+        (Q(user1=user1) & Q(user2=user2)) |
+        (Q(user1=user2) & Q(user2=user1))
+    ).exists()
+    print('FRIENDS: ', friends)
     return render(request, 'accounts/others_profile.html', {'innovator': innovator, 'innovator_skills': innovator_skills, 'innovator_services': innovator_services, 'projects': projects, 'conn_request': conn_request,  'conn_already_sent': conn_request.exists()})
 
 def edit_profile(request):
