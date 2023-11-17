@@ -150,12 +150,12 @@
                                 <button class="button button-primary" id="triggerButton">Send Connection Request</button>
                             </a>
                             {% endif %}
-                            {% if not conn_already_sent.0.recipient_has_responded %}
+                            {% if conn_request.0.recipient_has_responded == False and conn_request.0.remote_response == False %}
                             <button class="button button-primary button-disabled">Connection Request Already Sent</button>
                             {% endif %}
-                            {% if conn_already_sent.0.recipient_has_responded and conn_already_sent.0.is_accepted %}
+                            {% if conn_request.0.are_friends %}
                             <button class="button button-primary">Friends ✅</button>
-                            {% elif conn_already_sent.0.recipient_has_responded and not conn_already_sent.0.is_accepted %}
+                            {% elif conn_request.0.remote_response and conn_request.0.is_accepted == False %}
                             <button class="button button-danger">Declined</button>
                             {% endif %}
                         </div>
