@@ -88,7 +88,12 @@
 			</div>
   
 				<div class="row">
-					<div class="text-muted fst-italic mb-4">Posted on {{ project.date_created }} by <a href="{% url 'accounts:profile_with_arg' project.innovator.pk %}">
+					<div class="text-muted fst-italic mb-4">Posted on {{ project.date_created }} by 
+						{% if request.user.pk != project.innovator.user.pk %}
+						<a href="{% url 'accounts:profile_with_arg' project.innovator.pk %}">
+						{% else %}
+						<a href="{% url 'accounts:profile' %}">
+						{% endif %}
 						{% if project.innovator.user.middle_name %}
 						{{ project.innovator.user.last_name }}, {{ project.innovator.user.first_name }} {{ project.innovator.user.middle_name }}
 						{% else %}

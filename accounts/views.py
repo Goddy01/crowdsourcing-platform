@@ -234,9 +234,13 @@ def others_profile(request, innovator_pk):
     innovator_services = Service.objects.filter(user__pk=innovator_pk)
     projects = Project.objects.filter(innovator=innovator)[:3]
     conn_request = ConnectionRequest.objects.filter(
-        requester__pk=Innovator.objects.get(user__pk=request.user.pk).pk,
-        recipient__pk=innovator_pk
+        requester=Innovator.objects.get(user__pk=request.user.pk),
+        recipient=innovator
     )
+    print(ConnectionRequest.objects.all())
+    for i in ConnectionRequest.objects.all():
+        print('Req: ', request.user.pk, 'Recip: ', innovator.user.pk, 'db_req: ', i.requester.user.pk, 'db_recipi: ', i.recipient.user.pk)
+    # print(ConnectionRequest.objects.get(requester__user__pk=request.user.pk, recipient__user__pk=innovator.user.pk))
     return render(request, 'accounts/others_profile.html', {'innovator': innovator, 'innovator_skills': innovator_skills, 'innovator_services': innovator_services, 'projects': projects, 'conn_request': conn_request,  'conn_already_sent': conn_request.exists()})
 
 def edit_profile(request):
@@ -720,8 +724,9 @@ def accept_conn_request(request, conn_request_pk):
 
 
             conn_request_2 = ConnectionRequest.objects.get(
-                requester__pk=conn_request.requester.pk, recipient__pk=conn_request.recipient.pk,
-                recipient_has_responded=False
+                requester__pk=conn_request.recipient.pk, recipient__pk=conn_request.requester.pk,
+                recipient_has_responded=False,
+                remote_response=False
                 )
             conn_request_2.is_accepted = True
             conn_request_2.are_friends = True
@@ -743,8 +748,9 @@ def decline_conn_request(request, conn_request_pk):
             conn_request.save(update_fields=['is_accepted', 'recipient_has_responded'])
 
             conn_request_2 = ConnectionRequest.objects.get(
-                requester__pk=conn_request.requester.pk, recipient__pk=conn_request.recipient.pk,
-                recipient_has_responded=False
+                requester__pk=conn_request.recipient.pk, recipient__pk=conn_request.requester.pk,
+                recipient_has_responded=False,
+                remote_response=False
                 )
             conn_request_2.remote_response = True
             conn_request_2.save(update_fields=['remote_response'])

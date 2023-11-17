@@ -36,12 +36,18 @@
                             <!-- Post title-->
                             <h1 class="fw-bolder mb-2">{{ innovation.title|title }}</h1>
                             <!-- Post meta content-->
-                            <div class="text-muted fst-italic mb-4">Posted on {{ innovation.date_created }} by <a href="{% url 'accounts:profile_with_arg' innovation.owner.pk %}">
+                            <div class="text-muted fst-italic mb-4">Posted on {{ innovation.date_created }} by 
+                                {% if innovation.owner.user.pk != request.user.pk %}
+                                <a href="{% url 'accounts:profile_with_arg' innovation.owner.pk %}">
+                                {% else %}
+                                <a href="{% url 'accounts:profile' %}">
+                                {% endif %}
                                 {% if innovation.owner.user.middle_name %}
                                 {{ innovation.owner.user.last_name }}, {{innovation.owner.user.first_name}} {{ innovation.owner.user.middle_name}}
                                 {% else %}
                                 {{innovation.owner.user.first_name}} {{ innovation.owner.user.last_name }}
                                 {% endif %}
+                                </a>
                             </div>
                             <!-- Post categories-->
                             {% for category in innovation.category|remove_chars %}
