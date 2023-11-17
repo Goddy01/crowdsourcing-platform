@@ -798,3 +798,7 @@ def decline_conn_request(request, conn_request_pk):
             return JsonResponse(data={'status': 'success'})
         return HttpResponse('You have already responded to the request.')
     return HttpResponse('You do not have the privilege to view this page.')
+
+@login_required
+def friends_list(request):
+    return render(request, 'core/friends-list.html')
