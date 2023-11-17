@@ -219,6 +219,7 @@ class ConnectionRequest(models.Model):
     is_accepted = models.BooleanField(default=False)
     recipient_has_responded = models.BooleanField(default=False)
     date_sent = models.DateTimeField(auto_now_add=True)
+    are_friends = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.requester.user.username} sent a connection request to {self.recipient.user.username}"

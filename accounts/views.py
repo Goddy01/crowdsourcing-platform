@@ -235,7 +235,7 @@ def others_profile(request, innovator_pk):
     projects = Project.objects.filter(innovator=innovator)[:3]
     conn_already_sent = ConnectionRequest.objects.filter(
         requester__pk=Innovator.objects.get(user__pk=request.user.pk).pk,
-        recipient__pk=innovator_pk,
+        recipient__pk=innovator_pk
     ).exists()
     return render(request, 'accounts/others_profile.html', {'innovator': innovator, 'innovator_skills': innovator_skills, 'innovator_services': innovator_services, 'projects': projects, 'conn_already_sent': conn_already_sent})
 
@@ -714,7 +714,18 @@ def accept_conn_request(request, conn_request_pk):
         if not conn_request.recipient_has_responded:
             conn_request.is_accepted = True
             conn_request.recipient_has_responded = True
-            conn_request.save(update_fields=['is_accepted', 'recipient_has_responded'])
+            conn_request.are_friends = True
+            conn_request.save(update_fields=['is_accepted', 'recipient_has_responded', 'are_friends'])
+
+
+            conn_request_2 = ConnectionRequest.objects.get(
+                requester__pk=conn_request.requester.pk, recipient__pk=conn_request.recipient.pk,
+                recipient_has_responded=False
+                )
+            conn_request_2.is_accepted = True
+            conn_request_2.are_friends = True
+            conn_request_2.save(update_fields=['is_accepted', 'are_friends'])
+            
             return JsonResponse(data={'status': 'success'})
         return HttpResponse('You have already responded to the request.')
     return HttpResponse('You do not have the privilege to view this page.')
