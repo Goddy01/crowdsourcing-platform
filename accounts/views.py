@@ -233,11 +233,11 @@ def others_profile(request, innovator_pk):
     innovator_skills = InnovatorSkill.objects.filter(innovator__pk=innovator_pk)
     innovator_services = Service.objects.filter(user__pk=innovator_pk)
     projects = Project.objects.filter(innovator=innovator)[:3]
-    conn_already_sent = ConnectionRequest.objects.filter(
+    conn_request = ConnectionRequest.objects.filter(
         requester__pk=Innovator.objects.get(user__pk=request.user.pk).pk,
         recipient__pk=innovator_pk
-    ).exists()
-    return render(request, 'accounts/others_profile.html', {'innovator': innovator, 'innovator_skills': innovator_skills, 'innovator_services': innovator_services, 'projects': projects, 'conn_already_sent': conn_already_sent})
+    )
+    return render(request, 'accounts/others_profile.html', {'innovator': innovator, 'innovator_skills': innovator_skills, 'innovator_services': innovator_services, 'projects': projects, 'conn_request': conn_request,  'conn_already_sent': conn_request.exists()})
 
 def edit_profile(request):
     user = BaseUser.objects.get(username=request.user.username)
