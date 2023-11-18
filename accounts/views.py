@@ -721,7 +721,9 @@ def send_connection_request(request, recipient_pk):
                 conn_request = ConnectionRequest.objects.get(
                                     requester = requester,
                                     recipient = recipient,
-                                    are_friends=False)
+                                    are_friends=False,
+                                    sent_on=datetime.now()
+                                    )
                 conn_request.recipient_has_responded = False
                 conn_request.remote_response  = False
                 conn_request.save(update_fields=['recipient_has_responded', 'remote_response'])
@@ -729,7 +731,7 @@ def send_connection_request(request, recipient_pk):
                 
                 ConnectionRequest.objects.create(
                     recipient=recipient,
-                    requester=requester
+                    requester=requester,
                 )
             messages.success(request, 'Connection Request sent. Kindly wait for their response.')
             return redirect('accounts:profile_with_arg', recipient_pk)

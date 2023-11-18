@@ -178,6 +178,7 @@
                       <div class="col-md-3 col-sm-3 mt-2 col-lg-3">
                         <span class="remove-friend-btn btn btn-danger pull-left" data-friend-pk="{{ friend.user2.pk }}" >Remove Friend</span>
                         <span class="add-friend-btn btn btn-success pull-left" style="display: none;" data-friend-pk="{{ friend.user2.pk }}">Add Back</span>
+                        <span class="request-sent-btn btn btn-success pull-left" style="display: none;">Request Sent</span>
                       </div>
                     </div>
                   </div>
@@ -202,6 +203,7 @@
                       <div class="col-md-3 col-sm-3 mt-2 col-lg-3">
                         <span class="remove-friend-btn btn btn-danger pull-left" data-friend-pk="{{ friend.user1.pk }}" >Remove Friend</span>
                         <span class="add-friend-btn btn btn-success pull-left" style="display: none;" data-friend-pk="{{ friend.user1.pk }}">Add Back</span>
+                        <span class="request-sent-btn btn btn-success pull-left" style="display: none;">Request Sent</span>
                       </div>
                     </div>
                   </div>
@@ -273,7 +275,8 @@
                     },
                     success: function () {
                     // Update visibility after successful request
-                    $('.remove-friend-btn').show();
+                    // $('.remove-friend-btn').show();
+                    $('.request-sent-btn').show();
                     // $('.friend-removed-btn').show();
                     $('.add-friend-btn').hide();
                 }
