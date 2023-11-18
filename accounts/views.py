@@ -804,4 +804,30 @@ def friends_list(request):
     user = Innovator.objects.get(user__pk=request.user.pk)
     friends = Connection.objects.filter(Q(user1=user) |Q(user1=user)
     )
-    return render(request, 'core/friends-list.html', {'friends': friends})
+    return render(request, 'accounts/friends-list.html', {'friends': friends})
+
+@login_required
+def remove_friend(request, friend_pk):
+    user1 = Innovator.objects.get(user__pk=request.user.pk)
+    user2 = Innovator.objects.get(pk=friend_pk)
+    conn = Connection.objects.filter(
+        (Q(user1=user1) & Q(user2=user2)) |
+        (Q(user1=user2) & Q(user2=user1))
+    )
+    if conn:
+        conn.delete()
+        
+        conn_requests = ConnectionRequest.objects.filter(
+            (Q(requester=user1) & Q(recipient=user2)) |
+            (Q(requester=user2) & Q(recipient=user1))
+        )
+        for conn_request in conn_requests:
+            conn_request.is_accepted = False
+            conn_request.recipient_has_responded = False
+            conn_request.are_friends = False
+            conn_request.remote_response = False
+
+            conn_request.save(update_fields=['is_accepted', 'recipient_has_responded', 'are_friends', 'remote_response'])
+    else:
+        return JsonResponse({'error': 'You are not friends with the user you want to remove'})
+    return JsonResponse(data= {'status': 'success'})

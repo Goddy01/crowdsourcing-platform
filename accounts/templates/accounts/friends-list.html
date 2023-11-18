@@ -245,11 +245,18 @@
                     data: {
                         csrfmiddlewaretoken: csrftoken
                     },
-                    success: function () {
-                    // Update visibility after successful request
-                    $('.remove-friend-btn').hide();
-                    // $('.friend-removed-btn').show();
-                    $('.add-friend-btn').show();
+                    success: function (data) {
+
+                                    // Check for errors in the response
+                        if (data.error) {
+                            // Display the error message in the div
+                            $('#error-div').text(data.error);
+                            $('#error-div').show();
+                        } else {
+                            $('.remove-friend-btn').hide();
+                            // $('.friend-removed-btn').show();
+                            $('.add-friend-btn').show();
+                        }
                 }
                 });
             });
