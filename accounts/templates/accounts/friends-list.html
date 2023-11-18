@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Friend Requests{% endblock title %}
+{% block title %}Friends{% endblock title %}
 {% block content %}
 <!DOCTYPE html>
 <html lang="en">
@@ -125,6 +125,9 @@
 </head>
 <body>
     <div class="container" style="margin: 0 auto; padding: 30px;margin-top: 100px;">
+        <a href="{%url 'accounts:friend_requests' %}">
+            Friend Requests
+        </a>
         <h2>Friends ({{ friends|length }})</h2>
         
         {% if messages %}
