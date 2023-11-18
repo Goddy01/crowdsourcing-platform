@@ -218,7 +218,7 @@ class ConnectionRequest(models.Model):
     recipient = models.ForeignKey(Innovator, on_delete=models.CASCADE, related_name="connection_recipient")
     is_accepted = models.BooleanField(default=False)
     recipient_has_responded = models.BooleanField(default=False)
-    date_requested = models.DateTimeField(auto_now_add=True)
+    sent_on = models.DateTimeField(auto_now_add=True, null=True)
     are_friends = models.BooleanField(default=False)
     remote_response = models.BooleanField(default=False)
 

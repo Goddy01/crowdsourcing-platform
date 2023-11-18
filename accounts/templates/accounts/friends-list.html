@@ -125,7 +125,7 @@
 </head>
 <body>
     <div class="container" style="margin: 0 auto; padding: 30px;margin-top: 100px;">
-        <h2>Friend Requests({{ friend_requests|length }})</h2>
+        <h2>Friends ({{ friends|length }})</h2>
         
         {% if messages %}
                 <ul>
@@ -155,7 +155,7 @@
         <div class="row">
             <div class="col-md-8">
                 <div class="people-nearby">
-                    
+
                   {% for friend in friends %}
                   {% if friend.user1.user.username == request.user.username %}
                   <div class="nearby-user" style="margin-bottom: 50px;background-color: #EDF5FD;padding: 30px;border-radius: 5px;">

@@ -729,7 +729,7 @@ def send_connection_request(request, recipient_pk):
                 
                 ConnectionRequest.objects.create(
                     recipient=recipient,
-                    requester=requester,
+                    requester=requester
                 )
             messages.success(request, 'Connection Request sent. Kindly wait for their response.')
             return redirect('accounts:profile_with_arg', recipient_pk)
@@ -802,7 +802,7 @@ def decline_conn_request(request, conn_request_pk):
 @login_required
 def friends_list(request):
     user = Innovator.objects.get(user__pk=request.user.pk)
-    friends = Connection.objects.filter(Q(user1=user) |Q(user1=user)
+    friends = Connection.objects.filter(Q(user1=user) | Q(user2=user)
     )
     return render(request, 'accounts/friends-list.html', {'friends': friends})
 
