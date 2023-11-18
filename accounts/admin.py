@@ -9,7 +9,7 @@ class AccountAdmin(UserAdmin):
     list_filter = ()
     fieldsets = ()
 class ConnectionRequestAdmin(ImportExportModelAdmin):
-    readonly_fields = ('date',)
+    readonly_fields = ('sent_on',)
 
 admin.site.register(BaseUser, AccountAdmin)
 admin.site.register(Innovator)
