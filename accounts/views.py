@@ -721,8 +721,7 @@ def send_connection_request(request, recipient_pk):
                 conn_request = ConnectionRequest.objects.get(
                                     requester = requester,
                                     recipient = recipient,
-                                    are_friends=False,
-                                    sent_on=datetime.now()
+                                    are_friends=False
                                     )
                 conn_request.recipient_has_responded = False
                 conn_request.remote_response  = False
@@ -825,7 +824,7 @@ def remove_friend(request, friend_pk):
         )
         for conn_request in conn_requests:
             conn_request.is_accepted = False
-            conn_request.recipient_has_responded = False
+            conn_request.recipient_has_responded = True
             conn_request.are_friends = False
             conn_request.remote_response = False
 
