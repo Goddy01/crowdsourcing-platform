@@ -1,3 +1,5 @@
+from django.utils.html import strip_tags
+from django.template import loader
 from django.db.models import Q
 from datetime import datetime
 from django.utils.safestring import mark_safe
@@ -726,12 +728,42 @@ def send_connection_request(request, recipient_pk):
                 conn_request.recipient_has_responded = False
                 conn_request.remote_response  = False
                 conn_request.save(update_fields=['recipient_has_responded', 'remote_response'])
+
+                # SEND EMAIL
+                current_site = get_current_site(request)
+                subject = f'{requester.user.last_name}, {requester.user.first_name} {requester.user.middle_name} sent you a connection reqest.'
+                html_message = loader.render_to_string(
+                    'accounts/conn-request-email', {
+                    'user': BaseUser.objects.get(pk=request.user.pk),
+                    'domain': current_site.domain,
+                    'requester': requester,
+                    'recipient': recipient,
+                }, request=request
+                )
+                to_email = f'{request.user.email}'
+                from_email = settings.EMAIL_HOST_USER
+                send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
             else:
                 
                 ConnectionRequest.objects.create(
                     recipient=recipient,
                     requester=requester,
                 )
+
+                # SEND EMAIL
+                current_site = get_current_site(request)
+                subject = f'{requester.user.last_name}, {requester.user.first_name} {requester.user.middle_name} sent you a connection reqest.'
+                html_message = loader.render_to_string(
+                    'accounts/conn-request-email', {
+                    'user': BaseUser.objects.get(pk=request.user.pk),
+                    'domain': current_site.domain,
+                    'requester': requester,
+                    'recipient': recipient,
+                }, request=request
+                )
+                to_email = f'{request.user.email}'
+                from_email = settings.EMAIL_HOST_USER
+                send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
             messages.success(request, 'Connection Request sent. Kindly wait for their response.')
             return redirect('accounts:profile_with_arg', recipient_pk)
     return render(request, 'accounts/others_profile.html')
