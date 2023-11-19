@@ -234,6 +234,8 @@ def mod_profile(request):
 
 def others_profile(request, innovator_pk):
     innovator = Innovator.objects.get(pk=innovator_pk)
+    if innovator.user.username == request.user.username:
+        return redirect('accounts:profile')
     innovator_skills = InnovatorSkill.objects.filter(innovator__pk=innovator_pk)
     innovator_services = Service.objects.filter(user__pk=innovator_pk)
     projects = Project.objects.filter(innovator=innovator)[:3]
