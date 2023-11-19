@@ -4,7 +4,7 @@ from django.template import loader
 from django.db.models import Q
 from datetime import datetime
 from django.utils.safestring import mark_safe
-from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404, HttpResponseRedirect
 from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm, UpdateUserResidentialInfoForm, UpdateUserSocialsForm, ChangePasswordForm, UpdateUserSkillsForm, UpdateInnovatorServicesForm, UpdateUserServiceForm, UpdateUserNINForm, UpdateKBAQuestionForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.sites.shortcuts import get_current_site
@@ -87,7 +87,12 @@ def innovator_login(request):
                 user = Innovator.objects.get(user__email=form.cleaned_data.get('email'))
                 if user.user.is_verified:
                     return redirect('home')
-                return redirect('accounts:edit_profile')
+                redirect_to = request.GET.get('next')
+                print('REDIRECT TO: ', redirect_to)
+                if redirect_to is None:
+                    return redirect('accounts:edit_profile')
+                else:
+                    return HttpResponseRedirect(redirect_to)
     else:
         form = InnovatorSignInForm()
     context['innovator_signin_form'] = form
@@ -781,6 +786,7 @@ def send_connection_request(request, recipient_pk):
             return redirect('accounts:profile_with_arg', recipient_pk)
     return render(request, 'accounts/others_profile.html')
 
+@login_required
 def friend_requests(request):
     friend_requests = ConnectionRequest.objects.filter(
         recipient__user__pk=request.user.pk,
