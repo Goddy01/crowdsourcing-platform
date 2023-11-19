@@ -733,7 +733,7 @@ def send_connection_request(request, recipient_pk):
                 current_site = get_current_site(request)
                 subject = f'{requester.user.last_name}, {requester.user.first_name} {requester.user.middle_name} sent you a connection reqest.'
                 html_message = loader.render_to_string(
-                    'accounts/conn-request-email', {
+                    'accounts/conn-request-email.html', {
                     'user': BaseUser.objects.get(pk=request.user.pk),
                     'domain': current_site.domain,
                     'requester': requester,
@@ -754,7 +754,7 @@ def send_connection_request(request, recipient_pk):
                 current_site = get_current_site(request)
                 subject = f'{requester.user.last_name}, {requester.user.first_name} {requester.user.middle_name} sent you a connection reqest.'
                 html_message = loader.render_to_string(
-                    'accounts/conn-request-email', {
+                    'accounts/conn-request-email.html', {
                     'user': BaseUser.objects.get(pk=request.user.pk),
                     'domain': current_site.domain,
                     'requester': requester,
