@@ -159,8 +159,7 @@
                                                         <tr>
                                                             <td>
                                                                 <h5 style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;margin: 0px;padding: 0px;">
-                                                                    <img src="http://{{ domain }}{{MEDIA_URL}}{{ requester.user.pfp.url }}" alt="user" class="profile-photo-lg">
-                                                                    <a href="{% url 'accounts:profile_with_arg' requester.pk %}" class="profile-link">
+                                                                    <a href="{% url 'accounts:profile_with_arg' requester.pk %}" class="profile-link" style="text-decoration: none;">
                                                                         <p>{{ requester.user.username }}, {{ requester.user.first_name }} {{ requester.user.middle_name }}</p>
                                                                     </a>
                                                                 </h5>

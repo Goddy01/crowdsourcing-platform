@@ -168,7 +168,7 @@
                       </div>
                       <div class="col-md-7 col-sm-7">
                         <h5 style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;margin: 0px;padding: 0px;">
-                            <a href="{% url 'accounts:profile_with_arg' friend.user2.user.pk %}" class="profile-link">
+                            <a href="{% url 'accounts:profile_with_arg' friend.user2.pk %}" class="profile-link">
                                 {% if friend.user2.user.middle_name %}
                                 <p>{{ friend.user2.user.last_name }}, {{ friend.user2.user.first_name }} {{ friend.user2.user.middle_name }}</p>
                                 {% else %}
@@ -193,7 +193,7 @@
                       </div>
                       <div class="col-md-7 col-sm-7">
                         <h5 style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;margin: 0px;padding: 0px;">
-                            <a href="{% url 'accounts:profile_with_arg' friend.user1.user.pk %}" class="profile-link">
+                            <a href="{% url 'accounts:profile_with_arg' friend.user1.pk %}" class="profile-link">
                                 {% if friend.user1.user.middle_name %}
                                 <p>{{ friend.user1.user.last_name }}, {{ friend.user1.user.first_name }} {{ friend.user1.user.middle_name }}</p>
                                 {% else %}

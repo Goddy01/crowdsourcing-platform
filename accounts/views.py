@@ -739,7 +739,6 @@ def send_connection_request(request, recipient_pk):
                     'domain': current_site.domain,
                     'requester': requester,
                     'recipient': recipient,
-                    'MEDIA_URL': '/media/',
                     'requester_pfp': recipient.user.pfp.url,
                 }, request=request
                 )
@@ -762,7 +761,6 @@ def send_connection_request(request, recipient_pk):
                     'domain': current_site.domain,
                     'requester': requester,
                     'recipient': recipient,
-                    'MEDIA_URL': '/media/',
                     'requester_pfp': recipient.user.pfp.url,
                 }, request=request
                 )
