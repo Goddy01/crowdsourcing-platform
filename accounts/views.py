@@ -1,3 +1,4 @@
+from crowdsourcing import settings
 from django.utils.html import strip_tags
 from django.template import loader
 from django.db.models import Q
@@ -738,6 +739,8 @@ def send_connection_request(request, recipient_pk):
                     'domain': current_site.domain,
                     'requester': requester,
                     'recipient': recipient,
+                    'MEDIA_URL': '/media/',
+                    'requester_pfp': recipient.user.pfp.url,
                 }, request=request
                 )
                 to_email = f'{request.user.email}'
@@ -759,6 +762,8 @@ def send_connection_request(request, recipient_pk):
                     'domain': current_site.domain,
                     'requester': requester,
                     'recipient': recipient,
+                    'MEDIA_URL': '/media/',
+                    'requester_pfp': recipient.user.pfp.url,
                 }, request=request
                 )
                 to_email = f'{request.user.email}'

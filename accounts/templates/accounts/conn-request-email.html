@@ -152,16 +152,16 @@
 														</tr>
                                                         <td>
                                                             <h6 style="font-size: 14px; margin: 0; color: #040c04; direction: ltr; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-weight: 500; letter-spacing: normal; line-height: 120%; margin-top: 0; margin-bottom: 0;">
-                                                                <h2 class="tinyMce-placeholder">{{ requester.user.last_name }} {{ requester.user.first_name }} {{ requester.user.middle_name }} sent you a connection request!</h2>
+                                                                <h2 class="tinyMce-placeholder">{{ requester.user.last_name }}, {{ requester.user.first_name }} {{ requester.user.middle_name }} sent you a connection request</h2>
                                                             </h6>
                                                             
                                                         </td>
                                                         <tr>
                                                             <td>
                                                                 <h5 style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;margin: 0px;padding: 0px;">
-                                                                    <img src="{{ requester.user.pfp.url }}" alt="user" class="profile-photo-lg">
+                                                                    <img src="http://{{ domain }}{{MEDIA_URL}}{{ requester.user.pfp.url }}" alt="user" class="profile-photo-lg">
                                                                     <a href="{% url 'accounts:profile_with_arg' requester.pk %}" class="profile-link">
-                                                                        <p>{{ requester.user.last_name }}, {{ requester.user.first_name }} {{ requester.user.middle_name }}</p>
+                                                                        <p>{{ requester.user.username }}, {{ requester.user.first_name }} {{ requester.user.middle_name }}</p>
                                                                     </a>
                                                                 </h5>
                                                             </td>
