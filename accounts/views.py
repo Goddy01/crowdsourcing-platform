@@ -709,6 +709,14 @@ def send_connection_request(request, recipient_pk):
             recipient_has_responded=False
         ).exists():
             messages.info(request, mark_safe('You have already sent a connection request to this user.<br/>Kindly wait for their response.'))
+            return redirect('accounts:profile_with_arg', recipient_pk)
+        elif ConnectionRequest.objects.filter(
+            requester = requester,
+            recipient = recipient,
+            are_friends = True
+        ).exists():
+            messages.info(request, mark_safe('You can not send another connection request because you are already a friend of this user.'))
+            return redirect('accounts:profile_with_arg', recipient_pk)
         else:
             if ConnectionRequest.objects.filter(
                         requester = requester,
