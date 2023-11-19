@@ -731,7 +731,7 @@ def send_connection_request(request, recipient_pk):
 
                 # SEND EMAIL
                 current_site = get_current_site(request)
-                subject = f'{requester.user.last_name}, {requester.user.first_name} {requester.user.middle_name} sent you a connection reqest.'
+                subject = 'Connection Request'
                 html_message = loader.render_to_string(
                     'accounts/conn-request-email.html', {
                     'user': BaseUser.objects.get(pk=request.user.pk),
