@@ -141,6 +141,7 @@
                             {% endif %}
                             brev
                             {% if request.user.is_innovator %}
+                            <li><a href="{% url 'accounts:friends_list' %}">Friends</a></li>
                             <li><a href="{% url 'accounts:profile' %}">Profile</a></li>
                             {% else %}
                             <li><a href="{% url 'accounts:mod_profile' %}">Profile</a></li>
