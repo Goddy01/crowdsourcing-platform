@@ -154,26 +154,7 @@
                         
                         <p class="fw-bold mb-2 fs-1">{{ innovator.user.job_title }}</p>
                         <div>
-                            {% if not friends and conn_already_sent == False %}
-                            <a href="{% url 'accounts:send_conn_request' innovator.pk %}" class="text-decoration-none">
-                                <button class="button button-primary" id="triggerButton3">Send Connection Request</button>
-                            </a>
-                            {% endif %}
-
-                            {% if conn_request.0.is_accepted == False and conn_request.0.remote_response == False and conn_request.0.recipient_has_responded == False %}
-                            <button class="button button-primary button-disabled">Connection Request Already Sent</button>
-                            {% endif %}
-
-                            {% if conn_request.0.is_accepted == False and conn_request.0.remote_response == True %}
-                            <a href="{% url 'accounts:send_conn_request' innovator.pk %}" class="text-decoration-none">
-                                <button class="button button-primary" id="triggerButton3">Send Connection Request</button>
-                            </a>
-                            {% endif %}
-
                             {% if friends %}
-                            <!-- <button class="btn btn-outline-success fw-bolder fs-7 px-4 py-2">
-                                Friends ✅
-                            </button> -->
                             <small>
                                 <button class="btn btn-success text-white btn-outline-success fw-bolder fs-7 px-4 py-2 ">
                                     <span class="mx-2">Send a Message</span>
@@ -181,7 +162,24 @@
                                 </button>
                             </small>
                             {% endif %}
-                            
+
+                            {% if not friends and conn_already_sent == False %}
+                            <a href="{% url 'accounts:send_conn_request' innovator.pk %}" class="text-decoration-none">
+                                <button class="button button-primary" id="triggerButton3">Send Connection Request</button>
+                            </a>
+                            {% endif %}
+
+                            {% if not friends and conn_already_sent == True %}
+                                {% if conn_request.0.has_responded == True or conn_request.0.remote_response == True %}
+                                    {% if conn_request.0.is_accepted == False %}
+                                    <a href="{% url 'accounts:send_conn_request' innovator.pk %}" class="text-decoration-none">
+                                        <button class="button button-primary" id="triggerButton3">Send Connection Request</button>
+                                    </a>
+                                    {% endif %}
+                                {% elif conn_request.0.has_responded == False or conn_request.0.remote_response == False %}
+                                    <button class="button button-primary button-disabled">Connection Request Already Sent</button>
+                                {% endif %}
+                            {% endif %}                                                    
 
                         </div>
                         <ul>

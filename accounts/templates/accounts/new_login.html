@@ -92,7 +92,7 @@
                 <div class="card-body">
                   <h4 class="mb-4 text-center pb-2 pb-md-0 mb-md-4 px-md-2">Innovator Login</h4>
       
-                  <form class="px-md-2" method="POST" action="{% url 'accounts:innovator_login' %}?next={% firstof request.path '/ %}">
+                  <form class="px-md-2" method="POST" action="{% url 'accounts:innovator_login' %}?next={% firstof request.path '/' %}">
                     {% csrf_token %}
                     <div class="form-row px-1 mb-4">
                         <input type="email" name="email" id="email" class="form-control" placeholder="Email Address">

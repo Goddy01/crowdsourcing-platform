@@ -861,7 +861,7 @@ def remove_friend(request, friend_pk):
             conn_request.is_accepted = False
             conn_request.recipient_has_responded = True
             conn_request.are_friends = False
-            conn_request.remote_response = False
+            conn_request.remote_response = True
 
             conn_request.save(update_fields=['is_accepted', 'recipient_has_responded', 'are_friends', 'remote_response'])
     else:
