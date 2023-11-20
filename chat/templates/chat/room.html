@@ -730,7 +730,7 @@ p {
         <ul class="mt-2">
           {% for friend in friends %}
           {% if friend.user1.user.username == request.user.username %}
-          <li class="contact" data-friend-user="{{ friend.user2.user.pfp.url }}" data-friend-username="{{ friend.user2.user.username }}" id="contact-{{ friend.user2.user.username }}">
+          <li class="contact" data-friend-user-fullname="{{ friend.user2.user.get_full_name }}" data-friend-user="{{ friend.user2.user.pfp.url }}" data-friend-username="{{ friend.user2.user.username }}" id="contact-{{ friend.user2.user.username }}">
             <div class="wrap">
               <span class="contact-status online"></span>
               <img src="{{ friend.user2.user.pfp.url }}" alt="" style="border-radius: 50%;width: 60px;height: 60px;" class="offline" />
@@ -741,7 +741,7 @@ p {
             </div>
           </li>
           {% elif friend.user1.user.username != request.user.username %}
-          <li class="contact" data-friend-user="{{ friend.user1.user.pfp.url }}" data-friend-username="{{ friend.user1.user.username }}" id="contact-{{ friend.user1.user.username }}">
+          <li class="contact" data-friend-user-fullname="{{ friend.user1.user.get_full_name }}" data-friend-user="{{ friend.user1.user.pfp.url }}" data-friend-username="{{ friend.user1.user.username }}" id="contact-{{ friend.user1.user.username }}">
             <div class="wrap">
               <!-- <span class="contact-status online"></span> -->
               <img src="{{ friend.user1.user.pfp.url }}" alt="" style="border-radius: 50%;width: 60px;height: 60px;" class="offline"/>
@@ -898,13 +898,14 @@ p {
     // Get the data-friend-username attribute from the clicked list item
     var friendUsername = $(this).data('friend-username');
     var friendUserPfp = $(this).data('friend-user');
+    var friendUserFullname = $(this).data('friend-user-fullname');
     var recipientPfpImg = document.getElementById("recipient_pfp");
     var recipientUsernameSlot = document.getElementById("recipient_username");
 
     recipientPfpImg.style.height = "60px";
     recipientPfpImg.style.width = "60px";
     recipientPfpImg.src = friendUserPfp;
-    recipientUsernameSlot.textContent = friendUsername;
+    recipientUsernameSlot.textContent = friendUserFullname;
 
     
 
