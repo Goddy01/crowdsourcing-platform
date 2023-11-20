@@ -117,7 +117,6 @@
                     {% endif %}
 					<li class="menu-item-has-children" style="display: inline;">
 						<a href="account-overview.html">
-                            <em class="mdi mdi-account-outline"></em> 
                             <span class="account-details">
                                 <span class="account-name" style="font-weight: 600;">
                                     {% if request.user.is_authenticated %}
@@ -127,6 +126,7 @@
                                     {% endif %}
                                 </span> 
                             </span>
+                            <em class="mdi mdi-account-outline text-success" style="font-size: 24px;margin-right: 10px;"></em> 
                             <em class="mdi mdi-chevron-down"></em>
                         </a>
 						<ul class="sub-menu">
@@ -151,14 +151,14 @@
                     {% if request.user.is_authenticated %}
                     <li style="display: inline;">
                         <a href="">
-                            Chat
-                            <i class="fa-solid fa-message"></i>
+                            Notifications
+                            <i class="fa-solid fa-bell text-success" style="font-size: 20px;"></i>
                         </a>
                     </li>
                     <li class="account-logout" style="margin-left: 20px;display: inline;">
                         <a href="{% url 'accounts:sign_out' %}"  style="font-weight: 600;">
-                            <i style="font-size: 24px;" class="fa-solid fa-right-from-bracket"></i>
                             Logout
+                            <i style="font-size: 20px;" class="fa-solid fa-right-from-bracket text-success"></i>
                         </a>
                     </li>
                     {% endif %}
