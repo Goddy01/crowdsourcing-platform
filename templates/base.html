@@ -116,7 +116,7 @@
 					</li>
                     {% endif %}
 					<li class="menu-item-has-children" style="display: inline;">
-						<a href="account-overview.html">
+						<a href="{% url 'accounts:profile' %}">
                             <span class="account-details">
                                 <span class="account-name" style="font-weight: 600;">
                                     {% if request.user.is_authenticated %}
@@ -149,13 +149,20 @@
 						</ul>
 					</li>
                     {% if request.user.is_authenticated %}
-                    <li style="display: inline;">
+                    <li style="display: inline;" class="menu-item-has-children">
+                        <em class="mdi mdi-chevron-down"></em>
                         <a href="">
-                            Notifications
+                            <span style="font-weight: 600;">
+                                Notifications
+                            </span>
                             <i class="fa-solid fa-bell text-success" style="font-size: 20px;"></i>
+                            <sup class="text-success" style="font-size: 16px;">0</sup>
                         </a>
+                        <ul class="sub-menu" style="background-color: whitesmoke;">
+							<li><a href="">Wagwan brev!!</a></li>
+						</ul>
                     </li>
-                    <li class="account-logout" style="margin-left: 20px;display: inline;">
+                    <li class="account-logout" style="display: inline;">
                         <a href="{% url 'accounts:sign_out' %}"  style="font-weight: 600;">
                             Logout
                             <i style="font-size: 20px;" class="fa-solid fa-right-from-bracket text-success"></i>
@@ -302,5 +309,15 @@
 <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
 <script src="{% static 'js/fancybox.min.js' %}"></script>
 <script src="{% static 'js/functions.js' %}"></script>
+<script>
+    // JavaScript to handle the dropdown card
+    document.getElementById('notifications-link').addEventListener('mouseover', function() {
+        document.getElementById('notif-dropdown-card').style.display = 'block';
+    });
+
+    document.getElementById('notifications-link').addEventListener('mouseout', function() {
+        document.getElementById('notif-dropdown-card').style.display = 'none';
+    });
+</script>
 </body>
 </html>
