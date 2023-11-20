@@ -725,12 +725,12 @@ p {
         <label for=""><i class="fa fa-search" aria-hidden="true"></i></label>
         <input type="text" placeholder="Search contacts..." />
       </div> -->
-      <div id="contacts" style="background-color: #1d2934;border-radius: 1px;">
-        <p class="h4 text-center text-white p-3" style="border: none;background-color: #333;">Friends</p>
-        <ul class="mt-5">
+      <div id="contacts" style="background-color: #2C3E50;border-radius: 1px;" class="mt-5">
+        <p class="h4 text-center text-white p-3" style="border: none;background-color: #121a21;">Friends</p>
+        <ul class="mt-2">
           {% for friend in friends %}
           {% if friend.user1.user.username == request.user.username %}
-          <li class="contact">
+          <li class="contact" data-friend-pk="{{ friend.user2.pk }}">
             <div class="wrap">
               <span class="contact-status online"></span>
               <img src="{{ friend.user2.user.pfp.url }}" alt="" style="border-radius: 50%;width: 60px;height: 60px;" class="offline" />

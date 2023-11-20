@@ -20,3 +20,6 @@ def room(request, room_name):
         'friends': friends,
         'user':user
     })
+
+def chat_with_friend(request):
+    

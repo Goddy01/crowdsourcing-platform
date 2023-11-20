@@ -5,6 +5,7 @@ from accounts.models import BaseUser, Innovator
 class Chat(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     sender = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
+    recipient = models.ForeignKey(BaseUser, on_delete=models.CASCADE, null=True)
     content = models.TextField()
 
     # class Meta:
