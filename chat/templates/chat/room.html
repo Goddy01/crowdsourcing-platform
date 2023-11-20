@@ -730,7 +730,7 @@ p {
         <ul class="mt-2">
           {% for friend in friends %}
           {% if friend.user1.user.username == request.user.username %}
-          <li class="contact" data-friend-pk="{{ friend.user2.pk }}">
+          <li class="contact" data-friend-username="{{ friend.user2.user.username }}">
             <div class="wrap">
               <span class="contact-status online"></span>
               <img src="{{ friend.user2.user.pfp.url }}" alt="" style="border-radius: 50%;width: 60px;height: 60px;" class="offline" />
@@ -741,7 +741,7 @@ p {
             </div>
           </li>
           {% elif friend.user1.user.username != request.user.username %}
-          <li class="contact">
+          <li class="contact" data-friend-username="{{ friend.user1.user.username }}">
             <div class="wrap">
               <!-- <span class="contact-status online"></span> -->
               <img src="{{ friend.user1.user.pfp.url }}" alt="" style="border-radius: 50%;width: 60px;height: 60px;" class="offline"/>
@@ -842,10 +842,12 @@ p {
     document.querySelector('#chat-message-submit').onclick = function(e) {
         var messageInputDom = document.getElementById('chat-message-input');
         var message = messageInputDom.value;
+        var friendUsername = $(this).data('friend-username');
         chatSocket.send(JSON.stringify({
             'command': 'new_message',
             'message': message,
-            'from': username
+            'from': username,
+            'to': friendUsername
         }));
 
         messageInputDom.value = '';
@@ -857,6 +859,7 @@ p {
 
     function createMessage(data) {
       var sender = data['sender'];
+      var recipient = data['recipient']
       var msgListTag = document.createElement('li');
       var imgTag = document.createElement('img');
       var pTag = document.createElement('p');

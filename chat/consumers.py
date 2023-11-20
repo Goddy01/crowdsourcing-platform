@@ -16,9 +16,12 @@ class ChatConsumer(WebsocketConsumer):
 
     def new_message(self, data):
         sender = data['from']
+        recipient = data['to']
         sender_user = BaseUser.objects.get(username=sender)
+        recipient_user = BaseUser.objects.get(username=recipient)
         message = Chat.objects.create(
             sender=sender_user,
+            recipient=recipient_user,
             content=data['message']
         )
 
@@ -38,6 +41,7 @@ class ChatConsumer(WebsocketConsumer):
     def message_to_json(self, message):
         return {
             'sender': message.sender.username,
+            'recipient': message.recipient.username,
             'content': message.content,
             'timestamp': str(message.timestamp),
             'sender_pfp_url': message.sender.pfp.url
