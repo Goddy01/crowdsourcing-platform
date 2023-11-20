@@ -149,7 +149,7 @@
 						</ul>
 					</li>
                     {% if request.user.is_authenticated %}
-                    <li style="display: inline;" class="menu-item-has-children">
+                    <!-- <li style="display: inline;" class="menu-item-has-children">
                         <em class="mdi mdi-chevron-down"></em>
                         <a href="">
                             <span style="font-weight: 600;">
@@ -161,7 +161,7 @@
                         <ul class="sub-menu" style="background-color: whitesmoke;">
 							<li><a href="">Wagwan brev!!</a></li>
 						</ul>
-                    </li>
+                    </li> -->
                     <li class="account-logout" style="display: inline;">
                         <a href="{% url 'accounts:sign_out' %}"  style="font-weight: 600;">
                             Logout
@@ -244,6 +244,7 @@
                     </nav>
                 </div>
             </div>
+            <div class="yo"></div>
             <div class="widget widget_text">
                 <h4 class="widget-title">Contact <span class="low-opacity">Us</span></h4>
                 <div class="textwidget">
@@ -305,41 +306,6 @@
     <a href="" class="chat-toggle"><span class="badge">1</span></a>
 </div>
 
-
-<script>
-    var loc = window.location
-    var wsStart = "ws://"
-    if (loc.protocol == "https:"){
-        wsStart = "wss://"
-    }
-    var webSocketEndpoint =  wsStart + loc.host + '/notifications/'  // ws : wss   // Websocket URL, Same on as mentioned in the routing.py
-
-
-    var socket = new WebSocket(webSocketEndpoint) // Creating a new Web Socket Connection
-
-    // Socket On receive message Functionality
-    socket.onmessage = function(e){
-        console.log('message', e)
-        console.log(e.data) // Access the notification data
-        //$("body").append("<h3>"+e.data+"</h3>")
-        // Can write any functionality based on your requirement
-    }
-
-    // Socket Connet Functionality
-    socket.onopen = function(e){
-        console.log('open', e)
-    }
-
-    // Socket Error Functionality
-    socket.onerror = function(e){
-        console.log('error', e)
-    }
-
-    // Socket close Functionality
-    socket.onclose = function(e){
-        console.log('closed', e)
-    }
-</script>
 
 <script src="{% static 'js/modernizr-custom.js' %}"></script>
 <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>

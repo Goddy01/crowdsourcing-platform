@@ -7,7 +7,6 @@ import json
 def universal_content(request):
     context = {}
 
-    context['notif_group_name'] = mark_safe(json.dumps('broadcast'))
     # context['is_innovator'] = Innovator.objects.filter(user__username=request.user.username).exists()
     try:
         context['to_user_username'] = request.POST.get('to_user')
