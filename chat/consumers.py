@@ -7,6 +7,11 @@ from accounts.models import BaseUser
 
 class ChatConsumer(WebsocketConsumer):
     def fetch_messages(self, data):
+        sender = data.get('sender')
+        sender_user =BaseUser.objects.get(username=sender)
+        recipient = data.get('recipient_username')
+        recipient_user = BaseUser.objects.get(username=recipient)
+        print('RECIPIENT USERNAME: ', recipient)
         messages = Chat.last_10_messages()
         content = {
             'command': 'messages',

@@ -730,7 +730,7 @@ p {
         <ul class="mt-2">
           {% for friend in friends %}
           {% if friend.user1.user.username == request.user.username %}
-          <li class="contact" data-friend-username="{{ friend.user2.user.username }}">
+          <li class="contact" data-friend-user="{{ friend.user2.user.pfp.url }}" data-friend-username="{{ friend.user2.user.username }}" id="contact-{{ friend.user2.user.username }}">
             <div class="wrap">
               <span class="contact-status online"></span>
               <img src="{{ friend.user2.user.pfp.url }}" alt="" style="border-radius: 50%;width: 60px;height: 60px;" class="offline" />
@@ -741,7 +741,7 @@ p {
             </div>
           </li>
           {% elif friend.user1.user.username != request.user.username %}
-          <li class="contact" data-friend-username="{{ friend.user1.user.username }}">
+          <li class="contact" data-friend-user="{{ friend.user1.user.pfp.url }}" data-friend-username="{{ friend.user1.user.username }}" id="contact-{{ friend.user1.user.username }}">
             <div class="wrap">
               <!-- <span class="contact-status online"></span> -->
               <img src="{{ friend.user1.user.pfp.url }}" alt="" style="border-radius: 50%;width: 60px;height: 60px;" class="offline"/>
@@ -772,12 +772,21 @@ p {
     </div>
     <div class="content">
       <div class="contact-profile">
-        <img src="{{ request.user.pfp.url }}" alt="" />
-        <p>{{ username }}</p>
+        <img src="" alt="" id="recipient_pfp" />
+        <p id="recipient_username"></p>
         <div class="social-media">
-          <i class="fa fa-facebook" aria-hidden="true"></i>
-          <i class="fa fa-twitter" aria-hidden="true"></i>
-          <i class="fa fa-instagram" aria-hidden="true"></i>
+          <a href="" id="recipient_linkedin">
+            <i class="fa fa-linkedin" aria-hidden="true"></i>
+          </a>
+          <a href="" id="recipient_facebook">
+            <i class="fa fa-facebook" aria-hidden="true"></i>
+          </a>
+          <a href="" id="recipient_twitter">
+            <i class="fa fa-twitter" aria-hidden="true"></i>
+          </a>
+          <a href="" id="recipient_instagram">
+            <i class="fa fa-instagram" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
       <div class="messages" style="margin-bottom: 200px;">
@@ -806,7 +815,7 @@ p {
 
 <script src="{% static 'chat/js/main.js' %}"></script>
 <script src="{% static 'chat/js/reconnecting-websocket.js' %}"></script>
-<script>
+<!-- <script>
     var roomName = {{ room_name_json }};
     var username = {{ username }};
 
@@ -854,7 +863,9 @@ p {
     };
 
     function fetchMessages() {
-      chatSocket.send(JSON.stringify({'command': 'fetch_messages' }));
+      var friendUsername = $(this).data('friend-username');
+
+      chatSocket.send(JSON.stringify({'command': 'fetch_messages', 'recipient_username': friendUsername, 'sender': username}));
     }
 
     function createMessage(data) {
@@ -879,6 +890,102 @@ p {
       document.querySelector('#chat-log').appendChild(msgListTag);
     }
 
+</script> -->
+
+<script>
+  // Function to handle the click event on the list items
+  function handleListItemClick() {
+    // Get the data-friend-username attribute from the clicked list item
+    var friendUsername = $(this).data('friend-username');
+    var friendUserPfp = $(this).data('friend-user');
+    var recipientPfpImg = document.getElementById("recipient_pfp");
+    var recipientUsernameSlot = document.getElementById("recipient_username");
+
+    recipientPfpImg.style.height = "60px";
+    recipientPfpImg.style.width = "60px";
+    recipientPfpImg.src = friendUserPfp;
+    recipientUsernameSlot.textContent = friendUsername;
+
+    
+
+    // Your existing WebSocket code
+    var roomName = {{ room_name_json }};
+    var username = {{ username }};
+
+    var chatSocket = new ReconnectingWebSocket(
+      'ws://' + window.location.host + '/ws/chat/' + roomName + '/');
+
+    chatSocket.onopen = function(e) {
+      fetchMessages(friendUsername);
+    };
+
+    chatSocket.onmessage = function(e) {
+      var data = JSON.parse(e.data);
+      if (data['command'] === 'messages') {
+        for (let i = 0; i < data['messages'].length; i++) {
+          createMessage(data['messages'][i]);
+        }
+      } else if (data['command'] === 'new_message') {
+        createMessage(data['message']);
+      }
+    };
+
+    chatSocket.onclose = function(e) {
+      console.error('Chat socket closed unexpectedly');
+    };
+
+    document.querySelector('#chat-message-input').onkeyup = function(e) {
+      if (e.keyCode === 13) {  // enter, return
+        document.querySelector('#chat-message-submit').click();
+      }
+    };
+
+    document.querySelector('#chat-message-submit').onclick = function(e) {
+      var messageInputDom = document.getElementById('chat-message-input');
+      var message = messageInputDom.value;
+      chatSocket.send(JSON.stringify({
+        'command': 'new_message',
+        'message': message,
+        'from': username,
+        'to': friendUsername
+      }));
+
+      messageInputDom.value = '';
+    };
+
+    function fetchMessages(friendUsername) {
+      chatSocket.send(JSON.stringify({
+        'command': 'fetch_messages',
+        'recipient_username': friendUsername,
+        'sender': username
+      }));
+    }
+
+    function createMessage(data) {
+      var sender = data['sender'];
+      var recipient = data['recipient']
+      var msgListTag = document.createElement('li');
+      var imgTag = document.createElement('img');
+      var pTag = document.createElement('p');
+      var nameTag = document.createElement('small');
+      pTag.textContent = data.content;
+      console.log(data['sender']['pfp'])
+      imgTag.src = data['sender_pfp_url'];
+      // nameTag.textContent = data.sender.username;
+      
+      if (sender !== username) {
+        msgListTag.className = 'sent';
+      } else {
+        msgListTag.className = 'replies';
+      }
+      msgListTag.appendChild(imgTag);
+      msgListTag.appendChild(pTag);
+      document.querySelector('#chat-log').appendChild(msgListTag);
+    }
+  };
+
+  // Attach the click event to all list items with the 'contact' class
+  $('.contact').click(handleListItemClick);
 </script>
 </body>
 
