@@ -4,8 +4,8 @@ from accounts.models import BaseUser, Innovator
 
 class Chat(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
-    sender = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
-    recipient = models.ForeignKey(BaseUser, on_delete=models.CASCADE, null=True)
+    sender = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='chat_sender')
+    recipient = models.ForeignKey(BaseUser, on_delete=models.CASCADE, null=True, related_name='chat_recipient')
     content = models.TextField()
 
     # class Meta:
