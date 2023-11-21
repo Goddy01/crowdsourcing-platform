@@ -1004,6 +1004,9 @@ p {
       pTag.textContent = data.content;
       console.log(data['sender']['pfp'])
       imgTag.src = data['sender_pfp_url'];
+      imgTag.style.width = "40px";
+      imgTag.style.height = "40px";
+      imgTag.style.borderRadius = "50%";
       // nameTag.textContent = data.sender.username;
       
       if (sender !== username) {
