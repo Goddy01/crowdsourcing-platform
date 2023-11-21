@@ -43,7 +43,7 @@ def innovator_sign_up(request):
         form = InnovatorSignUpForm(request.POST)
         if form.is_valid():
             with transaction.atomic():
-                user = form.save(commit=False)
+                user = form.save()
                 user.is_active = False
                 user.date_joined = datetime.now()
                 user.last_login = datetime.now()
@@ -133,7 +133,7 @@ def moderator_sign_up(request):
                     if mod_form.is_valid():
                         # with transaction.atomic():   
                         # mod_user_obj = baseuser_form.save(commit=False)
-                        mod_user_obj = mod_form.save(commit=False)
+                        mod_user_obj = mod_form.save()
 
                         mod_user_obj.is_active = True
                         mod_user_obj.date_joined = datetime.now()

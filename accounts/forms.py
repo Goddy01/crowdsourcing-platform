@@ -128,7 +128,7 @@ class InnovatorSignUpForm(UserCreationForm):
         # user.is_student = True
         if commit:
             user.save()
-        moderator = Innovator.objects.create(user=user)
+        Innovator.objects.create(user=user)
         return user
     
     def clean_email(self):
