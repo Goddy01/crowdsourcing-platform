@@ -7,16 +7,16 @@ from accounts.models import Connection, Innovator
 
 def index(request):
     user = Innovator.objects.get(user__username=request.user.username)
-    friends = Connection.objects.filter(
+    friends_list = Connection.objects.filter(
         Q(user1=user) | Q(user2=user)
     )
     friends = []
 
-    for friend in friends:
+    for friend in friends_list:
         if friend.user1 == user:
-            friends.append(friends.user2)
+            friends.append(friend.user2)
         else:
-            friends.append(friends.user1)
+            friends.append(friend.user1)
     return render(request, 'chat/room.html', {
         'username': mark_safe(json.dumps(request.user.username)),
         'friends': friends,
@@ -26,16 +26,16 @@ def index(request):
 @login_required
 def room(request, room_name):
     user = Innovator.objects.get(user__username=request.user.username)
-    friends = Connection.objects.filter(
+    friends_list = Connection.objects.filter(
         Q(user1=user) | Q(user2=user)
     )
     friends = []
 
-    for friend in friends:
+    for friend in friends_list:
         if friend.user1 == user:
-            friends.append(friends.user2)
+            friends.append(friend.user2)
         else:
-            friends.append(friends.user1)
+            friends.append(friend.user1)
     return render(request, 'chat/room.html', {
         'room_name_json': mark_safe(json.dumps(room_name)),
         'username': mark_safe(json.dumps(request.user.username)),
