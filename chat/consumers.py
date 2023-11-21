@@ -3,16 +3,10 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import AsyncWebsocketConsumer, WebsocketConsumer
 from .models import Chat, GroupChat
 from accounts.models import BaseUser
-from django.db.models import Q
 
 
 class ChatConsumer(WebsocketConsumer):
     def fetch_messages(self, data):
-        sender = data.get('sender')
-        sender_user =BaseUser.objects.get(username=sender)
-        recipient = data.get('recipient_username')
-        recipient_user = BaseUser.objects.get(username=recipient)
-        print('RECIPIENT USERNAME: ', recipient)
         messages = Chat.last_10_messages()
         content = {
             'command': 'messages',
@@ -22,12 +16,11 @@ class ChatConsumer(WebsocketConsumer):
 
     def new_message(self, data):
         sender = data['from']
-        recipient = data['to']
         sender_user = BaseUser.objects.get(username=sender)
-        recipient_user = BaseUser.objects.get(username=recipient)
+        print('TO: ', data['to'])
         message = Chat.objects.create(
             sender=sender_user,
-            recipient=recipient_user,
+            recipient=BaseUser.objects.get(username=data['to']),
             content=data['message']
         )
 
@@ -47,7 +40,6 @@ class ChatConsumer(WebsocketConsumer):
     def message_to_json(self, message):
         return {
             'sender': message.sender.username,
-            'recipient': message.recipient.username,
             'content': message.content,
             'timestamp': str(message.timestamp),
             'sender_pfp_url': message.sender.pfp.url
@@ -58,9 +50,8 @@ class ChatConsumer(WebsocketConsumer):
         'new_message': new_message
     }
     def connect(self):
-        self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
-        print('ROOM NAME: ', self.room_name)
-        self.room_group_name = f"chat_{self.room_name}"
+        # self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
+        self.room_group_name = "chat_room"
         # Join room group
         async_to_sync(self.channel_layer.group_add)(self.room_group_name, self.channel_name)
         self.accept()

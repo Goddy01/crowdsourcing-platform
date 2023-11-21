@@ -734,7 +734,7 @@ p {
               <span class="contact-status online"></span>
               <img src="{{ friend.user.pfp.url }}" alt="" style="border-radius: 50%;width: 60px;height: 60px;" class="offline" />
               <div class="meta">
-                <p class="name">{{ friend.user.last_name }}, {{ friend.user.first_name }} {{ friend.user.middle_name }}</p>
+                <p class="name">{{ friend.user.get_full_name }}</p>
                 <p class="preview">You just got LITT up, Mike.</p>
               </div>
             </div>
@@ -801,6 +801,7 @@ p {
   </div>
 
 <script src="{% static 'chat/js/main.js' %}"></script>
+<script src="{% static 'chat/js/reconnecting-websocket.js' %}"></script>
 <!-- <script>
     var roomName = {{ room_name_json }};
     var username = {{ username }};
@@ -878,7 +879,6 @@ p {
 
 </script> -->
 
-<script src="{% static 'chat/js/reconnecting-websocket.js' %}"></script>
 <script>
   // Function to handle the click event on the list items
   function handleListItemClick() {
@@ -929,11 +929,11 @@ p {
     
 
     // Your existing WebSocket code
-    var roomName = friendUsername;
+    
     var username = {{ username }};
 
     var chatSocket = new ReconnectingWebSocket(
-      'ws://' + window.location.host + '/ws/chat/' + friendUsername + '/');
+      'ws://' + window.location.host + '/ws/chat/');
 
     chatSocket.onopen = function(e) {
       fetchMessages(friendUsername);
@@ -963,7 +963,6 @@ p {
     document.querySelector('#chat-message-submit').onclick = function(e) {
       var messageInputDom = document.getElementById('chat-message-input');
       var message = messageInputDom.value;
-      console.log('O tun ti se')
       chatSocket.send(JSON.stringify({
         'command': 'new_message',
         'message': message,

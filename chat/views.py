@@ -6,25 +6,10 @@ from django.contrib.auth.decorators import login_required
 from accounts.models import Connection, Innovator
 
 def index(request):
-    user = Innovator.objects.get(user__username=request.user.username)
-    friends_list = Connection.objects.filter(
-        Q(user1=user) | Q(user2=user)
-    )
-    friends = []
-
-    for friend in friends_list:
-        if friend.user1 == user:
-            friends.append(friend.user2)
-        else:
-            friends.append(friend.user1)
-    return render(request, 'chat/room.html', {
-        'username': mark_safe(json.dumps(request.user.username)),
-        'friends': friends,
-        'user':user
-    })
+    return render(request, 'chat/chat.html')
 
 @login_required
-def room(request, room_name):
+def room(request):
     user = Innovator.objects.get(user__username=request.user.username)
     friends_list = Connection.objects.filter(
         Q(user1=user) | Q(user2=user)
@@ -37,7 +22,6 @@ def room(request, room_name):
         else:
             friends.append(friend.user1)
     return render(request, 'chat/room.html', {
-        'room_name_json': mark_safe(json.dumps(room_name)),
         'username': mark_safe(json.dumps(request.user.username)),
         'friends': friends,
         'user':user
