@@ -149,19 +149,15 @@
 						</ul>
 					</li>
                     {% if request.user.is_authenticated %}
-                    <!-- <li style="display: inline;" class="menu-item-has-children">
+                    <li style="display: inline;">
                         <em class="mdi mdi-chevron-down"></em>
-                        <a href="">
+                        <a href="{% url 'chat:chat' %}">
                             <span style="font-weight: 600;">
-                                Notifications
+                                Chats
                             </span>
-                            <i class="fa-solid fa-bell text-success" style="font-size: 20px;"></i>
-                            <sup class="text-success" style="font-size: 16px;">0</sup>
+                            <i class="fa-solid fa-message text-success" style="font-size: 20px;"></i>
                         </a>
-                        <ul class="sub-menu" style="background-color: whitesmoke;">
-							<li><a href="">Wagwan brev!!</a></li>
-						</ul>
-                    </li> -->
+                    </li>
                     <li class="account-logout" style="display: inline;">
                         <a href="{% url 'accounts:sign_out' %}"  style="font-weight: 600;">
                             Logout
