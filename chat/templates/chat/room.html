@@ -730,7 +730,7 @@ p {
         <ul class="mt-2">
           {% for friend in friends %}
           {% if friend.user1.user.username == request.user.username %}
-          <li class="contact" data-friend-user-fullname="{{ friend.user2.user.get_full_name }}" data-friend-user="{{ friend.user2.user.pfp.url }}" data-friend-username="{{ friend.user2.user.username }}" id="contact-{{ friend.user2.user.username }}">
+          <li class="contact" data-friend-i="{{ friend.user2.user.instagram }}" data-friend-t="{{ friend.user2.user.twitter }}" data-friend-f="{{ friend.user2.user.facebook }}" data-friend-l="{{ friend.user2.user.linkedin }}" data-friend-user-fullname="{{ friend.user2.user.get_full_name }}" data-friend-user="{{ friend.user2.user.pfp.url }}" data-friend-username="{{ friend.user2.user.username }}" id="contact-{{ friend.user2.user.username }}">
             <div class="wrap">
               <span class="contact-status online"></span>
               <img src="{{ friend.user2.user.pfp.url }}" alt="" style="border-radius: 50%;width: 60px;height: 60px;" class="offline" />
@@ -741,7 +741,7 @@ p {
             </div>
           </li>
           {% elif friend.user1.user.username != request.user.username %}
-          <li class="contact" data-friend-user-fullname="{{ friend.user1.user.get_full_name }}" data-friend-user="{{ friend.user1.user.pfp.url }}" data-friend-username="{{ friend.user1.user.username }}" id="contact-{{ friend.user1.user.username }}">
+          <li class="contact" data-friend-i="{{ friend.user1.user.instagram }}" data-friend-t="{{ friend.user1.user.twitter }}" data-friend-f="{{ friend.user1.user.facebook }}" data-friend-l="{{ friend.user1.user.linkedin }}" data-friend-user-fullname="{{ friend.user1.user.get_full_name }}" data-friend-user="{{ friend.user1.user.pfp.url }}" data-friend-username="{{ friend.user1.user.username }}" id="contact-{{ friend.user1.user.username }}">
             <div class="wrap">
               <!-- <span class="contact-status online"></span> -->
               <img src="{{ friend.user1.user.pfp.url }}" alt="" style="border-radius: 50%;width: 60px;height: 60px;" class="offline"/>
@@ -775,16 +775,16 @@ p {
         <img src="" alt="" id="recipient_pfp" />
         <p id="recipient_username"></p>
         <div class="social-media">
-          <a href="" id="recipient_linkedin">
+          <a href="" id="recipient_linkedin" style="display: none;">
             <i class="fa fa-linkedin" aria-hidden="true"></i>
           </a>
-          <a href="" id="recipient_facebook">
+          <a href="" id="recipient_facebook" style="display: none;">
             <i class="fa fa-facebook" aria-hidden="true"></i>
           </a>
-          <a href="" id="recipient_twitter">
+          <a href="" id="recipient_twitter" style="display: none;">
             <i class="fa fa-twitter" aria-hidden="true"></i>
           </a>
-          <a href="" id="recipient_instagram">
+          <a href="" id="recipient_instagram" style="display: none;">
             <i class="fa fa-instagram" aria-hidden="true"></i>
           </a>
         </div>
@@ -899,13 +899,45 @@ p {
     var friendUsername = $(this).data('friend-username');
     var friendUserPfp = $(this).data('friend-user');
     var friendUserFullname = $(this).data('friend-user-fullname');
+    var friendUserInstagram = $(this).data('friend-i');
+    var friendUserTwitter = $(this).data('friend-t');
+    var friendUserFacebook = $(this).data('friend-f');
+    var friendUserLinkedln = $(this).data('friend-l');
+    
+    console.log('F: ', friendUserFacebook)
+
     var recipientPfpImg = document.getElementById("recipient_pfp");
     var recipientUsernameSlot = document.getElementById("recipient_username");
+    var recipientInstagramSlot = document.getElementById("recipient_instagram")
+    var recipientFacebookSlot = document.getElementById("recipient_facebook")
+    var recipientTwitterSlot = document.getElementById("recipient_twitter")
+    var recipientLinkedlnSlot = document.getElementById("recipient_linkedin")
+
+
+    if (friendUserInstagram && friendUserInstagram.length > 22) {
+      recipientInstagramSlot.style.display = 'inline';
+    }
+  
+    if (friendUserTwitter && friendUserTwitter.length > 20) {
+      recipientTwitterSlot.style.display = 'inline';
+    }
+
+    if (friendUserFacebook && friendUserFacebook.length > 21 ) {
+      recipientFacebookSlot.style.display = 'inline';
+    }
+
+    if (friendUserLinkedln && friendUserLinkedln.length > 21) {
+      recipientLinkedlnSlot.style.display = 'inline';
+    }
 
     recipientPfpImg.style.height = "60px";
     recipientPfpImg.style.width = "60px";
     recipientPfpImg.src = friendUserPfp;
     recipientUsernameSlot.textContent = friendUserFullname;
+    recipientInstagramSlot.href = friendUserInstagram;
+    recipientFacebookSlot.href = friendUserFacebook;
+    recipientTwitterSlot.href = friendUserTwitter;
+    recipientLinkedlnSlot.href = friendUserLinkedln;
 
     
 
