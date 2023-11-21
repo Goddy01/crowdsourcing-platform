@@ -729,41 +729,27 @@ p {
         <p class="h4 text-center text-white p-3" style="border: none;background-color: #121a21;">Friends</p>
         <ul class="mt-2">
           {% for friend in friends %}
-          {% if friend.user1.user.username == request.user.username %}
-          <li class="contact" data-friend-i="{{ friend.user2.user.instagram }}" data-friend-t="{{ friend.user2.user.twitter }}" data-friend-f="{{ friend.user2.user.facebook }}" data-friend-l="{{ friend.user2.user.linkedin }}" data-friend-user-fullname="{{ friend.user2.user.get_full_name }}" data-friend-user="{{ friend.user2.user.pfp.url }}" data-friend-username="{{ friend.user2.user.username }}" id="contact-{{ friend.user2.user.username }}">
-            <div class="wrap">
-              <span class="contact-status online"></span>
-              <img src="{{ friend.user2.user.pfp.url }}" alt="" style="border-radius: 50%;width: 60px;height: 60px;" class="offline" />
-              <div class="meta">
-                <p class="name">{{ friend.user2.user.last_name }}, {{ friend.user1.user.first_name }} {{ friend.user1.user.middle_name }}</p>
-                <p class="preview">You just got LITT up, Mike.</p>
-              </div>
-            </div>
-          </li>
-          {% elif friend.user1.user.username != request.user.username %}
-          <li class="contact" data-friend-i="{{ friend.user1.user.instagram }}" data-friend-t="{{ friend.user1.user.twitter }}" data-friend-f="{{ friend.user1.user.facebook }}" data-friend-l="{{ friend.user1.user.linkedin }}" data-friend-user-fullname="{{ friend.user1.user.get_full_name }}" data-friend-user="{{ friend.user1.user.pfp.url }}" data-friend-username="{{ friend.user1.user.username }}" id="contact-{{ friend.user1.user.username }}">
-            <div class="wrap">
-              <!-- <span class="contact-status online"></span> -->
-              <img src="{{ friend.user1.user.pfp.url }}" alt="" style="border-radius: 50%;width: 60px;height: 60px;" class="offline"/>
-              <div class="meta">
-                <p class="name">{{ friend.user1.user.last_name }}, {{ friend.user1.user.first_name }} {{ friend.user1.user.middle_name }}</p>
-                <p class="preview">You just got LITT up, Mike.</p>
-              </div>
-            </div>
-          </li>
-          {% endif %}
-          <!-- <li class="contact active">
-            <div class="wrap">
-              <span class="contact-status busy"></span>
-              <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-              <div class="meta">
-                <p class="name">Harvey Specter</p>
-                <p class="preview">Wrong. You take the gun, or you pull out a bigger one. Or, you call their bluff. Or, you do any one of a hundred and forty six other things.</p>
-              </div>
-            </div>
-          </li> -->
-        </ul>
-        {% endfor %}
+            {% with other_user = friend.user1.user if friend.user2.user.username == request.user.username else friend.user2.user %}
+              <li class="contact" 
+                  data-friend-i="{{ other_user.instagram }}" 
+                  data-friend-t="{{ other_user.twitter }}" 
+                  data-friend-f="{{ other_user.facebook }}" 
+                  data-friend-l="{{ other_user.linkedin }}" 
+                  data-friend-user-fullname="{{ other_user.get_full_name }}" 
+                  data-friend-user="{{ other_user.pfp.url }}" 
+                  data-friend-username="{{ other_user.username }}" 
+                  id="contact-{{ other_user.username }}">
+                <div class="wrap">
+                  <span class="contact-status online"></span>
+                  <img src="{{ other_user.pfp.url }}" alt="" style="border-radius: 50%; width: 60px; height: 60px;" class="offline" />
+                  <div class="meta">
+                    <p class="name">{{ other_user.last_name }}, {{ other_user.first_name }} {{ other_user.middle_name }}</p>
+                    <p class="preview">You just got LITT up, Mike.</p>
+                  </div>
+                </div>
+              </li>
+            {% endwith %}
+          {% endfor %}
       </div>
       <div id="bottom-bar">
         <button id="addcontact"><i class="fa fa-user-plus fa-fw" aria-hidden="true"></i> <span>Add contact</span></button>
@@ -814,7 +800,6 @@ p {
   </div>
 
 <script src="{% static 'chat/js/main.js' %}"></script>
-<script src="{% static 'chat/js/reconnecting-websocket.js' %}"></script>
 <!-- <script>
     var roomName = {{ room_name_json }};
     var username = {{ username }};
@@ -892,6 +877,7 @@ p {
 
 </script> -->
 
+<script src="{% static 'chat/js/reconnecting-websocket.js' %}"></script>
 <script>
   // Function to handle the click event on the list items
   function handleListItemClick() {
@@ -976,6 +962,7 @@ p {
     document.querySelector('#chat-message-submit').onclick = function(e) {
       var messageInputDom = document.getElementById('chat-message-input');
       var message = messageInputDom.value;
+      console.log('O tun ti se')
       chatSocket.send(JSON.stringify({
         'command': 'new_message',
         'message': message,

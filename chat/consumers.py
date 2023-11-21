@@ -13,10 +13,7 @@ class ChatConsumer(WebsocketConsumer):
         recipient = data.get('recipient_username')
         recipient_user = BaseUser.objects.get(username=recipient)
         print('RECIPIENT USERNAME: ', recipient)
-        messages = Chat.objects.filter(
-            Q(sender=sender_user) & Q(recipient=recipient_user) |
-            Q(sender=recipient_user) & Q(recipient=sender_user)
-        ).order_by('timestamp').distinct()
+        messages = Chat.last_10_messages()
         content = {
             'command': 'messages',
             'messages': self.messages_to_json(messages)
