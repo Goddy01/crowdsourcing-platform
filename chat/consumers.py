@@ -16,7 +16,7 @@ class ChatConsumer(WebsocketConsumer):
         messages = Chat.objects.filter(
             Q(sender=sender_user) & Q(recipient=recipient_user) |
             Q(sender=recipient_user) & Q(recipient=sender_user)
-        ).order_by('timestamp')
+        ).order_by('timestamp').distinct()
         content = {
             'command': 'messages',
             'messages': self.messages_to_json(messages)
@@ -62,6 +62,7 @@ class ChatConsumer(WebsocketConsumer):
     }
     def connect(self):
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
+        print('ROOM NAME: ', self.room_name)
         self.room_group_name = f"chat_{self.room_name}"
         # Join room group
         async_to_sync(self.channel_layer.group_add)(self.room_group_name, self.channel_name)

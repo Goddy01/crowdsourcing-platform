@@ -896,6 +896,7 @@ p {
   // Function to handle the click event on the list items
   function handleListItemClick() {
     // Get the data-friend-username attribute from the clicked list item
+    $(this).addClass('active');
     var friendUsername = $(this).data('friend-username');
     var friendUserPfp = $(this).data('friend-user');
     var friendUserFullname = $(this).data('friend-user-fullname');
@@ -904,7 +905,6 @@ p {
     var friendUserFacebook = $(this).data('friend-f');
     var friendUserLinkedln = $(this).data('friend-l');
     
-    console.log('F: ', friendUserFacebook)
 
     var recipientPfpImg = document.getElementById("recipient_pfp");
     var recipientUsernameSlot = document.getElementById("recipient_username");
@@ -942,11 +942,11 @@ p {
     
 
     // Your existing WebSocket code
-    var roomName = {{ room_name_json }};
+    var roomName = friendUsername;
     var username = {{ username }};
 
     var chatSocket = new ReconnectingWebSocket(
-      'ws://' + window.location.host + '/ws/chat/' + roomName + '/');
+      'ws://' + window.location.host + '/ws/chat/' + friendUsername + '/');
 
     chatSocket.onopen = function(e) {
       fetchMessages(friendUsername);
@@ -1002,7 +1002,6 @@ p {
       var pTag = document.createElement('p');
       var nameTag = document.createElement('small');
       pTag.textContent = data.content;
-      console.log(data['sender']['pfp'])
       imgTag.src = data['sender_pfp_url'];
       imgTag.style.width = "40px";
       imgTag.style.height = "40px";

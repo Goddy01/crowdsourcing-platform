@@ -6,7 +6,15 @@ from django.contrib.auth.decorators import login_required
 from accounts.models import Connection, Innovator
 
 def index(request):
-    return render(request, 'chat/chat.html')
+    user = Innovator.objects.get(user__username=request.user.username)
+    friends = Connection.objects.filter(
+        Q(user1=user) | Q(user2=user)
+    )
+    return render(request, 'chat/room.html', {
+        'username': mark_safe(json.dumps(request.user.username)),
+        'friends': friends,
+        'user':user
+    })
 
 @login_required
 def room(request, room_name):
