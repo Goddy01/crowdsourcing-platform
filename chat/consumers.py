@@ -3,6 +3,7 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import AsyncWebsocketConsumer, WebsocketConsumer
 from .models import Chat, GroupChat
 from accounts.models import BaseUser
+from django.db.models import Q
 
 
 class ChatConsumer(WebsocketConsumer):
@@ -12,7 +13,10 @@ class ChatConsumer(WebsocketConsumer):
         recipient = data.get('recipient_username')
         recipient_user = BaseUser.objects.get(username=recipient)
         print('RECIPIENT USERNAME: ', recipient)
-        messages = Chat.last_10_messages()
+        messages = Chat.objects.filter(
+            Q(sender=sender_user) & Q(recipient=recipient_user) |
+            Q(sender=recipient_user) & Q(recipient=sender_user)
+        ).order_by('timestamp')
         content = {
             'command': 'messages',
             'messages': self.messages_to_json(messages)
