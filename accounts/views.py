@@ -759,7 +759,7 @@ def send_connection_request(request, recipient_pk):
                     'requester_pfp': recipient.user.pfp.url,
                 }, request=request
                 )
-                to_email = f'{request.user.email}'
+                to_email = f'{recipient.user.email}'
                 from_email = settings.EMAIL_HOST_USER
                 send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
             else:
@@ -781,7 +781,7 @@ def send_connection_request(request, recipient_pk):
                     'requester_pfp': recipient.user.pfp.url,
                 }, request=request
                 )
-                to_email = f'{request.user.email}'
+                to_email = f'{recipient.user.email}'
                 from_email = settings.EMAIL_HOST_USER
                 send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
             messages.success(request, 'Connection Request sent. Kindly wait for their response.')

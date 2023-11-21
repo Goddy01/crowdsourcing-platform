@@ -131,7 +131,7 @@
 	</style><!--[if true]><style>.forceBgColor{background-color: white !important}</style><![endif]-->
 </head>
 
-<body class="forceBgColor" style="background-color: transparent; margin: 0; padding: 0; -webkit-text-size-adjust: none; text-size-adjust: none;">
+<body class="forceBgColor" style="background-color: transparent; margin: 0; padding: 30px; -webkit-text-size-adjust: none; text-size-adjust: none;">
 	<table class="nl-container" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: transparent;">
 		<tbody>
 			<tr>
@@ -144,7 +144,7 @@
 										<tbody>
 											<tr>
 												<td class="column column-1" width="100%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;">
-													<table class="heading_block block-1" width="100%" border="0" cellpadding="10" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
+													<table class="heading_block block-1" width="100%" border="0" cellpadding="10" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;padding: 30px;">
 														<tr>
                                                             <td class="pad">
                                                                 <h1 style="margin: 0; color: #4e8e4c; direction: ltr; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 45px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: center; margin-top: 0; margin-bottom: 0;"><span class="tinyMce-placeholder">Summit</span></h1>
@@ -152,21 +152,21 @@
 														</tr>
                                                         <td>
                                                             <h6 style="font-size: 14px; margin: 0; color: #040c04; direction: ltr; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-weight: 500; letter-spacing: normal; line-height: 120%; margin-top: 0; margin-bottom: 0;">
-                                                                <h2 class="tinyMce-placeholder">{{ requester.user.last_name }}, {{ requester.user.first_name }} {{ requester.user.middle_name }} sent you a connection request</h2>
+                                                                <h4 class="tinyMce-placeholder">{{ requester.user.last_name }}, {{ requester.user.first_name }} {{ requester.user.middle_name }} sent you a connection request</h4>
                                                             </h6>
                                                             
                                                         </td>
                                                         <tr>
-                                                            <td style="border-radius: 7px; background-color: whitesmoke; padding: 10px;">
+                                                            <td style="border-radius: 7px; background-color: whitesmoke; padding: 20px;">
                                                                 <h5 style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;margin: 0px;padding: 0px;">
-                                                                    <h4>
+                                                                    <h5>
                                                                         <span style="display: block;">
                                                                             {{ requester.user.last_name }}, {{ requester.user.first_name }} {{ requester.user.middle_name }}
                                                                         </span>
                                                                         <span>
                                                                             {{ requester.user.job_title }}
                                                                         </span>
-                                                                    </h4>
+                                                                    </h5>
                                                                     <a href="http://{{ domain }}{% url 'accounts:friend_requests' %}" class="profile-link" style="text-decoration: none;">
                                                                         View Request
                                                                     </a>
