@@ -43,7 +43,7 @@ def innovator_sign_up(request):
         form = InnovatorSignUpForm(request.POST)
         if form.is_valid():
             with transaction.atomic():
-                user = form.save()
+                user = form.save(commit=False)
                 user.is_active = False
                 user.date_joined = datetime.now()
                 user.last_login = datetime.now()
@@ -52,6 +52,7 @@ def innovator_sign_up(request):
                 # user.signup_confirmation = True
                 # user.is_staff = True
                 # user.is_verified = True
+                user.is_innovator =True
                 user.save()
                 current_site = get_current_site(request)
                 subject = 'Activate your account'
@@ -132,7 +133,7 @@ def moderator_sign_up(request):
                     if mod_form.is_valid():
                         # with transaction.atomic():   
                         # mod_user_obj = baseuser_form.save(commit=False)
-                        mod_user_obj = mod_form.save()
+                        mod_user_obj = mod_form.save(commit=False)
 
                         mod_user_obj.is_active = True
                         mod_user_obj.date_joined = datetime.now()
@@ -140,6 +141,7 @@ def moderator_sign_up(request):
                         mod_user_obj.signup_confirmation = True
                         mod_user_obj.is_staff = True
                         mod_user_obj.is_verified = True
+                        mod_user_obj.is_moderator = True
                         mod_user_obj.save()
 
                         admin = BaseUser.objects.get(username=request.user.username, is_admin=True)

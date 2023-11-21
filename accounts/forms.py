@@ -67,11 +67,11 @@ class BaseUserSignUpForm(UserCreationForm):
         return username
 
 class InnovatorSignUpForm(UserCreationForm):
-    job_title = forms.CharField(
-            error_messages={
-                'required': 'Please enter your Job title.'
-            }
-        )
+    # job_title = forms.CharField(
+    #         error_messages={
+    #             'required': 'Please enter your Job title.'
+    #         }
+    #     )
     username = forms.CharField(
             error_messages={
                 'required': 'Please enter your username.'
@@ -112,7 +112,7 @@ class InnovatorSignUpForm(UserCreationForm):
     
     class Meta:
         model = BaseUser
-        fields = ['job_title', 'last_name', 'first_name', 'username', 'email', 'phone_num']
+        fields = ['last_name', 'first_name', 'username', 'email', 'phone_num']
 
     # @transaction.atomic
     # def save(self, commit=True):
@@ -143,11 +143,11 @@ class InnovatorSignUpForm(UserCreationForm):
         return username
         
 class ModeratorSignUpForm(UserCreationForm):
-    job_title = forms.CharField(
-            error_messages={
-                'required': 'Please enter your Job title.'
-            }
-        )
+    # job_title = forms.CharField(
+    #         error_messages={
+    #             'required': 'Please enter your Job title.'
+    #         }
+    #     )
     username = forms.CharField(
             error_messages={
                 'required': 'Please enter your username.'
@@ -196,7 +196,7 @@ class ModeratorSignUpForm(UserCreationForm):
     # area_of_expertise = forms.CharField()
     class Meta:
         model = BaseUser
-        fields = ['job_title', 'last_name', 'first_name', 'username', 'email', 'area_of_expertise', 'phone_num']
+        fields = ['last_name', 'first_name', 'username', 'email', 'area_of_expertise', 'phone_num']
     
     @transaction.atomic
     def save(self, commit=True):
