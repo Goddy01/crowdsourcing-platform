@@ -22,7 +22,7 @@ def room(request):
         else:
             friends.append(friend.user1)
     return render(request, 'chat/room.html', {
-        'username': mark_safe(json.dumps(request.user.username)),
+        'username': request.user.username,
         'friends': friends,
         'user':user
     })

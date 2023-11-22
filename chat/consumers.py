@@ -1,4 +1,5 @@
 import json
+from django.db.models import Q
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import AsyncWebsocketConsumer, WebsocketConsumer
 from .models import Chat, GroupChat
@@ -7,7 +8,18 @@ from accounts.models import BaseUser
 
 class ChatConsumer(WebsocketConsumer):
     def fetch_messages(self, data):
-        messages = Chat.last_10_messages()
+        sender = BaseUser.objects.get(username=data.get('sender'))
+        print('RECIPIENT: ', data['sender'])
+        print('RECIPIENT: ', data['recipient'])
+        recipient = BaseUser.objects.get(username=data.get('recipient'))
+        # messages = Chat.last_10_messages()
+        messages = Chat.objects.filter(
+            (Q(sender=sender) & Q(recipient=recipient)) |
+            (Q(sender=recipient) & Q(recipient=sender))
+        ).order_by('timestamp')
+        for message in messages:
+            print('MESSAGE SENDER: ', message.sender)
+            print('MESSAGE RECIPIENT: ', message.recipient)
         content = {
             'command': 'messages',
             'messages': self.messages_to_json(messages)
