@@ -4,22 +4,16 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import AsyncWebsocketConsumer, WebsocketConsumer
 from .models import Chat, GroupChat
 from accounts.models import BaseUser
+from .views import get_messages
 
 
 class ChatConsumer(WebsocketConsumer):
     def fetch_messages(self, data):
         sender = BaseUser.objects.get(username=data.get('sender'))
-        print('RECIPIENT: ', data['sender'])
-        print('RECIPIENT: ', data['recipient'])
         recipient = BaseUser.objects.get(username=data.get('recipient'))
         # messages = Chat.last_10_messages()
-        messages = Chat.objects.filter(
-            (Q(sender=sender) & Q(recipient=recipient)) |
-            (Q(sender=recipient) & Q(recipient=sender))
-        ).order_by('timestamp')
-        for message in messages:
-            print('MESSAGE SENDER: ', message.sender)
-            print('MESSAGE RECIPIENT: ', message.recipient)
+        messages = get_messages(sender=sender, recipient=recipient)
+        print('MESSAGES: ', messages)
         content = {
             'command': 'messages',
             'messages': self.messages_to_json(messages)
@@ -52,6 +46,7 @@ class ChatConsumer(WebsocketConsumer):
     def message_to_json(self, message):
         return {
             'sender': message.sender.username,
+            'recipient': message.recipient.username,
             'content': message.content,
             'timestamp': str(message.timestamp),
             'sender_pfp_url': message.sender.pfp.url

@@ -1,9 +1,11 @@
+from itertools import chain
 from django.db.models import Q
 from django.shortcuts import render
 from django.utils.safestring import mark_safe
 import json
 from django.contrib.auth.decorators import login_required
 from accounts.models import Connection, Innovator
+from .models import Chat
 
 def index(request):
     return render(request, 'chat/chat.html')
@@ -26,3 +28,12 @@ def room(request):
         'friends': friends,
         'user':user
     })
+
+def get_messages(sender, recipient):
+    qs1 = Chat.objects.filter(sender=sender, recipient=recipient).order_by('timestamp') | Chat.objects.filter(sender=recipient, recipient=sender).order_by('timestamp')
+    print('Q1: ', qs1)
+    qs2 = Chat.objects.filter(sender=recipient, recipient=sender).order_by('timestamp')
+    print('Q2: ', qs2)
+    messages = list(chain(qs1, qs2))
+    print('M: ', messages)
+    return messages
