@@ -813,12 +813,12 @@ p {
         </div>
       </div>
       <div class="messages">
-        <span>
+        <!-- <span>
           <i class="fa fa-check d-inline">
           <small>delivered</small>
           </i>
         <i class="fa fa-check d-inline text-success">seen</i>
-        </span>
+        </span> -->
         <div class="floating d-flex justify-content-center" id="floating">
           <!-- <button class="new-msg-btn button button-primary badge-pill" style="padding: 0px 20px;height: 50px;font-family: Georgia, 'Times New Roman', Times, serif;display: none;white-space: nowrap;">
             <span style="font-size: 18px;">New Message</span>
@@ -828,7 +828,7 @@ p {
         <ul id="chat-log">
         </ul>
       </div>
-      <div class="message-input">
+      <div class="message-input" style="display: none;">
         <div class="wrap">
         <input id="chat-message-input" type="text" placeholder="Write your message..." />
         <i class="fa fa-paperclip attachment" aria-hidden="true"></i>
@@ -854,6 +854,7 @@ p {
     var floating = document.getElementById('floating');
 
     chatLog.innerHTML = '';
+    document.getElementsByClassName('message-input')[0].style.display = 'inline';
     // document.getElementsByClassName('new-msg-btn')[0].style.display = 'none';
 
     var chatSocket = new ReconnectingWebSocket(

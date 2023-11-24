@@ -12,10 +12,12 @@ class ChatConsumer(WebsocketConsumer):
         sender = BaseUser.objects.get(username=data.get('sender'))
         recipient = BaseUser.objects.get(username=data.get('recipient'))
         # messages = Chat.last_10_messages()
+        logged_in_user = BaseUser.objects.get(username=self.scope['user'].username)
         messages = get_messages(sender=sender, recipient=recipient)
         for message in messages:
-            message.is_seen = True
-            message.save(update_fields=['is_seen'])
+            if logged_in_user == message.recipient:
+                message.is_seen = True
+                message.save(update_fields=['is_seen'])
         content = {
             'command': 'messages',
             'messages': self.messages_to_json(messages)
