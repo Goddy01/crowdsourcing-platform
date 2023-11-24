@@ -13,6 +13,9 @@ class ChatConsumer(WebsocketConsumer):
         recipient = BaseUser.objects.get(username=data.get('recipient'))
         # messages = Chat.last_10_messages()
         messages = get_messages(sender=sender, recipient=recipient)
+        for message in messages:
+            message.is_seen = True
+            message.save(update_fields=['is_seen'])
         content = {
             'command': 'messages',
             'messages': self.messages_to_json(messages)
@@ -48,7 +51,8 @@ class ChatConsumer(WebsocketConsumer):
             'recipient': message.recipient.username,
             'content': message.content,
             'timestamp': str(message.timestamp),
-            'sender_pfp_url': message.sender.pfp.url
+            'sender_pfp_url': message.sender.pfp.url,
+            'is_seen': message.is_seen
 
         }
     commands = {
