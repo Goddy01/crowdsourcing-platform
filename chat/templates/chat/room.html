@@ -28,6 +28,37 @@
   -webkit-font-smoothing: antialiased;
 }
 
+
+.floating {  
+    animation-name: floating;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    margin-left: 30px;
+    margin-top: 5px;
+    position: relative; top: 8%;
+}
+ 
+@keyframes floating {
+    0% { transform: translate(0,  0px); }
+    50%  { transform: translate(0, 15px); }
+    100%   { transform: translate(0, -0px); }    
+}
+
+
+.new-msg-btn {
+  background-color: white;
+  color: #27ae60;
+  border: none;
+  
+}
+
+.new-msg-btn:hover {
+  background-color: #27ae60;
+  color: white;
+}
+
+
 #frame {
   width: 100%;
   min-width: 360px;
@@ -767,6 +798,12 @@ p {
         </div>
       </div>
       <div class="messages">
+        <div class="floating d-flex justify-content-center">
+          <button class="new-msg-btn button button-primary badge-pill" style="padding: 0 20px;width: 220px;height: 40px;font-family: Georgia, 'Times New Roman', Times, serif;display: none;">
+            <span style="font-size: 18px;">New Message</span>
+            <i class="fa fa-arrow-circle-down" style="font-size: 15px;"></i>
+          </button>
+        </div>
         <ul id="chat-log">
         </ul>
       </div>
@@ -793,7 +830,7 @@ p {
     var username = "{{ username }}";
     var friendUsername = $(this).data('friend-username');
 
-    chatLog.innerHTML = ''
+    chatLog.innerHTML = '';
     
     var chatSocket = new ReconnectingWebSocket(
       'ws://' + window.location.host + '/ws/chat/');
@@ -928,18 +965,25 @@ p {
       // msgListTag.id = friendUsername;
       var imgTag = document.createElement('img');
       var pTag = document.createElement('p');
-      var nameTag = document.createElement('small');
+      // var nameTag = document.createElement('p');
       pTag.textContent = data.content;
       imgTag.src = data['sender_pfp_url'];
       imgTag.style.width = "40px";
       imgTag.style.height = "40px";
       imgTag.style.borderRadius = "50%";
+      // nameTag.style.color = 'red';
       // nameTag.textContent = data.sender.username;
       
+      if (recipient === username) {
+        
+        document.getElementsByClassName('new-msg-btn')[0].style.display = 'inline';
+      }
+
       if (sender !== username) {
         msgListTag.className = 'sent';
       } else {
         msgListTag.className = 'replies';
+        
       }
       msgListTag.appendChild(imgTag);
       msgListTag.appendChild(pTag);
