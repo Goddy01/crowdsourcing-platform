@@ -36,7 +36,14 @@
     animation-timing-function: ease-in-out;
     margin-left: 30px;
     margin-top: 5px;
-    position: relative; top: 8%;
+    position: absolute;
+    /* top: 50%; */
+    left: 50%;
+    right: 50%;
+    
+    
+    
+    transform: translate(-50%, -50%);
 }
  
 @keyframes floating {
@@ -50,6 +57,8 @@
   background-color: white;
   color: #27ae60;
   border: none;
+  /* border-radius: 5%; */
+  /* width: 200px; */
   
 }
 
@@ -798,11 +807,11 @@ p {
         </div>
       </div>
       <div class="messages">
-        <div class="floating d-flex justify-content-center">
-          <button class="new-msg-btn button button-primary badge-pill" style="padding: 0 20px;width: 220px;height: 40px;font-family: Georgia, 'Times New Roman', Times, serif;display: none;">
+        <div class="floating d-flex justify-content-center" id="floating">
+          <!-- <button class="new-msg-btn button button-primary badge-pill" style="padding: 0px 20px;height: 50px;font-family: Georgia, 'Times New Roman', Times, serif;display: none;white-space: nowrap;">
             <span style="font-size: 18px;">New Message</span>
             <i class="fa fa-arrow-circle-down" style="font-size: 15px;"></i>
-          </button>
+          </button> -->
         </div>
         <ul id="chat-log">
         </ul>
@@ -829,9 +838,11 @@ p {
     var chatLog = document.getElementById("chat-log");
     var username = "{{ username }}";
     var friendUsername = $(this).data('friend-username');
+    var floating = document.getElementById('floating');
 
     chatLog.innerHTML = '';
-    
+    // document.getElementsByClassName('new-msg-btn')[0].style.display = 'none';
+
     var chatSocket = new ReconnectingWebSocket(
       'ws://' + window.location.host + '/ws/chat/');
 
@@ -896,10 +907,7 @@ p {
             
             if ((friendUsername === data['messages'][i].recipient && username === data['messages'][i].sender) ||
             (friendUsername === data['messages'][i].sender && username === data['messages'][i].recipient)) {
-              console.log('DOES NOT CREATE');
-              
-              console.log('MESSAGES: ', data['messages']);
-              createMessage(data['messages'][i]); 
+              createMessage(data['messages'][i]);
             }
           }
             // Add the timestamp to the addedTimestamps array
@@ -914,10 +922,15 @@ p {
           if ((friendUsername === data['message'].recipient && username === data['message'].sender) ||
             (friendUsername === data['message'].sender && username === data['message'].recipient)) {
           console.log('CREATES');
+          if (friendUsername === data['message'].sender && username === data['message'].recipient) {
+              // document.getElementsByClassName('new-msg-btn')[0].style.display = 'inline';
+              floating.appendChild(button);
+            }
           createMessage(data['message']);
           // Add the new message timestamp to the addedTimestamps array
           addedTimestamps.push(data['message'].timestamp);
             }
+
         }
       }
       console.log('DATA: ', data);
@@ -973,11 +986,6 @@ p {
       imgTag.style.borderRadius = "50%";
       // nameTag.style.color = 'red';
       // nameTag.textContent = data.sender.username;
-      
-      if (recipient === username) {
-        
-        document.getElementsByClassName('new-msg-btn')[0].style.display = 'inline';
-      }
 
       if (sender !== username) {
         msgListTag.className = 'sent';
@@ -990,6 +998,34 @@ p {
       // if (recipient === friendUsername) {
         chatLog.appendChild(msgListTag); 
       // }
+    }
+
+    function createNewMessageNotif() {
+        var button = document.createElement('button');
+        button.className = 'new-msg-btn button button-primary badge-pill';
+        button.style.padding = '0px 20px';
+        button.style.height = '50px';
+        button.style.fontFamily = "Georgia, 'Times New Roman', Times, serif";
+        // button.style.display = 'none';
+        button.style.whiteSpace = 'nowrap';
+
+        // Create the span element
+        var span = document.createElement('span');
+        span.style.fontSize = '18px';
+        span.textContent = 'New Message';
+
+        // Create the <i> element
+        var icon = document.createElement('i');
+        icon.className = 'fa fa-arrow-circle-down';
+        icon.style.fontSize = '15px';
+
+        // Append the span and icon to the button
+        button.appendChild(span);
+        button.appendChild(icon);
+
+        // Append the button to the container
+        
+        
     }
   };
 
