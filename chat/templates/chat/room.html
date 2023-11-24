@@ -921,7 +921,7 @@ p {
             
             if ((friendUsername === data['messages'][i].recipient && username === data['messages'][i].sender) ||
             (friendUsername === data['messages'][i].sender && username === data['messages'][i].recipient)) {
-              createMessage(data['messages'][i]);
+              createMessage(data['messages'][i], is_seen=data['messages'][i].is_seen);
             }
           }
             // Add the timestamp to the addedTimestamps array
@@ -940,7 +940,7 @@ p {
               // document.getElementsByClassName('new-msg-btn')[0].style.display = 'inline';
               // createNewMessageNotif();
             }
-          createMessage(data['message']);
+          createMessage(data['message'], is_seen=data['message'].is_seen);
           // Add the new message timestamp to the addedTimestamps array
           addedTimestamps.push(data['message'].timestamp);
             }
@@ -984,20 +984,36 @@ p {
       }));
     }
 
-    function createMessage(data) {
+    function createMessage(data, is_seen) {
       
       var sender = data['sender'];
       var recipient = data['recipient']
       var msgListTag = document.createElement('li');
-      // msgListTag.id = friendUsername;
+      // msgListTag.style.margin = '20px';
       var imgTag = document.createElement('img');
       var pTag = document.createElement('p');
-      var seen = document.createElement('i');
+      // var pTag2 = document.createElement('p');
+      var seen = document.createElement('p');
+      seen.style.padding = '0 10px'
+      seen.style.float = 'right';
+      seen.style.fontStyle = 'italic';
+      seen.style.marginTop = '-20px';
+      seen.style.marginRight = '60px';
+      seen.style.fontSize = '15px';
+      if (is_seen === true) {
+        // seen.className = 'fa fa-check';
+        seen.style.color = 'green';
+        seen.textContent = 'seen';
+      } else {
+        // seen.className = 'fa fa-check';
+        seen.textContent = 'delivered';
+      }
+      
       // var nameTag = document.createElement('p');
       pTag.textContent = data.content;
       imgTag.src = data['sender_pfp_url'];
-      imgTag.style.width = "40px";
-      imgTag.style.height = "40px";
+      imgTag.style.width = "30px";
+      imgTag.style.height = "30px";
       imgTag.style.borderRadius = "50%";
       // nameTag.style.color = 'red';
       // nameTag.textContent = data.sender.username;
@@ -1013,6 +1029,11 @@ p {
       // if (recipient === friendUsername) {
         chatLog.appendChild(msgListTag); 
       // }
+      if (msgListTag.className.includes('replies')) {
+        chatLog.appendChild(seen)
+      }
+      // msgListTag.style.backgroundColor = 'pink';
+      msgListTag.style.padding = '10px';
     }
 
     // function createNewMessageNotif() {
