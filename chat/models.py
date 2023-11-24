@@ -7,6 +7,7 @@ class Chat(models.Model):
     sender = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='chat_sender')
     recipient = models.ForeignKey(BaseUser, on_delete=models.CASCADE, null=True, related_name='chat_recipient')
     content = models.TextField()
+    is_seen = models.BooleanField(default=False)
 
     # class Meta:
     #     ordering = ('-timestamp', )

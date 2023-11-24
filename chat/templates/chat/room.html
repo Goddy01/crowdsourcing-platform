@@ -28,6 +28,12 @@
   -webkit-font-smoothing: antialiased;
 }
 
+.messages {
+  height: 100px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column-reverse;
+}
 
 .floating {  
     animation-name: floating;
@@ -807,6 +813,12 @@ p {
         </div>
       </div>
       <div class="messages">
+        <span>
+          <i class="fa fa-check d-inline">
+          <small>delivered</small>
+          </i>
+        <i class="fa fa-check d-inline text-success">seen</i>
+        </span>
         <div class="floating d-flex justify-content-center" id="floating">
           <!-- <button class="new-msg-btn button button-primary badge-pill" style="padding: 0px 20px;height: 50px;font-family: Georgia, 'Times New Roman', Times, serif;display: none;white-space: nowrap;">
             <span style="font-size: 18px;">New Message</span>
@@ -830,6 +842,7 @@ p {
 
 <script src="{% static 'chat/js/main.js' %}"></script>
 <script src="{% static 'chat/js/reconnecting-websocket.js' %}"></script>
+
 
 <script>
 
@@ -924,7 +937,7 @@ p {
           console.log('CREATES');
           if (friendUsername === data['message'].sender && username === data['message'].recipient) {
               // document.getElementsByClassName('new-msg-btn')[0].style.display = 'inline';
-              floating.appendChild(button);
+              // createNewMessageNotif();
             }
           createMessage(data['message']);
           // Add the new message timestamp to the addedTimestamps array
@@ -978,6 +991,7 @@ p {
       // msgListTag.id = friendUsername;
       var imgTag = document.createElement('img');
       var pTag = document.createElement('p');
+      var seen = document.createElement('i');
       // var nameTag = document.createElement('p');
       pTag.textContent = data.content;
       imgTag.src = data['sender_pfp_url'];
@@ -1000,33 +1014,34 @@ p {
       // }
     }
 
-    function createNewMessageNotif() {
-        var button = document.createElement('button');
-        button.className = 'new-msg-btn button button-primary badge-pill';
-        button.style.padding = '0px 20px';
-        button.style.height = '50px';
-        button.style.fontFamily = "Georgia, 'Times New Roman', Times, serif";
-        // button.style.display = 'none';
-        button.style.whiteSpace = 'nowrap';
+    // function createNewMessageNotif() {
+    //     var button = document.createElement('button');
+    //     button.className = 'new-msg-btn button button-primary badge-pill';
+    //     button.style.padding = '0px 20px';
+    //     button.style.height = '50px';
+    //     button.style.fontFamily = "";
+    //     // button.style.display = 'none';
+    //     button.style.whiteSpace = 'nowrap';
 
-        // Create the span element
-        var span = document.createElement('span');
-        span.style.fontSize = '18px';
-        span.textContent = 'New Message';
+    //     // Create the span element
+    //     var span = document.createElement('span');
+    //     span.style.fontSize = '18px';
+    //     span.textContent = 'New Message';
 
-        // Create the <i> element
-        var icon = document.createElement('i');
-        icon.className = 'fa fa-arrow-circle-down';
-        icon.style.fontSize = '15px';
+    //     // Create the <i> element
+    //     var icon = document.createElement('i');
+    //     icon.className = 'fa fa-arrow-circle-down';
+    //     icon.style.fontSize = '15px';
+    //     icon.style.margin = "0px 5px";
 
-        // Append the span and icon to the button
-        button.appendChild(span);
-        button.appendChild(icon);
+    //     // Append the span and icon to the button
+    //     button.appendChild(span);
+    //     button.appendChild(icon);
 
-        // Append the button to the container
+    //     // Append the button to the container
         
-        
-    }
+    //     floating.appendChild(button);
+    // }
   };
 
   // Attach the click event to all list items with the 'contact' class
