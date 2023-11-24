@@ -30,7 +30,7 @@ def room(request):
     })
 
 def get_messages(sender, recipient):
-    qs1 = Chat.objects.filter(sender=sender, recipient=recipient).order_by('timestamp') | Chat.objects.filter(sender=recipient, recipient=sender).order_by('timestamp')
+    qs1 = Chat.objects.filter(sender=sender, recipient=recipient).order_by('timestamp')
     qs2 = Chat.objects.filter(sender=recipient, recipient=sender).order_by('timestamp')
-    messages = list(chain(qs1, qs2))
-    return messages
+
+    return qs1 | qs2

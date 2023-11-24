@@ -556,8 +556,8 @@
 }
 #frame .content .messages {
   height: auto;
-  min-height: calc(100% - 93px);
-  max-height: calc(100% - 93px);
+  min-height: calc(100% - 153px);
+  max-height: calc(100% - 153px);
   overflow-y: scroll;
   overflow-x: hidden;
   width: 100%;
@@ -766,7 +766,7 @@ p {
           </a>
         </div>
       </div>
-      <div class="messages" style="margin-bottom: 200px;">
+      <div class="messages">
         <ul id="chat-log">
         </ul>
       </div>
@@ -786,42 +786,30 @@ p {
 <script src="{% static 'chat/js/reconnecting-websocket.js' %}"></script>
 
 <script>
-  
-  var oldFriendUsernames = []
-  
-  // Function to handle the click event on the list items
+
   function handleListItemClick() {
     addedTimestamps = []
-    document.getElementById('chat-log').innerHTML = ''
-    
+    var chatLog = document.getElementById("chat-log");
     var username = "{{ username }}";
-    // Get the data-friend-username attribute from the clicked list item
-    $(this).removeClass('active');
     var friendUsername = $(this).data('friend-username');
+
+    chatLog.innerHTML = ''
+    
+    var chatSocket = new ReconnectingWebSocket(
+      'ws://' + window.location.host + '/ws/chat/');
+
+    chatSocket.onopen = function(e) {
+      fetchMessages(friendUsername);
+    };
+    
+
+    $(this).removeClass('active');
     var friendUserPfp = $(this).data('friend-user');
     var friendUserFullname = $(this).data('friend-user-fullname');
     var friendUserInstagram = $(this).data('friend-i');
     var friendUserTwitter = $(this).data('friend-t');
     var friendUserFacebook = $(this).data('friend-f');
     var friendUserLinkedln = $(this).data('friend-l');
-    
-    // document.getElementsByClassName('sent').classList = `sent-${friendUsername}`;
-    var elements = document.getElementsByClassName('sent');
-
-      // Loop through each element in the collection
-      for (var a = 0; a < elements.length; a++) {
-          // Add a new class based on the friend's username
-          elements[a].classList.add(`sent-${friendUsername}`, 'sent');
-      }
-    // document.getElementsByClassName('replies').classList = `replies-${friendUsername}`
-
-    var repliesElements = document.getElementsByClassName('replies');
-
-      // Loop through each element in the collection
-      for (var b = 0; b < repliesElements.length; b++) {
-          // Add a new class based on the friend's username
-          repliesElements[b].classList.add(`replies-${friendUsername}`, 'replies');
-      }
 
     var recipientPfpImg = document.getElementById("recipient_pfp");
     var recipientUsernameSlot = document.getElementById("recipient_username");
@@ -854,41 +842,28 @@ p {
     recipientInstagramSlot.href = friendUserInstagram;
     recipientFacebookSlot.href = friendUserFacebook;
     recipientTwitterSlot.href = friendUserTwitter;
-    recipientLinkedlnSlot.href = friendUserLinkedln;
+    recipientLinkedlnSlot.href = friendUserLinkedln;    
 
     
-
-    var username1 = '{{ user.user.username }}'
-    oldFriendUsernames.push($(this).data('friend-username'));
-    var chatLog = document.getElementById("chat-log");
-    // var chatItems = chatLog.getElementsByTagName('li');
-    
-
-    var chatSocket = new ReconnectingWebSocket(
-      'ws://' + window.location.host + '/ws/chat/');
-
-    chatSocket.onopen = function(e) {
-      fetchMessages(friendUsername);
-    };
-
-
 
     chatSocket.onmessage = function(e) {
       var data = JSON.parse(e.data);
-      console.log('DATA: ', data);
+      
   
       if (data['command'] === 'messages') {
         
         for (let i = 0; i < data['messages'].length; i++) {
+          
           // Check if the timestamp is already in the addedTimestamps array
           if (!addedTimestamps.includes(data['messages'][i].timestamp)) {
-            // if ((friendUsername === data['messages'][i].recipient && username === data['messages'][i].sender) ||
-            // (friendUsername === data['messages'][i].sender && username === data['messages'][i].recipient)) {
-
+            
+            if ((friendUsername === data['messages'][i].recipient && username === data['messages'][i].sender) ||
+            (friendUsername === data['messages'][i].sender && username === data['messages'][i].recipient)) {
+              console.log('DOES NOT CREATE');
               
-              
+              console.log('MESSAGES: ', data['messages']);
               createMessage(data['messages'][i]); 
-            // }
+            }
           }
             // Add the timestamp to the addedTimestamps array
             addedTimestamps.push(data['messages'][i].timestamp);
@@ -896,13 +871,19 @@ p {
         };
       } 
       else if (data['command'] === 'new_message') {
+        console.log('DATA 2: ', data);
         // Check if the new message timestamp is already in the addedTimestamps array
         if (!addedTimestamps.includes(data['message'].timestamp)) {
+          if ((friendUsername === data['message'].recipient && username === data['message'].sender) ||
+            (friendUsername === data['message'].sender && username === data['message'].recipient)) {
+          console.log('CREATES');
           createMessage(data['message']);
           // Add the new message timestamp to the addedTimestamps array
           addedTimestamps.push(data['message'].timestamp);
+            }
         }
       }
+      console.log('DATA: ', data);
 };
 
 
@@ -944,7 +925,7 @@ p {
       var sender = data['sender'];
       var recipient = data['recipient']
       var msgListTag = document.createElement('li');
-      msgListTag.id = friendUsername;
+      // msgListTag.id = friendUsername;
       var imgTag = document.createElement('img');
       var pTag = document.createElement('p');
       var nameTag = document.createElement('small');
@@ -956,9 +937,9 @@ p {
       // nameTag.textContent = data.sender.username;
       
       if (sender !== username) {
-        msgListTag.classList.add(`sent-${friendUsername}`, 'sent');
+        msgListTag.className = 'sent';
       } else {
-        msgListTag.classList.add(`replies-${friendUsername}`, 'replies');
+        msgListTag.className = 'replies';
       }
       msgListTag.appendChild(imgTag);
       msgListTag.appendChild(pTag);
