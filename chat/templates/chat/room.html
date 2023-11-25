@@ -862,6 +862,7 @@ p {
 
     chatSocket.onopen = function(e) {
       fetchMessages(friendUsername);
+      console.log('OMO');
     };
     
 
@@ -921,7 +922,13 @@ p {
             
             if ((friendUsername === data['messages'][i].recipient && username === data['messages'][i].sender) ||
             (friendUsername === data['messages'][i].sender && username === data['messages'][i].recipient)) {
-              createMessage(data['messages'][i], is_seen=data['messages'][i].is_seen);
+              
+              createMessage(data['messages'][i]);
+              // if (data['messages'][i].is_seen === true) {
+              //   document.getElementById('wrap').textContent = 'bankai';
+              // }
+              
+              
             }
           }
             // Add the timestamp to the addedTimestamps array
@@ -936,11 +943,10 @@ p {
           if ((friendUsername === data['message'].recipient && username === data['message'].sender) ||
             (friendUsername === data['message'].sender && username === data['message'].recipient)) {
           console.log('CREATES');
-          if (friendUsername === data['message'].sender && username === data['message'].recipient) {
-              // document.getElementsByClassName('new-msg-btn')[0].style.display = 'inline';
-              // createNewMessageNotif();
-            }
-          createMessage(data['message'], is_seen=data['message'].is_seen);
+          createMessage(data['message']);
+          if (data['message'].is_seen === true) {
+            document.getElementById('wrap').textContent = 'bankai';
+              }
           // Add the new message timestamp to the addedTimestamps array
           addedTimestamps.push(data['message'].timestamp);
             }
@@ -980,11 +986,12 @@ p {
       chatSocket.send(JSON.stringify({
         'command': 'fetch_messages',
         'sender': username,
-        'recipient': friendUsername
+        'recipient': friendUsername,
+        'is_seen': true
       }));
     }
 
-    function createMessage(data, is_seen) {
+    function createMessage(data) {
       
       var sender = data['sender'];
       var recipient = data['recipient']
@@ -1000,7 +1007,7 @@ p {
       seen.style.marginTop = '-20px';
       seen.style.marginRight = '60px';
       seen.style.fontSize = '15px';
-      if (is_seen === true) {
+      if (data['is_seen'] === true) {
         // seen.className = 'fa fa-check';
         seen.style.color = 'green';
         seen.textContent = 'seen';

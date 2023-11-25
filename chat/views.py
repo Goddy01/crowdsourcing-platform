@@ -34,3 +34,6 @@ def get_messages(sender, recipient):
     qs2 = Chat.objects.filter(sender=recipient, recipient=sender).order_by('timestamp')
 
     return qs1 | qs2
+
+# def ():
+#     return 'hello world'

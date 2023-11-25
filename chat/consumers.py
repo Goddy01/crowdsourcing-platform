@@ -43,6 +43,9 @@ class ChatConsumer(WebsocketConsumer):
     def messages_to_json(self, messages):
         result = []
         for message in messages:
+            if message.recipient == BaseUser.objects.get(username=self.scope['user'].username):
+                message.is_seen = True
+                message.save(update_fields =['is_seen'])
             result.append(
                 self.message_to_json(message)
             )
