@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from itertools import chain
 from django.db.models import Q
 from django.shortcuts import render
@@ -35,5 +36,13 @@ def get_messages(sender, recipient):
 
     return qs1 | qs2
 
-# def ():
-#     return 'hello world'
+def set_all_message_to_seen(request, sender, recipient):
+    messages = Chat.objects.filter(
+        sender=sender,
+        recipient=recipient,
+        is_seen=False
+    )
+    for m in messages:
+        m.is_seen = True
+        m.save(update_fields=['is_seen'])
+    return JsonResponse(data = {'status': 'success'})

@@ -9,6 +9,7 @@ from .views import get_messages
 
 class ChatConsumer(WebsocketConsumer):
     def fetch_messages(self, data):
+        
         sender = BaseUser.objects.get(username=data.get('sender'))
         recipient = BaseUser.objects.get(username=data.get('recipient'))
         # messages = Chat.last_10_messages()
@@ -27,12 +28,12 @@ class ChatConsumer(WebsocketConsumer):
     def new_message(self, data):
         sender = data['from']
         sender_user = BaseUser.objects.get(username=sender)
-        print('TO: ', data['to'])
+        
         message = Chat.objects.create(
             sender=sender_user,
             recipient=BaseUser.objects.get(username=data['to']),
             content=data['message']
-        )
+        )    
 
         content = {
             'command': 'new_message',

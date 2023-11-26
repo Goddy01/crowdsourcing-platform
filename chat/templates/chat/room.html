@@ -924,9 +924,10 @@ p {
             (friendUsername === data['messages'][i].sender && username === data['messages'][i].recipient)) {
               
               createMessage(data['messages'][i]);
-              // if (data['messages'][i].is_seen === true) {
-              //   document.getElementById('wrap').textContent = 'bankai';
-              // }
+              if (data['messages'][i].is_seen === true) {
+                console.log('yes1');
+              }
+              
               
               
             }
@@ -943,17 +944,18 @@ p {
           if ((friendUsername === data['message'].recipient && username === data['message'].sender) ||
             (friendUsername === data['message'].sender && username === data['message'].recipient)) {
           console.log('CREATES');
+          console.log('STATUS: ', data['message'].is_seen);
           createMessage(data['message']);
-          if (data['message'].is_seen === true) {
-            document.getElementById('wrap').textContent = 'bankai';
-              }
+          // if (data['message'].is_seen === true) {
+          //   document.getElementById('wrap').textContent = 'bankai';
+          //     }
+          // handleListItemClick()
           // Add the new message timestamp to the addedTimestamps array
           addedTimestamps.push(data['message'].timestamp);
             }
 
         }
       }
-      console.log('DATA: ', data);
 };
 
 
