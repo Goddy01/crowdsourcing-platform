@@ -43,7 +43,7 @@
     margin-left: 30px;
     margin-top: 5px;
     position: absolute;
-    /* top: 50%; */
+    top: 10%;
     left: 50%;
     right: 50%;
     
@@ -848,6 +848,7 @@ p {
   oldFriends = [];
 
   function handleListItemClick() {
+    document.getElementsByClassName('floating')[0].innerHTML = ''
     addedTimestamps = []
     var chatLog = document.getElementById("chat-log");
     var username = "{{ username }}";
@@ -917,6 +918,7 @@ p {
 
       var data = JSON.parse(e.data);
       
+      
   
       if (data['command'] === 'messages') {
         
@@ -949,6 +951,7 @@ p {
         };
       } 
       else if (data['command'] === 'new_message') {
+        document.getElementsByClassName('floating')[0].innerHTML = '';
         console.log('DATA 2: ', data);
         // Check if the new message timestamp is already in the addedTimestamps array
         if (!addedTimestamps.includes(data['message'].timestamp)) {
@@ -959,10 +962,12 @@ p {
             }
             
             else if (data['message'].sender === oldFriends[oldFriends.length -1]) {
-              console.log('ORIGIN: ', oldFriends);
-              console.log('friendUsername: ', friendUsername);
-              console.log('Recipient of message: ', data['message'].recipient);
-              receivedMessage(data['message'], friendUsername)
+              receivedMessage(data['message'], oldFriends[oldFriends.length -1])
+              
+            }
+
+            if (data['message'].recipient === username) {
+              createNewMessageNotif(data['message'].recipient)
             }
           
           
@@ -1070,13 +1075,15 @@ p {
       var imgTag = document.createElement('img');
       var pTag = document.createElement('p');
       // var pTag2 = document.createElement('p');
-      // var seen = document.createElement('p');
-      // seen.style.padding = '0 10px'
-      // seen.style.float = 'right';
-      // seen.style.fontStyle = 'italic';
-      // seen.style.marginTop = '-20px';
-      // seen.style.marginRight = '60px';
-      // seen.style.fontSize = '15px';
+      var time = document.createElement('p');
+      time.style.padding = '0 10px'
+      time.textContent = new Date(data['timestamp']).toLocaleString()
+      time.style.float = 'right';
+      time.style.fontStyle = 'italic';
+      time.style.marginTop = '-20px';
+      time.style.marginRight = '60px';
+      time.style.fontSize = '15px';
+      time.style.color = 'green'
       // if (data['is_seen'] === true) {
       //   // seen.className = 'fa fa-check';
       //   seen.style.color = 'green';
@@ -1110,7 +1117,7 @@ p {
       // console.log('RECIPIENT: ', data['recipient']);
       // console.log('FRIEND: ', friendUsername);
       // if (msgListTag.className.includes('replies')) {
-      //   chatLog.appendChild(seen)
+        chatLog.appendChild(time)
       // }
       // msgListTag.style.backgroundColor = 'pink';
       msgListTag.style.padding = '10px';
@@ -1125,21 +1132,15 @@ p {
       var imgTag = document.createElement('img');
       var pTag = document.createElement('p');
       // var pTag2 = document.createElement('p');
-      // var seen = document.createElement('p');
-      // seen.style.padding = '0 10px'
-      // seen.style.float = 'right';
-      // seen.style.fontStyle = 'italic';
-      // seen.style.marginTop = '-20px';
-      // seen.style.marginRight = '60px';
-      // seen.style.fontSize = '15px';
-      // if (data['is_seen'] === true) {
-      //   // seen.className = 'fa fa-check';
-      //   seen.style.color = 'green';
-      //   seen.textContent = 'seen';
-      // } else {
-      //   // seen.className = 'fa fa-check';
-      //   seen.textContent = 'delivered';
-      // }
+      var time2 = document.createElement('p');
+      time2.style.padding = '0 10px'
+      time2.textContent = new Date(data['timestamp']).toLocaleString()
+      time2.style.float = 'left';
+      time2.style.fontStyle = 'italic';
+      time2.style.marginTop = '-20px';
+      time2.style.marginLeft = '20px';
+      time2.style.fontSize = '15px';
+      time2.style.color = 'green'
       
       // var nameTag = document.createElement('p');
       pTag.textContent = data.content;
@@ -1168,40 +1169,56 @@ p {
       // console.log('RECIPIENT: ', data['recipient']);
       // console.log('FRIEND: ', friendUsername);
       // if (msgListTag.className.includes('replies')) {
-      //   chatLog.appendChild(seen)
+      chatLog.appendChild(time2)
       // }
       // msgListTag.style.backgroundColor = 'pink';
       msgListTag.style.padding = '10px';
     }
 
-    // function createNewMessageNotif() {
-    //     var button = document.createElement('button');
-    //     button.className = 'new-msg-btn button button-primary badge-pill';
-    //     button.style.padding = '0px 20px';
-    //     button.style.height = '50px';
-    //     button.style.fontFamily = "";
-    //     // button.style.display = 'none';
-    //     button.style.whiteSpace = 'nowrap';
+    function createNewMessageNotif(recipientName) {
+        var button = document.createElement('button');
+        button.className = 'new-msg-btn button button-primary badge-pill';
+        button.style.padding = '0px 20px';
+        button.style.height = '50px';
+        button.style.width = '250px';
+        button.style.fontFamily = "";
+        button.id = 'new_msg_notif'
+        // button.style.display = 'none';
+        button.style.whiteSpace = 'nowrap';
 
-    //     // Create the span element
-    //     var span = document.createElement('span');
-    //     span.style.fontSize = '18px';
-    //     span.textContent = 'New Message';
-
-    //     // Create the <i> element
-    //     var icon = document.createElement('i');
-    //     icon.className = 'fa fa-arrow-circle-down';
-    //     icon.style.fontSize = '15px';
-    //     icon.style.margin = "0px 5px";
-
-    //     // Append the span and icon to the button
-    //     button.appendChild(span);
-    //     button.appendChild(icon);
-
-    //     // Append the button to the container
+        // Create the span element
+        var span = document.createElement('span');
+        span.style.fontSize = '18px';
+        span.textContent = 'New Message';
         
-    //     floating.appendChild(button);
-    // }
+        // var span2 = document.createElement('span');
+        // span2.style.float = 'right';
+        
+        // span2.innerHTML = '&times'
+        // span2.style.fontSize = '20px';
+        // span2.style.marginTop = '-3px';
+        // span2.style.color = 'red';
+
+        // Create the <i> element
+        var icon = document.createElement('i');
+        icon.className = 'fa fa-arrow-circle-down';
+        icon.style.fontSize = '15px';
+        icon.style.margin = "0px 5px";
+
+        // Append the span and icon to the button
+        button.appendChild(span);
+        button.appendChild(icon);
+        // button.appendChild(span2);
+
+        // Append the button to the container
+        if (recipientName === username) {
+          floating.appendChild(button); 
+        }
+
+        // span2.onclick = function() {
+        //     document.getElementsByClassName('floating')[0].innerHTML = '';
+        // };
+    }
   };
 
   // Attach the click event to all list items with the 'contact' class
