@@ -813,17 +813,7 @@ p {
         </div>
       </div>
       <div class="messages">
-        <!-- <span>
-          <i class="fa fa-check d-inline">
-          <small>delivered</small>
-          </i>
-        <i class="fa fa-check d-inline text-success">seen</i>
-        </span> -->
         <div class="floating d-flex justify-content-center" id="floating">
-          <!-- <button class="new-msg-btn button button-primary badge-pill" style="padding: 0px 20px;height: 50px;font-family: Georgia, 'Times New Roman', Times, serif;display: none;white-space: nowrap;">
-            <span style="font-size: 18px;">New Message</span>
-            <i class="fa fa-arrow-circle-down" style="font-size: 15px;"></i>
-          </button> -->
         </div>
         <ul id="chat-log">
         </ul>
@@ -932,18 +922,7 @@ p {
             }
             else if (data['messages'][i].recipient === username) {
               receivedMessage(data['messages'][i])
-            } {
-              
             }
-            
-            // if ((friendUsername === data['messages'][i].recipient && username === data['messages'][i].sender) ||
-            // (friendUsername === data['messages'][i].sender && username === data['messages'][i].recipient)) {
-            //   console.log('THIS');
-            //   createMessage(data['messages'][i]);
-              
-              
-              
-            // }
           }
             // Add the timestamp to the addedTimestamps array
             addedTimestamps.push(data['messages'][i].timestamp);
@@ -955,8 +934,6 @@ p {
         console.log('DATA 2: ', data);
         // Check if the new message timestamp is already in the addedTimestamps array
         if (!addedTimestamps.includes(data['message'].timestamp)) {
-          // if ((friendUsername === data['message'].recipient && username === data['message'].sender) ||
-          //   (friendUsername === data['message'].sender && username === data['message'].recipient)) {
             if (data['message'].sender === username) {
               senderMessages(data['message']);
             }
@@ -1013,60 +990,6 @@ p {
       }));
     }
 
-    function createMessage(data) {
-      
-      var sender = data['sender'];
-      var recipient = data['recipient']
-      var msgListTag = document.createElement('li');
-      // msgListTag.style.margin = '20px';
-      var imgTag = document.createElement('img');
-      var pTag = document.createElement('p');
-      // var pTag2 = document.createElement('p');
-      var seen = document.createElement('p');
-      seen.style.padding = '0 10px'
-      seen.style.float = 'right';
-      seen.style.fontStyle = 'italic';
-      seen.style.marginTop = '-20px';
-      seen.style.marginRight = '60px';
-      seen.style.fontSize = '15px';
-      if (data['is_seen'] === true) {
-        // seen.className = 'fa fa-check';
-        seen.style.color = 'green';
-        seen.textContent = 'seen';
-      } else {
-        // seen.className = 'fa fa-check';
-        seen.textContent = 'delivered';
-      }
-      
-      // var nameTag = document.createElement('p');
-      pTag.textContent = data.content;
-      imgTag.src = data['sender_pfp_url'];
-      imgTag.style.width = "30px";
-      imgTag.style.height = "30px";
-      imgTag.style.borderRadius = "50%";
-      // nameTag.style.color = 'red';
-      // nameTag.textContent = data.sender.username;
-
-      if (sender !== username) {
-        msgListTag.className = 'sent';
-      } else {
-        msgListTag.className = 'replies';
-        
-      }
-      msgListTag.appendChild(imgTag);
-      msgListTag.appendChild(pTag);
-      if (recipient === friendUsername) {
-        chatLog.appendChild(msgListTag); 
-      }
-      console.log('SENDER: ', data['sender']);
-      console.log('RECIPIENT: ', data['recipient']);
-      console.log('FRIEND: ', friendUsername);
-      if (msgListTag.className.includes('replies')) {
-        chatLog.appendChild(seen)
-      }
-      // msgListTag.style.backgroundColor = 'pink';
-      msgListTag.style.padding = '10px';
-    }
 
     function senderMessages(data) {
       
