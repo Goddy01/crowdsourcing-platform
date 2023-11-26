@@ -845,13 +845,17 @@ p {
 
 
 <script>
+  oldFriends = [];
 
   function handleListItemClick() {
     addedTimestamps = []
     var chatLog = document.getElementById("chat-log");
     var username = "{{ username }}";
     var friendUsername = $(this).data('friend-username');
+    oldFriends.push(friendUsername)
+    console.log('YO, ', friendUsername);
     var floating = document.getElementById('floating');
+    // var csrfToken = "{{ csrf_token }}";
 
     chatLog.innerHTML = '';
     document.getElementsByClassName('message-input')[0].style.display = 'inline';
@@ -910,27 +914,34 @@ p {
     
 
     chatSocket.onmessage = function(e) {
+
       var data = JSON.parse(e.data);
       
   
       if (data['command'] === 'messages') {
         
         for (let i = 0; i < data['messages'].length; i++) {
-          
+          console.log(data['messages'][i].content);
           // Check if the timestamp is already in the addedTimestamps array
           if (!addedTimestamps.includes(data['messages'][i].timestamp)) {
             
-            if ((friendUsername === data['messages'][i].recipient && username === data['messages'][i].sender) ||
-            (friendUsername === data['messages'][i].sender && username === data['messages'][i].recipient)) {
-              
-              createMessage(data['messages'][i]);
-              if (data['messages'][i].is_seen === true) {
-                console.log('yes1');
-              }
-              
-              
+            if (data['messages'][i].sender === username) {
+              senderMessages(data['messages'][i])
+            }
+            else if (data['messages'][i].recipient === username) {
+              receivedMessage(data['messages'][i])
+            } {
               
             }
+            
+            // if ((friendUsername === data['messages'][i].recipient && username === data['messages'][i].sender) ||
+            // (friendUsername === data['messages'][i].sender && username === data['messages'][i].recipient)) {
+            //   console.log('THIS');
+            //   createMessage(data['messages'][i]);
+              
+              
+              
+            // }
           }
             // Add the timestamp to the addedTimestamps array
             addedTimestamps.push(data['messages'][i].timestamp);
@@ -941,18 +952,22 @@ p {
         console.log('DATA 2: ', data);
         // Check if the new message timestamp is already in the addedTimestamps array
         if (!addedTimestamps.includes(data['message'].timestamp)) {
-          if ((friendUsername === data['message'].recipient && username === data['message'].sender) ||
-            (friendUsername === data['message'].sender && username === data['message'].recipient)) {
-          console.log('CREATES');
-          console.log('STATUS: ', data['message'].is_seen);
-          createMessage(data['message']);
-          // if (data['message'].is_seen === true) {
-          //   document.getElementById('wrap').textContent = 'bankai';
-          //     }
-          // handleListItemClick()
-          // Add the new message timestamp to the addedTimestamps array
-          addedTimestamps.push(data['message'].timestamp);
+          // if ((friendUsername === data['message'].recipient && username === data['message'].sender) ||
+          //   (friendUsername === data['message'].sender && username === data['message'].recipient)) {
+            if (data['message'].sender === username) {
+              senderMessages(data['message']);
             }
+            
+            else if (data['message'].sender === oldFriends[oldFriends.length -1]) {
+              console.log('ORIGIN: ', oldFriends);
+              console.log('friendUsername: ', friendUsername);
+              console.log('Recipient of message: ', data['message'].recipient);
+              receivedMessage(data['message'], friendUsername)
+            }
+          
+          
+          addedTimestamps.push(data['message'].timestamp);
+            // }
 
         }
       }
@@ -1035,12 +1050,126 @@ p {
       }
       msgListTag.appendChild(imgTag);
       msgListTag.appendChild(pTag);
-      // if (recipient === friendUsername) {
+      if (recipient === friendUsername) {
         chatLog.appendChild(msgListTag); 
-      // }
+      }
+      console.log('SENDER: ', data['sender']);
+      console.log('RECIPIENT: ', data['recipient']);
+      console.log('FRIEND: ', friendUsername);
       if (msgListTag.className.includes('replies')) {
         chatLog.appendChild(seen)
       }
+      // msgListTag.style.backgroundColor = 'pink';
+      msgListTag.style.padding = '10px';
+    }
+
+    function senderMessages(data) {
+      
+      var sender = data['sender'];
+      var msgListTag = document.createElement('li');
+      var imgTag = document.createElement('img');
+      var pTag = document.createElement('p');
+      // var pTag2 = document.createElement('p');
+      // var seen = document.createElement('p');
+      // seen.style.padding = '0 10px'
+      // seen.style.float = 'right';
+      // seen.style.fontStyle = 'italic';
+      // seen.style.marginTop = '-20px';
+      // seen.style.marginRight = '60px';
+      // seen.style.fontSize = '15px';
+      // if (data['is_seen'] === true) {
+      //   // seen.className = 'fa fa-check';
+      //   seen.style.color = 'green';
+      //   seen.textContent = 'seen';
+      // } else {
+      //   // seen.className = 'fa fa-check';
+      //   seen.textContent = 'delivered';
+      // }
+      
+      // var nameTag = document.createElement('p');
+      pTag.textContent = data.content;
+      imgTag.src = data['sender_pfp_url'];
+      imgTag.style.width = "30px";
+      imgTag.style.height = "30px";
+      imgTag.style.borderRadius = "50%";
+      // nameTag.style.color = 'red';
+      // nameTag.textContent = data.sender.username;
+
+      // if (sender !== username) {
+      //   msgListTag.className = 'sent';
+      // } else {
+      msgListTag.className = 'replies';
+        
+      // }
+      msgListTag.appendChild(imgTag);
+      msgListTag.appendChild(pTag);
+      // if (recipient === friendUsername) {
+      chatLog.appendChild(msgListTag); 
+      // }
+      // console.log('SENDER: ', data['sender']);
+      // console.log('RECIPIENT: ', data['recipient']);
+      // console.log('FRIEND: ', friendUsername);
+      // if (msgListTag.className.includes('replies')) {
+      //   chatLog.appendChild(seen)
+      // }
+      // msgListTag.style.backgroundColor = 'pink';
+      msgListTag.style.padding = '10px';
+    }
+
+    function receivedMessage(data, showTo) {
+      
+      var sender = data['sender'];
+      
+      var msgListTag = document.createElement('li');
+      // msgListTag.style.margin = '20px';
+      var imgTag = document.createElement('img');
+      var pTag = document.createElement('p');
+      // var pTag2 = document.createElement('p');
+      // var seen = document.createElement('p');
+      // seen.style.padding = '0 10px'
+      // seen.style.float = 'right';
+      // seen.style.fontStyle = 'italic';
+      // seen.style.marginTop = '-20px';
+      // seen.style.marginRight = '60px';
+      // seen.style.fontSize = '15px';
+      // if (data['is_seen'] === true) {
+      //   // seen.className = 'fa fa-check';
+      //   seen.style.color = 'green';
+      //   seen.textContent = 'seen';
+      // } else {
+      //   // seen.className = 'fa fa-check';
+      //   seen.textContent = 'delivered';
+      // }
+      
+      // var nameTag = document.createElement('p');
+      pTag.textContent = data.content;
+      imgTag.src = data['sender_pfp_url'];
+      imgTag.style.width = "30px";
+      imgTag.style.height = "30px";
+      imgTag.style.borderRadius = "50%";
+      // nameTag.style.color = 'red';
+      // nameTag.textContent = data.sender.username;
+
+      // if (sender !== username) {
+        msgListTag.className = 'sent';
+      // } else {
+      //   msgListTag.className = 'replies';
+        
+      // }
+      msgListTag.appendChild(imgTag);
+      msgListTag.appendChild(pTag);
+      // if (recipient === friendUsername) {
+      // if (showTo === data['recipient']) {
+        
+      // }
+      chatLog.appendChild(msgListTag); 
+      // }
+      // console.log('SENDER: ', data['sender']);
+      // console.log('RECIPIENT: ', data['recipient']);
+      // console.log('FRIEND: ', friendUsername);
+      // if (msgListTag.className.includes('replies')) {
+      //   chatLog.appendChild(seen)
+      // }
       // msgListTag.style.backgroundColor = 'pink';
       msgListTag.style.padding = '10px';
     }

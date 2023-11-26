@@ -38,11 +38,12 @@ def get_messages(sender, recipient):
 
 def set_all_message_to_seen(request, sender, recipient):
     messages = Chat.objects.filter(
-        sender=sender,
-        recipient=recipient,
+        sender__username=sender,
+        recipient__username=recipient,
         is_seen=False
     )
     for m in messages:
         m.is_seen = True
         m.save(update_fields=['is_seen'])
+    print('SHITE')
     return JsonResponse(data = {'status': 'success'})
