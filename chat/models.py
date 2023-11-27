@@ -3,13 +3,14 @@ from accounts.models import BaseUser, Innovator
 # Create your models here.
 
 def upload_in_chat_files(instance, filename):
-    return f'inchat_files/{instance.sender.username} sent a /-{filename}'
+    return f'inchat_files/{instance.sender.username} -> {instance.recipient.username}-{filename}'
 
 class Chat(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     sender = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='chat_sender')
     recipient = models.ForeignKey(BaseUser, on_delete=models.CASCADE, null=True, related_name='chat_recipient')
     content = models.TextField()
+    file_content = models.FileField(upload_to=upload_in_chat_files, null=True, blank=True)
     is_seen = models.BooleanField(default=False)
 
     # class Meta:
