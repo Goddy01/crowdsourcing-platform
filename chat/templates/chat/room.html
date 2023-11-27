@@ -924,7 +924,6 @@ p {
               receivedMessage(data['messages'][i])
             }
           }
-            // Add the timestamp to the addedTimestamps array
             addedTimestamps.push(data['messages'][i].timestamp);
           // }
         };
@@ -934,7 +933,7 @@ p {
           document.getElementsByClassName('floating')[0].innerHTML = ''; 
         }
         
-        // Check if the new message timestamp is already in the addedTimestamps array
+
         if (!addedTimestamps.includes(data['message'].timestamp)) {
             if (data['message'].sender === username) {
               senderMessages(data['message']);
@@ -947,10 +946,9 @@ p {
 
             if (data['message'].recipient === username && data['message'].sender === oldFriends[oldFriends.length -1]) {
               createNewMessageNotif(username)
-              console.log('YAY');
             }
             else if (data['message'].recipient === username && data['message'].sender !== oldFriends[oldFriends.length -1]) {
-              console.log('SIKE');
+
             }
           
           
@@ -1142,10 +1140,7 @@ p {
         // Append the button to the container
         if (recipientName === username) {
           floating.appendChild(button); 
-          console.log('YES');
-        }
-        else {
-          console.log('AINT');
+
         }
 
         // span2.onclick = function() {

@@ -9,8 +9,7 @@ from .views import get_messages
 
 class ChatConsumer(WebsocketConsumer):
     def fetch_messages(self, data):
-        
-        sender = BaseUser.objects.get(username=data.get('sender'))
+        sender = BaseUser.objects.get(username=data['sender'])
         recipient = BaseUser.objects.get(username=data.get('recipient'))
         # messages = Chat.last_10_messages()
         logged_in_user = BaseUser.objects.get(username=self.scope['user'].username)
