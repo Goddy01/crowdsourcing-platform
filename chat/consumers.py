@@ -34,8 +34,10 @@ class ChatConsumer(WebsocketConsumer):
             file_content = file_content,
         )
         content = {
-            'command': 'new_file'
+            'command': 'new_file',
+            'file_content': file_message
         }
+        return self.send_chat_files(content)
 
     def new_message(self, data):
         
