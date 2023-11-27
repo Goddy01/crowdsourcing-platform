@@ -33,6 +33,9 @@ class ChatConsumer(WebsocketConsumer):
             recipient=recipient,
             file_content = file_content,
         )
+        content = {
+            'command': 'new_file'
+        }
 
     def new_message(self, data):
         
@@ -102,6 +105,11 @@ class ChatConsumer(WebsocketConsumer):
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(
         self.room_group_name, {"type": "chat.message", "message": message}
+        )
+    
+    def send_chat_files(self, file):
+        async_to_sync(self.channel_layer.group_send)(
+        self.room_group_name, {"type": "chat.file_content", "file_content": file}
         )
 
     def send_message(self, message):
