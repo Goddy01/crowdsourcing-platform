@@ -24,6 +24,16 @@ class ChatConsumer(WebsocketConsumer):
         }
         self.send_message(content)
 
+    def new_file_message(self, data):
+        file_content = data['file_content']
+        sender = BaseUser.objects.get(username=data['sender'])
+        recipient = BaseUser.objects.get(username=data.get('recipient'))
+        file_message = Chat.objects.create(
+            sender=sender,
+            recipient=recipient,
+            file_content = file_content,
+        )
+
     def new_message(self, data):
         
         sender = data['from']

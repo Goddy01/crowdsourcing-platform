@@ -1152,6 +1152,28 @@ p {
   // Attach the click event to all list items with the 'contact' class
   $('.contact').click(handleListItemClick);
 </script>
+
+<script>
+  function toDataURL(file, callback) {
+    var reader = new FileReader();
+    reader.onload = function () {
+        var dataURL = reader.result;
+        callback(dataURL);
+    }
+    reader.readAsDataURL(file);
+}
+
+document.getElementById('image').addEventListener('change', function(event){
+    var files = event.target
+    var file = files[0];
+    toDataURL(file, function(dataURL){
+    chatSocket.send(JSON.stringify({
+        'command':'new_file', 
+        'dataURL': dataURL
+    }))
+    })
+})
+</script>
 </body>
 
 </html>
