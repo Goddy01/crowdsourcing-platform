@@ -844,7 +844,7 @@ p {
     var username = "{{ username }}";
     var friendUsername = $(this).data('friend-username');
     oldFriends.push(friendUsername)
-    console.log('YO, ', friendUsername);
+    
     var floating = document.getElementById('floating');
     // var csrfToken = "{{ csrf_token }}";
 
@@ -857,7 +857,7 @@ p {
 
     chatSocket.onopen = function(e) {
       fetchMessages(friendUsername);
-      console.log('OMO');
+      
     };
     
 
@@ -913,7 +913,7 @@ p {
       if (data['command'] === 'messages') {
         
         for (let i = 0; i < data['messages'].length; i++) {
-          console.log(data['messages'][i].content);
+          
           // Check if the timestamp is already in the addedTimestamps array
           if (!addedTimestamps.includes(data['messages'][i].timestamp)) {
             
@@ -930,8 +930,10 @@ p {
         };
       } 
       else if (data['command'] === 'new_message') {
-        document.getElementsByClassName('floating')[0].innerHTML = '';
-        console.log('DATA 2: ', data);
+        if (data['message'].sender === username) {
+          document.getElementsByClassName('floating')[0].innerHTML = ''; 
+        }
+        
         // Check if the new message timestamp is already in the addedTimestamps array
         if (!addedTimestamps.includes(data['message'].timestamp)) {
             if (data['message'].sender === username) {
@@ -943,8 +945,12 @@ p {
               
             }
 
-            if (data['message'].recipient === username) {
-              createNewMessageNotif(data['message'].recipient)
+            if (data['message'].recipient === username && data['message'].sender === oldFriends[oldFriends.length -1]) {
+              createNewMessageNotif(username)
+              console.log('YAY');
+            }
+            else if (data['message'].recipient === username && data['message'].sender !== oldFriends[oldFriends.length -1]) {
+              console.log('SIKE');
             }
           
           
@@ -981,7 +987,7 @@ p {
     };
 
     function fetchMessages(friendUsername) {
-      console.log('OYA')
+      
       chatSocket.send(JSON.stringify({
         'command': 'fetch_messages',
         'sender': username,
@@ -1036,9 +1042,9 @@ p {
       // if (recipient === friendUsername) {
       chatLog.appendChild(msgListTag); 
       // }
-      // console.log('SENDER: ', data['sender']);
-      // console.log('RECIPIENT: ', data['recipient']);
-      // console.log('FRIEND: ', friendUsername);
+      // 
+      // 
+      // 
       // if (msgListTag.className.includes('replies')) {
         chatLog.appendChild(time)
       // }
@@ -1088,9 +1094,9 @@ p {
       // }
       chatLog.appendChild(msgListTag); 
       // }
-      // console.log('SENDER: ', data['sender']);
-      // console.log('RECIPIENT: ', data['recipient']);
-      // console.log('FRIEND: ', friendUsername);
+      // 
+      // 
+      // 
       // if (msgListTag.className.includes('replies')) {
       chatLog.appendChild(time2)
       // }
@@ -1136,6 +1142,10 @@ p {
         // Append the button to the container
         if (recipientName === username) {
           floating.appendChild(button); 
+          console.log('YES');
+        }
+        else {
+          console.log('AINT');
         }
 
         // span2.onclick = function() {
