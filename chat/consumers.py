@@ -9,6 +9,7 @@ from .views import get_messages
 
 class ChatConsumer(WebsocketConsumer):
     def fetch_messages(self, data):
+
         sender = BaseUser.objects.get(username=data['sender'])
         recipient = BaseUser.objects.get(username=data.get('recipient'))
         # messages = Chat.last_10_messages()
@@ -23,21 +24,6 @@ class ChatConsumer(WebsocketConsumer):
             'messages': self.messages_to_json(messages)
         }
         self.send_message(content)
-
-    def new_file_message(self, data):
-        file_content = data['file_content']
-        sender = BaseUser.objects.get(username=data['sender'])
-        recipient = BaseUser.objects.get(username=data.get('recipient'))
-        file_message = Chat.objects.create(
-            sender=sender,
-            recipient=recipient,
-            file_content = file_content,
-        )
-        content = {
-            'command': 'new_file',
-            'file_content': file_message
-        }
-        return self.send_chat_files(content)
 
     def new_message(self, data):
         
@@ -107,11 +93,6 @@ class ChatConsumer(WebsocketConsumer):
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(
         self.room_group_name, {"type": "chat.message", "message": message}
-        )
-    
-    def send_chat_files(self, file):
-        async_to_sync(self.channel_layer.group_send)(
-        self.room_group_name, {"type": "chat.file_content", "file_content": file}
         )
 
     def send_message(self, message):

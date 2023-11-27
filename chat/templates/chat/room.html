@@ -1139,6 +1139,7 @@ p {
 
         // Append the button to the container
         if (recipientName === username) {
+          document.getElementsByClassName('floating')[0].innerHTML = ''
           floating.appendChild(button); 
 
         }
@@ -1153,27 +1154,6 @@ p {
   $('.contact').click(handleListItemClick);
 </script>
 
-<script>
-  function toDataURL(file, callback) {
-    var reader = new FileReader();
-    reader.onload = function () {
-        var dataURL = reader.result;
-        callback(dataURL);
-    }
-    reader.readAsDataURL(file);
-}
-
-document.getElementById('image').addEventListener('change', function(event){
-    var files = event.target
-    var file = files[0];
-    toDataURL(file, function(dataURL){
-    chatSocket.send(JSON.stringify({
-        'command':'new_file', 
-        'dataURL': dataURL
-    }))
-    })
-})
-</script>
 </body>
 
 </html>
