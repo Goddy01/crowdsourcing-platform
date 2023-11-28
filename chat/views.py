@@ -47,3 +47,15 @@ def set_all_message_to_seen(request, sender, recipient):
         m.save(update_fields=['is_seen'])
     print('SHITE')
     return JsonResponse(data = {'status': 'success'})
+
+@login_required
+def send_file_message(request, sender, recipient):
+    if request.method == 'POST':
+        file = request.POST.get('file-message')
+        message  = Chat.objects.create(
+            sender=sender,
+            recipient=recipient,
+            content='',
+            file_content=file
+        )
+    return JsonResponse(data = {'file_url': message.file_content.url})
