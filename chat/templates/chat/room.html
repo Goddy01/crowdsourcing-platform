@@ -1026,14 +1026,17 @@ p {
           console.log('DONDA: ', response);
           function fileSenderMessages(response) {
       
-            var sender = response.message.sender;
+            var sender = response.message_sender;
             var msgListTag = document.createElement('li');
             var imgTag = document.createElement('img');
             var pTag = document.createElement('img');
+            pTag.style.width = '300px';
+            pTag.style.height = '200px';
+            pTag.style.borderRadius = '0px';
 
             var time = document.createElement('p');
             time.style.padding = '0 10px'
-            time.textContent = new Date(data['timestamp']).toLocaleString()
+            time.textContent = new Date(response.timestamp).toLocaleString()
             time.style.float = 'right';
             time.style.fontStyle = 'italic';
             time.style.marginTop = '-20px';
@@ -1042,7 +1045,7 @@ p {
             time.style.color = 'green'
 
             pTag.src = response.file_url;
-            imgTag.src = response.sender.pfp.url;
+            imgTag.src = response.message_sender_pfp_url;
             imgTag.style.width = "30px";
             imgTag.style.height = "30px";
             imgTag.style.borderRadius = "50%";
@@ -1051,21 +1054,26 @@ p {
               
             msgListTag.appendChild(imgTag);
             msgListTag.appendChild(pTag);
-            chatLog.appendChild(msgListTag); 
-              chatLog.appendChild(time)
+            if (username === response.message_sender) {
+              chatLog.appendChild(msgListTag);
+              chatLog.appendChild(time) 
+            }
             msgListTag.style.padding = '10px';
           }
 
           function FileReceivedMessage(response) {
             
-            var sender = response.message.sender;
+            var sender = response.message_sender;
             
             var msgListTag = document.createElement('li');
             var imgTag = document.createElement('img');
             var pTag = document.createElement('img');
+            pTag.style.width = '300px';
+            pTag.style.height = '200px';
+            pTag.style.borderRadius = '0px';
             var time2 = document.createElement('p');
             time2.style.padding = '0 10px'
-            time2.textContent = new Date(data['timestamp']).toLocaleString()
+            time2.textContent = new Date(response.timestamp).toLocaleString()
             time2.style.float = 'left';
             time2.style.fontStyle = 'italic';
             time2.style.marginTop = '-20px';
@@ -1075,7 +1083,7 @@ p {
             
             
             pTag.src = response.file_url;
-            imgTag.src = response.sender.pfp.url;
+            imgTag.src = response.message_sender_pfp_url;
             imgTag.style.width = "30px";
             imgTag.style.height = "30px";
             imgTag.style.borderRadius = "50%";

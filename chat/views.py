@@ -61,4 +61,4 @@ def send_file_message(request, sender, recipient):
             content='',
             file_content=file
         )
-    return JsonResponse(data = {'status': 'success', 'file_url': message.file_content.url})
+    return JsonResponse(data = {'status': 'success', 'file_url': message.file_content.url, 'message_sender': message.sender.username, 'message_sender_pfp_url': message.sender.pfp.url, 'message_recipient': message.recipient.username, 'message_recipient_url': message.recipient.pfp.url, 'timestamp': message.timestamp})
