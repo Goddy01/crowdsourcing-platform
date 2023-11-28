@@ -819,6 +819,7 @@ p {
         </ul>
       </div>
       <div class="message-input" style="display: none;">
+        <input type="file" name="file-message" id="file-msg" hidden>
         <div class="wrap">
         <input id="chat-message-input" type="text" placeholder="Write your message..." />
         <i class="fa fa-paperclip attachment" aria-hidden="true"></i>
@@ -983,6 +984,25 @@ p {
 
       messageInputDom.value = '';
     };
+
+    var fileMsg = document.querySelector('#file-msg')
+    var fileIcon = document.querySelector('.fa-paperclip')
+    var sendFileUrl = "{% url 'chat:send_file_msg' sender=0 recipient=1 %}".replace('0', username).replace('1', oldFriends[oldFriends.length-1]);
+    
+    fileIcon.addEventListener('click', function () {
+      fileMsg.click();
+    })
+
+    fileMsg.addEventListener('change', function () {
+      var file = fileMsg.files[0];
+      $.ajax({
+        type: 'POST',
+        url: sendFileUrl,
+        data: {
+          'csrfmiddlewaretoken': getCookie('csrftoken')
+        }
+      })
+    })
 
     function fetchMessages(friendUsername) {
       
