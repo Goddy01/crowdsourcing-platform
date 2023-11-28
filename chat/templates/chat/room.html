@@ -1010,11 +1010,85 @@ p {
 
     fileMsg.addEventListener('change', function () {
       var file = fileMsg.files[0];
+      var formData = new FormData();
+      formData.append('file', file)
+
       $.ajax({
         type: 'POST',
         url: sendFileUrl,
-        data: {
-          'csrfmiddlewaretoken': getCookie('csrftoken')
+        data: formData,
+        processData: false,
+        contentType: false,
+        headers: {
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        success: function(response) {
+          console.log('DONDA: ', response);
+          function fileSenderMessages(response) {
+      
+            var sender = response.message.sender;
+            var msgListTag = document.createElement('li');
+            var imgTag = document.createElement('img');
+            var pTag = document.createElement('img');
+
+            var time = document.createElement('p');
+            time.style.padding = '0 10px'
+            time.textContent = new Date(data['timestamp']).toLocaleString()
+            time.style.float = 'right';
+            time.style.fontStyle = 'italic';
+            time.style.marginTop = '-20px';
+            time.style.marginRight = '60px';
+            time.style.fontSize = '15px';
+            time.style.color = 'green'
+
+            pTag.src = response.file_url;
+            imgTag.src = response.sender.pfp.url;
+            imgTag.style.width = "30px";
+            imgTag.style.height = "30px";
+            imgTag.style.borderRadius = "50%";
+            
+            msgListTag.className = 'replies';
+              
+            msgListTag.appendChild(imgTag);
+            msgListTag.appendChild(pTag);
+            chatLog.appendChild(msgListTag); 
+              chatLog.appendChild(time)
+            msgListTag.style.padding = '10px';
+          }
+
+          function FileReceivedMessage(response) {
+            
+            var sender = response.message.sender;
+            
+            var msgListTag = document.createElement('li');
+            var imgTag = document.createElement('img');
+            var pTag = document.createElement('img');
+            var time2 = document.createElement('p');
+            time2.style.padding = '0 10px'
+            time2.textContent = new Date(data['timestamp']).toLocaleString()
+            time2.style.float = 'left';
+            time2.style.fontStyle = 'italic';
+            time2.style.marginTop = '-20px';
+            time2.style.marginLeft = '20px';
+            time2.style.fontSize = '15px';
+            time2.style.color = 'green'
+            
+            
+            pTag.src = response.file_url;
+            imgTag.src = response.sender.pfp.url;
+            imgTag.style.width = "30px";
+            imgTag.style.height = "30px";
+            imgTag.style.borderRadius = "50%";
+              msgListTag.className = 'sent';
+            msgListTag.appendChild(imgTag);
+            msgListTag.appendChild(pTag);
+            chatLog.appendChild(msgListTag); 
+            chatLog.appendChild(time2)
+            msgListTag.style.padding = '10px';
+          }
+
+          fileSenderMessages(response);
+          FileReceivedMessage(response);
         }
       })
     })

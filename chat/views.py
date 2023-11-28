@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from accounts.models import BaseUser
 from itertools import chain
 from django.db.models import Q
 from django.shortcuts import render
@@ -51,7 +52,9 @@ def set_all_message_to_seen(request, sender, recipient):
 @login_required
 def send_file_message(request, sender, recipient):
     if request.method == 'POST':
-        file = request.POST.get('file-message')
+        sender = BaseUser.objects.get(username=sender)
+        recipient = BaseUser.objects.get(username=recipient)
+        file = request.FILES['file']
         message  = Chat.objects.create(
             sender=sender,
             recipient=recipient,
