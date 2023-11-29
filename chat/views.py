@@ -37,19 +37,19 @@ def get_messages(sender, recipient):
 
     return qs1 | qs2
 
-def set_all_message_to_seen(request, sender, recipient):
-    messages = Chat.objects.filter(
-        sender__username=sender,
-        recipient__username=recipient,
-        is_seen=False
-    )
-    for m in messages:
-        m.is_seen = True
-        m.save(update_fields=['is_seen'])
-    print('SHITE')
-    return JsonResponse(data = {'status': 'success'})
+# def set_all_message_to_seen(request, sender, recipient):
+#     messages = Chat.objects.filter(
+#         sender__username=sender,
+#         recipient__username=recipient,
+#         is_seen=False
+#     )
+#     for m in messages:
+#         m.is_seen = True
+#         m.save(update_fields=['is_seen'])
+#     print('SHITE')
+#     return JsonResponse(data = {'status': 'success'})
 
-@login_required
+# @login_required
 def send_file_message(request, sender, recipient):
     if request.method == 'POST':
         sender = BaseUser.objects.get(username=sender)
@@ -58,7 +58,6 @@ def send_file_message(request, sender, recipient):
         message  = Chat.objects.create(
             sender=sender,
             recipient=recipient,
-            content='',
             file_content=file
         )
     return JsonResponse(data = {'status': 'success', 'file_url': message.file_content.url, 'message_sender': message.sender.username, 'message_sender_pfp_url': message.sender.pfp.url, 'message_recipient': message.recipient.username, 'message_recipient_url': message.recipient.pfp.url, 'timestamp': message.timestamp})

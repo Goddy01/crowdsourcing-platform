@@ -25,6 +25,18 @@ class ChatConsumer(WebsocketConsumer):
         }
         self.send_message(content)
 
+    def new_file_message(self, data):
+        sender = BaseUser.objects.get(username=data['sender'])
+        recipient = BaseUser.objects.get(username=data['recipient'])
+        message = Chat.objects.filter(sender=sender, recipient=recipient, file_content__isnull=False).order_by('-timestamp').first()
+
+        content = {
+            'command': 'new_file',
+            'message': self.message_to_json(message)
+        }
+
+        return self.send_message(content)
+
     def new_message(self, data):
         
         sender = data['from']
@@ -54,19 +66,28 @@ class ChatConsumer(WebsocketConsumer):
             )
         return result
     def message_to_json(self, message):
-        
+        try:
+            file_content = message.file_content.url
+        except:
+            file_content = None
+        if message.content is not None:
+            content = message.content
+        else:
+            content = None
         return {
             'sender': message.sender.username,
             'recipient': message.recipient.username,
-            'content': message.content,
+            'content': content,
             'timestamp': str(message.timestamp),
             'sender_pfp_url': message.sender.pfp.url,
-            'is_seen': message.is_seen
+            'is_seen': message.is_seen,
+            'file_content': file_content
 
         }
     commands = {
         'fetch_messages': fetch_messages,
-        'new_message': new_message
+        'new_message': new_message,
+        'new_file': new_file_message
     }
     def connect(self):
         
