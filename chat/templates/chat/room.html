@@ -28,6 +28,10 @@
   -webkit-font-smoothing: antialiased;
 }
 
+a:focus {
+    outline: none;
+}
+
 .messages {
   height: 100px;
   overflow: auto;
@@ -1140,12 +1144,22 @@ p {
         msgListTag.appendChild(pTag);
       }
       if (data['file_content'] !== null) {
-        var pTag = document.createElement('img');
-      pTag.src = data['file_content'];
-      pTag.style.width = '400px';
-      pTag.style.height = '280px';
+        var pTag = document.createElement('button');
+        var hrefLink = document.createElement('a')
+        hrefLink.href = data['file_content'];
+        hrefLink.textContent = 'View File'
+        hrefLink.style.textDecoration = 'none'
+        pTag.appendChild(hrefLink)
+      // pTag.style.color = 'black'
+      pTag.style.backgroundColor = 'white'
+      pTag.style.padding = '10px'
+      pTag.style.width = '100px';
+      pTag.style.float = 'right'
+      pTag.style.height = '50px';
       pTag.style.borderRadius = '10px'
+      pTag.style.border = 'none';
       pTag.style.marginBottom = '10px';
+      pTag.style.fontSize = '20px'
       msgListTag.appendChild(pTag);
       }
       
@@ -1202,12 +1216,22 @@ p {
         msgListTag.appendChild(pTag);
       }
       if (data['file_content'] !== null) {
-        var pTag = document.createElement('img');
-      pTag.src = data['file_content'];
-      pTag.style.width = '400px';
-      pTag.style.height = '280px';
+        var pTag = document.createElement('button');
+        var hrefLink = document.createElement('a')
+        hrefLink.href = data['file_content'];
+        hrefLink.textContent = 'View File'
+        hrefLink.style.textDecoration = 'none'
+        hrefLink.style.color = 'white'
+        pTag.appendChild(hrefLink)
+      // pTag.style.color = 'black'
+      pTag.style.backgroundColor = '#435F7A'
+      pTag.style.padding = '10px'
+      pTag.style.width = '100px';
+      pTag.style.height = '50px';
       pTag.style.borderRadius = '10px'
+      pTag.style.border = 'none';
       pTag.style.marginBottom = '10px';
+      pTag.style.fontSize = '20px'
       msgListTag.appendChild(pTag);
       }
       // msgListTag.appendChild(pTag);
