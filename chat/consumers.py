@@ -35,7 +35,7 @@ class ChatConsumer(WebsocketConsumer):
             'message': self.message_to_json(message)
         }
 
-        return self.send_message(content)
+        return self.send_chat_message(content)
 
     def new_message(self, data):
         

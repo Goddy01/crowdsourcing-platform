@@ -941,6 +941,7 @@ p {
             }
             
             else if (data['message'].sender === oldFriends[oldFriends.length -1]) {
+              console.log('YO SON');
               receivedMessage(data['message'], oldFriends[oldFriends.length -1])
               
             }
@@ -961,6 +962,7 @@ p {
       }
 
       else if (data['command'] === 'new_file') {
+        console.log('USERNAME: ', username);
         if (data['message'].sender === username) {
           document.getElementsByClassName('floating')[0].innerHTML = ''; 
         }
@@ -971,7 +973,7 @@ p {
             if (data['message'].sender === username) {
               console.log('2');
               senderMessages(data['message']);
-              console.log('2 DATA: ', data)
+              // console.log('2 DATA: ', data)
                 // createFileMessage(data['message'])
             }
             
@@ -985,7 +987,7 @@ p {
             console.log('4');
               createNewMessageNotif(username)
             }
-            else if (data['message'].recipient === username && data['message'].sender !== oldFriends[oldFriends.length -1]) {
+            else if (data['message'].recipient === username) {
               console.log('5');
             }
           
@@ -1136,10 +1138,8 @@ p {
         var pTag = document.createElement('p'); 
         pTag.textContent = data.content;
         msgListTag.appendChild(pTag);
-        console.log('CONTENT 11: ', data.content);
       }
       if (data['file_content'] !== null) {
-        console.log('BREV');
         var pTag = document.createElement('img');
       pTag.src = data['file_content'];
       pTag.style.width = '400px';
@@ -1147,7 +1147,6 @@ p {
       pTag.style.borderRadius = '10px'
       pTag.style.marginBottom = '10px';
       msgListTag.appendChild(pTag);
-      console.log('FILEE 11');
       }
       
       if ( data['recipient'] === friendUsername) {
@@ -1201,7 +1200,6 @@ p {
         var pTag = document.createElement('p'); 
         pTag.textContent = data.content;
         msgListTag.appendChild(pTag);
-        console.log('CONTENTTT 22');
       }
       if (data['file_content'] !== null) {
         var pTag = document.createElement('img');
@@ -1211,7 +1209,6 @@ p {
       pTag.style.borderRadius = '10px'
       pTag.style.marginBottom = '10px';
       msgListTag.appendChild(pTag);
-      console.log('FILEE 22');
       }
       // msgListTag.appendChild(pTag);
       // if (recipient === friendUsername) {
