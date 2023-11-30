@@ -30,6 +30,10 @@ class Group(models.Model):
     def __str__(self):
         return self.name
     
+    @property
+    def members_count(self):
+        return self.members.count()
+    
 class GroupChat(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     sender = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
