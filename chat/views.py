@@ -27,7 +27,8 @@ def room(request):
             conversations.append(friend.user1)
     return render(request, 'chat/room.html', {
         'username': request.user.username,
-        'friends': list(chain(conversations, Group.objects.filter(members=user.user.pk))),
+        'friends': conversations,
+        'groups': Group.objects.filter(members=user.user.pk),
         'user':user
     })
 

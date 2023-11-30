@@ -776,29 +776,50 @@ p {
         <input type="text" placeholder="Search contacts..." />
       </div> -->
       <div id="contacts" style="background-color: #2C3E50;border-radius: 1px;" class="mt-5">
-        <ul class="nav nav-tabs row">
-          <li class="nav-item col-6 btn">
-            <a class="nav-link font-weight-bold" aria-current="page" href="#">Friends</a>
+        <ul class="nav nav-tabs row" role="tablist">
+          <li class="nav-item col-6 btn chat-type-change" id="friends-chat">
+            <a class="nav-link font-weight-bold" aria-current="page" href="#tabContent1"data-toggle="tab">Friends</a>
           </li>
-          <li class="nav-item col-6 btn">
-            <a class="nav-link font-weight-bold" aria-current="page" href="#">Groups</a>
+          <li class="nav-item col-6 btn chat-type-change" id="groups-chat">
+            <a class="nav-link font-weight-bold" aria-current="page" href="#tabContent2" data-toggle="tab">Groups</a>
           </li>
         </ul>
         <!-- <p class="h4 text-center text-white p-3" style="border: none;background-color: #121a21;">Friends</p> -->
-        <ul class="mt-2">
-          {% for friend in friends %}
-          <li class="contact" data-friend-i="{{ friend.user.instagram }}" data-friend-t="{{ friend.user.twitter }}" data-friend-f="{{ friend.user.facebook }}" data-friend-l="{{ friend.user.linkedin }}" data-friend-user-fullname="{{ friend.user.get_full_name }}" data-friend-user="{{ friend.user.pfp.url }}" data-friend-username="{{ friend.user.username }}" id="contact-{{ friend.user.username }}">
-            <div class="wrap">
-              <span class="contact-status online"></span>
-              <img src="{{ friend.user.pfp.url }}" alt="" style="border-radius: 50%;width: 60px;height: 60px;" class="offline" />
-              <div class="meta">
-                <p class="name">{{ friend.user.get_full_name }}</p>
-                <p class="preview">You just got LITT up, Mike.</p>
-              </div>
-            </div>
-          </li>
-          {% endfor %}
-        </ul>
+        <div class="tab-content">
+          <div class="tab-pane" id="tabContent1">
+            <ul class="mt-2">
+              {% for friend in friends %}
+              <li class="contact" data-friend-i="{{ friend.user.instagram }}" data-friend-t="{{ friend.user.twitter }}" data-friend-f="{{ friend.user.facebook }}" data-friend-l="{{ friend.user.linkedin }}" data-friend-user-fullname="{{ friend.user.get_full_name }}" data-friend-user="{{ friend.user.pfp.url }}" data-friend-username="{{ friend.user.username }}" id="contact-{{ friend.user.username }}">
+                <div class="wrap">
+                  <span class="contact-status online"></span>
+                  <img src="{{ friend.user.pfp.url }}" alt="" style="border-radius: 50%;width: 60px;height: 60px;" class="offline" />
+                  <div class="meta">
+                    <p class="name">{{ friend.user.get_full_name }}</p>
+                    <p class="preview">You just got LITT up, Mike.</p>
+                  </div>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+          
+          <div class="tab-pane" id="tabContent2">
+            <ul class="mt-2">
+              {% for group in groups %}
+              <li class="contact" id="contact-{{ group.name }}">
+                <div class="wrap">
+                  <!-- <span class="contact-status online"></span> -->
+                  <img src="{% static 'images/group.jpg' %}" alt="" style="border-radius: 50%;width: 60px;height: 60px;"/>
+                  <div class="meta">
+                    <p class="name">{{ group.name }}</p>
+                    <!-- <p class="preview" style="text-wrap: wrap;">{{ group.description }}</p> -->
+                  </div>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
       </div>
       <div id="bottom-bar">
         <button id="addcontact"><i class="fa fa-user-plus fa-fw" aria-hidden="true"></i> <span>Add contact</span></button>
@@ -1389,6 +1410,13 @@ p {
   // Attach the click event to all list items with the 'contact' class
   $('.contact').click(handleListItemClick);
 </script>
+<script>
+  $(document).ready(function() {
+      $('.chat-type-change').on('click',function(){
+           document.title = $(this).attr('id');
+      });
+  });
+  </script>
 
 </body>
 
