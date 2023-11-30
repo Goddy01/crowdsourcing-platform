@@ -67,6 +67,10 @@ class Project(models.Model):
         else:
             return 0  # To handle the case where target is 0 (to avoid division by zero)
 
+    @property
+    def count_make_investments_instances(self):
+        return self.the_investment.count()
+
     def __str__(self):
         return f"Project: {self.name} by {self.innovator.user.username}"
     

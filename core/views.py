@@ -1,4 +1,5 @@
 from django.db.models.functions import Length
+from chat.models import Group, GroupChat
 from django.template import RequestContext
 from django.db.models import Q
 from django.contrib.auth import login, authenticate, logout
@@ -443,6 +444,7 @@ def invest(request, investment_pk):
                 post_balance = investment.fund_raised,
                 type='INCOMING INVESTMENT'
             )
+            
             context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
             messages.success(request, 'Thank you for investing in this project!')
             return redirect('project_details', investment_pk)
