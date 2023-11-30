@@ -447,13 +447,13 @@ def invest(request, investment_pk):
             associated_investments = investment.count_make_investments_instances
             if associated_investments == 1:
                 new_group = Group.objects.create(
-                    name = f'{investment.name} by {investment.innovator.user.get_full_name}',
+                    name = f'{investment.name} by {investment.innovator.user.get_full_name()}',
                     description = f'This is the community dedicated to investors who have contributed to the {investment.name} project. Please adhere to our community guidelines. The project owner, {investment.name}, will regularly share updates on the progress of the investment project with all members.')
                 new_group.members.add(investment.innovator.user)
-                if investor.user not in new_group.members:
+                if not new_group.members.filter(pk=investor.user.pk).exists():
                     new_group.members.add(investor.user)
             context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
-            messages.success(request, 'Thank you for investing in this project!')
+            messages.success(request, 'Thank you for investing in this project. You have been added to the investment group chat.')
             return redirect('project_details', investment_pk)
         else:
             return HttpResponse('Insufficient Account Balance ')
