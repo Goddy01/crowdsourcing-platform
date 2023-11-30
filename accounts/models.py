@@ -125,10 +125,12 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
                 img.thumbnail(output_size)
                 img.save(self.pfp.path)
     
+    
     def get_full_name(self):
         '''Returns the first_name plus the last_name, with a space in between.'''
-        full_name = '%s, %s %s' % (self.last_name, self.first_name, self.middle_name)
-        return full_name.strip()
+        if self.middle_name:
+            return '%s, %s %s' % (self.last_name, self.first_name, self.middle_name).strip()
+        return '%s %s' % (self.first_name, self.last_name).strip()
 
     def has_perm(self, perm, obj=None):
         """Checks if the user has any permissions"""

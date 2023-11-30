@@ -444,7 +444,13 @@ def invest(request, investment_pk):
                 post_balance = investment.fund_raised,
                 type='INCOMING INVESTMENT'
             )
-            
+            associated_investments = investment.count_make_investments_instances
+            if associated_investments == 1:
+                new_group = Group.objects.create(
+                    name = f'{investment.name} by {investment.innovator.user.get_full_name}',
+                    description = f'This is the community dedicated to investors who have contributed to the {investment.name} project. Please adhere to our community guidelines. The project owner, {investment.name}, will regularly share updates on the progress of the investment project with all members.')
+                if investor.user not in new_group.members:
+                    new_group.members.add(investor.user)
             context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
             messages.success(request, 'Thank you for investing in this project!')
             return redirect('project_details', investment_pk)
