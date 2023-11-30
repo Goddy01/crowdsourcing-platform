@@ -7,7 +7,7 @@ from django.utils.safestring import mark_safe
 import json
 from django.contrib.auth.decorators import login_required
 from accounts.models import Connection, Innovator
-from .models import Chat
+from .models import Chat, Group, GroupChat
 
 def index(request):
     return render(request, 'chat/chat.html')
@@ -18,16 +18,16 @@ def room(request):
     friends_list = Connection.objects.filter(
         Q(user1=user) | Q(user2=user)
     )
-    friends = []
+    conversations = []
 
     for friend in friends_list:
         if friend.user1 == user:
-            friends.append(friend.user2)
+            conversations.append(friend.user2)
         else:
-            friends.append(friend.user1)
+            conversations.append(friend.user1)
     return render(request, 'chat/room.html', {
         'username': request.user.username,
-        'friends': friends,
+        'friends': list(chain(conversations, Group.objects.filter(members=user.user.pk))),
         'user':user
     })
 

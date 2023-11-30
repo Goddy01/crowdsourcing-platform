@@ -776,7 +776,15 @@ p {
         <input type="text" placeholder="Search contacts..." />
       </div> -->
       <div id="contacts" style="background-color: #2C3E50;border-radius: 1px;" class="mt-5">
-        <p class="h4 text-center text-white p-3" style="border: none;background-color: #121a21;">Friends</p>
+        <ul class="nav nav-tabs row">
+          <li class="nav-item col-6 btn">
+            <a class="nav-link font-weight-bold" aria-current="page" href="#">Friends</a>
+          </li>
+          <li class="nav-item col-6 btn">
+            <a class="nav-link font-weight-bold" aria-current="page" href="#">Groups</a>
+          </li>
+        </ul>
+        <!-- <p class="h4 text-center text-white p-3" style="border: none;background-color: #121a21;">Friends</p> -->
         <ul class="mt-2">
           {% for friend in friends %}
           <li class="contact" data-friend-i="{{ friend.user.instagram }}" data-friend-t="{{ friend.user.twitter }}" data-friend-f="{{ friend.user.facebook }}" data-friend-l="{{ friend.user.linkedin }}" data-friend-user-fullname="{{ friend.user.get_full_name }}" data-friend-user="{{ friend.user.pfp.url }}" data-friend-username="{{ friend.user.username }}" id="contact-{{ friend.user.username }}">
