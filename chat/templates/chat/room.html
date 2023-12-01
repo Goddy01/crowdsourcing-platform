@@ -805,12 +805,12 @@ p {
           <div class="tab-pane" id="tabContent2">
             <ul class="mt-2">
               {% for group in groups %}
-              <li class="contact group-conversation" id="contact-{{ group.name }}">
+              <li class="contact group-conversation" id="contact-{{ group.name }}" data-group-name="{{ group.name }}" data-group-desc="{{ group.description}}">
                 <div class="wrap">
                   
                   <img src="{% static 'images/group.jpg' %}" alt="" style="border-radius: 50%;width: 60px;height: 60px;"/>
                   <div class="meta">
-                    <p class="name">{{ group.name }}</p>
+                    <p class="name" id="group-name" >{{ group.name }}</p>
                     <!-- <p class="preview" style="text-wrap: wrap;">{{ group.description }}</p> -->
                   </div>
                 </div>
@@ -828,6 +828,7 @@ p {
     <div class="content">
       <div class="contact-profile">
         <img src="" alt="" id="recipient_pfp" />
+        <p id="description"></p>
         <p id="recipient_username"></p>
         <div class="social-media">
           <a href="" id="recipient_linkedin" style="display: none;">
@@ -1421,6 +1422,33 @@ p {
 
     function handleGroupClick() {
       document.getElementById('chat-log').innerHTML = ''
+      document.getElementsByClassName('floating')[0].innerHTML = ''
+      addedTimestamps = []
+      var chatLog = document.getElementById("chat-log");
+      var username = "{{ username }}";
+      var groupName = $(this).data('group-name');
+      var groupDesc = $(this).data('group-desc');
+      var groupNameSlot = document.getElementById('recipient_username')
+      var groupPfpSlot = document.getElementById('recipient_pfp')
+      var contactProfile = document.getElementsByClassName('contact-profile')[0]
+      var createGroupDesc = document.createElement('p');
+      oldGroups.push(groupName)
+
+      groupNameSlot.textContent = groupName;
+      groupPfpSlot.style.marginTop = '20px'
+      groupPfpSlot.src = "{% static 'images/group.jpg' %}"
+      // document.getElementById('description').textContent = groupDesc
+      createGroupDesc.textContent = groupDesc
+      createGroupDesc.style.padding = '20px'
+      createGroupDesc.style.position = 'absolute'
+      createGroupDesc.style.top = '80px'
+      createGroupDesc.style.backgroundColor = '#d1ecf1'
+      
+      document.getElementsByClassName('messages')[0].appendChild(createGroupDesc)
+
+      document.getElementsByClassName('social-media')[0].style.display = 'none';
+      document.getElementsByClassName('content')[0].style.display = 'block';
+      document.getElementsByClassName('message-input')[0].style.display = 'inline';
     }
     $('.group-conversation').click(handleGroupClick)
 </script>

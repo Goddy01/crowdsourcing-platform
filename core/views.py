@@ -448,7 +448,7 @@ def invest(request, investment_pk):
             if associated_investments == 1:
                 new_group = Group.objects.create(
                     name = f'{investment.name} by {investment.innovator.user.get_full_name()}',
-                    description = f'This is the community dedicated to investors who have contributed to the {investment.name} project. Please adhere to our community guidelines. The project owner, {investment.name}, will regularly share updates on the progress of the investment project with all members.')
+                    description = f'This is the community dedicated to investors who have contributed to the {investment.name} project. Please adhere to our community guidelines. The project owner ({investment.innovator.user.get_full_name}), will regularly share updates on the progress of the investment project with all members.')
                 new_group.members.add(investment.innovator.user)
                 if not new_group.members.filter(pk=investor.user.pk).exists():
                     new_group.members.add(investor.user)
