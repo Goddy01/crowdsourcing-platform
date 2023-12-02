@@ -805,7 +805,7 @@ p {
           <div class="tab-pane" id="tabContent2">
             <ul class="mt-2">
               {% for group in groups %}
-              <li class="contact group-conversation" id="contact-{{ group.name }}" data-group-pk="{{ group.pk }}" data-group-name="{{ group.name }}" data-group-desc="{{ group.description}}" data-members-count="{{ group.members_count }}">
+              <li class="contact group-conversation" id="contact-{{ group.name }}" data-group-pk="{{ group.pk }}" data-group-members="{{ group.members.all }}" data-group-name="{{ group.name }}" data-group-desc="{{ group.description}}" data-members-count="{{ group.members_count }}">
                 <div class="wrap">
                   
                   <img src="{% static 'images/group.jpg' %}" alt="" style="border-radius: 50%;width: 60px;height: 60px;"/>
@@ -909,7 +909,7 @@ p {
     var floating = content1.querySelector('#floating');
     floatingClass = content1.querySelector('.floating')
     floatingClass.innerHTML = ''
-    addedTimestamps = []
+    var addedTimestamps = []
     var chatLog = content1.querySelector("#chat-log");
     var username = "{{ username }}";
     var friendUsername = $(this).data('friend-username');
@@ -1446,6 +1446,7 @@ p {
 </script>
 
 
+
 <script>
     document.getElementsByClassName('group-chat-tab')[0].addEventListener('click', function () {
       document.getElementById('content-1').style.display = 'none';
@@ -1455,6 +1456,8 @@ p {
 
     function handleGroupClick() {
 
+
+      var addedTimestamps = []
       var content2 = document.getElementById('content-2')
       content2.style.display = 'block';
       var floatingClass = content2.querySelector('.floating')
@@ -1469,6 +1472,11 @@ p {
       var groupPk = $(this).data('group-pk')
       var groupName = $(this).data('group-name');
       var groupDesc = $(this).data('group-desc');
+      for (let member = 0; member < groupMembers.length; member++) {
+        console.log('Member: ', groupMembers[member].user);
+        
+      }
+      console.log(typeof groupMembers);
       var membersCount = $(this).data('members-count')
       var groupNameSlot = content2.querySelector('#group_name')
       var groupPfpSlot = content2.querySelector('#group_pfp')
@@ -1511,8 +1519,23 @@ p {
         'ws://' + window.location.host + '/ws/chat/groups/'
       );
       
+
       groupChatSocket.onopen = function(e) {
         fetchGroupMessages(groupPk);
+      }
+
+      groupChatSocket.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+
+        if (data['command'] === 'load_messages') {
+          for (let i = 0; i < data['messages'].length; i++) {
+            if (!addedTimestamps.includes(data['messages'][i].timestamp)) {
+              if (data['messages'][i].sender === username) {
+                senderMessages(data['messages'][i])
+              }
+            }
+          }
+        }
       }
     }
     $('.group-conversation').click(handleGroupClick)

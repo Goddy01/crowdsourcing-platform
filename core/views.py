@@ -454,6 +454,11 @@ def invest(request, investment_pk):
                 new_group.members.add(investment.innovator.user)
                 if not new_group.members.filter(pk=investor.user.pk).exists():
                     new_group.members.add(investor.user)
+            else:
+                group = Group.objects.get(
+                    investment_project = investment
+                )
+                group.members.add(investor.user)
             context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
             messages.success(request, 'Thank you for investing in this project. You will be added to the investment group chat if this is your first investment in this project.')
             return redirect('project_details', investment_pk)

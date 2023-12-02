@@ -8,6 +8,7 @@ import json
 from django.contrib.auth.decorators import login_required
 from accounts.models import Connection, Innovator
 from .models import Chat, Group, GroupChat
+from django.core.serializers import serialize
 
 def index(request):
     return render(request, 'chat/chat.html')
@@ -29,6 +30,7 @@ def room(request):
         'username': request.user.username,
         'friends': conversations,
         'groups': Group.objects.filter(members=user.user.pk),
+        'groups2': serialize('json', queryset=Group.objects.filter(members=user.user.pk)),
         'user':user
     })
 
