@@ -864,26 +864,12 @@ p {
     </div>
 
     <div class="content" id="content-2" style="display: none;">
-      <div class="contact-profile">
-        <img src="" alt="" id="recipient_pfp" />
-        <p id="recipient_username"></p>
+      <div class="contact-profile" id="contact-profile-1">
+        <img src="" alt="" id="group_pfp" />
+        <p id="group_name"></p>
         <p id="members-count-slot" style="display: block;"></p>
-        <div class="social-media">
-          <a href="" id="recipient_linkedin" style="display: none;">
-            <i class="fa fa-linkedin" aria-hidden="true"></i>
-          </a>
-          <a href="" id="recipient_facebook" style="display: none;">
-            <i class="fa fa-facebook" aria-hidden="true"></i>
-          </a>
-          <a href="" id="recipient_twitter" style="display: none;">
-            <i class="fa fa-twitter" aria-hidden="true"></i>
-          </a>
-          <a href="" id="recipient_instagram" style="display: none;">
-            <i class="fa fa-instagram" aria-hidden="true"></i>
-          </a>
-        </div>
       </div>
-      <div class="contact-profile"></div>
+      <div class="contact-profile" id="contact-profile-2"></div>
       <div class="messages">
         <div class="floating d-flex justify-content-center" id="floating">
         </div>
@@ -908,6 +894,10 @@ p {
 
 
 <script>
+
+    document.getElementsByClassName('friend-chat-tab')[0].addEventListener('click', function () {
+      document.getElementById('content-2').style.display = 'none';
+    })
   oldFriends = [];
 
   function handleListItemClick() {
@@ -1458,30 +1448,33 @@ p {
 
 <script>
     document.getElementsByClassName('group-chat-tab')[0].addEventListener('click', function () {
-      document.getElementsByClassName('content')[0].style.display = 'none';
+      document.getElementById('content-1').style.display = 'none';
     })
 
     oldGroups = []
 
     function handleGroupClick() {
-      document.getElementById('chat-log').innerHTML = ''
-      document.getElementsByClassName('floating')[0].innerHTML = ''
+
+      var content2 = document.getElementById('content-2')
+      content2.style.display = 'block';
+      var floatingClass = content2.querySelector('.floating')
+      var chatLog = content2.querySelector('#chat-log')
+      
+      chatLog.innerHTML = ''
+      floatingClass.innerHTML = ''
       addedTimestamps = []
-      var chatLog = document.getElementById("chat-log");
+
+      // var chatLog = document.getElementById("chat-log");
       var username = "{{ username }}";
       var groupName = $(this).data('group-name');
       var groupDesc = $(this).data('group-desc');
       var membersCount = $(this).data('members-count')
-      var groupNameSlot = document.getElementById('recipient_username')
-      var groupPfpSlot = document.getElementById('recipient_pfp')
-      var contactProfile = document.getElementsByClassName('contact-profile')[0]
-      var contactProfile2 = document.getElementsByClassName('contact-profile')[1]
+      var groupNameSlot = content2.querySelector('#group_name')
+      var groupPfpSlot = content2.querySelector('#group_pfp')
+      var contactProfile = content2.querySelector('#contact-profile-1')
+      var contactProfile2 = content2.querySelector('#contact-profile-2')
       var createGroupDesc = document.createElement('p');
-      // var createMembersCount = document.createElement('p')
-      var groupCountSlot = document.getElementById('members-count-slot')
-
-
-      // createMembersCount.innerHTML = `Members: <span style="font-weight: bold;">${membersCount}</span>`;
+      var groupCountSlot = content2.querySelector('#members-count-slot')
       
       groupCountSlot.innerHTML = `Members: <span style="font-weight: bold;">${membersCount}</span>`;
       groupCountSlot.style.position = 'absolute';
@@ -1509,11 +1502,8 @@ p {
       // #d1ecf1
       createGroupDesc.style.backgroundColor = 'whitesmoke'
       
-      document.getElementsByClassName('messages')[0].appendChild(createGroupDesc)
-
-      document.getElementsByClassName('social-media')[0].style.display = 'none';
-      document.getElementsByClassName('content')[0].style.display = 'block';
-      document.getElementsByClassName('message-input')[0].style.display = 'inline';
+      content2.querySelector('.messages').appendChild(createGroupDesc)
+      content2.querySelector('.message-input').style.display = 'inline';
     }
     $('.group-conversation').click(handleGroupClick)
 </script>
