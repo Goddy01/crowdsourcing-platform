@@ -1456,6 +1456,7 @@ p {
 
     function handleGroupClick() {
 
+      groupMembersObject = {}
 
       var addedTimestamps = []
       var content2 = document.getElementById('content-2')
@@ -1472,11 +1473,24 @@ p {
       var groupPk = $(this).data('group-pk')
       var groupName = $(this).data('group-name');
       var groupDesc = $(this).data('group-desc');
-      for (let member = 0; member < groupMembers.length; member++) {
-        console.log('Member: ', groupMembers[member].user);
+      
+      
+      getGroupMembersUrl = "{% url 'chat:get_group_members' group_pk=0 %}".replace('0', groupPk)
+      $.ajax({
+        url: getGroupMembersUrl,
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+          groupMembersObject['members'] = data.members
+        }
+      })
+
+      // for (let member = 0; member < groupMembers.length; member++) {
+      //   console.log('Member: ', groupMembers[member].user);
         
-      }
-      console.log(typeof groupMembers);
+      // }
+      console.log(typeof groupMembersObject);
+      console.log(groupMembersObject);
       var membersCount = $(this).data('members-count')
       var groupNameSlot = content2.querySelector('#group_name')
       var groupPfpSlot = content2.querySelector('#group_pfp')

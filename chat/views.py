@@ -56,9 +56,12 @@ def get_messages(sender, recipient):
 
 def get_group_members(request, group_pk):
     group = get_object_or_404(Group, pk=group_pk)
-    members = list(group.members.all().values())
-    data = serialize('json', members)
-    return JsonResponse({'members': data})
+    
+    # Select specific fields for each member
+    members = group.members.all().values('first_name', 'last_name', 'middle_name', 'pfp', 'username')
+
+    return JsonResponse({'members': list(members)})
+
 
 def send_file_message(request, sender, recipient):
     if request.method == 'POST':
