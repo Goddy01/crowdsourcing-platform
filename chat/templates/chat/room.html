@@ -18,7 +18,7 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: #27ae60;
+  background: #2C3E50;
   font-family: "proxima-nova", "Source Sans Pro", sans-serif;
   font-size: 1em;
   letter-spacing: 0.1px;
@@ -805,7 +805,7 @@ p {
           <div class="tab-pane" id="tabContent2">
             <ul class="mt-2">
               {% for group in groups %}
-              <li class="contact group-conversation" id="contact-{{ group.name }}" data-group-name="{{ group.name }}" data-group-desc="{{ group.description}}">
+              <li class="contact group-conversation" id="contact-{{ group.name }}" data-group-name="{{ group.name }}" data-group-desc="{{ group.description}}" data-members-count="{{ group.members_count }}">
                 <div class="wrap">
                   
                   <img src="{% static 'images/group.jpg' %}" alt="" style="border-radius: 50%;width: 60px;height: 60px;"/>
@@ -825,11 +825,11 @@ p {
         <button id="settings"><i class="fa fa-cog fa-fw" aria-hidden="true"></i> <span>Settings</span></button>
       </div>
     </div>
-    <div class="content">
+    <div class="content" id="content-1" style="display: none;">
       <div class="contact-profile">
         <img src="" alt="" id="recipient_pfp" />
-        <p id="description"></p>
         <p id="recipient_username"></p>
+        <!-- <p id="members-count-slot" style="display: block;"></p> -->
         <div class="social-media">
           <a href="" id="recipient_linkedin" style="display: none;">
             <i class="fa fa-linkedin" aria-hidden="true"></i>
@@ -862,6 +862,45 @@ p {
         </div>
       </div>
     </div>
+
+    <div class="content" id="content-2" style="display: none;">
+      <div class="contact-profile">
+        <img src="" alt="" id="recipient_pfp" />
+        <p id="recipient_username"></p>
+        <p id="members-count-slot" style="display: block;"></p>
+        <div class="social-media">
+          <a href="" id="recipient_linkedin" style="display: none;">
+            <i class="fa fa-linkedin" aria-hidden="true"></i>
+          </a>
+          <a href="" id="recipient_facebook" style="display: none;">
+            <i class="fa fa-facebook" aria-hidden="true"></i>
+          </a>
+          <a href="" id="recipient_twitter" style="display: none;">
+            <i class="fa fa-twitter" aria-hidden="true"></i>
+          </a>
+          <a href="" id="recipient_instagram" style="display: none;">
+            <i class="fa fa-instagram" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+      <div class="contact-profile"></div>
+      <div class="messages">
+        <div class="floating d-flex justify-content-center" id="floating">
+        </div>
+        <ul id="chat-log">
+        </ul>
+      </div>
+      <div class="message-input" style="display: none;">
+        <input type="file" name="file-message" id="file-msg" hidden>
+        <div class="wrap">
+        <input id="chat-message-input" type="text" placeholder="Write your message..." />
+        <i class="fa fa-paperclip attachment" aria-hidden="true"></i>
+        <button id="chat-message-submit" class="submit">
+          <i class="fa fa-paper-plane" aria-hidden="true"></i>
+        </button>
+        </div>
+      </div>
+    </div>
   </div>
 
 <script src="{% static 'chat/js/main.js' %}"></script>
@@ -872,19 +911,24 @@ p {
   oldFriends = [];
 
   function handleListItemClick() {
-    document.getElementsByClassName('content')[0].style.display = 'block';
-    document.getElementsByClassName('floating')[0].innerHTML = ''
+    
+    var content1 = document.getElementById('content-1');
+    content1.style.display = 'block';
+    // document.getElementsByClassName('content')[0].style.display = 'block';
+
+    var floating = content1.querySelector('#floating');
+    floatingClass = content1.querySelector('.floating')
+    floatingClass.innerHTML = ''
     addedTimestamps = []
-    var chatLog = document.getElementById("chat-log");
+    var chatLog = content1.querySelector("#chat-log");
     var username = "{{ username }}";
     var friendUsername = $(this).data('friend-username');
     oldFriends.push(friendUsername)
     
-    var floating = document.getElementById('floating');
     // var csrfToken = "{{ csrf_token }}";
 
     chatLog.innerHTML = '';
-    document.getElementsByClassName('message-input')[0].style.display = 'inline';
+    content1.querySelector('.message-input').style.display = 'inline';
     // document.getElementsByClassName('new-msg-btn')[0].style.display = 'none';
 
     var chatSocket = new ReconnectingWebSocket(
@@ -904,12 +948,12 @@ p {
     var friendUserFacebook = $(this).data('friend-f');
     var friendUserLinkedln = $(this).data('friend-l');
 
-    var recipientPfpImg = document.getElementById("recipient_pfp");
-    var recipientUsernameSlot = document.getElementById("recipient_username");
-    var recipientInstagramSlot = document.getElementById("recipient_instagram")
-    var recipientFacebookSlot = document.getElementById("recipient_facebook")
-    var recipientTwitterSlot = document.getElementById("recipient_twitter")
-    var recipientLinkedlnSlot = document.getElementById("recipient_linkedin")
+    var recipientPfpImg = content1.querySelector("#recipient_pfp");
+    var recipientUsernameSlot = content1.querySelector("#recipient_username");
+    var recipientInstagramSlot = content1.querySelector("#recipient_instagram")
+    var recipientFacebookSlot = content1.querySelector("#recipient_facebook")
+    var recipientTwitterSlot = content1.querySelector("#recipient_twitter")
+    var recipientLinkedlnSlot = content1.querySelector("#recipient_linkedin")
 
 
     if (friendUserInstagram && friendUserInstagram.length > 22) {
@@ -965,7 +1009,7 @@ p {
       } 
       else if (data['command'] === 'new_message') {
         if (data['message'].sender === username) {
-          document.getElementsByClassName('floating')[0].innerHTML = ''; 
+          content1.querySelector('.floating').innerHTML = ''; 
         }
         
 
@@ -975,7 +1019,6 @@ p {
             }
             
             else if (data['message'].sender === oldFriends[oldFriends.length -1]) {
-              console.log('YO SON');
               receivedMessage(data['message'], oldFriends[oldFriends.length -1])
               
             }
@@ -998,7 +1041,7 @@ p {
       else if (data['command'] === 'new_file') {
         console.log('USERNAME: ', username);
         if (data['message'].sender === username) {
-          document.getElementsByClassName('floating')[0].innerHTML = ''; 
+          floatingClass.innerHTML = ''; 
         }
         
 
@@ -1038,15 +1081,15 @@ p {
       console.error('Chat socket closed unexpectedly');
     };
 
-    document.querySelector('#chat-message-input').onkeyup = function(e) {
+    content1.querySelector('#chat-message-input').onkeyup = function(e) {
       if (e.keyCode === 13) {  // enter, return
-        document.querySelector('#chat-message-submit').click();
+        content1.querySelector('#chat-message-submit').click();
       }
     };
 
-    document.querySelector('#chat-message-submit').onclick = function(e) {
+    content1.querySelector('#chat-message-submit').onclick = function(e) {
       // e.preventDefault();
-      var messageInputDom = document.getElementById('chat-message-input');
+      var messageInputDom = content1.querySelector('#chat-message-input');
       var message = messageInputDom.value;
       chatSocket.send(JSON.stringify({
         'command': 'new_message',
@@ -1073,8 +1116,8 @@ p {
         return cookieValue;
     }
 
-    var fileMsg = document.querySelector('#file-msg')
-    var fileIcon = document.querySelector('.fa-paperclip')
+    var fileMsg = content1.querySelector('#file-msg')
+    var fileIcon = content1.querySelector('.fa-paperclip')
     var sendFileUrl = "{% url 'chat:send_file_msg' sender=0 recipient=1 %}".replace('0', username).replace('1', oldFriends[oldFriends.length-1]);
     
     fileIcon.addEventListener('click', function () {
@@ -1428,21 +1471,43 @@ p {
       var username = "{{ username }}";
       var groupName = $(this).data('group-name');
       var groupDesc = $(this).data('group-desc');
+      var membersCount = $(this).data('members-count')
       var groupNameSlot = document.getElementById('recipient_username')
       var groupPfpSlot = document.getElementById('recipient_pfp')
       var contactProfile = document.getElementsByClassName('contact-profile')[0]
+      var contactProfile2 = document.getElementsByClassName('contact-profile')[1]
       var createGroupDesc = document.createElement('p');
+      // var createMembersCount = document.createElement('p')
+      var groupCountSlot = document.getElementById('members-count-slot')
+
+
+      // createMembersCount.innerHTML = `Members: <span style="font-weight: bold;">${membersCount}</span>`;
+      
+      groupCountSlot.innerHTML = `Members: <span style="font-weight: bold;">${membersCount}</span>`;
+      groupCountSlot.style.position = 'absolute';
+      groupCountSlot.style.left = '80px';
+      groupCountSlot.style.float = 'left'
+      groupCountSlot.style.top = '35px'
+      contactProfile.style.backgroundColor = '#2C3E50'
+      contactProfile2.style.backgroundColor = '#2C3E50'
+      contactProfile.style.color = 'white'
+      contactProfile2.style.color = 'white'
+      contactProfile2.appendChild(groupCountSlot)
+      // createMembersCount.style.position = 'absolute';
+      // createMembersCount.style.right = '7px'
       oldGroups.push(groupName)
 
       groupNameSlot.textContent = groupName;
+      // contactProfile.appendChild(createMembersCount)
       groupPfpSlot.style.marginTop = '20px'
       groupPfpSlot.src = "{% static 'images/group.jpg' %}"
       // document.getElementById('description').textContent = groupDesc
       createGroupDesc.textContent = groupDesc
       createGroupDesc.style.padding = '20px'
       createGroupDesc.style.position = 'absolute'
-      createGroupDesc.style.top = '80px'
-      createGroupDesc.style.backgroundColor = '#d1ecf1'
+      createGroupDesc.style.top = '90px'
+      // #d1ecf1
+      createGroupDesc.style.backgroundColor = 'whitesmoke'
       
       document.getElementsByClassName('messages')[0].appendChild(createGroupDesc)
 
