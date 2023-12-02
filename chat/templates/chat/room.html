@@ -922,7 +922,7 @@ p {
     // document.getElementsByClassName('new-msg-btn')[0].style.display = 'none';
 
     var friendsChatSocket = new ReconnectingWebSocket(
-      'ws://' + window.location.host + '/ws/chat/');
+      'ws://' + window.location.host + '/ws/chat/friends/');
 
     friendsChatSocket.onopen = function(e) {
       fetchMessages(friendUsername);
@@ -1507,9 +1507,9 @@ p {
       content2.querySelector('.message-input').style.display = 'inline';
 
       // WEBSOCKER
-      var groupChatSocket = new ReconnectingWebSocket(
-        'ws://' + window.location.host + 'ws/chat/'
-      );
+      // var groupChatSocket = new ReconnectingWebSocket(
+      //   'ws://' + window.location.host + 'ws/chat/'
+      // );
       
     }
     $('.group-conversation').click(handleGroupClick)
