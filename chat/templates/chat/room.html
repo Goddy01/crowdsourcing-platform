@@ -900,7 +900,7 @@ p {
     })
   oldFriends = [];
 
-  function handleListItemClick() {
+  function handleFriendClick() {
     
     var content1 = document.getElementById('content-1');
     content1.style.display = 'block';
@@ -921,10 +921,10 @@ p {
     content1.querySelector('.message-input').style.display = 'inline';
     // document.getElementsByClassName('new-msg-btn')[0].style.display = 'none';
 
-    var chatSocket = new ReconnectingWebSocket(
+    var friendsChatSocket = new ReconnectingWebSocket(
       'ws://' + window.location.host + '/ws/chat/');
 
-    chatSocket.onopen = function(e) {
+    friendsChatSocket.onopen = function(e) {
       fetchMessages(friendUsername);
       
     };
@@ -973,7 +973,7 @@ p {
 
     
 
-    chatSocket.onmessage = function(e) {
+    friendsChatSocket.onmessage = function(e) {
 
       var data = JSON.parse(e.data);
       
@@ -1067,7 +1067,7 @@ p {
 };
 
 
-    chatSocket.onclose = function(e) {
+    friendsChatSocket.onclose = function(e) {
       console.error('Chat socket closed unexpectedly');
     };
 
@@ -1081,7 +1081,7 @@ p {
       // e.preventDefault();
       var messageInputDom = content1.querySelector('#chat-message-input');
       var message = messageInputDom.value;
-      chatSocket.send(JSON.stringify({
+      friendsChatSocket.send(JSON.stringify({
         'command': 'new_message',
         'message': message,
         'from': username,
@@ -1129,7 +1129,7 @@ p {
           'X-CSRFToken': getCookie('csrftoken')
         },
         success: function(response) {
-          chatSocket.send(JSON.stringify({
+          friendsChatSocket.send(JSON.stringify({
             'command': 'new_file',
             'message': response,
             'sender': username,
@@ -1150,7 +1150,7 @@ p {
 
     function fetchMessages(friendUsername) {
       
-      chatSocket.send(JSON.stringify({
+      friendsChatSocket.send(JSON.stringify({
         'command': 'fetch_messages',
         'sender': username,
         'recipient': friendUsername,
@@ -1442,7 +1442,7 @@ p {
   };
 
   // Attach the click event to all list items with the 'contact' class
-  $('.friend-conversation').click(handleListItemClick);
+  $('.friend-conversation').click(handleFriendClick);
 </script>
 
 
@@ -1504,6 +1504,12 @@ p {
       
       content2.querySelector('.messages').appendChild(createGroupDesc)
       content2.querySelector('.message-input').style.display = 'inline';
+
+      // WEBSOCKER
+      var groupChatSocket = new ReconnectingWebSocket(
+        'ws://' + window.location.host + 'ws/chat/'
+      );
+      
     }
     $('.group-conversation').click(handleGroupClick)
 </script>

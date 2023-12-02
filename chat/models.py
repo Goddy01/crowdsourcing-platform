@@ -1,5 +1,6 @@
 from django.db import models
 from accounts.models import BaseUser, Innovator
+from core.models import Project
 # Create your models here.
 
 def upload_in_chat_files(instance, filename):
@@ -26,6 +27,7 @@ class Group(models.Model):
     name = models.CharField(max_length=128, unique=True, null=False, blank=False)
     description = models.TextField(max_length=1000)
     members = models.ManyToManyField(BaseUser)
+    investment_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=False)
 
     def __str__(self):
         return self.name

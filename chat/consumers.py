@@ -125,3 +125,8 @@ class ChatConsumer(WebsocketConsumer):
         message = event["message"]
         # Send message to WebSocket
         self.send(text_data=json.dumps(message))
+
+
+class GroupChatConsumer(WebsocketConsumer):
+    def fetch_group_messages(self, data):
+        sender = BaseUser.objects.get(username=data['sender'])
