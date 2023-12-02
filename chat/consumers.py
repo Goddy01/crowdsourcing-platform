@@ -2,9 +2,10 @@ import json
 from django.db.models import Q
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import AsyncWebsocketConsumer, WebsocketConsumer
-from .models import Chat, GroupChat
+from .models import Chat, GroupChat, Group
 from accounts.models import BaseUser
 from .views import get_messages
+from django.shortcuts import get_object_or_404
 
 
 class ChatConsumer(WebsocketConsumer):
@@ -129,4 +130,6 @@ class ChatConsumer(WebsocketConsumer):
 
 class GroupChatConsumer(WebsocketConsumer):
     def fetch_group_messages(self, data):
-        sender = BaseUser.objects.get(username=data['sender'])
+        sender = get_object_or_404(BaseUser, username=data['sender'])
+        group = Group.objects.get(Group, pk=data['groupPk'])
+        logged_in_user = get_object_or_404(BaseUser, username=self.scope['user'].username)

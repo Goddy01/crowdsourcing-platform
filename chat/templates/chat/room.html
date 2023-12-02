@@ -805,7 +805,7 @@ p {
           <div class="tab-pane" id="tabContent2">
             <ul class="mt-2">
               {% for group in groups %}
-              <li class="contact group-conversation" id="contact-{{ group.name }}" data-group-name="{{ group.name }}" data-group-desc="{{ group.description}}" data-members-count="{{ group.members_count }}">
+              <li class="contact group-conversation" id="contact-{{ group.name }}" data-group-pk="{{ group.pk }}" data-group-name="{{ group.name }}" data-group-desc="{{ group.description}}" data-members-count="{{ group.members_count }}">
                 <div class="wrap">
                   
                   <img src="{% static 'images/group.jpg' %}" alt="" style="border-radius: 50%;width: 60px;height: 60px;"/>
@@ -1466,6 +1466,7 @@ p {
 
       // var chatLog = document.getElementById("chat-log");
       var username = "{{ username }}";
+      var groupPk = $(this).data('group-pk')
       var groupName = $(this).data('group-name');
       var groupDesc = $(this).data('group-desc');
       var membersCount = $(this).data('members-count')
