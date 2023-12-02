@@ -1511,6 +1511,9 @@ p {
         'ws://' + window.location.host + '/ws/chat/groups/'
       );
       
+      groupChatSocket.onopen = function(e) {
+        fetchGroupMessages(groupPk);
+      }
     }
     $('.group-conversation').click(handleGroupClick)
 </script>

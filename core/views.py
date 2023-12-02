@@ -455,7 +455,7 @@ def invest(request, investment_pk):
                 if not new_group.members.filter(pk=investor.user.pk).exists():
                     new_group.members.add(investor.user)
             context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
-            messages.success(request, 'Thank you for investing in this project. You have been added to the investment group chat.')
+            messages.success(request, 'Thank you for investing in this project. You will be added to the investment group chat if this is your first investment in this project.')
             return redirect('project_details', investment_pk)
         else:
             return HttpResponse('Insufficient Account Balance ')
