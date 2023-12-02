@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from accounts.models import BaseUser
 from itertools import chain
 from django.db.models import Q
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.utils.safestring import mark_safe
 import json
 from django.contrib.auth.decorators import login_required
@@ -53,6 +53,13 @@ def get_messages(sender, recipient):
 #     return JsonResponse(data = {'status': 'success'})
 
 # @login_required
+
+def get_group_members(request, group_pk):
+    group = get_object_or_404(Group, pk=group_pk)
+    members = list(group.members.all().values())
+    data = serialize('json', members)
+    return JsonResponse({'members': data})
+
 def send_file_message(request, sender, recipient):
     if request.method == 'POST':
         sender = BaseUser.objects.get(username=sender)
