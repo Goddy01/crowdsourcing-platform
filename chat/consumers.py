@@ -39,7 +39,6 @@ class ChatConsumer(WebsocketConsumer):
         return self.send_chat_message(content)
 
     def new_message(self, data):
-        
         sender = data['from']
         sender_user = BaseUser.objects.get(username=sender)
         
@@ -82,7 +81,8 @@ class ChatConsumer(WebsocketConsumer):
             'timestamp': str(message.timestamp),
             'sender_pfp_url': message.sender.pfp.url,
             'is_seen': message.is_seen,
-            'file_content': file_content
+            'file_content': file_content,
+            'pk': message.pk,
 
         }
     commands = {
@@ -110,7 +110,6 @@ class ChatConsumer(WebsocketConsumer):
         self.commands[data['command']](self, data)
 
     def send_chat_message(self, message):
-        
         # message = data["message"]
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(
@@ -128,8 +127,8 @@ class ChatConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps(message))
 
 
-class GroupChatConsumer(WebsocketConsumer):
-    def fetch_group_messages(self, data):
-        sender = get_object_or_404(BaseUser, username=data['sender'])
-        group = Group.objects.get(Group, pk=data['groupPk'])
-        logged_in_user = get_object_or_404(BaseUser, username=self.scope['user'].username)
+# class GroupChatConsumer(WebsocketConsumer):
+#     def fetch_group_messages(self, data):
+#         sender = get_object_or_404(BaseUser, username=data['sender'])
+#         group = Group.objects.get(Group, pk=data['groupPk'])
+#         logged_in_user = get_object_or_404(BaseUser, username=self.scope['user'].username)
