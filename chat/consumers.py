@@ -1,18 +1,20 @@
 import json
 from django.db.models import Q
 from asgiref.sync import async_to_sync
-from channels.generic.websocket import AsyncWebsocketConsumer
+from channels.generic.websocket import AsyncWebsocketConsumer, WebsocketConsumer
 from .models import Chat, GroupChat, Group
 from accounts.models import BaseUser
 from .views import get_messages
 from django.shortcuts import get_object_or_404
-from asgiref.sync import sync_to_async
 
-class ChatConsumer(AsyncWebsocketConsumer):
-    async def fetch_messages(self, data):
+
+class ChatConsumer(WebsocketConsumer):
+    chat_list = set()
+    def fetch_messages(self, data):
         print('1')
         sender = BaseUser.objects.get(username=data['sender'])
         recipient = BaseUser.objects.get(username=data.get('recipient'))
+        # messages = Chat.last_10_messages()
         logged_in_user = BaseUser.objects.get(username=self.scope['user'].username)
         messages = get_messages(sender=sender, recipient=recipient)
         for message in messages:
@@ -21,11 +23,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 message.save(update_fields=['is_seen'])
         content = {
             'command': 'messages',
-            'messages': await self.messages_to_json(messages)
+            'messages': self.messages_to_json(messages)
         }
-        await self.send_message(content)
+        self.send_message(content)
 
-    async def new_file_message(self, data):
+    def new_file_message(self, data):
         print('2')
         sender = BaseUser.objects.get(username=data['sender'])
         recipient = BaseUser.objects.get(username=data['recipient'])
@@ -33,40 +35,41 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         content = {
             'command': 'new_file',
-            'message': await self.message_to_json(message)
+            'message': self.message_to_json(message)
         }
 
-        await self.send_chat_message(content)
+        return self.send_chat_message(content)
 
-    async def new_message(self, data):
+    def new_message(self, data):
         print('3')
         sender = data['from']
         sender_user = BaseUser.objects.get(username=sender)
-
-        message = await Chat.objects.create(
+        
+        message = Chat.objects.create(
             sender=sender_user,
             recipient=BaseUser.objects.get(username=data['to']),
             content=data['message']
-        )
+        )    
 
         content = {
             'command': 'new_message',
-            'message': await self.message_to_json(message)
+            'message': self.message_to_json(message)
         }
-        await self.send_chat_message(content)
+        return self.send_chat_message(content)
 
-    async def messages_to_json(self, messages):
+    def messages_to_json(self, messages):
+        # print('4')
         result = []
         for message in messages:
             if message.recipient == BaseUser.objects.get(username=self.scope['user'].username):
                 message.is_seen = True
-                message.save(update_fields=['is_seen'])
+                message.save(update_fields =['is_seen'])
             result.append(
-                await self.message_to_json(message)
+                self.message_to_json(message)
             )
         return result
-
-    async def message_to_json(self, message):
+    def message_to_json(self, message):
+        # print('5')
         try:
             file_content = message.file_content.url
         except:
@@ -84,42 +87,56 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'is_seen': message.is_seen,
             'file_content': file_content,
             'pk': message.pk,
-        }
 
+        }
     commands = {
         'fetch_messages': fetch_messages,
         'new_message': new_message,
         'new_file': new_file_message
     }
-
-    async def connect(self):
+    def connect(self):
         print('6')
-        self.room_group_name = "chat_room"
-        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
-        await self.accept()
+        # self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
+        self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
+        self.room_group_name = "chat_%s" % self.room_name
+        self.user = self.scope["user"]
+        # Join room group
+        async_to_sync(self.channel_layer.group_add)(self.room_group_name, self.channel_name)
+        self.accept()
 
-    async def disconnect(self, close_code):
+    def disconnect(self, close_code):
         print('7')
-        await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
+        # Leave room group
+        async_to_sync( self.channel_layer.group_discard)(self.room_group_name, self.channel_name)
 
-    async def receive(self, text_data):
+    # Receive message from WebSocket
+    def receive(self, text_data):
         print('8')
         data = json.loads(text_data)
-        await self.commands[data['command']](self, data)
+        self.commands[data['command']](self, data)
 
-    async def send_chat_message(self, message):
+    def send_chat_message(self, message):
         print('9')
-        await self.channel_layer.group_send(
-            self.room_group_name, {"type": "chat.message", "message": message}
+        # message = data["message"]
+        # Send message to room group
+        async_to_sync(self.channel_layer.group_send)(
+        self.room_group_name, {"type": "chat.message", "message": message}
         )
 
-    async def send_message(self, message):
+    def send_message(self, message):
         print('10')
-        await self.send(text_data=json.dumps(message))
-
-    async def chat_message(self, event):
-        chat_list = []
-        message = event["message"]
-        print('Message: ', message)
         self.send(text_data=json.dumps(message))
-        # chat_list.append(message['pk'])
+    # Receive message from room group
+    def chat_message(self, event):
+        message = event["message"]
+        
+        if message['message']['pk'] not in self.chat_list:
+            self.chat_list.add(message['message']['pk'])
+            self.send(text_data=json.dumps(message))
+
+
+# class GroupChatConsumer(WebsocketConsumer):
+#     def fetch_group_messages(self, data):
+#         sender = get_object_or_404(BaseUser, username=data['sender'])
+#         group = Group.objects.get(Group, pk=data['groupPk'])
+#         logged_in_user = get_object_or_404(BaseUser, username=self.scope['user'].username)

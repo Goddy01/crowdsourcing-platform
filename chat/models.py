@@ -6,6 +6,19 @@ from core.models import Project
 def upload_in_chat_files(instance, filename):
     return f'inchat_files/{instance.sender.username} -> {instance.recipient.username}-{filename}'
 
+class ChatManager(models.Manager):
+    def by_sender_recipient(self, sender, recipient):
+        qs = (Chat.objects
+              .filter(sender__username=sender, recipient__username=recipient) |
+              Chat.objects.filter(sender__username=recipient, recipient__username=sender)
+              .order_by('timestamp'))
+
+        # new_qs = []
+        # for queryset in qs:
+        #     new_qs.append(queryset)
+
+        return qs
+
 class Chat(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     sender = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='chat_sender')
@@ -16,6 +29,7 @@ class Chat(models.Model):
 
     # class Meta:
     #     ordering = ('-timestamp', )
+    objects = ChatManager()
 
     def __str__(self):
         return self.sender.username

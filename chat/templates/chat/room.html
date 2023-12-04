@@ -901,9 +901,12 @@ p {
 oldFriends = [];
 
 function handleFriendClick() {
-  var friendsChatSocket = new ReconnectingWebSocket(
-    'ws://' + window.location.host + '/ws/chat/friends/');
 
+  var friendUsername = $(this).data('friend-username');
+  // var currentUrl = window.location.href;
+  // var newUrl = currentUrl + friendUsername;
+  // console.log(friendUsername);
+  // window.location.href = newUrl;
 
   var addedMessagePk = []
   var content1 = document.getElementById('content-1');
@@ -917,16 +920,21 @@ function handleFriendClick() {
   
   var chatLog = content1.querySelector("#chat-log");
   var username = "{{ username }}";
-  var friendUsername = $(this).data('friend-username');
+  
   oldFriends.push(friendUsername)
   
   // var csrfToken = "{{ csrf_token }}";
+  
+  // window.location.href = newUrl;
 
   chatLog.innerHTML = '';
   content1.querySelector('.message-input').style.display = 'inline';
   // document.getElementsByClassName('new-msg-btn')[0].style.display = 'none';
 
-  
+  var friendsChatSocket = new ReconnectingWebSocket(
+    'ws://' + window.location.host + '/ws/chat/friends/' + `${oldFriends[oldFriends.length-1]}` + '/');
+
+    console.log((friendsChatSocket));
 
   friendsChatSocket.onopen = function(e) {
     fetchMessages(friendUsername);

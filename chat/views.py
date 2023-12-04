@@ -14,7 +14,9 @@ def index(request):
     return render(request, 'chat/chat.html')
 
 @login_required
-def room(request):
+def room(request, room_name=None):
+    if room_name is not None:
+        room_name = mark_safe(json.dumps(room_name))
     user = Innovator.objects.get(user__username=request.user.username)
     friends_list = Connection.objects.filter(
         Q(user1=user) | Q(user2=user)
@@ -28,15 +30,17 @@ def room(request):
             conversations.append(friend.user1)
     return render(request, 'chat/room.html', {
         'username': request.user.username,
+        'room_name_json': room_name,
         'friends': conversations,
         'groups': Group.objects.filter(members=user.user.pk),
         'groups2': serialize('json', queryset=Group.objects.filter(members=user.user.pk)),
         'user':user
     })
 
+
 def get_messages(sender, recipient):
-    qs1 = Chat.objects.filter(sender=sender, recipient=recipient).order_by('timestamp')
-    qs2 = Chat.objects.filter(sender=recipient, recipient=sender).order_by('timestamp')
+    qs1 = Chat.objects.filter(sender__username=sender, recipient__username=recipient).order_by('timestamp')
+    qs2 = Chat.objects.filter(sender__username=recipient, recipient__username=sender).order_by('timestamp')
 
     return qs1 | qs2
 
