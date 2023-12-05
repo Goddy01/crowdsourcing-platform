@@ -851,12 +851,12 @@ p {
         <ul id="chat-log">
         </ul>
       </div>
-      <div class="message-input" style="display: none;" id="1">
+      <div class="message-input" style="display: none;">
         <input type="file" name="file-message" id="file-msg" hidden>
         <div class="wrap">
-        <input id="chat-message-input" type="text" placeholder="Write your message..." />
+        <input id="chat-message-input1" type="text" placeholder="Write your message..." />
         <i class="fa fa-paperclip attachment" aria-hidden="true"></i>
-        <button id="chat-message-submit" class="submit">
+        <button id="chat-message-submit1" class="submit">
           <i class="fa fa-paper-plane" aria-hidden="true"></i>
         </button>
         </div>
@@ -876,12 +876,12 @@ p {
         <ul id="chat-log">
         </ul>
       </div>
-      <div class="message-input" style="display: none;" id="2">
+      <div class="message-input" style="display: none;">
         <input type="file" name="file-message" id="file-msg" hidden>
         <div class="wrap">
-        <input id="chat-message-input" type="text" placeholder="Write your message..." />
+        <input id="chat-message-input2" type="text" placeholder="Write your message..." />
         <i class="fa fa-paperclip attachment" aria-hidden="true"></i>
-        <button id="chat-message-submit" class="submit">
+        <button id="chat-message-submit2" class="submit">
           <i class="fa fa-paper-plane" aria-hidden="true"></i>
         </button>
         </div>
@@ -895,579 +895,535 @@ p {
 
 <script>
 
-  document.getElementsByClassName('friend-chat-tab')[0].addEventListener('click', function () {
-    document.getElementById('content-2').style.display = 'none';
-  })
-oldFriends = [];
-
-function handleFriendClick() {
-
-  var friendUsername = $(this).data('friend-username');
-  // var currentUrl = window.location.href;
-  // var newUrl = currentUrl + friendUsername;
-  // console.log(friendUsername);
-  // window.location.href = newUrl;
-
-  var addedMessagePk = []
-  var content1 = document.getElementById('content-1');
-  content1.style.display = 'block';
-  // document.getElementsByClassName('content')[0].style.display = 'block';
-
-  var floating = content1.querySelector('#floating');
-  floatingClass = content1.querySelector('.floating')
-  floatingClass.innerHTML = ''
-  
-  
-  var chatLog = content1.querySelector("#chat-log");
-  var username = "{{ username }}";
-  
-  oldFriends.push(friendUsername)
-  
-  // var csrfToken = "{{ csrf_token }}";
-  
-  // window.location.href = newUrl;
-
-  chatLog.innerHTML = '';
-  content1.querySelector('.message-input').style.display = 'inline';
-  // document.getElementsByClassName('new-msg-btn')[0].style.display = 'none';
-
-  var friendsChatSocket = new ReconnectingWebSocket(
-    'ws://' + window.location.host + '/ws/chat/friends/' + `${oldFriends[oldFriends.length-1]}` + '/');
-
-    console.log((friendsChatSocket));
-
-  friendsChatSocket.onopen = function(e) {
-    fetchMessages(friendUsername);
-    
-  };
-
-  
-  
-  
-
-  $(this).removeClass('active');
-  var friendUserPfp = $(this).data('friend-user');
-  var friendUserFullname = $(this).data('friend-user-fullname');
-  var friendUserInstagram = $(this).data('friend-i');
-  var friendUserTwitter = $(this).data('friend-t');
-  var friendUserFacebook = $(this).data('friend-f');
-  var friendUserLinkedln = $(this).data('friend-l');
-
-  var recipientPfpImg = content1.querySelector("#recipient_pfp");
-  var recipientUsernameSlot = content1.querySelector("#recipient_username");
-  var recipientInstagramSlot = content1.querySelector("#recipient_instagram")
-  var recipientFacebookSlot = content1.querySelector("#recipient_facebook")
-  var recipientTwitterSlot = content1.querySelector("#recipient_twitter")
-  var recipientLinkedlnSlot = content1.querySelector("#recipient_linkedin")
-
-
-  if (friendUserInstagram && friendUserInstagram.length > 22) {
-    recipientInstagramSlot.style.display = 'inline';
-  }
-
-  if (friendUserTwitter && friendUserTwitter.length > 20) {
-    recipientTwitterSlot.style.display = 'inline';
-  }
-
-  if (friendUserFacebook && friendUserFacebook.length > 21 ) {
-    recipientFacebookSlot.style.display = 'inline';
-  }
-
-  if (friendUserLinkedln && friendUserLinkedln.length > 21) {
-    recipientLinkedlnSlot.style.display = 'inline';
-  }
-
-  recipientPfpImg.style.height = "60px";
-  recipientPfpImg.style.width = "60px";
-  recipientPfpImg.src = friendUserPfp;
-  recipientUsernameSlot.textContent = friendUserFullname;
-  recipientInstagramSlot.href = friendUserInstagram;
-  recipientFacebookSlot.href = friendUserFacebook;
-  recipientTwitterSlot.href = friendUserTwitter;
-  recipientLinkedlnSlot.href = friendUserLinkedln;    
-
-  friendsChatSocket.onmessage = function(e) {
-    
-    var data = JSON.parse(e.data);
-    
-    
-
-    if (data['command'] === 'messages') {
-      
-      for (let i = 0; i < data['messages'].length; i++) {
-        
-        // Check if the timestamp is already in the addedMessagePk array
-        if (!addedMessagePk.includes(data['messages'][i].pk)) {
-          
-          if (data['messages'][i].sender === username) {
-            senderMessages(data['messages'][i])
-          }
-          else if (data['messages'][i].recipient === username) {
-            receivedMessage(data['messages'][i])
-          }
-        }
-          addedMessagePk.push(data['messages'][i].pk);
-        // }
-      };
-    } 
-    else if (data['command'] === 'new_message') {
-      
-      if (data['message'].sender === username) {
-        floatingClass.innerHTML = ''; 
-      }
-      
-
-      if (!addedMessagePk.includes(data['message'].pk)) {
-          if (data['message'].sender === username) {
-            // addedMessagePk.push(data['message'].pk);
-            
-            senderMessages(data['message']);
-            
-            
-            
-          }
-          
-          else if (data['message'].recipient === username && data['message'].sender === oldFriends[oldFriends.length -1]) {
-            receivedMessage(data['message'], oldFriends[oldFriends.length -1])
-            
-            
-          }
-
-          if (data['message'].recipient === username && data['message'].sender === oldFriends[oldFriends.length -1]) {
-            
-            createNewMessageNotif(username)
-          }
-          // else if (data['message'].recipient === username && data['message'].sender !== oldFriends[oldFriends.length -1]) {
-
-          // }
-        
-        
-        addedMessagePk.push(data['message'].pk);
-          // }
-
-      }
-    }
-
-    else if (data['command'] === 'new_file') {
-      
-      if (data['message'].sender === username) {
-        floatingClass.innerHTML = ''; 
-      }
-      
-
-      if (!addedMessagePk.includes(data['message'].pk)) {
-        
-          if (data['message'].sender === username) {
-            
-            senderMessages(data['message']);
-            
-              // createFileMessage(data['message'])
-          }
-          
-          else if (data['message'].sender === oldFriends[oldFriends.length -1]) {
-            
-            receivedMessage(data['message'], oldFriends[oldFriends.length -1])
-            
-          }
-
-          if (data['message'].recipient === username && data['message'].sender === oldFriends[oldFriends.length -1]) {
-          
-            createNewMessageNotif(username)
-          }
-          else if (data['message'].recipient === username) {
-            
-          }
-        
-        
-        addedMessagePk.push(data['message'].pk);
-          // }
-
-      }
-    }
-};
-  
-
-
-  friendsChatSocket.onclose = function(e) {
-    console.error('Chat socket closed unexpectedly');
-  };
-
-  content1.querySelector('#chat-message-input').onkeyup = function(e) {
-    if (e.keyCode === 13) {  // enter, return
-      content1.querySelector('#chat-message-submit').click();
-    }
-    console.log('bro1');
-  };
-
-  content1.querySelector('#chat-message-submit').onclick = function(e) {
-    
-    // e.preventDefault();
-    var messageInputDom = content1.querySelector('#chat-message-input');
-    var message = messageInputDom.value;
-    console.log('bro2');
-    friendsChatSocket.send(JSON.stringify({
-      'command': 'new_message',
-      'message': message,
-      'from': username,
-      'to': friendUsername
-    }));
-
-    messageInputDom.value = '';
-  };
-
-  function getCookie(name) {
-      var cookieValue = null;
-      if (document.cookie && document.cookie !== '') {
-          var cookies = document.cookie.split(';');
-          for (var i = 0; i < cookies.length; i++) {
-              var cookie = jQuery.trim(cookies[i]);
-              if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                  break;
-              }
-          }
-      }
-      return cookieValue;
-  }
-
-  var fileMsg = content1.querySelector('#file-msg')
-  var fileIcon = content1.querySelector('.fa-paperclip')
-  var sendFileUrl = "{% url 'chat:send_file_msg' sender=0 recipient=1 %}".replace('0', username).replace('1', oldFriends[oldFriends.length-1]);
-  
-  fileIcon.addEventListener('click', function () {
-    fileMsg.click();
-  })
-
-  fileMsg.addEventListener('change', function () {
-    var file = fileMsg.files[0];
-    var formData = new FormData();
-    formData.append('file', file)
-
-    $.ajax({
-      type: 'POST',
-      url: sendFileUrl,
-      data: formData,
-      processData: false,
-      contentType: false,
-      headers: {
-        'X-CSRFToken': getCookie('csrftoken')
-      },
-      success: function(response) {
-        friendsChatSocket.send(JSON.stringify({
-          'command': 'new_file',
-          'message': response,
-          'sender': username,
-          'recipient': oldFriends[oldFriends.length-1]
-        }));
-        // if (username === response.message_sender) {
-        //   createFileMessage(response)
-        // }
-         if (username === response.message_recipient) {
-          receivedFileMessage(response)
-        } {
-          
-        }
-      }
-      
+    document.getElementsByClassName('friend-chat-tab')[0].addEventListener('click', function () {
+      document.getElementById('content-2').style.display = 'none';
     })
-  })
+  oldFriends = [];
+  oldSockets = []
 
-  function fetchMessages(friendUsername) {
-    
-    friendsChatSocket.send(JSON.stringify({
-      'command': 'fetch_messages',
-      'sender': username,
-      'recipient': friendUsername,
-      'is_seen': true
-    }));
-  }
-
-
-  function senderMessages(data) {
-    var sender = data['sender'];
-    var msgListTag = document.createElement('li');
-    var imgTag = document.createElement('img');
-    
-    // var pTag2 = document.createElement('p');
-    var time = document.createElement('p');
-    time.style.padding = '0 10px'
-    time.textContent = new Date(data['timestamp']).toLocaleString()
-    time.style.float = 'right';
-    time.style.fontStyle = 'italic';
-    time.style.marginTop = '-20px';
-    time.style.marginRight = '60px';
-    time.style.fontSize = '15px';
-    time.style.color = 'green'
-    // if (data['is_seen'] === true) {
-    //   // seen.className = 'fa fa-check';
-    //   seen.style.color = 'green';
-    //   seen.textContent = 'seen';
-    // } else {
-    //   // seen.className = 'fa fa-check';
-    //   seen.textContent = 'delivered';
-    // }
-    
-    // var nameTag = document.createElement('p');
-    // pTag.textContent = data.content;
-    imgTag.src = data['sender_pfp_url'];
-    imgTag.style.width = "30px";
-    imgTag.style.height = "30px";
-    imgTag.style.borderRadius = "50%";
-    // nameTag.style.color = 'red';
-    // nameTag.textContent = data.sender.username;
-
-    // if (sender !== username) {
-    //   msgListTag.className = 'sent';
-    // } else {
-    msgListTag.className = 'replies';
-      
-    // }
-
-
-    msgListTag.appendChild(imgTag);
-    if (data['content']) {
-      var pTag = document.createElement('p'); 
-      pTag.textContent = data.content;
-      msgListTag.appendChild(pTag);
+  function handleFriendClick() {
+    if (oldSockets.length > 0) {
+      var previousSocket = oldSockets[oldSockets.length-1];
+      previousSocket.close()
     }
-    if (data['file_content'] !== null) {
-      var pTag = document.createElement('button');
-      var hrefLink = document.createElement('a')
-      hrefLink.href = data['file_content'];
-      hrefLink.textContent = 'View File'
-      hrefLink.style.textDecoration = 'none'
-      pTag.appendChild(hrefLink)
-    // pTag.style.color = 'black'
-    pTag.style.backgroundColor = 'white'
-    pTag.style.padding = '10px'
-    pTag.style.width = '100px';
-    pTag.style.float = 'right'
-    pTag.style.height = '50px';
-    pTag.style.borderRadius = '10px'
-    pTag.style.border = 'none';
-    pTag.style.marginBottom = '10px';
-    pTag.style.fontSize = '20px'
-    msgListTag.appendChild(pTag);
+
+    var friendsChatSocket = new ReconnectingWebSocket(
+    'ws://' + window.location.host + '/ws/chat/friends/');
+    oldSockets.push(friendsChatSocket)
+
+    var friendUsername = $(this).data('friend-username');
+    var content1 = document.getElementById('content-1');
+    content1.style.display = 'block';
+    // document.getElementsByClassName('content')[0].style.display = 'block';
+
+    var floating = content1.querySelector('#floating');
+    floatingClass = content1.querySelector('.floating')
+    floatingClass.innerHTML = ''
+    var addedTimestamps = []
+    var chatLog = content1.querySelector("#chat-log");
+    var username = "{{ username }}";
+    oldFriends.push(friendUsername)
+    
+    // var csrfToken = "{{ csrf_token }}";
+
+    chatLog.innerHTML = '';
+    content1.querySelector('.message-input').style.display = 'inline';
+    // document.getElementsByClassName('new-msg-btn')[0].style.display = 'none';
+
+    
+
+    friendsChatSocket.onopen = function(e) {
+      fetchMessages(friendUsername);
+      
+    };
+    
+
+    $(this).removeClass('active');
+    var friendUserPfp = $(this).data('friend-user');
+    var friendUserFullname = $(this).data('friend-user-fullname');
+    var friendUserInstagram = $(this).data('friend-i');
+    var friendUserTwitter = $(this).data('friend-t');
+    var friendUserFacebook = $(this).data('friend-f');
+    var friendUserLinkedln = $(this).data('friend-l');
+
+    var recipientPfpImg = content1.querySelector("#recipient_pfp");
+    var recipientUsernameSlot = content1.querySelector("#recipient_username");
+    var recipientInstagramSlot = content1.querySelector("#recipient_instagram")
+    var recipientFacebookSlot = content1.querySelector("#recipient_facebook")
+    var recipientTwitterSlot = content1.querySelector("#recipient_twitter")
+    var recipientLinkedlnSlot = content1.querySelector("#recipient_linkedin")
+
+
+    if (friendUserInstagram && friendUserInstagram.length > 22) {
+      recipientInstagramSlot.style.display = 'inline';
+    }
   
+    if (friendUserTwitter && friendUserTwitter.length > 20) {
+      recipientTwitterSlot.style.display = 'inline';
     }
-    
-    if ( data['recipient'] === oldFriends[oldFriends.length-1]) {
-    chatLog.appendChild(msgListTag); 
+
+    if (friendUserFacebook && friendUserFacebook.length > 21 ) {
+      recipientFacebookSlot.style.display = 'inline';
     }
-    // 
-    // 
-    // 
-    // if (msgListTag.className.includes('replies')) {
-      chatLog.appendChild(time)
-    // }
-    // msgListTag.style.backgroundColor = 'pink';
-    msgListTag.style.padding = '10px';
-  }
 
-  function receivedMessage(data, showTo) {
-    var sender = data['sender'];
-    
-    var msgListTag = document.createElement('li');
-    // msgListTag.style.margin = '20px';
-    var imgTag = document.createElement('img');
-    
-    // var pTag2 = document.createElement('p');
-    var time2 = document.createElement('p');
-    time2.style.padding = '0 10px'
-    time2.textContent = new Date(data['timestamp']).toLocaleString()
-    time2.style.float = 'left';
-    time2.style.fontStyle = 'italic';
-    time2.style.marginTop = '-20px';
-    time2.style.marginLeft = '20px';
-    time2.style.fontSize = '15px';
-    time2.style.color = 'green'
-    
-    // var nameTag = document.createElement('p');
+    if (friendUserLinkedln && friendUserLinkedln.length > 21) {
+      recipientLinkedlnSlot.style.display = 'inline';
+    }
 
-    imgTag.src = data['sender_pfp_url'];
-    imgTag.style.width = "30px";
-    imgTag.style.height = "30px";
-    imgTag.style.borderRadius = "50%";
-    // nameTag.style.color = 'red';
-    // nameTag.textContent = data.sender.username;
+    recipientPfpImg.style.height = "60px";
+    recipientPfpImg.style.width = "60px";
+    recipientPfpImg.src = friendUserPfp;
+    recipientUsernameSlot.textContent = friendUserFullname;
+    recipientInstagramSlot.href = friendUserInstagram;
+    recipientFacebookSlot.href = friendUserFacebook;
+    recipientTwitterSlot.href = friendUserTwitter;
+    recipientLinkedlnSlot.href = friendUserLinkedln;    
 
-    // if (sender !== username) {
-      msgListTag.className = 'sent';
-    // } else {
-    //   msgListTag.className = 'replies';
+    
+
+    friendsChatSocket.onmessage = function(e) {
+
+var data = JSON.parse(e.data);
+
+
+
+if (data['command'] === 'messages') {
+  
+  for (let i = 0; i < data['messages'].length; i++) {
+    
+    // Check if the timestamp is already in the addedTimestamps array
       
+      if (data['messages'][i].sender === username) {
+        senderMessages(data['messages'][i])
+      }
+      else if (data['messages'][i].recipient === username) {
+        receivedMessage(data['messages'][i])
+      }
     // }
-    msgListTag.appendChild(imgTag);
-    if (data['content']) {
-      var pTag = document.createElement('p'); 
-      pTag.textContent = data.content;
-      msgListTag.appendChild(pTag);
-    }
-    if (data['file_content'] !== null) {
-      var pTag = document.createElement('button');
-      var hrefLink = document.createElement('a')
-      hrefLink.href = data['file_content'];
-      hrefLink.textContent = 'View File'
-      hrefLink.style.textDecoration = 'none'
-      hrefLink.style.color = 'white'
-      pTag.appendChild(hrefLink)
-    // pTag.style.color = 'black'
-    pTag.style.backgroundColor = '#435F7A'
-    pTag.style.padding = '10px'
-    pTag.style.width = '100px';
-    pTag.style.height = '50px';
-    pTag.style.borderRadius = '10px'
-    pTag.style.border = 'none';
-    pTag.style.marginBottom = '10px';
-    pTag.style.fontSize = '20px'
-    msgListTag.appendChild(pTag);
-    }
-    // msgListTag.appendChild(pTag);
-    // if (recipient === friendUsername) {
-    // if (showTo === data['recipient']) {
-      
     // }
-    chatLog.appendChild(msgListTag); 
-    // }
-    // 
-    // 
-    // 
-    // if (msgListTag.className.includes('replies')) {
-    chatLog.appendChild(time2)
-    // }
-    // msgListTag.style.backgroundColor = 'pink';
-    msgListTag.style.padding = '10px';
-  }
-
-  function createFileMessage(response) {
-    var sender = response.message_sender;
-          var msgListTag = document.createElement('li');
-          var imgTag = document.createElement('img');
-          var pTag = document.createElement('img');
-          pTag.style.width = '400px';
-          pTag.src = response.file_url;
-          pTag.style.height = '280px';
-          pTag.style.borderRadius = '10px'
-          pTag.style.marginBottom = '10px';
-
-          var time = document.createElement('p');
-          time.style.padding = '0 10px'
-          time.textContent = new Date(response.timestamp).toLocaleString()
-          time.style.float = 'right';
-          time.style.fontStyle = 'italic';
-          time.style.marginTop = '-20px';
-          time.style.marginRight = '60px';
-          time.style.fontSize = '15px';
-          time.style.color = 'green'
-
-          imgTag.src = response.message_sender_pfp_url;
-          imgTag.style.width = "30px";
-          imgTag.style.height = "30px";
-          imgTag.style.borderRadius = "50%";
-          
-          msgListTag.className = 'replies';
-            
-          msgListTag.appendChild(imgTag);
-          msgListTag.appendChild(pTag);
-          if (username === response.message_sender) {
-            chatLog.appendChild(msgListTag);
-            chatLog.appendChild(time) 
-          }
-          msgListTag.style.padding = '10px';
+  };
+} 
+else if (data['command'] === 'new_message') {
+  if (data['message'].sender === username) {
+    content1.querySelector('.floating').innerHTML = ''; 
   }
   
-  function receivedFileMessage(response) {
-    var sender = response.message_sender;
-          // console.log('CHAT LOG: ', chatLog);
-          var msgListTag = document.createElement('li');
-          var imgTag = document.createElement('img');
-          var pTag = document.createElement('img');
-          pTag.style.width = '400px';
-          pTag.src = response.file_url;
-          pTag.style.height = '280px';
-          pTag.style.borderRadius = '10px'
-          pTag.style.marginBottom = '10px';
-          var time2 = document.createElement('p');
-          time2.style.padding = '0 10px'
-          time2.textContent = new Date(response.timestamp).toLocaleString()
-          time2.style.float = 'left';
-          time2.style.fontStyle = 'italic';
-          time2.style.marginTop = '-20px';
-          time2.style.marginLeft = '20px';
-          time2.style.fontSize = '15px';
-          time2.style.color = 'green'
-          
-          
-          pTag.src = response.file_url;
-          imgTag.src = response.message_recipient_url;
-          imgTag.style.width = "30px";
-          imgTag.style.height = "30px";
-          imgTag.style.borderRadius = "50%";
-          msgListTag.appendChild(imgTag);
-          msgListTag.appendChild(pTag);
-          msgListTag.className = 'sent';
-          if (username === response.message_recipient) {
-            
-            chatLog.appendChild(msgListTag); 
-            chatLog.appendChild(time2)
-            
-          }
-          else if (username === response.message_sender){
-            
-          }
-          msgListTag.style.padding = '10px';
-  }
 
-  function createNewMessageNotif(recipientName) {
-      var button = document.createElement('button');
-      button.className = 'new-msg-btn button button-primary badge-pill';
-      button.style.padding = '0px 20px';
-      button.style.height = '50px';
-      button.style.width = '250px';
-      button.style.fontFamily = "";
-      button.id = 'new_msg_notif'
-      // button.style.display = 'none';
-      button.style.whiteSpace = 'nowrap';
 
-      // Create the span element
-      var span = document.createElement('span');
-      span.style.fontSize = '18px';
-      span.textContent = 'New Message';
+      if (data['message'].sender === username) {
+        senderMessages(data['message']);
+      }
       
-      // var span2 = document.createElement('span');
-      // span2.style.float = 'right';
-      
-      // span2.innerHTML = '&times'
-      // span2.style.fontSize = '20px';
-      // span2.style.marginTop = '-3px';
-      // span2.style.color = 'red';
-
-      // Create the <i> element
-      var icon = document.createElement('i');
-      icon.className = 'fa fa-arrow-circle-down';
-      icon.style.fontSize = '15px';
-      icon.style.margin = "0px 5px";
-
-      // Append the span and icon to the button
-      button.appendChild(span);
-      button.appendChild(icon);
-      // button.appendChild(span2);
-
-      // Append the button to the container
-      if (recipientName === username) {
-        floatingClass.innerHTML = ''
-        floating.appendChild(button); 
-
+      else if (data['message'].sender === oldFriends[oldFriends.length -1] && data['message'].recipient === username) {
+        receivedMessage(data['message'], oldFriends[oldFriends.length -1])
+        
       }
 
-      // span2.onclick = function() {
-      //     document.getElementsByClassName('floating')[0].innerHTML = '';
-      // };
+      if (data['message'].recipient === username && data['message'].sender === oldFriends[oldFriends.length -1]) {
+        
+        createNewMessageNotif(username)
+      }
+      else if (data['message'].recipient === username && data['message'].sender !== oldFriends[oldFriends.length -1]) {
+
+      }
+    
+    
+      // }
+}
+
+else if (data['command'] === 'new_file') {
+  console.log('USERNAME: ', username);
+  if (data['message'].sender === username) {
+    floatingClass.innerHTML = ''; 
   }
+  
+
+
+    console.log('1');
+      if (data['message'].sender === username) {
+        console.log('2');
+        senderMessages(data['message']);
+        // console.log('2 DATA: ', data)
+          // createFileMessage(data['message'])
+      }
+      
+      else if (data['message'].sender === oldFriends[oldFriends.length -1] && data['message'].recipient === username) {
+        console.log('3');
+        receivedMessage(data['message'], oldFriends[oldFriends.length -1])
+        
+      }
+
+      if (data['message'].recipient === username && data['message'].sender === oldFriends[oldFriends.length -1]) {
+      console.log('4');
+        createNewMessageNotif(username)
+      }
+      else if (data['message'].recipient === username) {
+        console.log('5');
+      }
+    
+    
+}
 };
 
-// Attach the click event to all list items with the 'contact' class
-$('.friend-conversation').click(handleFriendClick);
+
+    friendsChatSocket.onclose = function(e) {
+      console.error('Chat socket closed unexpectedly');
+    };
+
+    document.querySelector('#chat-message-input1').onkeyup = function(e) {
+      if (e.keyCode === 13) {  // enter, return
+        document.querySelector('#chat-message-submit1').click();
+      }
+    };
+
+    document.querySelector('#chat-message-submit1').onclick = function(e) {
+      // e.preventDefault();
+      var messageInputDom = document.querySelector('#chat-message-input1');
+      var message = messageInputDom.value;
+      friendsChatSocket.send(JSON.stringify({
+        'command': 'new_message',
+        'message': message,
+        'from': username,
+        'to': friendUsername
+      }));
+      messageInputDom.value = '';
+    };
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    var fileMsg = content1.querySelector('#file-msg')
+    var fileIcon = content1.querySelector('.fa-paperclip')
+    var sendFileUrl = "{% url 'chat:send_file_msg' sender=0 recipient=1 %}".replace('0', username).replace('1', oldFriends[oldFriends.length-1]);
+    
+    fileIcon.addEventListener('click', function () {
+      fileMsg.click();
+    })
+
+    fileMsg.addEventListener('change', function () {
+      var file = fileMsg.files[0];
+      var formData = new FormData();
+      formData.append('file', file)
+
+      $.ajax({
+        type: 'POST',
+        url: sendFileUrl,
+        data: formData,
+        processData: false,
+        contentType: false,
+        headers: {
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        success: function(response) {
+          friendsChatSocket.send(JSON.stringify({
+            'command': 'new_file',
+            'message': response,
+            'sender': username,
+            'recipient': oldFriends[oldFriends.length-1]
+          }));
+          // if (username === response.message_sender) {
+          //   createFileMessage(response)
+          // }
+           if (username === response.message_recipient) {
+            receivedFileMessage(response)
+          } {
+            
+          }
+        }
+        
+      })
+    })
+
+    function fetchMessages(friendUsername) {
+      
+      friendsChatSocket.send(JSON.stringify({
+        'command': 'fetch_messages',
+        'sender': username,
+        'recipient': friendUsername
+      }));
+    }
+
+
+    function senderMessages(data) {
+      var sender = data['sender'];
+      var msgListTag = document.createElement('li');
+      var imgTag = document.createElement('img');
+      
+      var time = document.createElement('p');
+      time.style.padding = '0 10px'
+      time.textContent = new Date(data['timestamp']).toLocaleString()
+      time.style.float = 'right';
+      time.style.fontStyle = 'italic';
+      time.style.marginTop = '-20px';
+      time.style.marginRight = '60px';
+      time.style.fontSize = '15px';
+      time.style.color = 'green'
+      
+      imgTag.src = data['sender_pfp_url'];
+      imgTag.style.width = "30px";
+      imgTag.style.height = "30px";
+      imgTag.style.borderRadius = "50%";
+
+      if (sender !== username) {
+        msgListTag.className = 'sent';
+      } else {
+      msgListTag.className = 'replies';
+        
+      }
+
+      msgListTag.appendChild(imgTag);
+      if (data['content']) {
+        var pTag = document.createElement('p'); 
+        pTag.textContent = data.content;
+        msgListTag.appendChild(pTag);
+      }
+      if (data['file_content'] !== null) {
+        var pTag = document.createElement('button');
+        var hrefLink = document.createElement('a')
+        hrefLink.href = data['file_content'];
+        hrefLink.textContent = 'View File'
+        hrefLink.style.textDecoration = 'none'
+        pTag.appendChild(hrefLink)
+      // pTag.style.color = 'black'
+      pTag.style.backgroundColor = 'white'
+      pTag.style.padding = '10px'
+      pTag.style.width = '100px';
+      pTag.style.float = 'right'
+      pTag.style.height = '50px';
+      pTag.style.borderRadius = '10px'
+      pTag.style.border = 'none';
+      pTag.style.marginBottom = '10px';
+      pTag.style.fontSize = '20px'
+      msgListTag.appendChild(pTag);
+      }
+      
+      if ( data['recipient'] === friendUsername) {
+      chatLog.appendChild(msgListTag); 
+      }
+
+        chatLog.appendChild(time)
+
+      msgListTag.style.padding = '10px';
+    }
+
+    function receivedMessage(data) {
+      var sender = data['sender'];
+      
+      var msgListTag = document.createElement('li');
+      // msgListTag.style.margin = '20px';
+      var imgTag = document.createElement('img');
+      
+      // var pTag2 = document.createElement('p');
+      var time2 = document.createElement('p');
+      time2.style.padding = '0 10px'
+      time2.textContent = new Date(data['timestamp']).toLocaleString()
+      time2.style.float = 'left';
+      time2.style.fontStyle = 'italic';
+      time2.style.marginTop = '-20px';
+      time2.style.marginLeft = '20px';
+      time2.style.fontSize = '15px';
+      time2.style.color = 'green'
+      
+      // var nameTag = document.createElement('p');
+
+      imgTag.src = data['sender_pfp_url'];
+      imgTag.style.width = "30px";
+      imgTag.style.height = "30px";
+      imgTag.style.borderRadius = "50%";
+      // nameTag.style.color = 'red';
+      // nameTag.textContent = data.sender.username;
+
+      // if (sender !== username) {
+        msgListTag.className = 'sent';
+      // } else {
+      //   msgListTag.className = 'replies';
+        
+      // }
+      msgListTag.appendChild(imgTag);
+      if (data['content']) {
+        var pTag = document.createElement('p'); 
+        pTag.textContent = data.content;
+        msgListTag.appendChild(pTag);
+      }
+      if (data['file_content'] !== null) {
+        var pTag = document.createElement('button');
+        var hrefLink = document.createElement('a')
+        hrefLink.href = data['file_content'];
+        hrefLink.textContent = 'View File'
+        hrefLink.style.textDecoration = 'none'
+        hrefLink.style.color = 'white'
+        pTag.appendChild(hrefLink)
+      // pTag.style.color = 'black'
+      pTag.style.backgroundColor = '#435F7A'
+      pTag.style.padding = '10px'
+      pTag.style.width = '100px';
+      pTag.style.height = '50px';
+      pTag.style.borderRadius = '10px'
+      pTag.style.border = 'none';
+      pTag.style.marginBottom = '10px';
+      pTag.style.fontSize = '20px'
+      msgListTag.appendChild(pTag);
+      }
+      // msgListTag.appendChild(pTag);
+      // if (recipient === friendUsername) {
+      // if (showTo === data['recipient']) {
+        
+      // }
+      chatLog.appendChild(msgListTag); 
+      // }
+      // 
+      // 
+      // 
+      // if (msgListTag.className.includes('replies')) {
+      chatLog.appendChild(time2)
+      // }
+      // msgListTag.style.backgroundColor = 'pink';
+      msgListTag.style.padding = '10px';
+    }
+
+    function createFileMessage(response) {
+      var sender = response.message_sender;
+            var msgListTag = document.createElement('li');
+            var imgTag = document.createElement('img');
+            var pTag = document.createElement('img');
+            pTag.style.width = '400px';
+            pTag.src = response.file_url;
+            pTag.style.height = '280px';
+            pTag.style.borderRadius = '10px'
+            pTag.style.marginBottom = '10px';
+
+            var time = document.createElement('p');
+            time.style.padding = '0 10px'
+            time.textContent = new Date(response.timestamp).toLocaleString()
+            time.style.float = 'right';
+            time.style.fontStyle = 'italic';
+            time.style.marginTop = '-20px';
+            time.style.marginRight = '60px';
+            time.style.fontSize = '15px';
+            time.style.color = 'green'
+
+            imgTag.src = response.message_sender_pfp_url;
+            imgTag.style.width = "30px";
+            imgTag.style.height = "30px";
+            imgTag.style.borderRadius = "50%";
+            
+            msgListTag.className = 'replies';
+              
+            msgListTag.appendChild(imgTag);
+            msgListTag.appendChild(pTag);
+            if (username === response.message_sender) {
+              chatLog.appendChild(msgListTag);
+              chatLog.appendChild(time) 
+            }
+            msgListTag.style.padding = '10px';
+    }
+    
+    function receivedFileMessage(response) {
+      var sender = response.message_sender;
+            
+            var msgListTag = document.createElement('li');
+            var imgTag = document.createElement('img');
+            var pTag = document.createElement('img');
+            pTag.style.width = '400px';
+            pTag.src = response.file_url;
+            pTag.style.height = '280px';
+            pTag.style.borderRadius = '10px'
+            pTag.style.marginBottom = '10px';
+            var time2 = document.createElement('p');
+            time2.style.padding = '0 10px'
+            time2.textContent = new Date(response.timestamp).toLocaleString()
+            time2.style.float = 'left';
+            time2.style.fontStyle = 'italic';
+            time2.style.marginTop = '-20px';
+            time2.style.marginLeft = '20px';
+            time2.style.fontSize = '15px';
+            time2.style.color = 'green'
+            
+            
+            pTag.src = response.file_url;
+            imgTag.src = response.message_recipient_url;
+            imgTag.style.width = "30px";
+            imgTag.style.height = "30px";
+            imgTag.style.borderRadius = "50%";
+            msgListTag.appendChild(imgTag);
+            msgListTag.appendChild(pTag);
+            msgListTag.className = 'sent';
+            if (username === response.message_recipient) {
+              console.log('RECIEVE');
+              chatLog.appendChild(msgListTag); 
+              chatLog.appendChild(time2)
+              
+            }
+            else if (username === response.message_sender){
+              console.log('DIDNT RECEIVE NUN');
+            }
+            msgListTag.style.padding = '10px';
+    }
+
+    function createNewMessageNotif(recipientName) {
+        var button = document.createElement('button');
+        button.className = 'new-msg-btn button button-primary badge-pill';
+        button.style.padding = '0px 20px';
+        button.style.height = '50px';
+        button.style.width = '250px';
+        button.style.fontFamily = "";
+        button.id = 'new_msg_notif'
+        // button.style.display = 'none';
+        button.style.whiteSpace = 'nowrap';
+
+        // Create the span element
+        var span = document.createElement('span');
+        span.style.fontSize = '18px';
+        span.textContent = 'New Message';
+        
+        // var span2 = document.createElement('span');
+        // span2.style.float = 'right';
+        
+        // span2.innerHTML = '&times'
+        // span2.style.fontSize = '20px';
+        // span2.style.marginTop = '-3px';
+        // span2.style.color = 'red';
+
+        // Create the <i> element
+        var icon = document.createElement('i');
+        icon.className = 'fa fa-arrow-circle-down';
+        icon.style.fontSize = '15px';
+        icon.style.margin = "0px 5px";
+
+        // Append the span and icon to the button
+        button.appendChild(span);
+        button.appendChild(icon);
+        // button.appendChild(span2);
+
+        // Append the button to the container
+        if (recipientName === username) {
+          document.getElementsByClassName('floating')[0].innerHTML = ''
+          floating.appendChild(button); 
+
+        }
+
+        // span2.onclick = function() {
+        //     document.getElementsByClassName('floating')[0].innerHTML = '';
+        // };
+    }
+    console.log('SOCKET: ', friendsChatSocket);
+    friendsChatSocket
+  };
+
+  // Attach the click event to all list items with the 'contact' class
+  $('.friend-conversation').click(handleFriendClick);
 </script>
 
 
@@ -1483,7 +1439,7 @@ $('.friend-conversation').click(handleFriendClick);
 
       groupMembersObject = {}
 
-      var addedMessagePk = []
+      var addedTimestamps = []
       var content2 = document.getElementById('content-2')
       content2.style.display = 'block';
       var floatingClass = content2.querySelector('.floating')
@@ -1491,7 +1447,7 @@ $('.friend-conversation').click(handleFriendClick);
       
       chatLog.innerHTML = ''
       floatingClass.innerHTML = ''
-      addedMessagePk = []
+      addedTimestamps = []
 
       // var chatLog = document.getElementById("chat-log");
       var username = "{{ username }}";
@@ -1510,6 +1466,12 @@ $('.friend-conversation').click(handleFriendClick);
         }
       })
 
+      // for (let member = 0; member < groupMembers.length; member++) {
+      //   console.log('Member: ', groupMembers[member].user);
+        
+      // }
+      console.log(typeof groupMembersObject);
+      console.log(groupMembersObject);
       var membersCount = $(this).data('members-count')
       var groupNameSlot = content2.querySelector('#group_name')
       var groupPfpSlot = content2.querySelector('#group_pfp')
@@ -1562,15 +1524,11 @@ $('.friend-conversation').click(handleFriendClick);
 
         if (data['command'] === 'load_messages') {
           for (let i = 0; i < data['messages'].length; i++) {
-            if (!addedMessagePk.includes(data['messages'][i].pk)) {
+            if (!addedTimestamps.includes(data['messages'][i].timestamp)) {
               if (data['messages'][i].sender === username) {
                 senderMessages(data['messages'][i])
               }
-              else if (data['messages'][i].sender !== username && groupMembersObject.includes(username)) {
-                receivedMessage(data['messages'][i])
-              }
             }
-            addedMessagePk.push(data['messages'][i].pk);
           }
         }
       }

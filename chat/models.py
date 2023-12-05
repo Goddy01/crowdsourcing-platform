@@ -25,7 +25,7 @@ class Chat(models.Model):
     recipient = models.ForeignKey(BaseUser, on_delete=models.CASCADE, null=True, related_name='chat_recipient')
     content = models.TextField()
     file_content = models.FileField(upload_to=upload_in_chat_files, null=True, blank=True)
-    is_seen = models.BooleanField(default=False)
+    # is_seen = models.BooleanField(default=False)
 
     # class Meta:
     #     ordering = ('-timestamp', )
