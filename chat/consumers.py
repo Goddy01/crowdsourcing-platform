@@ -23,33 +23,29 @@ class ChatConsumer(WebsocketConsumer):
         }
         self.send_message(content)
 
-    # def new_file_message(self, data):
-    #     print('2')
-    #     sender = BaseUser.objects.get(username=data['sender'])
-    #     recipient = BaseUser.objects.get(username=data['recipient'])
-    #     message = Chat.objects.filter(sender=sender, recipient=recipient, file_content__isnull=False).order_by('-timestamp').first()
+    def new_file_message(self, data):
+        print('2')
+        sender = BaseUser.objects.get(username=data['sender'])
+        recipient = BaseUser.objects.get(username=data['recipient'])
+        message = Chat.objects.filter(sender=sender, recipient=recipient, file_content__isnull=False).order_by('-timestamp').first()
 
-    #     content = {
-    #         'command': 'new_file',
-    #         'message': self.message_to_json(message)
-    #     }
+        content = {
+            'command': 'new_file',
+            'message': self.message_to_json(message)
+        }
 
-    #     return self.send_chat_message(content)
+        return self.send_chat_message(content)
 
     def new_message(self, data):
         print('3')
         sender = data['from']
         sender_user = BaseUser.objects.get(username=sender)
-        recipient = data['to']
-        if data['type'] == 'new_message':
-            message = Chat.objects.create(
-                sender=sender_user,
-                recipient=BaseUser.objects.get(username=recipient),
-                content=data['message']
-            )
-        elif data['type'] == 'new_file':
-            message = Chat.objects.filter(sender=sender, recipient=recipient, file_content__isnull=False).order_by('-timestamp').first()
-
+        
+        message = Chat.objects.create(
+            sender=sender_user,
+            recipient=BaseUser.objects.get(username=data['to']),
+            content=data['message']
+        )    
 
         content = {
             'command': 'new_message',
@@ -92,7 +88,7 @@ class ChatConsumer(WebsocketConsumer):
     commands = {
         'fetch_messages': fetch_messages,
         'new_message': new_message,
-        # 'new_file': new_file_message
+        'new_file': new_file_message
     }
     def connect(self):
         print('6')

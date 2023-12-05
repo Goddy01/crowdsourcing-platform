@@ -898,16 +898,15 @@ p {
     document.getElementsByClassName('friend-chat-tab')[0].addEventListener('click', function () {
       document.getElementById('content-2').style.display = 'none';
     })
+    var username = "{{ username }}"
   oldFriends = [];
-  oldSockets = []
-  var sendFileCount = 0
+  oldSockets = [];
+
+  var fileMsg = document.querySelector('#file-msg1')
+  var fileIcon = document.querySelector('#clip-1')
+  var sendFileUrl = "{% url 'chat:send_file_msg' sender=0 recipient=1 %}".replace('0', username);
 
   function handleFriendClick() {
-
-    // for (let socket = 0; socket < oldSockets.length; socket++) {
-    //   oldSockets[socket].close()
-      
-    // }
     if (oldSockets.length > 0) {
       var previousSocket = oldSockets[oldSockets.length-1];
       previousSocket.close()
@@ -991,10 +990,10 @@ if (data['command'] === 'messages') {
   
   for (let i = 0; i < data['messages'].length; i++) {
     
-      if (data['messages'][i].sender === username && data['messages'][i].recipient === oldFriends[oldFriends.length-1]) {
+      if (data['messages'][i].sender === username) {
         senderMessages(data['messages'][i])
       }
-      else if (data['messages'][i].recipient === username && data['sendee']) {
+      else if (data['messages'][i].recipient === username) {
         receivedMessage(data['messages'][i])
       }
   };
@@ -1004,12 +1003,12 @@ else if (data['command'] === 'new_message') {
     content1.querySelector('.floating').innerHTML = ''; 
   }
   
-      if (data['message'].sender === username && data['message'].recipient === oldFriends[oldFriends.length-1]) {
+      if (data['message'].sender === username ) {
         senderMessages(data['message']);
       }
       
-      else if (data['message'].sender === oldFriends[oldFriends.length -1] && data['message'].recipient === username) {
-        receivedMessage(data['message'], oldFriends[oldFriends.length -1])
+      else if (data['message'].recipient === username && data['message'].sender === oldFriends[oldFriends.length -1]) {
+        receivedMessage(data['message'])
         
       }
 
@@ -1031,12 +1030,12 @@ else if (data['command'] === 'new_file') {
 
 
     console.log('1');
-      if (data['message'].sender === username && data['message'].recipient === oldFriends[oldFriends.length-1]) {
+      if (data['message'].sender === username) {
         console.log('2');
         senderMessages(data['message']);
       }
       
-      else if (data['message'].sender === oldFriends[oldFriends.length -1] && data['message'].recipient === username) {
+      else if (data['message'].recipient === username && data['message'].sender === oldFriends[oldFriends.length -1]) {
         console.log('3');
         receivedMessage(data['message'])
         
@@ -1073,8 +1072,7 @@ else if (data['command'] === 'new_file') {
         'command': 'new_message',
         'message': message,
         'from': username,
-        'to': friendUsername,
-        'type': 'new_message'
+        'to': friendUsername
       }));
       messageInputDom.value = '';
     };
@@ -1094,17 +1092,13 @@ else if (data['command'] === 'new_file') {
         }
         return cookieValue;
     }
-
-    var fileMsg = content1.querySelector('#file-msg1')
-    var fileIcon = content1.querySelector('#clip-1')
-    var sendFileUrl = "{% url 'chat:send_file_msg' sender=0 recipient=1 %}".replace('0', username);
     
-    fileIcon.addEventListener('click', function () {
+    fileIcon.onclick = function(e) {
       fileMsg.click();
-    })
+    }
 
-    fileMsg.addEventListener('change', function () {
-      // e.preventDefault()
+    fileMsg.onchange = function(e) {
+      e.preventDefault()
       console.log('SOCKET: ', friendsChatSocket);
       var file = fileMsg.files[0];
       var formData = new FormData();
@@ -1122,13 +1116,12 @@ else if (data['command'] === 'new_file') {
         },
         success: function(response) {
           friendsChatSocket.send(JSON.stringify({
-            'command': 'new_message',
+            'command': 'new_file',
             'message': response,
-            'from': username,
-            'type': new_file,
-            'to': oldFriends[oldFriends.length-1]
+            'sender': username,
+            'recipient': oldFriends[oldFriends.length-1]
           }));
-          fileMsg.value = '';
+          // fileMsg.value = '';
            if (username === response.message_recipient) {
             receivedFileMessage(response)
           } {
@@ -1137,10 +1130,8 @@ else if (data['command'] === 'new_file') {
         }
         
       })
-      content1.querySelector('#chat-log').innerHTML = '';
-      console.log('YAGA');
-      // fileMsg.removeEventListener('click', namedListener);
-    })
+      console.log('bro');
+    }
 
     function fetchMessages(friendUsername) {
       
