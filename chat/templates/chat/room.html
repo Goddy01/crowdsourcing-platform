@@ -914,7 +914,6 @@ p {
     var friendUsername = $(this).data('friend-username');
     var content1 = document.getElementById('content-1');
     content1.style.display = 'block';
-    // document.getElementsByClassName('content')[0].style.display = 'block';
 
     var floating = content1.querySelector('#floating');
     floatingClass = content1.querySelector('.floating')
@@ -924,13 +923,8 @@ p {
     var username = "{{ username }}";
     oldFriends.push(friendUsername)
     
-    // var csrfToken = "{{ csrf_token }}";
-
     chatLog.innerHTML = '';
-    content1.querySelector('.message-input').style.display = 'inline';
-    // document.getElementsByClassName('new-msg-btn')[0].style.display = 'none';
-
-    
+    content1.querySelector('.message-input').style.display = 'inline';    
 
     friendsChatSocket.onopen = function(e) {
       fetchMessages(friendUsername);
@@ -991,16 +985,12 @@ if (data['command'] === 'messages') {
   
   for (let i = 0; i < data['messages'].length; i++) {
     
-    // Check if the timestamp is already in the addedTimestamps array
-      
       if (data['messages'][i].sender === username) {
         senderMessages(data['messages'][i])
       }
       else if (data['messages'][i].recipient === username) {
         receivedMessage(data['messages'][i])
       }
-    // }
-    // }
   };
 } 
 else if (data['command'] === 'new_message') {
@@ -1008,8 +998,6 @@ else if (data['command'] === 'new_message') {
     content1.querySelector('.floating').innerHTML = ''; 
   }
   
-
-
       if (data['message'].sender === username) {
         senderMessages(data['message']);
       }
@@ -1026,9 +1014,6 @@ else if (data['command'] === 'new_message') {
       else if (data['message'].recipient === username && data['message'].sender !== oldFriends[oldFriends.length -1]) {
 
       }
-    
-    
-      // }
 }
 
 else if (data['command'] === 'new_file') {
@@ -1043,8 +1028,6 @@ else if (data['command'] === 'new_file') {
       if (data['message'].sender === username) {
         console.log('2');
         senderMessages(data['message']);
-        // console.log('2 DATA: ', data)
-          // createFileMessage(data['message'])
       }
       
       else if (data['message'].sender === oldFriends[oldFriends.length -1] && data['message'].recipient === username) {
@@ -1077,7 +1060,6 @@ else if (data['command'] === 'new_file') {
     };
 
     document.querySelector('#chat-message-submit1').onclick = function(e) {
-      // e.preventDefault();
       var messageInputDom = document.querySelector('#chat-message-input1');
       var message = messageInputDom.value;
       friendsChatSocket.send(JSON.stringify({
@@ -1133,9 +1115,6 @@ else if (data['command'] === 'new_file') {
             'sender': username,
             'recipient': oldFriends[oldFriends.length-1]
           }));
-          // if (username === response.message_sender) {
-          //   createFileMessage(response)
-          // }
            if (username === response.message_recipient) {
             receivedFileMessage(response)
           } {
@@ -1196,7 +1175,6 @@ else if (data['command'] === 'new_file') {
         hrefLink.textContent = 'View File'
         hrefLink.style.textDecoration = 'none'
         pTag.appendChild(hrefLink)
-      // pTag.style.color = 'black'
       pTag.style.backgroundColor = 'white'
       pTag.style.padding = '10px'
       pTag.style.width = '100px';
@@ -1222,10 +1200,9 @@ else if (data['command'] === 'new_file') {
       var sender = data['sender'];
       
       var msgListTag = document.createElement('li');
-      // msgListTag.style.margin = '20px';
+
       var imgTag = document.createElement('img');
       
-      // var pTag2 = document.createElement('p');
       var time2 = document.createElement('p');
       time2.style.padding = '0 10px'
       time2.textContent = new Date(data['timestamp']).toLocaleString()
@@ -1235,22 +1212,14 @@ else if (data['command'] === 'new_file') {
       time2.style.marginLeft = '20px';
       time2.style.fontSize = '15px';
       time2.style.color = 'green'
-      
-      // var nameTag = document.createElement('p');
 
       imgTag.src = data['sender_pfp_url'];
       imgTag.style.width = "30px";
       imgTag.style.height = "30px";
       imgTag.style.borderRadius = "50%";
-      // nameTag.style.color = 'red';
-      // nameTag.textContent = data.sender.username;
 
-      // if (sender !== username) {
         msgListTag.className = 'sent';
-      // } else {
-      //   msgListTag.className = 'replies';
-        
-      // }
+
       msgListTag.appendChild(imgTag);
       if (data['content']) {
         var pTag = document.createElement('p'); 
@@ -1276,20 +1245,9 @@ else if (data['command'] === 'new_file') {
       pTag.style.fontSize = '20px'
       msgListTag.appendChild(pTag);
       }
-      // msgListTag.appendChild(pTag);
-      // if (recipient === friendUsername) {
-      // if (showTo === data['recipient']) {
-        
-      // }
+      
       chatLog.appendChild(msgListTag); 
-      // }
-      // 
-      // 
-      // 
-      // if (msgListTag.className.includes('replies')) {
       chatLog.appendChild(time2)
-      // }
-      // msgListTag.style.backgroundColor = 'pink';
       msgListTag.style.padding = '10px';
     }
 
@@ -1387,42 +1345,24 @@ else if (data['command'] === 'new_file') {
         var span = document.createElement('span');
         span.style.fontSize = '18px';
         span.textContent = 'New Message';
-        
-        // var span2 = document.createElement('span');
-        // span2.style.float = 'right';
-        
-        // span2.innerHTML = '&times'
-        // span2.style.fontSize = '20px';
-        // span2.style.marginTop = '-3px';
-        // span2.style.color = 'red';
-
-        // Create the <i> element
         var icon = document.createElement('i');
         icon.className = 'fa fa-arrow-circle-down';
         icon.style.fontSize = '15px';
         icon.style.margin = "0px 5px";
 
-        // Append the span and icon to the button
         button.appendChild(span);
         button.appendChild(icon);
-        // button.appendChild(span2);
 
-        // Append the button to the container
         if (recipientName === username) {
           document.getElementsByClassName('floating')[0].innerHTML = ''
           floating.appendChild(button); 
 
         }
 
-        // span2.onclick = function() {
-        //     document.getElementsByClassName('floating')[0].innerHTML = '';
-        // };
     }
     console.log('SOCKET: ', friendsChatSocket);
     friendsChatSocket
   };
-
-  // Attach the click event to all list items with the 'contact' class
   $('.friend-conversation').click(handleFriendClick);
 </script>
 
