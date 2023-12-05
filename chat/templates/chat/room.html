@@ -852,10 +852,10 @@ p {
         </ul>
       </div>
       <div class="message-input" style="display: none;">
-        <input type="file" name="file-message" id="file-msg" hidden>
+        <input type="file" name="file-message" id="file-msg1" hidden>
         <div class="wrap">
         <input id="chat-message-input1" type="text" placeholder="Write your message..." />
-        <i class="fa fa-paperclip attachment" aria-hidden="true"></i>
+        <i class="fa fa-paperclip attachment" id="clip-1" aria-hidden="true"></i>
         <button id="chat-message-submit1" class="submit">
           <i class="fa fa-paper-plane" aria-hidden="true"></i>
         </button>
@@ -877,7 +877,7 @@ p {
         </ul>
       </div>
       <div class="message-input" style="display: none;">
-        <input type="file" name="file-message" id="file-msg" hidden>
+        <input type="file" name="file-message" id="file-msg2" hidden>
         <div class="wrap">
         <input id="chat-message-input2" type="text" placeholder="Write your message..." />
         <i class="fa fa-paperclip attachment" aria-hidden="true"></i>
@@ -900,8 +900,14 @@ p {
     })
   oldFriends = [];
   oldSockets = []
+  var sendFileCount = 0
 
   function handleFriendClick() {
+
+    // for (let socket = 0; socket < oldSockets.length; socket++) {
+    //   oldSockets[socket].close()
+      
+    // }
     if (oldSockets.length > 0) {
       var previousSocket = oldSockets[oldSockets.length-1];
       previousSocket.close()
@@ -985,10 +991,10 @@ if (data['command'] === 'messages') {
   
   for (let i = 0; i < data['messages'].length; i++) {
     
-      if (data['messages'][i].sender === username) {
+      if (data['messages'][i].sender === username && data['messages'][i].recipient === oldFriends[oldFriends.length-1]) {
         senderMessages(data['messages'][i])
       }
-      else if (data['messages'][i].recipient === username) {
+      else if (data['messages'][i].recipient === username && data['sendee']) {
         receivedMessage(data['messages'][i])
       }
   };
@@ -998,7 +1004,7 @@ else if (data['command'] === 'new_message') {
     content1.querySelector('.floating').innerHTML = ''; 
   }
   
-      if (data['message'].sender === username) {
+      if (data['message'].sender === username && data['message'].recipient === oldFriends[oldFriends.length-1]) {
         senderMessages(data['message']);
       }
       
@@ -1025,14 +1031,14 @@ else if (data['command'] === 'new_file') {
 
 
     console.log('1');
-      if (data['message'].sender === username) {
+      if (data['message'].sender === username && data['message'].recipient === oldFriends[oldFriends.length-1]) {
         console.log('2');
         senderMessages(data['message']);
       }
       
       else if (data['message'].sender === oldFriends[oldFriends.length -1] && data['message'].recipient === username) {
         console.log('3');
-        receivedMessage(data['message'], oldFriends[oldFriends.length -1])
+        receivedMessage(data['message'])
         
       }
 
@@ -1040,9 +1046,9 @@ else if (data['command'] === 'new_file') {
       console.log('4');
         createNewMessageNotif(username)
       }
-      else if (data['message'].recipient === username) {
-        console.log('5');
-      }
+      // else if (data['message'].recipient === username) {
+      //   console.log('5');
+      // }
     
     
 }
@@ -1051,6 +1057,7 @@ else if (data['command'] === 'new_file') {
 
     friendsChatSocket.onclose = function(e) {
       console.error('Chat socket closed unexpectedly');
+      // friendsChatSocket = null;
     };
 
     document.querySelector('#chat-message-input1').onkeyup = function(e) {
@@ -1066,11 +1073,13 @@ else if (data['command'] === 'new_file') {
         'command': 'new_message',
         'message': message,
         'from': username,
-        'to': friendUsername
+        'to': friendUsername,
+        'type': 'new_message'
       }));
       messageInputDom.value = '';
     };
 
+    
     function getCookie(name) {
         var cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -1086,35 +1095,40 @@ else if (data['command'] === 'new_file') {
         return cookieValue;
     }
 
-    var fileMsg = content1.querySelector('#file-msg')
-    var fileIcon = content1.querySelector('.fa-paperclip')
-    var sendFileUrl = "{% url 'chat:send_file_msg' sender=0 recipient=1 %}".replace('0', username).replace('1', oldFriends[oldFriends.length-1]);
+    var fileMsg = content1.querySelector('#file-msg1')
+    var fileIcon = content1.querySelector('#clip-1')
+    var sendFileUrl = "{% url 'chat:send_file_msg' sender=0 recipient=1 %}".replace('0', username);
     
     fileIcon.addEventListener('click', function () {
       fileMsg.click();
     })
 
     fileMsg.addEventListener('change', function () {
+      // e.preventDefault()
+      console.log('SOCKET: ', friendsChatSocket);
       var file = fileMsg.files[0];
       var formData = new FormData();
       formData.append('file', file)
-
       $.ajax({
-        type: 'POST',
-        url: sendFileUrl,
-        data: formData,
         processData: false,
         contentType: false,
+        async: false,
+        type: 'POST',
+        cache: false,
+        url: sendFileUrl.replace('1', oldFriends[oldFriends.length-1]),
+        data: formData,
         headers: {
           'X-CSRFToken': getCookie('csrftoken')
         },
         success: function(response) {
           friendsChatSocket.send(JSON.stringify({
-            'command': 'new_file',
+            'command': 'new_message',
             'message': response,
-            'sender': username,
-            'recipient': oldFriends[oldFriends.length-1]
+            'from': username,
+            'type': new_file,
+            'to': oldFriends[oldFriends.length-1]
           }));
+          fileMsg.value = '';
            if (username === response.message_recipient) {
             receivedFileMessage(response)
           } {
@@ -1123,6 +1137,9 @@ else if (data['command'] === 'new_file') {
         }
         
       })
+      content1.querySelector('#chat-log').innerHTML = '';
+      console.log('YAGA');
+      // fileMsg.removeEventListener('click', namedListener);
     })
 
     function fetchMessages(friendUsername) {
@@ -1360,10 +1377,14 @@ else if (data['command'] === 'new_file') {
         }
 
     }
-    console.log('SOCKET: ', friendsChatSocket);
-    friendsChatSocket
+    // console.log('SOCKET: ', friendsChatSocket);
+    // friendsChatSocket
   };
   $('.friend-conversation').click(handleFriendClick);
+</script>
+
+<script>
+  
 </script>
 
 

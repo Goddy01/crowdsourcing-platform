@@ -17,39 +17,39 @@ class ChatConsumer(WebsocketConsumer):
         # messages = Chat.last_10_messages()
         logged_in_user = BaseUser.objects.get(username=self.scope['user'].username)
         messages = get_messages(sender=sender, recipient=recipient)
-        # for message in messages:
-        #     if logged_in_user == message.recipient:
-        #         message.is_seen = True
-        #         message.save(update_fields=['is_seen'])
         content = {
             'command': 'messages',
             'messages': self.messages_to_json(messages)
         }
         self.send_message(content)
 
-    def new_file_message(self, data):
-        print('2')
-        sender = BaseUser.objects.get(username=data['sender'])
-        recipient = BaseUser.objects.get(username=data['recipient'])
-        message = Chat.objects.filter(sender=sender, recipient=recipient, file_content__isnull=False).order_by('-timestamp').first()
+    # def new_file_message(self, data):
+    #     print('2')
+    #     sender = BaseUser.objects.get(username=data['sender'])
+    #     recipient = BaseUser.objects.get(username=data['recipient'])
+    #     message = Chat.objects.filter(sender=sender, recipient=recipient, file_content__isnull=False).order_by('-timestamp').first()
 
-        content = {
-            'command': 'new_file',
-            'message': self.message_to_json(message)
-        }
+    #     content = {
+    #         'command': 'new_file',
+    #         'message': self.message_to_json(message)
+    #     }
 
-        return self.send_chat_message(content)
+    #     return self.send_chat_message(content)
 
     def new_message(self, data):
         print('3')
         sender = data['from']
         sender_user = BaseUser.objects.get(username=sender)
-        
-        message = Chat.objects.create(
-            sender=sender_user,
-            recipient=BaseUser.objects.get(username=data['to']),
-            content=data['message']
-        )    
+        recipient = data['to']
+        if data['type'] == 'new_message':
+            message = Chat.objects.create(
+                sender=sender_user,
+                recipient=BaseUser.objects.get(username=recipient),
+                content=data['message']
+            )
+        elif data['type'] == 'new_file':
+            message = Chat.objects.filter(sender=sender, recipient=recipient, file_content__isnull=False).order_by('-timestamp').first()
+
 
         content = {
             'command': 'new_message',
@@ -92,7 +92,7 @@ class ChatConsumer(WebsocketConsumer):
     commands = {
         'fetch_messages': fetch_messages,
         'new_message': new_message,
-        'new_file': new_file_message
+        # 'new_file': new_file_message
     }
     def connect(self):
         print('6')
@@ -107,6 +107,7 @@ class ChatConsumer(WebsocketConsumer):
 
     def disconnect(self, close_code):
         print('7')
+        # del self.thread  # Maybe you also want to delete the thread
         # Leave chat
         async_to_sync( self.channel_layer.group_discard)(self.room_group_name, self.channel_name)
 

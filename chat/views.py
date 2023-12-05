@@ -66,9 +66,10 @@ def get_group_members(request, group_pk):
 
     return JsonResponse({'members': list(members)})
 
-
 def send_file_message(request, sender, recipient):
-    if request.method == 'POST':
+    if request.method == "POST" and request.FILES.get("file"):
+        print('FILES: ', request.FILES)
+        print('POST: ', request.POST)
         sender = BaseUser.objects.get(username=sender)
         recipient = BaseUser.objects.get(username=recipient)
         file = request.FILES['file']
@@ -77,4 +78,5 @@ def send_file_message(request, sender, recipient):
             recipient=recipient,
             file_content=file
         )
+        print('FILE CREATED')
     return JsonResponse(data = {'status': 'success', 'file_url': message.file_content.url, 'message_sender': message.sender.username, 'message_sender_pfp_url': message.sender.pfp.url, 'message_recipient': message.recipient.username, 'message_recipient_url': message.recipient.pfp.url, 'timestamp': message.timestamp})
