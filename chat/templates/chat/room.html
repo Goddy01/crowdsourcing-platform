@@ -1014,7 +1014,7 @@ else if (data['command'] === 'new_message') {
 
       if (data['message'].recipient === username && data['message'].sender === oldFriends[oldFriends.length -1]) {
         
-        createNewMessageNotif(username)
+        createNewMessageNotif(username, data['message'].pk)
       }
       else if (data['message'].recipient === username && data['message'].sender !== oldFriends[oldFriends.length -1]) {
 
@@ -1036,7 +1036,7 @@ else if (data['command'] === 'new_file') {
       }
 
       if (data['message'].recipient === username && data['message'].sender === oldFriends[oldFriends.length -1]) {
-        createNewMessageNotif(username)
+        createNewMessageNotif(username, data['message'].pk)
       }
     
     
@@ -1141,7 +1141,7 @@ else if (data['command'] === 'new_file') {
       time.textContent = new Date(data['timestamp']).toLocaleString()
       time.style.float = 'right';
       time.style.fontStyle = 'italic';
-      time.style.marginTop = '-20px';
+      time.style.marginTop = '-25px';
       time.style.marginRight = '60px';
       time.style.fontSize = '15px';
       time.style.color = 'green'
@@ -1200,11 +1200,11 @@ else if (data['command'] === 'new_file') {
       var imgTag = document.createElement('img');
       
       var time2 = document.createElement('p');
-      time2.style.padding = '0 10px'
+      time2.style.padding = '0px 10px'
       time2.textContent = new Date(data['timestamp']).toLocaleString()
       time2.style.float = 'left';
       time2.style.fontStyle = 'italic';
-      time2.style.marginTop = '-20px';
+      time2.style.marginTop = '-25px';
       time2.style.marginLeft = '20px';
       time2.style.fontSize = '15px';
       time2.style.color = 'green'
@@ -1326,14 +1326,14 @@ else if (data['command'] === 'new_file') {
             msgListTag.style.padding = '10px';
     }
 
-    function createNewMessageNotif(recipientName) {
+    function createNewMessageNotif(recipientName, msgID) {
         var button = document.createElement('button');
         button.className = 'new-msg-btn button button-primary badge-pill';
         button.style.padding = '0px 20px';
         button.style.height = '50px';
         button.style.width = '250px';
         button.style.fontFamily = "";
-        button.id = 'new_msg_notif'
+        button.id = `msg_${msgID}_notif`
         // button.style.display = 'none';
         button.style.whiteSpace = 'nowrap';
 
@@ -1352,6 +1352,32 @@ else if (data['command'] === 'new_file') {
         if (recipientName === username) {
           document.getElementsByClassName('floating')[0].innerHTML = ''
           floating.appendChild(button); 
+
+          // Add click event listener to the button
+          button.onclick = function (e) {
+            floatingClass.innerHTML = '';
+            // Specify that it is a new message
+            var messageElements = document.getElementsByClassName('sent');
+            if (messageElements.length > 0) {
+                var messageElement = messageElements[messageElements.length - 1];
+
+                // Apply the hovering effect immediately
+                messageElement.style.backgroundColor = '#8193A6'; // Set your preferred background color
+                messageElement.style.padding = '10px';
+                messageElement.style.borderRadius = '15px';
+                messageElement.style.boxShadow = '0 8px 10px rgba(0, 0, 0, 0.1)';
+
+                // Set a timeout to remove the styles after 5 seconds
+                setTimeout(function () {
+                    messageElement.style.backgroundColor = ''; // Reset the background color
+                    messageElement.style.padding = '10px';
+                    messageElement.style.borderRadius = '';
+                    messageElement.style.boxShadow = '';
+                    messageElement.style.height = '';
+                }, 5000); // Adjust the time (in milliseconds) as needed
+            }
+        };
+
 
         }
 
