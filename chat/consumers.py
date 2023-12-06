@@ -9,22 +9,21 @@ from django.shortcuts import get_object_or_404
 
 
 class ChatConsumer(WebsocketConsumer):
-    chat_list = set()
     def fetch_messages(self, data):
-        print('1')
         sender = BaseUser.objects.get(username=data['sender'])
         recipient = BaseUser.objects.get(username=data.get('recipient'))
-        # messages = Chat.last_10_messages()
         logged_in_user = BaseUser.objects.get(username=self.scope['user'].username)
-        messages = get_messages(sender=sender, recipient=recipient)
-        content = {
-            'command': 'messages',
-            'messages': self.messages_to_json(messages)
-        }
+        if logged_in_user == sender:
+            messages = get_messages(sender=sender, recipient=recipient)
+            content = {
+                'command': 'messages',
+                'messages': self.messages_to_json(messages)
+            }
+        else:
+            content = {}
         self.send_message(content)
 
     def new_file_message(self, data):
-        print('2')
         sender = BaseUser.objects.get(username=data['sender'])
         recipient = BaseUser.objects.get(username=data['recipient'])
         message = Chat.objects.filter(sender=sender, recipient=recipient, file_content__isnull=False).order_by('-timestamp').first()
@@ -54,18 +53,13 @@ class ChatConsumer(WebsocketConsumer):
         return self.send_chat_message(content)
 
     def messages_to_json(self, messages):
-        # print('4')
         result = []
         for message in messages:
-            # if message.recipient == BaseUser.objects.get(username=self.scope['user'].username):
-            #     message.is_seen = True
-            #     message.save(update_fields =['is_seen'])
             result.append(
                 self.message_to_json(message)
             )
         return result
     def message_to_json(self, message):
-        # print('5')
         try:
             file_content = message.file_content.url
         except:
@@ -80,7 +74,6 @@ class ChatConsumer(WebsocketConsumer):
             'content': content,
             'timestamp': str(message.timestamp),
             'sender_pfp_url': message.sender.pfp.url,
-            # 'is_seen': message.is_seen,
             'file_content': file_content,
             'pk': message.pk,
 
@@ -92,34 +85,19 @@ class ChatConsumer(WebsocketConsumer):
     }
     def connect(self):
         print('6')
-        # self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
-        # self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
-        # self.room_group_name = "chat_%s" % self.room_name
-        # self.user = self.scope["user"]
         self.room_group_name = 'chat_room'
         
         async_to_sync(self.channel_layer.group_add)(self.room_group_name, self.channel_name)
         self.accept()
 
     def disconnect(self, close_code):
-        print('7')
-        # del self.thread  # Maybe you also want to delete the thread
-        # Leave chat
         async_to_sync( self.channel_layer.group_discard)(self.room_group_name, self.channel_name)
 
-    # Receive message from WebSocket
     def receive(self, text_data):
-        print('8')
         data = json.loads(text_data)
         self.commands[data['command']](self, data)
 
     def send_chat_message(self, message):
-        print('9')
-        # message = data["message"]
-        # Send message to room group
-        # print(message)
-        
-        
         async_to_sync(self.channel_layer.group_send)(
         self.room_group_name, {"type": "chat_message", "message": message}
         )
@@ -127,15 +105,9 @@ class ChatConsumer(WebsocketConsumer):
     def send_message(self, message):
         print('10')
         self.send(text_data=json.dumps(message))
-    # Receive message from room group
+
     def chat_message(self, event):
         message = event["message"]
-        # if message['message']['pk'] not in self.chat_list:
-        print('11')
-        #     self.chat_list.add(message['message']['pk'])
-        # if message['message']['pk'] not in self.chat_list:
-        #     self.chat_list.add(message['message']['pk'])
-        #     print(self.chat_list)
         self.send(text_data=json.dumps(message))
 
 

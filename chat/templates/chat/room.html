@@ -1022,32 +1022,22 @@ else if (data['command'] === 'new_message') {
 }
 
 else if (data['command'] === 'new_file') {
-  console.log('USERNAME: ', username);
   if (data['message'].sender === username) {
     floatingClass.innerHTML = ''; 
   }
   
-
-
-    console.log('1');
       if (data['message'].sender === username) {
-        console.log('2');
         senderMessages(data['message']);
       }
       
       else if (data['message'].recipient === username && data['message'].sender === oldFriends[oldFriends.length -1]) {
-        console.log('3');
         receivedMessage(data['message'])
         
       }
 
       if (data['message'].recipient === username && data['message'].sender === oldFriends[oldFriends.length -1]) {
-      console.log('4');
         createNewMessageNotif(username)
       }
-      // else if (data['message'].recipient === username) {
-      //   console.log('5');
-      // }
     
     
 }
@@ -1056,11 +1046,10 @@ else if (data['command'] === 'new_file') {
 
     friendsChatSocket.onclose = function(e) {
       console.error('Chat socket closed unexpectedly');
-      // friendsChatSocket = null;
     };
 
     document.querySelector('#chat-message-input1').onkeyup = function(e) {
-      if (e.keyCode === 13) {  // enter, return
+      if (e.keyCode === 13) {  
         document.querySelector('#chat-message-submit1').click();
       }
     };
@@ -1099,7 +1088,6 @@ else if (data['command'] === 'new_file') {
 
     fileMsg.onchange = function(e) {
       e.preventDefault()
-      console.log('SOCKET: ', friendsChatSocket);
       var file = fileMsg.files[0];
       var formData = new FormData();
       formData.append('file', file)
@@ -1368,8 +1356,6 @@ else if (data['command'] === 'new_file') {
         }
 
     }
-    // console.log('SOCKET: ', friendsChatSocket);
-    // friendsChatSocket
   };
   $('.friend-conversation').click(handleFriendClick);
 </script>
