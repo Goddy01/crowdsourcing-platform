@@ -22,16 +22,20 @@ def room(request, room_name=None):
         Q(user1=user) | Q(user2=user)
     )
     conversations = []
+    last_convos = []
 
     for friend in friends_list:
         if friend.user1 == user:
             conversations.append(friend.user2)
+            last_convos.append({f'{friend.user2.user.username}': friend.last_chat_with_conn})
         else:
             conversations.append(friend.user1)
+            last_convos.append({f'{friend.user1.user.username}': friend.last_chat_with_conn})
     return render(request, 'chat/room.html', {
         'username': request.user.username,
         'room_name_json': room_name,
         'friends': conversations,
+        'last_convos': last_convos,
         'groups': Group.objects.filter(members=user.user.pk),
         'groups2': serialize('json', queryset=Group.objects.filter(members=user.user.pk)),
         'user':user
@@ -68,8 +72,6 @@ def get_group_members(request, group_pk):
 
 def send_file_message(request, sender, recipient):
     if request.method == "POST" and request.FILES.get("file"):
-        print('FILES: ', request.FILES)
-        print('POST: ', request.POST)
         sender = BaseUser.objects.get(username=sender)
         recipient = BaseUser.objects.get(username=recipient)
         file = request.FILES['file']

@@ -1,5 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.db import IntegrityError
+from django.apps import apps
 from enum import unique
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
@@ -231,3 +232,8 @@ class Connection(models.Model):
     conn_request = models.ForeignKey(ConnectionRequest, on_delete=models.CASCADE, null=True, blank=True)
     user1 = models.ForeignKey(Innovator, on_delete=models.CASCADE, related_name='conn_user1')
     user2 = models.ForeignKey(Innovator, on_delete=models.CASCADE, related_name='conn_user2')
+    
+    @property
+    def last_chat_with_conn(self):
+        chats = apps.get_model('chat.Chat').objects.filter(sender=self.user1.user, recipient=self.user2.user).order_by('timestamp') | apps.get_model('chat.Chat').objects.filter(sender=self.user2.user, recipient=self.user1.user).order_by('timestamp')
+        return chats.first()
