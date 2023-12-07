@@ -809,7 +809,7 @@ button:focus {
                   <img src="{{ friend.user.pfp.url }}" alt="" style="border-radius: 50%;width: 60px;height: 60px;"/>
                   <div class="meta">
                     <p class="name">{{ friend.user.get_full_name }}</p>
-                    <p class="preview">You just got LITT up, Mike.</p>
+                    <p class="last_message" style="font-style: italic;" id="last_message_{{ friend.user.username }}"></p>
                   </div>
                 </div>
               </li>
@@ -1014,6 +1014,19 @@ if (data['command'] === 'messages') {
   };
 } 
 else if (data['command'] === 'new_message') {
+  if (data['message'].sender === username || data['message'].recipient === username) {
+    console.log('F: ', friendUsername);
+    console.log('OF: ', oldFriends[oldFriends.length-1]);
+    var conversation = document.getElementById(`last_message_${friendUsername}`)
+    // else if (data['message'].content) {
+      if (data['message'].content.length < 11) {
+        conversation.textContent = data['message'].content
+      }
+      else if (data['message'].content) {
+        conversation.textContent = data['message'].content.slice(0, 10) + "....." 
+      }
+    // }
+  }
   if (data['message'].sender === username) {
     content1.querySelector('.floating').innerHTML = ''; 
   }
@@ -1040,6 +1053,10 @@ else if (data['command'] === 'new_file') {
   if (data['message'].sender === username) {
     floatingClass.innerHTML = ''; 
   }
+      if (data['message'].sender === username || data['message'].recipient === username) {
+        var conversation = document.getElementById(`last_message_${friendUsername}`)
+        conversation.textContent = 'File 📁'
+      }
   
       if (data['message'].sender === username) {
         senderMessages(data['message']);
@@ -1196,6 +1213,7 @@ else if (data['command'] === 'new_file') {
         var pTag = document.createElement('p'); 
         pTag.textContent = data.content;
         pTag.style.padding = '15px 30px'
+        pTag.style.wordWrap = 'break-word'
         msgListTag.appendChild(pTag);
         pTag.appendChild(svgElement);
       }
@@ -1273,6 +1291,7 @@ else if (data['command'] === 'new_file') {
         var pTag = document.createElement('p'); 
         pTag.textContent = data.content;
         pTag.style.padding = '15px 30px'
+        pTag.style.wordWrap = 'break-word'
         msgListTag.appendChild(pTag);
         pTag.appendChild(svgElement);
       }

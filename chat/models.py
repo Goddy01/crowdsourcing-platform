@@ -36,6 +36,7 @@ class Chat(models.Model):
     
     def last_10_messages():
         return Chat.objects.order_by('timestamp').all()[:10]
+    
 
 class TagChat(models.Model):
     message_tagged = models.ForeignKey(Chat, on_delete=models.CASCADE, null=True, blank=True, related_name='message_tagged')
