@@ -32,10 +32,18 @@ class Chat(models.Model):
     objects = ChatManager()
 
     def __str__(self):
-        return self.sender.username
+        return f'{self.sender.username} -- {self.recipient.username}'
     
     def last_10_messages():
         return Chat.objects.order_by('timestamp').all()[:10]
+
+class TagChat(models.Model):
+    message_tagged = models.ForeignKey(Chat, on_delete=models.CASCADE, null=True, blank=True, related_name='message_tagged')
+    timestamp = models.DateTimeField(auto_now_add=True)
+    sender = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='t_chat_sender')
+    recipient = models.ForeignKey(BaseUser, on_delete=models.CASCADE, null=True, related_name='t_chat_recipient')
+    content = models.TextField()
+    file_content = models.FileField(upload_to=upload_in_chat_files, null=True, blank=True)
     
 class Group(models.Model):
     name = models.CharField(max_length=128, unique=True, null=False, blank=False)
