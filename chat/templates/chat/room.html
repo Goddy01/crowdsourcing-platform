@@ -606,8 +606,8 @@ a:focus {
 }
 #frame .content .messages {
   height: auto;
-  min-height: calc(100% - 153px);
-  max-height: calc(100% - 153px);
+  min-height: calc(100% - 173px);
+  max-height: calc(100% - 173px);
   overflow-y: scroll;
   overflow-x: hidden;
   width: 100%;
@@ -940,8 +940,9 @@ button:focus {
 <script src="{% static 'chat/js/reconnecting-websocket.js' %}"></script>
 
 
-<script>  
-
+<script>
+  
+  var insertedTaggedMessage
     document.getElementsByClassName('friend-chat-tab')[0].addEventListener('click', function () {
       document.getElementById('content-2').style.display = 'none';
     })
@@ -954,6 +955,13 @@ button:focus {
   var sendFileUrl = "{% url 'chat:send_file_msg' sender=0 recipient=1 %}".replace('0', username);
 
   function handleFriendClick() {
+    
+    if (insertedTaggedMessage) {
+      console.log('DONE');
+      insertedTaggedMessage.parentNode.removeChild(insertedTaggedMessage); 
+      insertedTaggedMessage = '';
+    }
+
     if (oldSockets.length > 0) {
       var previousSocket = oldSockets[oldSockets.length-1];
       previousSocket.close()
@@ -961,6 +969,7 @@ button:focus {
 
     var friendsChatSocket = new ReconnectingWebSocket(
     'ws://' + window.location.host + '/ws/chat/friends/');
+    friendsChatSocket.debug = false;
     oldSockets.push(friendsChatSocket)
 
     var friendUsername = $(this).data('friend-username');
@@ -1286,6 +1295,19 @@ else if (data['command'] === 'new_file') {
         // Append dropdown item to the dropdown menu
         dropdownMenu.appendChild(dropdownItem);
 
+        // dropdownMenu.onclick = tagMessage(data)
+
+        dropdownMenu.addEventListener('click', function() { 
+          if (data['content'].length > 15) {
+            tagMessageAndFocus(data['content'].slice(0, 14) + '....')
+          }
+
+          else if (data['content'].length <= 15) {
+            tagMessageAndFocus(data['content'])
+          }
+          
+        })
+
         // Append dropdown toggle and menu to the dropdown wrapper
         dropdownWrapper.appendChild(svgElement);
         dropdownWrapper.appendChild(dropdownMenu);
@@ -1340,6 +1362,10 @@ else if (data['command'] === 'new_file') {
 
         // Append dropdown item to the dropdown menu
         dropdownMenu.appendChild(dropdownItem);
+
+        dropdownMenu.addEventListener('click', function() { 
+          tagMessageAndFocus('File 📁')
+        })
 
         // Append dropdown toggle and menu to the dropdown wrapper
         dropdownWrapper.appendChild(svgElement);
@@ -1430,6 +1456,17 @@ else if (data['command'] === 'new_file') {
         dropdownMenu.style.minWidth = '80px'
         dropdownMenu.setAttribute('aria-labelledby', 'dropdownMenuButton');
 
+        dropdownMenu.addEventListener('click', function() { 
+          if (data['content'].length > 15) {
+            tagMessageAndFocus(data['content'].slice(0, 14) + '....')
+          }
+
+          else if (data['content'].length <= 15) {
+            tagMessageAndFocus(data['content'])
+          }
+          
+        })
+
         // Create dropdown item (you can customize this as needed)
         var dropdownItem = document.createElement('a');
         dropdownItem.className = 'dropdown-item';
@@ -1483,6 +1520,10 @@ else if (data['command'] === 'new_file') {
         dropdownMenu.className = 'dropdown-menu';
         dropdownMenu.style.minWidth = '80px'
         dropdownMenu.setAttribute('aria-labelledby', 'dropdownMenuButton');
+
+        dropdownMenu.addEventListener('click', function() { 
+          tagMessageAndFocus('File 📁')
+        })
 
         // Create dropdown item (you can customize this as needed)
         var dropdownItem = document.createElement('a');
@@ -1645,6 +1686,31 @@ else if (data['command'] === 'new_file') {
         }
 
     }
+    function tagMessageAndFocus(message) {
+      
+            if (insertedTaggedMessage) {
+                insertedTaggedMessage.parentNode.removeChild(insertedTaggedMessage);
+              }
+
+            // Create a new div for the tagged message
+            var taggedMessageDiv = document.createElement('div');
+            taggedMessageDiv.textContent = 'Tagged message: ' + message;
+            taggedMessageDiv.style.backgroundColor = '#eee';
+            taggedMessageDiv.style.padding = '10px';
+            taggedMessageDiv.style.marginBottom = '10px';
+            taggedMessageDiv.style.fontSize = '20px'
+
+            // Get the reference to the message input field
+            var messageInput = document.getElementById('chat-message-input1');
+
+            // Insert the tagged message above the input field
+            messageInput.parentNode.insertBefore(taggedMessageDiv, messageInput);
+            
+            insertedTaggedMessage = taggedMessageDiv;
+
+            // Focus on the message input field to bring up the keyboard
+            messageInput.focus();
+        }
     function tagMessage(parentMessage) {
       friendsChatSocket.send(
       JSON.stringify(

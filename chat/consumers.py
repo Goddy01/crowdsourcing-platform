@@ -2,7 +2,7 @@ import json
 from django.db.models import Q
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import AsyncWebsocketConsumer, WebsocketConsumer, SyncConsumer
-from .models import Chat, GroupChat, Group
+from .models import Chat, GroupChat, Group, TagChat
 from accounts.models import BaseUser
 from .views import get_messages
 from django.shortcuts import get_object_or_404
@@ -53,6 +53,16 @@ class ChatConsumer(WebsocketConsumer):
         return self.send_chat_message(content)
     
     def tag_message(self, data):
+        sender = data['sender']
+        recipient = data['recipient']
+        parent_message = data['parent_message']
+
+        message = TagChat.objects.create(
+            message_tagged = parent_message,
+            sender = sender,
+            recipient = recipient,
+            content = data['']
+        )
         return self.send_chat_message(content)
     
     def messages_to_json(self, messages):
