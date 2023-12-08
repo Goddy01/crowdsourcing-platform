@@ -956,7 +956,8 @@ button:focus {
   var sendFileUrl = "{% url 'chat:send_file_msg' sender=0 recipient=1 %}".replace('0', username);
 
   function handleFriendClick() {
-    document.getElementById('message_type').value = 'normal';
+    var messageType = document.getElementById('message_type')
+    messageType.value = 'normal';
     
     if (insertedTaggedMessage) {
       insertedTaggedMessage.parentNode.removeChild(insertedTaggedMessage); 
@@ -1072,15 +1073,15 @@ if (data['command'] === 'messages') {
   };
 } 
 else if (data['command'] === 'new_message') {
-  if (data['message'].sender === username || data['message'].recipient === username) {
+  if (data['message'].sender === username || data['message'].sender === friendUsername) {
     var conversation = document.getElementById(`last_message_${friendUsername}`)
     // else if (data['message'].content) {
-      if (data['message'].content.length < 21) {
+        if (data['message'].content.length < 21) {
         conversation.textContent = data['message'].content
-      }
-      else if (data['message'].content) {
-        conversation.textContent = data['message'].content.slice(0, 20) + "....." 
-      }
+        }
+        else if (data['message'].content) {
+          conversation.textContent = data['message'].content.slice(0, 20) + "....." 
+        }
     // }
   }
   if (data['message'].sender === username) {
@@ -1109,7 +1110,7 @@ else if (data['command'] === 'new_file') {
   if (data['message'].sender === username) {
     floatingClass.innerHTML = ''; 
   }
-      if (data['message'].sender === username || data['message'].recipient === username) {
+      if (data['message'].sender === username || data['message'].sender === friendUsername) {
         var conversation = document.getElementById(`last_message_${friendUsername}`)
         conversation.textContent = 'File 📁'
       }
@@ -1131,8 +1132,8 @@ else if (data['command'] === 'new_file') {
 }
 };
     function sendMessage() {
-      if (document.getElementById('message_type') === 'normal') {
-        console.log(normal);
+      if (messageType.value === 'normal') {
+        console.log('normal');
         var messageInputDom = document.querySelector('#chat-message-input1');
         var message = messageInputDom.value;
         friendsChatSocket.send(JSON.stringify({
@@ -1144,7 +1145,7 @@ else if (data['command'] === 'new_file') {
       messageInputDom.value = '';
       }
 
-      else if (document.getElementById('message_type') === 'tagged') {
+      else if (messageType.value === 'tagged') {
         console.log('tagged');
         var messageInputDom = document.querySelector('#chat-message-input1');
         var message = messageInputDom.value;
@@ -1718,7 +1719,7 @@ else if (data['command'] === 'new_file') {
             taggedMessageDiv.style.padding = '10px';
             taggedMessageDiv.style.marginBottom = '10px';
             taggedMessageDiv.style.fontSize = '20px'
-            messageType = document.getElementById('message_type')
+            // var messageType = document.getElementById('message_type')
             messageType.value = 'tagged';
 
             // Create a close button
@@ -1732,6 +1733,7 @@ else if (data['command'] === 'new_file') {
                 // Remove the tagged message when the close button is clicked
                 taggedMessageDiv.parentNode.removeChild(taggedMessageDiv);
                 insertedTaggedMessage = null; // Reset the reference
+                messageType.value = 'normal';
             });
 
             // Append the close button to the tagged message
