@@ -1234,7 +1234,7 @@ else if (data['command'] === 'new_file') {
       svgElement.setAttribute("height", "50");
       svgElement.setAttribute("width", "12");
       svgElement.style.float = 'right'
-      svgElement.setAttribute('transform','translate(22,90)');
+      svgElement.setAttribute('transform','translate(22,65)');
       svgElement.setAttribute("viewBox", "0 0 448 512");
 
       var pathElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -1259,8 +1259,44 @@ else if (data['command'] === 'new_file') {
         pTag.textContent = data.content;
         pTag.style.padding = '15px 30px'
         pTag.style.wordWrap = 'break-word'
+
+        var dropdownWrapper = document.createElement('div');
+        dropdownWrapper.className = 'dropdown';
+
+        // svgElement.setAttribute('class', 'btn btn-secondary dropdown-toggle');
+        svgElement.setAttribute('type', 'button');
+        svgElement.setAttribute('id', 'dropdownMenuButton');
+        svgElement.setAttribute('data-toggle', 'dropdown');
+        svgElement.setAttribute('aria-haspopup', 'true');
+        svgElement.setAttribute('aria-expanded', 'false');
+
+
+        // Create the dropdown menu
+        var dropdownMenu = document.createElement('div');
+        dropdownMenu.className = 'dropdown-menu';
+        dropdownMenu.setAttribute('aria-labelledby', 'dropdownMenuButton');
+
+        // Create dropdown item (you can customize this as needed)
+        var dropdownItem = document.createElement('a');
+        dropdownItem.className = 'dropdown-item';
+        dropdownItem.href = '#';
+        dropdownItem.textContent = 'Tag';
+        dropdownItem.style.width = '40px';
+
+        // Append dropdown item to the dropdown menu
+        dropdownMenu.appendChild(dropdownItem);
+
+        // Append dropdown toggle and menu to the dropdown wrapper
+        dropdownWrapper.appendChild(svgElement);
+        dropdownWrapper.appendChild(dropdownMenu);
+
+        // Append the Bootstrap dropdown wrapper to the message
+        // msgListTag.appendChild(dropdownWrapper);
+
         msgListTag.appendChild(pTag);
-        pTag.appendChild(svgElement);
+        pTag.appendChild(dropdownWrapper);
+
+        
       }
       if (data['file_content'] !== null) {
         var pTag = document.createElement('button');
@@ -1270,28 +1306,61 @@ else if (data['command'] === 'new_file') {
         hrefLink.style.textDecoration = 'none'
         pTag.appendChild(hrefLink)
         pTag.style.padding = '10px 30px'
-      pTag.style.backgroundColor = 'white'
-      pTag.style.float = 'right'
-      pTag.style.borderRadius = '10px'
-      pTag.style.border = '0px';
-      pTag.style.marginBottom = '10px';
-      pTag.style.fontSize = '20px'
-      pTag.appendChild(svgElement);
+        pTag.style.backgroundColor = 'white'
+        pTag.style.float = 'right'
+        pTag.style.borderRadius = '10px'
+        pTag.style.border = '0px';
+        pTag.style.marginBottom = '10px';
+        pTag.style.fontSize = '20px'
 
-      msgListTag.appendChild(pTag);
+        var dropdownWrapper = document.createElement('div');
+        dropdownWrapper.className = 'dropdown';
+
+        // svgElement.setAttribute('class', 'btn btn-secondary dropdown-toggle');
+        svgElement.setAttribute('type', 'button');
+        svgElement.setAttribute('id', 'dropdownMenuButton');
+        svgElement.setAttribute('data-toggle', 'dropdown');
+        svgElement.setAttribute('aria-haspopup', 'true');
+        svgElement.setAttribute('aria-expanded', 'false');
+
+
+        // Create the dropdown menu
+        var dropdownMenu = document.createElement('div');
+        dropdownMenu.className = 'dropdown-menu';
+        dropdownMenu.setAttribute('aria-labelledby', 'dropdownMenuButton');
+
+        // Create dropdown item (you can customize this as needed)
+        var dropdownItem = document.createElement('a');
+        dropdownItem.className = 'dropdown-item';
+        dropdownItem.href = '#';
+        dropdownItem.textContent = 'Tag';
+        dropdownItem.style.width = '40px';
+
+        // Append dropdown item to the dropdown menu
+        dropdownMenu.appendChild(dropdownItem);
+
+        // Append dropdown toggle and menu to the dropdown wrapper
+        dropdownWrapper.appendChild(svgElement);
+        dropdownWrapper.appendChild(dropdownMenu);
+
+        // Append the Bootstrap dropdown wrapper to the message
+        // msgListTag.appendChild(dropdownWrapper);
+
+        msgListTag.appendChild(pTag);
+        pTag.appendChild(dropdownWrapper);
+        }
+        if ( data['recipient'] === friendUsername) {
+        chatLog.appendChild(msgListTag); 
+        }
+
+          chatLog.appendChild(time)
+
+        msgListTag.style.padding = '10px';
+
+        svgElement.onclick = function(e) {
+          
+        }
       }
-      if ( data['recipient'] === friendUsername) {
-      chatLog.appendChild(msgListTag); 
-      }
-
-        chatLog.appendChild(time)
-
-      msgListTag.style.padding = '10px';
-
-      svgElement.onclick = function(e) {
-        
-      }
-    }
     
 
     function receivedMessage(data) {
@@ -1386,16 +1455,16 @@ else if (data['command'] === 'new_file') {
         hrefLink.style.textDecoration = 'none'
         hrefLink.style.color = 'white'
         pTag.appendChild(hrefLink)
-      pTag.style.backgroundColor = '#435F7A'
-      pTag.style.padding = '10px 30px'
-      pTag.style.borderRadius = '10px'
-      pTag.style.border = '0px';
-      pTag.style.marginBottom = '10px';
-      pTag.style.fontSize = '20px'
-      // pTag.appendChild(svgElement);
-      // svgElement.setAttribute('transform','translate(-22,88)');
-      // msgListTag.appendChild(pTag);
-      var dropdownWrapper = document.createElement('div');
+        pTag.style.backgroundColor = '#435F7A'
+        pTag.style.padding = '10px 30px'
+        pTag.style.borderRadius = '10px'
+        pTag.style.border = '0px';
+        pTag.style.marginBottom = '10px';
+        pTag.style.fontSize = '20px'
+        // pTag.appendChild(svgElement);
+        // svgElement.setAttribute('transform','translate(-22,88)');
+        // msgListTag.appendChild(pTag);
+        var dropdownWrapper = document.createElement('div');
         dropdownWrapper.className = 'dropdown';
 
         // svgElement.setAttribute('class', 'btn btn-secondary dropdown-toggle');
