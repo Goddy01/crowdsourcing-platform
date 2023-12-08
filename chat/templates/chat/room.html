@@ -902,6 +902,7 @@ button:focus {
       <div class="message-input" style="display: none;">
         <input type="file" name="file-message" id="file-msg1" hidden>
         <div class="wrap">
+        <input type="text" hidden value="normal" id="message_type">
         <input id="chat-message-input1" type="text" placeholder="Write your message..." />
         <i class="fa fa-paperclip attachment" id="clip-1" aria-hidden="true"></i>
         <button id="chat-message-submit1" class="submit">
@@ -955,9 +956,9 @@ button:focus {
   var sendFileUrl = "{% url 'chat:send_file_msg' sender=0 recipient=1 %}".replace('0', username);
 
   function handleFriendClick() {
+    document.getElementById('message_type').value = 'normal';
     
     if (insertedTaggedMessage) {
-      console.log('DONE');
       insertedTaggedMessage.parentNode.removeChild(insertedTaggedMessage); 
       insertedTaggedMessage = '';
     }
@@ -1129,6 +1130,33 @@ else if (data['command'] === 'new_file') {
     
 }
 };
+    function sendMessage() {
+      if (document.getElementById('message_type') === 'normal') {
+        console.log(normal);
+        var messageInputDom = document.querySelector('#chat-message-input1');
+        var message = messageInputDom.value;
+        friendsChatSocket.send(JSON.stringify({
+        'command': 'new_message',
+        'message': message,
+        'from': username,
+        'to': friendUsername
+      }));
+      messageInputDom.value = '';
+      }
+
+      else if (document.getElementById('message_type') === 'tagged') {
+        console.log('tagged');
+        var messageInputDom = document.querySelector('#chat-message-input1');
+        var message = messageInputDom.value;
+        friendsChatSocket.send(JSON.stringify({
+          'command': 'tag_message',
+          'sender': username,
+          'recipient': friendUsername,
+          'parentMessage': parentMessage
+        }));
+      }
+      
+    }
 
 
     friendsChatSocket.onclose = function(e) {
@@ -1142,15 +1170,7 @@ else if (data['command'] === 'new_file') {
     };
 
     document.querySelector('#chat-message-submit1').onclick = function(e) {
-      var messageInputDom = document.querySelector('#chat-message-input1');
-      var message = messageInputDom.value;
-      friendsChatSocket.send(JSON.stringify({
-        'command': 'new_message',
-        'message': message,
-        'from': username,
-        'to': friendUsername
-      }));
-      messageInputDom.value = '';
+      sendMessage()
     };
 
     
@@ -1619,14 +1639,13 @@ else if (data['command'] === 'new_file') {
             msgListTag.appendChild(pTag);
             msgListTag.className = 'sent';
             if (username === response.message_recipient) {
-              console.log('RECIEVE');
               chatLog.appendChild(msgListTag); 
               chatLog.appendChild(time2)
               
             }
-            else if (username === response.message_sender){
-              console.log('DIDNT RECEIVE NUN');
-            }
+            // else if (username === response.message_sender){
+            //   console.log('DIDNT RECEIVE NUN');
+            // }
             msgListTag.style.padding = '10px';
     }
 
@@ -1699,6 +1718,24 @@ else if (data['command'] === 'new_file') {
             taggedMessageDiv.style.padding = '10px';
             taggedMessageDiv.style.marginBottom = '10px';
             taggedMessageDiv.style.fontSize = '20px'
+            messageType = document.getElementById('message_type')
+            messageType.value = 'tagged';
+
+            // Create a close button
+            var closeButton = document.createElement('button');
+            closeButton.textContent = 'x';
+            closeButton.style.backgroundColor = '#EEEEEE';
+            closeButton.style.color = '#435F7A'
+            closeButton.style.marginTop = '-10px'
+            closeButton.className = 'close-button';
+            closeButton.addEventListener('click', function() {
+                // Remove the tagged message when the close button is clicked
+                taggedMessageDiv.parentNode.removeChild(taggedMessageDiv);
+                insertedTaggedMessage = null; // Reset the reference
+            });
+
+            // Append the close button to the tagged message
+            taggedMessageDiv.appendChild(closeButton);
 
             // Get the reference to the message input field
             var messageInput = document.getElementById('chat-message-input1');
@@ -1710,6 +1747,7 @@ else if (data['command'] === 'new_file') {
 
             // Focus on the message input field to bring up the keyboard
             messageInput.focus();
+
         }
     function tagMessage(parentMessage) {
       friendsChatSocket.send(
