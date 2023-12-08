@@ -1645,6 +1645,18 @@ else if (data['command'] === 'new_file') {
         }
 
     }
+    function tagMessage(parentMessage) {
+      friendsChatSocket.send(
+      JSON.stringify(
+        {
+          'command': 'tag_message',
+          'sender': username,
+          'recipient': friendUsername,
+          'parentMessage': parentMessage
+        }
+      )
+    )
+    }
   };
   $('.friend-conversation').click(handleFriendClick);
 </script>

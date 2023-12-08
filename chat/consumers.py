@@ -51,7 +51,10 @@ class ChatConsumer(WebsocketConsumer):
             'message': self.message_to_json(message)
         }
         return self.send_chat_message(content)
-
+    
+    def tag_message(self, data):
+        return self.send_chat_message(content)
+    
     def messages_to_json(self, messages):
         result = []
         for message in messages:
@@ -81,7 +84,8 @@ class ChatConsumer(WebsocketConsumer):
     commands = {
         'fetch_messages': fetch_messages,
         'new_message': new_message,
-        'new_file': new_file_message
+        'new_file': new_file_message,
+        'tag_message': tag_message
     }
     def connect(self):
         print('6')
