@@ -22,20 +22,17 @@ def room(request, room_name=None):
         Q(user1=user) | Q(user2=user)
     )
     conversations = []
-    last_convos = []
 
-    for friend in friends_list:
-        if friend.user1 == user:
-            conversations.append(friend.user2)
-            last_convos.append({f'{friend.user2.user.username}': friend.last_chat_with_conn})
-        else:
-            conversations.append(friend.user1)
-            last_convos.append({f'{friend.user1.user.username}': friend.last_chat_with_conn})
+    # for friend in friends_list:
+    #     if friend.user1 == user:
+    #         conversations.append(friend.user2)
+    #     else:
+    #         conversations.append(friend.user1)
     return render(request, 'chat/room.html', {
         'username': request.user.username,
         'room_name_json': room_name,
         'friends': conversations,
-        'last_convos': last_convos,
+        'friends_list': friends_list,
         'groups': Group.objects.filter(members=user.user.pk),
         'groups2': serialize('json', queryset=Group.objects.filter(members=user.user.pk)),
         'user':user

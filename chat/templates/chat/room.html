@@ -803,21 +803,49 @@ button:focus {
         <div class="tab-content">
           <div class="tab-pane" id="tabContent1">
             <ul class="mt-2">
-              {% for friend in friends %}
-              <li class="contact friend-conversation" data-friend-i="{{ friend.user.instagram }}" data-friend-t="{{ friend.user.twitter }}" data-friend-f="{{ friend.user.facebook }}" data-friend-l="{{ friend.user.linkedin }}" data-friend-user-fullname="{{ friend.user.get_full_name }}" data-friend-user="{{ friend.user.pfp.url }}" data-friend-username="{{ friend.user.username }}" id="contact-{{ friend.user.username }}">
+              {% for friend in friends_list %}
+
+              {% if friend.user2 == user %}
+              <li class="contact friend-conversation" data-friend-i="{{ friend.user1.user.instagram }}" data-friend-t="{{ friend.user1.user.twitter }}" data-friend-f="{{ friend.user1.user.facebook }}" data-friend-l="{{ friend.user1.user.linkedin }}" data-friend-user-fullname="{{ friend.user1.user.get_full_name }}" data-friend-user="{{ friend.user1.user.pfp.url }}" data-friend-username="{{ friend.user1.user.username }}" id="contact-{{ friend.user1.user.username }}">
                 <div class="wrap">
-                  <img src="{{ friend.user.pfp.url }}" alt="" style="border-radius: 50%;width: 60px;height: 60px;"/>
+                  <img src="{{ friend.user1.user.pfp.url }}" alt="" style="border-radius: 50%;width: 60px;height: 60px;"/>
                   <div class="meta">
-                    <p class="name">{{ friend.user.get_full_name }}</p>
-                    <p class="last_message" style="font-style: italic;" id="last_message_{{ friend.user.username }}">
-                      {% for friend_convo in last_convos %}
-                      {%  %}
-                      {{ last_convos.friend }}
+                    <p class="name">{{ friend.user1.user.get_full_name }}</p>
+                    <p class="last_message" style="font-style: italic;" id="last_message_{{ friend.user1.user.username }}">
+                      {% if friend.last_chat_with_conn.content %}
+                      {% if friend.last_chat_with_conn.content|length > 20 %}
+                      {{ friend.last_chat_with_conn.content|slice:":20" }}.....
+                      {% else %}
+                      {{ friend.last_chat_with_conn.content }}
+                      {% endif %}
+                      {% else %}
+                      File 📁
                       {% endif %}
                     </p>
                   </div>
                 </div>
               </li>
+              {% elif friend.user1 == user %}
+              <li class="contact friend-conversation" data-friend-i="{{ friend.user2.user.instagram }}" data-friend-t="{{ friend.user2.user.twitter }}" data-friend-f="{{ friend.user2.user.facebook }}" data-friend-l="{{ friend.user2.user.linkedin }}" data-friend-user-fullname="{{ friend.user2.user.get_full_name }}" data-friend-user="{{ friend.user2.user.pfp.url }}" data-friend-username="{{ friend.user2.user.username }}" id="contact-{{ friend.user2.user.username }}">
+                <div class="wrap">
+                  <img src="{{ friend.user2.user.pfp.url }}" alt="" style="border-radius: 50%;width: 60px;height: 60px;"/>
+                  <div class="meta">
+                    <p class="name">{{ friend.user2.user.get_full_name }}</p>
+                    <p class="last_message" style="font-style: italic;" id="last_message_{{ friend.user2.user.username }}">
+                      {% if friend.last_chat_with_conn.content %}
+                      {% if friend.last_chat_with_conn.content|length > 20 %}
+                      {{ friend.last_chat_with_conn.content|slice:":20" }}.....
+                      {% else %}
+                      {{ friend.last_chat_with_conn.content }}
+                      {% endif %}
+                      {% else %}
+                      File 📁
+                      {% endif %}
+                    </p>
+                  </div>
+                </div>
+              </li>
+              {% endif %}
               {% endfor %}
             </ul>
           </div>
@@ -912,7 +940,7 @@ button:focus {
 <script src="{% static 'chat/js/reconnecting-websocket.js' %}"></script>
 
 
-<script>
+<script>  
 
     document.getElementsByClassName('friend-chat-tab')[0].addEventListener('click', function () {
       document.getElementById('content-2').style.display = 'none';
@@ -1012,11 +1040,11 @@ if (data['command'] === 'messages') {
   for (let i = 0; i < data['messages'].length; i++) {
     if (data['messages'][i].sender === username || data['messages'][i].recipient === username) {
       if (data['messages'][data['messages'].length-1].content) {
-        if (data['messages'][data['messages'].length-1].content.length < 11) {
+        if (data['messages'][data['messages'].length-1].content.length < 21) {
         conversation.textContent = data['messages'][data['messages'].length-1].content
       }
       else {
-        conversation.textContent = data['messages'][data['messages'].length-1].content.slice(0, 10) + "....." 
+        conversation.textContent = data['messages'][data['messages'].length-1].content.slice(0, 20) + "....." 
       }
       }
       else if (!data['messages'][data['messages'].length-1].content) {
@@ -1037,11 +1065,11 @@ else if (data['command'] === 'new_message') {
   if (data['message'].sender === username || data['message'].recipient === username) {
     var conversation = document.getElementById(`last_message_${friendUsername}`)
     // else if (data['message'].content) {
-      if (data['message'].content.length < 11) {
+      if (data['message'].content.length < 21) {
         conversation.textContent = data['message'].content
       }
       else if (data['message'].content) {
-        conversation.textContent = data['message'].content.slice(0, 10) + "....." 
+        conversation.textContent = data['message'].content.slice(0, 20) + "....." 
       }
     // }
   }
@@ -1168,7 +1196,6 @@ else if (data['command'] === 'new_file') {
         }
         
       })
-      console.log('bro');
     }
 
     function fetchMessages(friendUsername) {
@@ -1420,7 +1447,7 @@ else if (data['command'] === 'new_file') {
         var button = document.createElement('button');
         button.className = 'new-msg-btn button button-primary badge-pill';
         button.style.padding = '0px 20px';
-        button.style.height = '50px';
+        button.style.height = '70px';
         button.style.width = '250px';
         button.style.fontFamily = "";
         button.id = `msg_${msgID}_notif`

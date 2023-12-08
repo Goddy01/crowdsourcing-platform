@@ -235,5 +235,5 @@ class Connection(models.Model):
     
     @property
     def last_chat_with_conn(self):
-        chats = apps.get_model('chat.Chat').objects.filter(sender=self.user1.user, recipient=self.user2.user).order_by('timestamp') | apps.get_model('chat.Chat').objects.filter(sender=self.user2.user, recipient=self.user1.user).order_by('timestamp')
+        chats = apps.get_model('chat.Chat').objects.filter(sender=self.user1.user, recipient=self.user2.user).order_by('timestamp') | apps.get_model('chat.Chat').objects.filter(sender=self.user2.user, recipient=self.user1.user).order_by('-timestamp')
         return chats.first()
