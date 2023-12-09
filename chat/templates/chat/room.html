@@ -813,13 +813,17 @@ button:focus {
                     <p class="name">{{ friend.user1.user.get_full_name }}</p>
                     <p class="last_message" style="font-style: italic;" id="last_message_{{ friend.user1.user.username }}">
                       {% if friend.last_chat_with_conn.content %}
+                      
                       {% if friend.last_chat_with_conn.content|length > 20 %}
                       {{ friend.last_chat_with_conn.content|slice:":20" }}.....
                       {% else %}
                       {{ friend.last_chat_with_conn.content }}
                       {% endif %}
-                      {% else %}
+
+                      {% elif friend.last_chat_with_conn.file_content %}
                       File 📁
+                      {% else %}
+                      <p class="text-info">Send a message</p>
                       {% endif %}
                     </p>
                   </div>
@@ -833,13 +837,17 @@ button:focus {
                     <p class="name">{{ friend.user2.user.get_full_name }}</p>
                     <p class="last_message" style="font-style: italic;" id="last_message_{{ friend.user2.user.username }}">
                       {% if friend.last_chat_with_conn.content %}
+                      
                       {% if friend.last_chat_with_conn.content|length > 20 %}
                       {{ friend.last_chat_with_conn.content|slice:":20" }}.....
                       {% else %}
                       {{ friend.last_chat_with_conn.content }}
                       {% endif %}
-                      {% else %}
+
+                      {% elif friend.last_chat_with_conn.file_content %}
                       File 📁
+                      {% else %}
+                      <p class="text-info">Send a message</p>
                       {% endif %}
                     </p>
                   </div>
@@ -1066,13 +1074,26 @@ if (data['command'] === 'messages') {
         conversation.textContent = 'File 📁'
       }
     }
-    
+
+    if (data['messages'][i].message_tagged === null) {
       if (data['messages'][i].sender === username) {
         senderMessages(data['messages'][i])
       }
       else if (data['messages'][i].recipient === username) {
         receivedMessage(data['messages'][i])
       }
+    } else if (data['messages'][i].message_tagged !== null) {
+      if (data['messages'][i].sender === username) {
+        senderTaggedMessages(data['messages'][i])
+      }
+      else if (data['messages'][i].recipient === username) {
+        receivedTaggedMessages(data['messages'][i])
+      }
+    } {
+      
+    }
+    
+      
   };
 } 
 else if (data['command'] === 'new_message') {
@@ -1954,6 +1975,32 @@ else if (data['command'] === 'new_file_tagged') {
       msgListTag.style.position = 'relative'
       var imgTag = document.createElement('img');
       
+      if (data['tagged_content']) {
+        var tagBox = document.createElement('div');
+        tagBox.textContent = data['tagged_content']
+        tagBox.style.padding = '10px 30px'
+        tagBox.style.float = 'left'
+        tagBox.style.border = 'none';
+        tagBox.style.marginBottom = '10px';
+        tagBox.style.fontSize = '20px'
+        msgListTag.appendChild(tagBox)
+      }
+
+      else if (data['tagged_file_content'] !== null) {
+        console.log('FILE yo');
+        var tagBox = document.createElement('a');
+        tagBox.className = 'tag-box';
+        tagBox.href = data['tagged_file_content']
+        tagBox.textContent = 'File 📁'
+        tagBox.style.padding = '10px 30px'
+        tagBox.style.float = 'left'
+        tagBox.style.border = 'none';
+        tagBox.style.marginBottom = '10px';
+        tagBox.style.fontSize = '20px'
+        msgListTag.appendChild(tagBox)
+      }
+
+
       var time2 = document.createElement('p');
       time2.style.padding = '0px 10px'
       time2.textContent = new Date(data['timestamp']).toLocaleString()
