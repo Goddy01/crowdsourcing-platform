@@ -1,4 +1,5 @@
 from django.db import models
+import uuid
 from accounts.models import BaseUser, Innovator
 from core.models import Project
 # Create your models here.
@@ -20,6 +21,7 @@ class ChatManager(models.Manager):
         return qs
 
 class Chat(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     message_tagged = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='reply_to')
     timestamp = models.DateTimeField(auto_now_add=True)
     sender = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='chat_sender')
