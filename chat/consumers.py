@@ -56,12 +56,13 @@ class ChatConsumer(WebsocketConsumer):
         sender = data['sender']
         recipient = data['recipient']
         parent_message = data['parentMessage']
-
+        message = data['message']
+        message_tagged = get_object_or_404(Chat, pk=parent_message['pk'])
         message = TagChat.objects.create(
-            message_tagged = parent_message,
+            message_tagged = message_tagged,
             sender = sender,
             recipient = recipient,
-            content = parent_message
+            content = message
         )
         content = {
             'command': 'tag_message',

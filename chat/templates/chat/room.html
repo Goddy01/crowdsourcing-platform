@@ -951,14 +951,14 @@ button:focus {
   oldFriends = [];
   oldSockets = [];
 
-  var fileMsg = document.querySelector('#file-msg1')
-  var fileIcon = document.querySelector('#clip-1')
-  var sendFileUrl = "{% url 'chat:send_file_msg' sender=0 recipient=1 %}".replace('0', username);
 
   function handleFriendClick() {
     var messageType = document.getElementById('message_type')
     messageType.value = 'normal';
+
     var parentMessageContent;
+
+    document.getElementById('chat-message-input1').value = '';
     
     if (insertedTaggedMessage) {
       insertedTaggedMessage.parentNode.removeChild(insertedTaggedMessage); 
@@ -1201,6 +1201,15 @@ else if (data['command'] === 'new_file') {
 
     fileMsg.onchange = function(e) {
       e.preventDefault()
+
+      var fileMsg = document.querySelector('#file-msg1')
+      var fileIcon = document.querySelector('#clip-1')
+      if (messageType.value === 'normal') {
+        var sendFileUrl = "{% url 'chat:send_file_msg' sender=0 recipient=1 %}".replace('0', username); 
+      }
+      else if (messageType.value === 'tagged') {
+        var sendFileUrl = "{% url 'chat:send_file_msg_with_parent' sender=0 recipient=1 parent_message=2 %}".replace('0', username).replace('2', parentMessageContent); 
+      }
       var file = fileMsg.files[0];
       var formData = new FormData();
       formData.append('file', file)
@@ -1767,13 +1776,16 @@ else if (data['command'] === 'new_file') {
 
         }
     function tagMessage(parentMessage) {
+      var messageInputDom = document.querySelector('#chat-message-input1');
+      var message = messageInputDom.value;
       friendsChatSocket.send(
       JSON.stringify(
         {
           'command': 'tag_message',
           'sender': username,
           'recipient': friendUsername,
-          'parentMessage': parentMessage
+          'parentMessage': parentMessage,
+          'message': message
         }
       )
     )

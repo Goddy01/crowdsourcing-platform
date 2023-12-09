@@ -80,11 +80,13 @@ def send_file_message(request, sender, recipient, parent_message=None):
             )
             print('FILE CREATED')
         if parent_message is not None:
+            print('Parent Message: ', parent_message)
+            messages_tagged = get_object_or_404(Chat, pk=parent_message['pk'])
             message  = TagChat.objects.create(
                 sender=sender,
                 recipient=recipient,
                 file_content=file,
-                message_tagged = parent_message
+                message_tagged = messages_tagged
             )
             print('TAGGED FILE CREATED')
     return JsonResponse(data = 
