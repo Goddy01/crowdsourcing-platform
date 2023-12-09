@@ -32,8 +32,8 @@ class Chat(models.Model):
     #     ordering = ('-timestamp', )
     objects = ChatManager()
 
-    def __str__(self):
-        return f'{self.sender.username} -- {self.recipient.username}'
+    # def __str__(self):
+    #     return f'{self.sender.username} -- {self.recipient.username}'
     
     def last_10_messages():
         return Chat.objects.order_by('timestamp').all()[:10]

@@ -1065,11 +1065,13 @@ var data = JSON.parse(e.data);
 
 
 if (data['command'] === 'messages') {
+  
   content1.querySelector('#chat-log').innerHTML = '';
   var conversation = document.getElementById(`last_message_${friendUsername}`)
   for (let i = 0; i < data['messages'].length; i++) {
     if (data['messages'][i].sender === username || data['messages'][i].recipient === username) {
       if (data['messages'][data['messages'].length-1].content) {
+
         if (data['messages'][data['messages'].length-1].content.length < 21) {
         conversation.textContent = data['messages'][data['messages'].length-1].content
       }
@@ -1083,14 +1085,17 @@ if (data['command'] === 'messages') {
       }
     }
     if (typeof data['messages'][i].tagged_pk === 'undefined') {
+      
       if (data['messages'][i].sender === username) {
         senderMessages(data['messages'][i])
       }
       else if (data['messages'][i].recipient === username) {
-        console.log('shite')
         receivedMessage(data['messages'][i])
       }
-    } else if (typeof data['messages'][i].tagged_pk !== 'undefined') {
+      
+    } 
+    if (typeof data['messages'][i].tagged_pk !== 'undefined') {
+      
       if (data['messages'][i].sender === username) {
         senderTaggedMessages(data['messages'][i])
       }
@@ -1098,7 +1103,6 @@ if (data['command'] === 'messages') {
         receivedTaggedMessages(data['messages'][i])
       }
     } 
-    
       
   };
 } 
@@ -1358,7 +1362,7 @@ else if (data['command'] === 'new_file_tagged') {
       
 
       var time = document.createElement('p');
-      time.style.zIndex = '9998'
+      time.style.zIndex = '10000000'
       time.className = 'time';
       time.style.padding = '0 10px'
       time.textContent = new Date(data['timestamp']).toLocaleString()
@@ -1404,7 +1408,8 @@ else if (data['command'] === 'new_file_tagged') {
         pTag.textContent = data.content;
         pTag.style.padding = '15px 30px'
         pTag.style.wordWrap = 'break-word'
-
+        pTag.id = 'original_' + `${data['pk']}`
+        console.log('ORG PK: ', pTag.id);
         var dropdownWrapper = document.createElement('div');
         dropdownWrapper.className = 'dropdown';
 
@@ -1455,6 +1460,8 @@ else if (data['command'] === 'new_file_tagged') {
         hrefLink.style.textDecoration = 'none'
         pTag.appendChild(hrefLink)
         pTag.style.padding = '10px 30px'
+        pTag.id = 'original_' + `${data['pk']}`
+        console.log('ORG PK: ', pTag.id);
         pTag.style.backgroundColor = 'white'
         pTag.style.float = 'right'
         pTag.style.borderRadius = '10px'
@@ -1514,7 +1521,7 @@ else if (data['command'] === 'new_file_tagged') {
       var imgTag = document.createElement('img');
       
       var time2 = document.createElement('p');
-      time2.style.zIndex = '9998'
+      time2.style.zIndex = '10000000'
       time2.className = 'time';
       time2.style.padding = '0px 10px'
       time2.textContent = new Date(data['timestamp']).toLocaleString()
@@ -1554,6 +1561,9 @@ else if (data['command'] === 'new_file_tagged') {
         var pTag = document.createElement('p'); 
         pTag.textContent = data.content;
         pTag.style.padding = '15px 30px'
+        
+        pTag.id = 'original_' + `${data['pk']}`
+        console.log('pTagID: ', pTag.id);
         pTag.style.wordWrap = 'break-word'
         // Create a Bootstrap dropdown wrapper
         var dropdownWrapper = document.createElement('div');
@@ -1615,6 +1625,8 @@ else if (data['command'] === 'new_file_tagged') {
         hrefLink.style.color = 'white'
         pTag.appendChild(hrefLink)
         pTag.style.backgroundColor = '#435F7A'
+        pTag.id = 'original_' + `${data['pk']}`
+        console.log('pTagID: ', pTag.id);
         pTag.style.padding = '10px 30px'
         pTag.style.borderRadius = '10px'
         pTag.style.border = '0px';
@@ -1681,7 +1693,7 @@ else if (data['command'] === 'new_file_tagged') {
 
             if (data['tagged_content']) {
             var tagBox = document.createElement('div');
-            tagBox.id ='tagged_' +  data['tagged_pk']
+            tagBox.id =data['tagged_pk']
             tagBox.textContent = data['tagged_content']
             tagBox.style.padding = '10px 30px'
             tagBox.style.float = 'left'
@@ -1690,7 +1702,8 @@ else if (data['command'] === 'new_file_tagged') {
             tagBox.style.fontSize = '20px'
             msgListTag.appendChild(tagBox)
 
-            tagBoxsage.addEventListener('click', function() {
+            tagBox.addEventListener('click', function() {
+              console.log('NIGGA');
         // Call a function to scroll to the tagged message
               gotoTaggedMessage(tagBox.id);
           });
@@ -1699,9 +1712,9 @@ else if (data['command'] === 'new_file_tagged') {
           else if (data['tagged_file_content'] !== null) {
             console.log('FILE yo');
             var tagBox = document.createElement('a');
-            tagBox.id ='tagged_' +  data['tagged_pk']
+            tagBox.id =data['tagged_pk']
             tagBox.className = 'tag-box';
-            tagBox.href = data['tagged_file_content']
+            // tagBox.href = data['tagged_file_content']
             tagBox.textContent = 'File 📁'
             tagBox.style.padding = '10px 30px'
             tagBox.style.float = 'left'
@@ -1710,7 +1723,8 @@ else if (data['command'] === 'new_file_tagged') {
             tagBox.style.fontSize = '20px'
             msgListTag.appendChild(tagBox)
 
-            tagBoxsage.addEventListener('click', function() {
+            tagBox.addEventListener('click', function() {
+              console.log('NIGGA');
         // Call a function to scroll to the tagged message
               gotoTaggedMessage(tagBox.id);
           });
@@ -1725,7 +1739,7 @@ else if (data['command'] === 'new_file_tagged') {
             pTag.style.borderRadius = '10px'
             pTag.style.marginBottom = '10px';
             var time2 = document.createElement('p');
-            time2.style.zIndex = '9998'
+            time2.style.zIndex = '10000000'
             time2.className = 'time';
             time2.style.padding = '0 10px'
             time2.textContent = new Date(response.timestamp).toLocaleString()
@@ -1792,7 +1806,7 @@ else if (data['command'] === 'new_file_tagged') {
                 var messageElement = messageElements[messageElements.length - 1];
 
                 // Apply the hovering effect immediately
-                messageElement.style.backgroundColor = '#DCDCDC'; // Set your preferred background color
+                messageElement.style.backgroundColor = '#50C878'; // Set your preferred background color
                 messageElement.style.padding = '10px';
                 messageElement.style.borderRadius = '15px';
                 messageElement.style.boxShadow = '0 8px 10px rgba(0, 0, 0, 0.1)';
@@ -1805,6 +1819,14 @@ else if (data['command'] === 'new_file_tagged') {
                     messageElement.style.boxShadow = '';
                     messageElement.style.height = '';
                 }, 5000); // Adjust the time (in milliseconds) as needed
+
+                if (messageElement) {
+          // Scroll to the position of the message element
+                  messageElement.scrollIntoView({
+                      behavior: 'smooth',
+                      block: 'start',
+                  });
+              }
             }
         };
 
@@ -1814,8 +1836,6 @@ else if (data['command'] === 'new_file_tagged') {
     }
 
     function senderTaggedMessages(data) {
-      console.log('stagged F: ', data['tagged_file_content']);
-      console.log('stagged C: ', data['tagged_content']);
       var sender = data['sender'];
       var msgListTag = document.createElement('li');
       msgListTag.style.position = 'relative'
@@ -1825,7 +1845,7 @@ else if (data['command'] === 'new_file_tagged') {
       
       if (data['tagged_content']) {
         var tagBox = document.createElement('div');
-        tagBox.id ='tagged_' +  data['tagged_pk']
+        tagBox.id = 'trigger_' + `${data['tagged_pk']}`
         tagBox.textContent = data['tagged_content']
         tagBox.style.padding = '10px 30px'
         tagBox.style.float = 'left'
@@ -1835,6 +1855,7 @@ else if (data['command'] === 'new_file_tagged') {
         msgListTag.appendChild(tagBox)
 
         tagBox.addEventListener('click', function() {
+          console.log('NIGGA');
         // Call a function to scroll to the tagged message
               gotoTaggedMessage(tagBox.id);
           });
@@ -1843,9 +1864,9 @@ else if (data['command'] === 'new_file_tagged') {
       else if (data['tagged_file_content'] !== null) {
         // console.log('FILE yo');
         var tagBox = document.createElement('a');
-        tagBox.id ='tagged_' +  data['tagged_pk']
+        tagBox.id ='trigger_' + `${data['tagged_pk']}`
         tagBox.className = 'tag-box';
-        tagBox.href = data['tagged_file_content']
+        // tagBox.href = data['tagged_file_content']
         tagBox.textContent = 'File 📁'
         tagBox.style.padding = '10px 30px'
         tagBox.style.float = 'left'
@@ -1855,13 +1876,14 @@ else if (data['command'] === 'new_file_tagged') {
         msgListTag.appendChild(tagBox)
 
         tagBox.addEventListener('click', function() {
+          console.log('NIGGA');
         // Call a function to scroll to the tagged message
-              gotoTaggedMessage(tagBox.id);
+        gotoTaggedMessage(tagBox.id);
           });
       }
 
       var time = document.createElement('p');
-      time.style.zIndex = '9998'
+      time.style.zIndex = '10000000'
       time.className = 'time';
       time.style.padding = '0 10px'
       time.textContent = new Date(data['timestamp']).toLocaleString()
@@ -1907,7 +1929,8 @@ else if (data['command'] === 'new_file_tagged') {
         pTag.textContent = data.content;
         pTag.style.padding = '15px 30px'
         pTag.style.wordWrap = 'break-word'
-
+        pTag.id = 'original_' + `${data['pk']}`
+        console.log('ORG PK: ', pTag.id);
         var dropdownWrapper = document.createElement('div');
         dropdownWrapper.className = 'dropdown';
 
@@ -1964,6 +1987,8 @@ else if (data['command'] === 'new_file_tagged') {
         pTag.style.border = '0px';
         pTag.style.marginBottom = '10px';
         pTag.style.fontSize = '20px'
+        pTag.id = 'original_' + `${data['pk']}`
+        console.log('ORG PK: ', pTag.id);
 
         var dropdownWrapper = document.createElement('div');
         dropdownWrapper.className = 'dropdown';
@@ -2018,7 +2043,7 @@ else if (data['command'] === 'new_file_tagged') {
       
       if (data['tagged_content']) {
         var tagBox = document.createElement('div');
-        tagBox.id ='tagged_' +  data['tagged_pk']
+        tagBox.id = 'trigger_' + `${data['tagged_pk']}`
         tagBox.textContent = data['tagged_content']
         tagBox.style.padding = '10px 30px'
         tagBox.style.float = 'right'
@@ -2028,17 +2053,18 @@ else if (data['command'] === 'new_file_tagged') {
         msgListTag.appendChild(tagBox)
 
         tagBox.addEventListener('click', function() {
+          console.log('NIGGA');
         // Call a function to scroll to the tagged message
-              gotoTaggedMessage(tagBox.id);
+        gotoTaggedMessage(tagBox.id);
           });
       }
 
       else if (data['tagged_file_content'] !== null) {
         console.log('FILE yo');
         var tagBox = document.createElement('a');
-        tagBox.id ='tagged_' +  data['tagged_pk']
+        tagBox.id ='trigger_' + `${data['tagged_pk']}`
         tagBox.className = 'tag-box';
-        tagBox.href = data['tagged_file_content']
+        // tagBox.href = data['tagged_file_content']
         tagBox.textContent = 'File 📁'
         tagBox.style.padding = '10px 30px'
         tagBox.style.float = 'right'
@@ -2048,14 +2074,15 @@ else if (data['command'] === 'new_file_tagged') {
         msgListTag.appendChild(tagBox)
 
         tagBox.addEventListener('click', function() {
+          console.log('NIGGA');
         // Call a function to scroll to the tagged message
-              gotoTaggedMessage(tagBox.id);
+        gotoTaggedMessage(tagBox.id);
           });
       }
 
 
       var time2 = document.createElement('p');
-      time2.style.zIndex = '9998'
+      time2.style.zIndex = '10000000'
       time2.className = 'time';
       time2.style.padding = '0px 10px'
       time2.textContent = new Date(data['timestamp']).toLocaleString()
@@ -2096,6 +2123,8 @@ else if (data['command'] === 'new_file_tagged') {
         pTag.textContent = data.content;
         pTag.style.padding = '15px 30px'
         pTag.style.wordWrap = 'break-word'
+        pTag.id = 'original_' + `${data['pk']}`
+        console.log('ORG PK: ', pTag.id);
         // Create a Bootstrap dropdown wrapper
         var dropdownWrapper = document.createElement('div');
         dropdownWrapper.className = 'dropdown';
@@ -2161,6 +2190,8 @@ else if (data['command'] === 'new_file_tagged') {
         pTag.style.border = '0px';
         pTag.style.marginBottom = '10px';
         pTag.style.fontSize = '20px'
+        pTag.id = 'original_' + `${data['pk']}`
+        console.log('ORG PK: ', pTag.id);
         // pTag.appendChild(svgElement);
         // svgElement.setAttribute('transform','translate(-22,88)');
         // msgListTag.appendChild(pTag);
@@ -2276,11 +2307,28 @@ else if (data['command'] === 'new_file_tagged') {
     }
     
     function gotoTaggedMessage(taggedMsgPk) {
-      const messageId = taggedMsgPk;
-
+      console.log('PK: ', taggedMsgPk);
+      var messageId = 'original_' + taggedMsgPk.slice(8, taggedMsgPk.length)
+      console.log('ID: ', messageId);
       // Find the actual message element by its identifier or data attribute
-      const messageElement = document.querySelector(`#${messageId}`);
+      var messageElement = document.getElementById(messageId);
+      messageElement = messageElement.parentElement
+      console.log('YO MAN: ', messageElement);
+      messageElement.style.backgroundColor = '#50C878'; // Set your preferred background color
+      messageElement.style.padding = '10px';
+      messageElement.style.borderRadius = '10px';
+      messageElement.style.boxShadow = '0 8px 10px rgba(0, 0, 0, 0.1)';
+      // messageElement.style.height = '70px'
 
+      // Set a timeout to remove the styles after 5 seconds
+      setTimeout(function () {
+          messageElement.style.backgroundColor = ''; // Reset the background color
+          messageElement.style.padding = '10px';
+          messageElement.style.borderRadius = '';
+          messageElement.style.boxShadow = '';
+          messageElement.style.height = '';
+      }, 5000); // Adjust the time (in milliseconds) as needed
+      console.log('Goto: ', messageElement);
       if (messageElement) {
           // Scroll to the position of the message element
           messageElement.scrollIntoView({

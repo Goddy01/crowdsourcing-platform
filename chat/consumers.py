@@ -35,7 +35,6 @@ class ChatConsumer(WebsocketConsumer):
                 }
 
         elif data['message_type'] == 'tagged':
-            print('DONE')
             message = Chat.objects.filter(sender=sender, recipient=recipient, file_content__isnull=False).order_by('-timestamp').first()
             content = {
                 'command': 'new_file_tagged',
@@ -98,10 +97,12 @@ class ChatConsumer(WebsocketConsumer):
         result = []
         for message in messages:
             if message.message_tagged is not None:
+                print('PK: ', message.pk)
                 result.append(
                     self.tag_message_to_json(message)
                 )
             elif message.message_tagged is None:
+                print('PK: ', message.pk)
                 result.append(
                     self.message_to_json(message)
                 )
@@ -141,7 +142,6 @@ class ChatConsumer(WebsocketConsumer):
             tagged_file_content = message.message_tagged.file_content.url
         except:
             tagged_file_content = None
-        print('MESSAGE: ', message)
         try :
             tagged_content = message.message_tagged.content
         except:
