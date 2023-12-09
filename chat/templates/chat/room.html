@@ -976,7 +976,8 @@ button:focus {
       document.getElementById('chat-message-input1').value = '';
       if (insertedTaggedMessage) {
         insertedTaggedMessage.parentNode.removeChild(insertedTaggedMessage); 
-        insertedTaggedMessage = '';
+        insertedTaggedMessage = null; // Reset the reference
+        messageType.value = 'normal';
       }
     }
 

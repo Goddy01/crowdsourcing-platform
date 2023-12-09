@@ -35,6 +35,7 @@ DEBUG = True
 
 INSTALLED_APPS = [
     'daphne',
+    'django_truncate',
     'channels',
     'corsheaders',
     'django_cleanup.apps.CleanupConfig',
