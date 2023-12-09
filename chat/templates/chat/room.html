@@ -958,6 +958,7 @@ button:focus {
   function handleFriendClick() {
     var messageType = document.getElementById('message_type')
     messageType.value = 'normal';
+    var parentMessageContent;
     
     if (insertedTaggedMessage) {
       insertedTaggedMessage.parentNode.removeChild(insertedTaggedMessage); 
@@ -1146,15 +1147,19 @@ else if (data['command'] === 'new_file') {
       }
 
       else if (messageType.value === 'tagged') {
-        console.log('tagged');
+        console.log('tagged: ', parentMessageContent);
         var messageInputDom = document.querySelector('#chat-message-input1');
         var message = messageInputDom.value;
         friendsChatSocket.send(JSON.stringify({
           'command': 'tag_message',
           'sender': username,
           'recipient': friendUsername,
-          'parentMessage': parentMessage
+          'parentMessage': parentMessageContent
         }));
+      }
+
+      else {
+        console.log('This instance is not pre-defined.');
       }
       
     }
@@ -1328,7 +1333,7 @@ else if (data['command'] === 'new_file') {
           else if (data['content'].length <= 15) {
             tagMessageAndFocus(data['content'])
           }
-          
+          parentMessageContent = data
         })
 
         // Append dropdown toggle and menu to the dropdown wrapper
@@ -1383,13 +1388,14 @@ else if (data['command'] === 'new_file') {
         dropdownItem.className = 'dropdown-item fa fa-reply text-center';
         dropdownItem.href = '#';
         // dropdownItem.textContent = 'Tag';
-        dropdownItem.style.width = '40px';
+        // dropdownItem.style.width = '40px';
 
         // Append dropdown item to the dropdown menu
         dropdownMenu.appendChild(dropdownItem);
 
         dropdownMenu.addEventListener('click', function() { 
           tagMessageAndFocus('File 📁')
+          parentMessageContent = data;
         })
 
         // Append dropdown toggle and menu to the dropdown wrapper
@@ -1491,7 +1497,7 @@ else if (data['command'] === 'new_file') {
           else if (data['content'].length <= 15) {
             tagMessageAndFocus(data['content'])
           }
-          
+          parentMessageContent = data
         })
 
         // Create dropdown item (you can customize this as needed)
@@ -1499,7 +1505,7 @@ else if (data['command'] === 'new_file') {
         dropdownItem.className = 'dropdown-item fa fa-reply text-center';
         dropdownItem.href = '#';
         // dropdownItem.textContent = 'Tag';
-        dropdownItem.style.width = '40px';
+        // dropdownItem.style.width = '40px';
 
         // Append dropdown item to the dropdown menu
         dropdownMenu.appendChild(dropdownItem);
@@ -1552,6 +1558,7 @@ else if (data['command'] === 'new_file') {
 
         dropdownMenu.addEventListener('click', function() { 
           tagMessageAndFocus('File 📁')
+          parentMessageContent = data
         })
 
         // Create dropdown item (you can customize this as needed)
@@ -1559,7 +1566,7 @@ else if (data['command'] === 'new_file') {
         dropdownItem.className = 'dropdown-item fa fa-reply text-center';
         dropdownItem.href = '#';
         // dropdownItem.textContent = 'Tag';
-        dropdownItem.style.width = '40px';
+        // dropdownItem.style.width = '40px';
 
         // Append dropdown item to the dropdown menu
         dropdownMenu.appendChild(dropdownItem);
@@ -1725,7 +1732,7 @@ else if (data['command'] === 'new_file') {
             taggedMessageDiv.textContent = 'Tagged message: ' + message;
             taggedMessageDiv.style.backgroundColor = '#eee';
             taggedMessageDiv.style.padding = '10px';
-            taggedMessageDiv.style.marginBottom = '10px';
+            // taggedMessageDiv.style.marginBottom = '10px';
             taggedMessageDiv.style.fontSize = '20px'
             // var messageType = document.getElementById('message_type')
             messageType.value = 'tagged';

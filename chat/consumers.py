@@ -55,14 +55,18 @@ class ChatConsumer(WebsocketConsumer):
     def tag_message(self, data):
         sender = data['sender']
         recipient = data['recipient']
-        parent_message = data['parent_message']
+        parent_message = data['parentMessage']
 
         message = TagChat.objects.create(
             message_tagged = parent_message,
             sender = sender,
             recipient = recipient,
-            content = data['']
+            content = parent_message
         )
+        content = {
+            'command': 'tag_message',
+            'message': self.message_to_json(message)
+        }
         return self.send_chat_message(content)
     
     def messages_to_json(self, messages):

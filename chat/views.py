@@ -7,7 +7,7 @@ from django.utils.safestring import mark_safe
 import json
 from django.contrib.auth.decorators import login_required
 from accounts.models import Connection, Innovator
-from .models import Chat, Group, GroupChat
+from .models import Chat, Group, GroupChat, TagChat
 from django.core.serializers import serialize
 
 def index(request):
@@ -67,15 +67,33 @@ def get_group_members(request, group_pk):
 
     return JsonResponse({'members': list(members)})
 
-def send_file_message(request, sender, recipient):
+def send_file_message(request, sender, recipient, parent_message=None):
     if request.method == "POST" and request.FILES.get("file"):
         sender = BaseUser.objects.get(username=sender)
         recipient = BaseUser.objects.get(username=recipient)
         file = request.FILES['file']
-        message  = Chat.objects.create(
-            sender=sender,
-            recipient=recipient,
-            file_content=file
-        )
-        print('FILE CREATED')
-    return JsonResponse(data = {'status': 'success', 'file_url': message.file_content.url, 'message_sender': message.sender.username, 'message_sender_pfp_url': message.sender.pfp.url, 'message_recipient': message.recipient.username, 'message_recipient_url': message.recipient.pfp.url, 'timestamp': message.timestamp})
+        if parent_message is None:
+            message  = Chat.objects.create(
+                sender=sender,
+                recipient=recipient,
+                file_content=file
+            )
+            print('FILE CREATED')
+        if parent_message is not None:
+            message  = TagChat.objects.create(
+                sender=sender,
+                recipient=recipient,
+                file_content=file,
+                message_tagged = parent_message
+            )
+            print('TAGGED FILE CREATED')
+    return JsonResponse(data = 
+        {
+        'status': 'success', 
+        'file_url': message.file_content.url, 
+        'message_sender': message.sender.username, 
+        'message_sender_pfp_url': message.sender.pfp.url, 
+        'message_recipient': message.recipient.username, 
+        'message_recipient_url': message.recipient.pfp.url, 
+        'timestamp': message.timestamp
+        })
