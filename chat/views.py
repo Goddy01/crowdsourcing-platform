@@ -7,7 +7,7 @@ from django.utils.safestring import mark_safe
 import json
 from django.contrib.auth.decorators import login_required
 from accounts.models import Connection, Innovator
-from .models import Chat, Group, GroupChat, TagChat
+from .models import Chat, Group, GroupChat
 from django.core.serializers import serialize
 
 def index(request):
@@ -82,7 +82,7 @@ def send_file_message(request, sender, recipient, parent_message=None):
         if parent_message is not None:
             print('Parent Message: ', parent_message)
             messages_tagged = get_object_or_404(Chat, pk=parent_message['pk'])
-            message  = TagChat.objects.create(
+            message  = Chat.objects.create(
                 sender=sender,
                 recipient=recipient,
                 file_content=file,

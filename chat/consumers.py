@@ -2,7 +2,7 @@ import json
 from django.db.models import Q
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import AsyncWebsocketConsumer, WebsocketConsumer, SyncConsumer
-from .models import Chat, GroupChat, Group, TagChat
+from .models import Chat, GroupChat, Group
 from accounts.models import BaseUser
 from .views import get_messages
 from django.shortcuts import get_object_or_404
@@ -35,7 +35,7 @@ class ChatConsumer(WebsocketConsumer):
                 }
 
         elif data['message_type'] == 'tagged':
-            message = TagChat.objects.filter(sender=sender, recipient=recipient, file_content__isnull=False).order_by('-timestamp').first()
+            message = Chat.objects.filter(sender=sender, recipient=recipient, file_content__isnull=False).order_by('-timestamp').first()
             content = {
                 'command': 'new_file_tagged',
                 'message': self.message_to_json(message)
@@ -63,7 +63,7 @@ class ChatConsumer(WebsocketConsumer):
             message = data['message']
             print('MESSAGE TAGGED: ', parent_message)
             message_tagged = Chat.objects.get(pk=parent_message)
-            message = TagChat.objects.create(
+            message = Chat.objects.create(
                 message_tagged = message_tagged,
                 sender = sender_user,
                 recipient = recipient,
@@ -82,7 +82,7 @@ class ChatConsumer(WebsocketConsumer):
         parent_message = data['parentMessage']
         message = data['message']
         message_tagged = get_object_or_404(Chat, pk=parent_message['pk'])
-        message = TagChat.objects.create(
+        message = Chat.objects.create(
             message_tagged = message_tagged,
             sender = sender,
             recipient = recipient,

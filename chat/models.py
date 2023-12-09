@@ -20,7 +20,7 @@ class ChatManager(models.Manager):
         return qs
 
 class Chat(models.Model):
-    message_tagged = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='message_tagged')
+    message_tagged = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='reply_to')
     timestamp = models.DateTimeField(auto_now_add=True)
     sender = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='chat_sender')
     recipient = models.ForeignKey(BaseUser, on_delete=models.CASCADE, null=True, related_name='chat_recipient')
