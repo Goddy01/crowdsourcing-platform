@@ -28,6 +28,10 @@
   -webkit-font-smoothing: antialiased;
 }
 
+.time {
+  z-index: 9998;
+}
+
 a:focus {
     outline: none;
 }
@@ -1353,11 +1357,13 @@ else if (data['command'] === 'new_file_tagged') {
       
 
       var time = document.createElement('p');
+      time.style.zIndex = '9998'
+      time.className = 'time';
       time.style.padding = '0 10px'
       time.textContent = new Date(data['timestamp']).toLocaleString()
       time.style.float = 'right';
       time.style.fontStyle = 'italic';
-      time.style.marginTop = '-25px';
+      time.style.marginTop = '-15px';
       time.style.marginRight = '60px';
       time.style.fontSize = '15px';
       time.style.color = 'green'
@@ -1507,11 +1513,13 @@ else if (data['command'] === 'new_file_tagged') {
       var imgTag = document.createElement('img');
       
       var time2 = document.createElement('p');
+      time2.style.zIndex = '9998'
+      time2.className = 'time';
       time2.style.padding = '0px 10px'
       time2.textContent = new Date(data['timestamp']).toLocaleString()
       time2.style.float = 'left';
       time2.style.fontStyle = 'italic';
-      time2.style.marginTop = '-25px';
+      time2.style.marginTop = '-15px';
       time2.style.marginLeft = '20px';
       time2.style.fontSize = '15px';
       time2.style.color = 'green'
@@ -1672,6 +1680,7 @@ else if (data['command'] === 'new_file_tagged') {
 
             if (data['tagged_content']) {
             var tagBox = document.createElement('div');
+            tagBox.id ='tagged_' +  data['tagged_pk']
             tagBox.textContent = data['tagged_content']
             tagBox.style.padding = '10px 30px'
             tagBox.style.float = 'left'
@@ -1679,11 +1688,17 @@ else if (data['command'] === 'new_file_tagged') {
             tagBox.style.marginBottom = '10px';
             tagBox.style.fontSize = '20px'
             msgListTag.appendChild(tagBox)
+
+            tagBoxsage.addEventListener('click', function() {
+        // Call a function to scroll to the tagged message
+              gotoTaggedMessage(tagBox.id);
+          });
           }
 
           else if (data['tagged_file_content'] !== null) {
             console.log('FILE yo');
             var tagBox = document.createElement('a');
+            tagBox.id ='tagged_' +  data['tagged_pk']
             tagBox.className = 'tag-box';
             tagBox.href = data['tagged_file_content']
             tagBox.textContent = 'File 📁'
@@ -1693,6 +1708,11 @@ else if (data['command'] === 'new_file_tagged') {
             tagBox.style.marginBottom = '10px';
             tagBox.style.fontSize = '20px'
             msgListTag.appendChild(tagBox)
+
+            tagBoxsage.addEventListener('click', function() {
+        // Call a function to scroll to the tagged message
+              gotoTaggedMessage(tagBox.id);
+          });
           }
 
 
@@ -1704,11 +1724,13 @@ else if (data['command'] === 'new_file_tagged') {
             pTag.style.borderRadius = '10px'
             pTag.style.marginBottom = '10px';
             var time2 = document.createElement('p');
+            time2.style.zIndex = '9998'
+            time2.className = 'time';
             time2.style.padding = '0 10px'
             time2.textContent = new Date(response.timestamp).toLocaleString()
             time2.style.float = 'left';
             time2.style.fontStyle = 'italic';
-            time2.style.marginTop = '-20px';
+            time2.style.marginTop = '-15px';
             time2.style.marginLeft = '20px';
             time2.style.fontSize = '15px';
             time2.style.color = 'green'
@@ -1769,7 +1791,7 @@ else if (data['command'] === 'new_file_tagged') {
                 var messageElement = messageElements[messageElements.length - 1];
 
                 // Apply the hovering effect immediately
-                messageElement.style.backgroundColor = '#8193A6'; // Set your preferred background color
+                messageElement.style.backgroundColor = '#DCDCDC'; // Set your preferred background color
                 messageElement.style.padding = '10px';
                 messageElement.style.borderRadius = '15px';
                 messageElement.style.boxShadow = '0 8px 10px rgba(0, 0, 0, 0.1)';
@@ -1797,10 +1819,12 @@ else if (data['command'] === 'new_file_tagged') {
       var msgListTag = document.createElement('li');
       msgListTag.style.position = 'relative'
       msgListTag.style.backgroundColor = '#DCDCDC'
+      msgListTag.style.borderRadius = '10px'
       var imgTag = document.createElement('img');
       
       if (data['tagged_content']) {
         var tagBox = document.createElement('div');
+        tagBox.id ='tagged_' +  data['tagged_pk']
         tagBox.textContent = data['tagged_content']
         tagBox.style.padding = '10px 30px'
         tagBox.style.float = 'left'
@@ -1808,11 +1832,17 @@ else if (data['command'] === 'new_file_tagged') {
         tagBox.style.marginBottom = '10px';
         tagBox.style.fontSize = '20px'
         msgListTag.appendChild(tagBox)
+
+        tagBox.addEventListener('click', function() {
+        // Call a function to scroll to the tagged message
+              gotoTaggedMessage(tagBox.id);
+          });
       }
 
       else if (data['tagged_file_content'] !== null) {
         // console.log('FILE yo');
         var tagBox = document.createElement('a');
+        tagBox.id ='tagged_' +  data['tagged_pk']
         tagBox.className = 'tag-box';
         tagBox.href = data['tagged_file_content']
         tagBox.textContent = 'File 📁'
@@ -1822,9 +1852,16 @@ else if (data['command'] === 'new_file_tagged') {
         tagBox.style.marginBottom = '10px';
         tagBox.style.fontSize = '20px'
         msgListTag.appendChild(tagBox)
+
+        tagBox.addEventListener('click', function() {
+        // Call a function to scroll to the tagged message
+              gotoTaggedMessage(tagBox.id);
+          });
       }
 
       var time = document.createElement('p');
+      time.style.zIndex = '9998'
+      time.className = 'time';
       time.style.padding = '0 10px'
       time.textContent = new Date(data['timestamp']).toLocaleString()
       time.style.float = 'right';
@@ -1973,12 +2010,14 @@ else if (data['command'] === 'new_file_tagged') {
       var msgListTag = document.createElement('li');
       msgListTag.style.position = 'relative'
       msgListTag.style.backgroundColor = '#DCDCDC'
+      msgListTag.style.borderRadius = '10px'
       var imgTag = document.createElement('img');
 
       console.log('DATA YO: ', data);
       
       if (data['tagged_content']) {
         var tagBox = document.createElement('div');
+        tagBox.id ='tagged_' +  data['tagged_pk']
         tagBox.textContent = data['tagged_content']
         tagBox.style.padding = '10px 30px'
         tagBox.style.float = 'right'
@@ -1986,11 +2025,17 @@ else if (data['command'] === 'new_file_tagged') {
         tagBox.style.marginBottom = '10px';
         tagBox.style.fontSize = '20px'
         msgListTag.appendChild(tagBox)
+
+        tagBox.addEventListener('click', function() {
+        // Call a function to scroll to the tagged message
+              gotoTaggedMessage(tagBox.id);
+          });
       }
 
       else if (data['tagged_file_content'] !== null) {
         console.log('FILE yo');
         var tagBox = document.createElement('a');
+        tagBox.id ='tagged_' +  data['tagged_pk']
         tagBox.className = 'tag-box';
         tagBox.href = data['tagged_file_content']
         tagBox.textContent = 'File 📁'
@@ -2000,10 +2045,17 @@ else if (data['command'] === 'new_file_tagged') {
         tagBox.style.marginBottom = '10px';
         tagBox.style.fontSize = '20px'
         msgListTag.appendChild(tagBox)
+
+        tagBox.addEventListener('click', function() {
+        // Call a function to scroll to the tagged message
+              gotoTaggedMessage(tagBox.id);
+          });
       }
 
 
       var time2 = document.createElement('p');
+      time2.style.zIndex = '9998'
+      time2.className = 'time';
       time2.style.padding = '0px 10px'
       time2.textContent = new Date(data['timestamp']).toLocaleString()
       time2.style.float = 'left';
@@ -2221,6 +2273,22 @@ else if (data['command'] === 'new_file_tagged') {
       )
     )
     }
+    
+    function gotoTaggedMessage(taggedMsgPk) {
+      const messageId = taggedMsgPk;
+
+      // Find the actual message element by its identifier or data attribute
+      const messageElement = document.querySelector(`#${messageId}`);
+
+      if (messageElement) {
+          // Scroll to the position of the message element
+          messageElement.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start',
+          });
+      }
+    }
+  
   };
   $('.friend-conversation').click(handleFriendClick);
 </script>

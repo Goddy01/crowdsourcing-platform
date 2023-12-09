@@ -156,7 +156,8 @@ class ChatConsumer(WebsocketConsumer):
             'pk': message.pk,
             'tagged_pk': message.message_tagged.pk,
             'tagged_content': tagged_content,
-            'tagged_file_content': tagged_file_content
+            'tagged_file_content': tagged_file_content,
+            
 
         }
     commands = {
