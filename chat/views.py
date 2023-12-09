@@ -69,6 +69,8 @@ def get_group_members(request, group_pk):
 
 def send_file_message(request, sender, recipient, parent_message=None):
     if request.method == "POST" and request.FILES.get("file"):
+        print('R* : ', recipient)
+        tagged_file_content = None
         sender = BaseUser.objects.get(username=sender)
         recipient = BaseUser.objects.get(username=recipient)
         file = request.FILES['file']
@@ -81,7 +83,8 @@ def send_file_message(request, sender, recipient, parent_message=None):
             print('FILE CREATED')
         if parent_message is not None:
             print('Parent Message: ', parent_message)
-            messages_tagged = get_object_or_404(Chat, pk=parent_message['pk'])
+            messages_tagged = Chat.objects.get(pk=parent_message)
+            
             message  = Chat.objects.create(
                 sender=sender,
                 recipient=recipient,

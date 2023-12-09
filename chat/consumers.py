@@ -31,14 +31,14 @@ class ChatConsumer(WebsocketConsumer):
             message = Chat.objects.filter(sender=sender, recipient=recipient, file_content__isnull=False).order_by('-timestamp').first()
             content = {
             'command': 'new_file_normal',
-            'message': self.message_to_json(message)
+            'message': self.tag_message_to_json(message)
                 }
 
         elif data['message_type'] == 'tagged':
             message = Chat.objects.filter(sender=sender, recipient=recipient, file_content__isnull=False).order_by('-timestamp').first()
             content = {
                 'command': 'new_file_tagged',
-                'message': self.message_to_json(message)
+                'message': self.tag_message_to_json(message)
             }
         return self.send_chat_message(content)
 
@@ -136,7 +136,7 @@ class ChatConsumer(WebsocketConsumer):
             tagged_file_content = message.message_tagged.file_content.url
         except:
             tagged_file_content = None
-        if message.content is not None:
+        if message.message_tagged.content is not None:
             tagged_content = message.message_tagged.content
         else:
             tagged_content = None
