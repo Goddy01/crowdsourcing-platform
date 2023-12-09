@@ -97,7 +97,9 @@ class ChatConsumer(WebsocketConsumer):
     def messages_to_json(self, messages):
         result = []
         for message in messages:
+            print('EACH MESSAGE: ', message.message_tagged)
             if message.message_tagged is not None:
+                print('TAGGED AINT NONE')
                 result.append(
                     self.tag_message_to_json(message)
                 )

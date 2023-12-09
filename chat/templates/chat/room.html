@@ -50,11 +50,12 @@ a:focus {
     top: 10%;
     left: 50%;
     right: 50%;
-    
-    
-    
     transform: translate(-50%, -50%);
+    
+    /* Set a high z-index value to ensure it's not covered */
+    z-index: 9999;
 }
+
  
 @keyframes floating {
     0% { transform: translate(0,  0px); }
@@ -811,7 +812,7 @@ button:focus {
                   <img src="{{ friend.user1.user.pfp.url }}" alt="" style="border-radius: 50%;width: 60px;height: 60px;"/>
                   <div class="meta">
                     <p class="name">{{ friend.user1.user.get_full_name }}</p>
-                    <p class="last_message" style="font-style: italic;" id="last_message_{{ friend.user1.user.username }}">
+                    <p class="last_message text-info" style="font-style: italic;" id="last_message_{{ friend.user1.user.username }}">
                       {% if friend.last_chat_with_conn.content %}
                       
                       {% if friend.last_chat_with_conn.content|length > 20 %}
@@ -822,8 +823,8 @@ button:focus {
 
                       {% elif friend.last_chat_with_conn.file_content %}
                       File 📁
-                      {% else %}
-                      <p class="text-info">Send a message</p>
+                      {% elif not friend.last_chat_with_conn.file_content and not friend.last_chat_with_conn.content%}
+                      Send a message
                       {% endif %}
                     </p>
                   </div>
@@ -835,7 +836,7 @@ button:focus {
                   <img src="{{ friend.user2.user.pfp.url }}" alt="" style="border-radius: 50%;width: 60px;height: 60px;"/>
                   <div class="meta">
                     <p class="name">{{ friend.user2.user.get_full_name }}</p>
-                    <p class="last_message" style="font-style: italic;" id="last_message_{{ friend.user2.user.username }}">
+                    <p class="last_message text-info" style="font-style: italic;" id="last_message_{{ friend.user2.user.username }}">
                       {% if friend.last_chat_with_conn.content %}
                       
                       {% if friend.last_chat_with_conn.content|length > 20 %}
@@ -846,8 +847,8 @@ button:focus {
 
                       {% elif friend.last_chat_with_conn.file_content %}
                       File 📁
-                      {% else %}
-                      <p class="text-info">Send a message</p>
+                      {% elif not friend.last_chat_with_conn.file_content and not friend.last_chat_with_conn.content%}
+                      Send a message
                       {% endif %}
                     </p>
                   </div>
@@ -966,14 +967,16 @@ button:focus {
     var messageType = document.getElementById('message_type')
     messageType.value = 'normal';
 
-    var parentMessageContent;
-
-    document.getElementById('chat-message-input1').value = '';
-    
-    if (insertedTaggedMessage) {
-      insertedTaggedMessage.parentNode.removeChild(insertedTaggedMessage); 
-      insertedTaggedMessage = '';
+    function removeTaggedMessag() {
+      var parentMessageContent;
+      document.getElementById('chat-message-input1').value = '';
+      if (insertedTaggedMessage) {
+        insertedTaggedMessage.parentNode.removeChild(insertedTaggedMessage); 
+        insertedTaggedMessage = '';
+      }
     }
+
+    removeTaggedMessag()
 
     if (oldSockets.length > 0) {
       var previousSocket = oldSockets[oldSockets.length-1];
@@ -1074,24 +1077,22 @@ if (data['command'] === 'messages') {
         conversation.textContent = 'File 📁'
       }
     }
-
-    if (data['messages'][i].message_tagged === null) {
+    if (typeof data['messages'][i].tagged_pk === 'undefined') {
       if (data['messages'][i].sender === username) {
         senderMessages(data['messages'][i])
       }
       else if (data['messages'][i].recipient === username) {
+        console.log('shite')
         receivedMessage(data['messages'][i])
       }
-    } else if (data['messages'][i].message_tagged !== null) {
+    } else if (typeof data['messages'][i].tagged_pk !== 'undefined') {
       if (data['messages'][i].sender === username) {
         senderTaggedMessages(data['messages'][i])
       }
       else if (data['messages'][i].recipient === username) {
         receivedTaggedMessages(data['messages'][i])
       }
-    } {
-      
-    }
+    } 
     
       
   };
@@ -1151,7 +1152,7 @@ else if (data['command'] === 'tag_message') {
       }
       
       else if (data['message'].recipient === username && data['message'].sender === oldFriends[oldFriends.length -1]) {
-        receivedMessage(data['message'])
+        receivedTaggedMessages(data['message'])
         
       }
 
@@ -1203,7 +1204,7 @@ else if (data['command'] === 'new_file_tagged') {
       }
       
       else if (data['message'].recipient === username && data['message'].sender === oldFriends[oldFriends.length -1]) {
-        receivedMessage(data['message'])
+        receivedTaggedMessages(data['message'])
         
       }
 
@@ -1244,6 +1245,8 @@ else if (data['command'] === 'new_file_tagged') {
           'parentMessage': parentMessageContent['pk'],
           'message': message
         }));
+        messageInputDom.value = '';
+        removeTaggedMessag()
       }
 
       else {
@@ -1809,7 +1812,7 @@ else if (data['command'] === 'new_file_tagged') {
       }
 
       else if (data['tagged_file_content'] !== null) {
-        console.log('FILE yo');
+        // console.log('FILE yo');
         var tagBox = document.createElement('a');
         tagBox.className = 'tag-box';
         tagBox.href = data['tagged_file_content']
@@ -1963,9 +1966,6 @@ else if (data['command'] === 'new_file_tagged') {
 
         msgListTag.style.padding = '10px';
 
-        svgElement.onclick = function(e) {
-          
-        }
       }
 
       function receivedTaggedMessages(data) {
@@ -1973,13 +1973,16 @@ else if (data['command'] === 'new_file_tagged') {
       
       var msgListTag = document.createElement('li');
       msgListTag.style.position = 'relative'
+      msgListTag.style.backgroundColor = '#DCDCDC'
       var imgTag = document.createElement('img');
+
+      console.log('DATA YO: ', data);
       
       if (data['tagged_content']) {
         var tagBox = document.createElement('div');
         tagBox.textContent = data['tagged_content']
         tagBox.style.padding = '10px 30px'
-        tagBox.style.float = 'left'
+        tagBox.style.float = 'right'
         tagBox.style.border = 'none';
         tagBox.style.marginBottom = '10px';
         tagBox.style.fontSize = '20px'
@@ -1993,7 +1996,7 @@ else if (data['command'] === 'new_file_tagged') {
         tagBox.href = data['tagged_file_content']
         tagBox.textContent = 'File 📁'
         tagBox.style.padding = '10px 30px'
-        tagBox.style.float = 'left'
+        tagBox.style.float = 'right'
         tagBox.style.border = 'none';
         tagBox.style.marginBottom = '10px';
         tagBox.style.fontSize = '20px'
@@ -2006,7 +2009,7 @@ else if (data['command'] === 'new_file_tagged') {
       time2.textContent = new Date(data['timestamp']).toLocaleString()
       time2.style.float = 'left';
       time2.style.fontStyle = 'italic';
-      time2.style.marginTop = '-25px';
+      // time2.style.marginTop = '-25px';
       time2.style.marginLeft = '20px';
       time2.style.fontSize = '15px';
       time2.style.color = 'green'
