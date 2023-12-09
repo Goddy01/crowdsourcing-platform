@@ -24,32 +24,56 @@ class ChatConsumer(WebsocketConsumer):
         self.send_message(content)
 
     def new_file_message(self, data):
+        content = {}
         sender = BaseUser.objects.get(username=data['sender'])
         recipient = BaseUser.objects.get(username=data['recipient'])
-        message = Chat.objects.filter(sender=sender, recipient=recipient, file_content__isnull=False).order_by('-timestamp').first()
-
-        content = {
-            'command': 'new_file',
+        if data['message_type'] == 'normal':
+            message = Chat.objects.filter(sender=sender, recipient=recipient, file_content__isnull=False).order_by('-timestamp').first()
+            content = {
+            'command': 'new_file_normal',
             'message': self.message_to_json(message)
-        }
+                }
 
+        elif data['message_type'] == 'tagged':
+            message = TagChat.objects.filter(sender=sender, recipient=recipient, file_content__isnull=False).order_by('-timestamp').first()
+            content = {
+                'command': 'new_file_tagged',
+                'message': self.message_to_json(message)
+            }
         return self.send_chat_message(content)
 
     def new_message(self, data):
-        print('3')
+        content = {}
         sender = data['from']
         sender_user = BaseUser.objects.get(username=sender)
-        
-        message = Chat.objects.create(
-            sender=sender_user,
-            recipient=BaseUser.objects.get(username=data['to']),
-            content=data['message']
-        )    
-
-        content = {
+        recipient = BaseUser.objects.get(username=data['to'])
+        if data['type'] == 'normal':
+            message = Chat.objects.create(
+                sender=sender_user,
+                recipient=recipient,
+                content=data['message']
+            )
+            content = {
             'command': 'new_message',
             'message': self.message_to_json(message)
         }
+
+        elif data['type'] == 'tagged':
+            parent_message = data['parentMessage']
+            message = data['message']
+            print('MESSAGE TAGGED: ', parent_message)
+            message_tagged = Chat.objects.get(pk=parent_message)
+            message = TagChat.objects.create(
+                message_tagged = message_tagged,
+                sender = sender_user,
+                recipient = recipient,
+                content = message
+            )
+            content = {
+                'command': 'tag_message',
+                'message': self.tag_message_to_json(message)
+            }
+            
         return self.send_chat_message(content)
     
     def tag_message(self, data):
@@ -96,11 +120,45 @@ class ChatConsumer(WebsocketConsumer):
             'pk': message.pk,
 
         }
+    
+    def tag_message_to_json(self, message):
+        try:
+            file_content = message.file_content.url
+        except:
+            file_content = None
+        if message.content is not None:
+            content = message.content
+        else:
+            content = None
+
+
+        try:
+            tagged_file_content = message.message_tagged.file_content.url
+        except:
+            tagged_file_content = None
+        if message.content is not None:
+            tagged_content = message.message_tagged.content
+        else:
+            tagged_content = None
+        return {
+            'sender': message.sender.username,
+            'recipient': message.recipient.username,
+            'content': content,
+            'timestamp': str(message.timestamp),
+            'sender_pfp_url': message.sender.pfp.url,
+            'file_content': file_content,
+            'pk': message.pk,
+            'tagged_pk': message.message_tagged.pk,
+            'tagged_content': tagged_content,
+            'tagged_file_content': tagged_file_content
+
+        }
     commands = {
         'fetch_messages': fetch_messages,
         'new_message': new_message,
-        'new_file': new_file_message,
-        'tag_message': tag_message
+        'new_file_normal': new_file_message,
+        'new_file_tagged': new_file_message,
+        'tag_message': new_message
     }
     def connect(self):
         print('6')

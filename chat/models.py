@@ -20,6 +20,7 @@ class ChatManager(models.Manager):
         return qs
 
 class Chat(models.Model):
+    message_tagged = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='message_tagged')
     timestamp = models.DateTimeField(auto_now_add=True)
     sender = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='chat_sender')
     recipient = models.ForeignKey(BaseUser, on_delete=models.CASCADE, null=True, related_name='chat_recipient')
@@ -38,13 +39,13 @@ class Chat(models.Model):
         return Chat.objects.order_by('timestamp').all()[:10]
     
 
-class TagChat(models.Model):
-    message_tagged = models.ForeignKey(Chat, on_delete=models.CASCADE, null=True, blank=True, related_name='message_tagged')
-    timestamp = models.DateTimeField(auto_now_add=True)
-    sender = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='t_chat_sender')
-    recipient = models.ForeignKey(BaseUser, on_delete=models.CASCADE, null=True, related_name='t_chat_recipient')
-    content = models.TextField()
-    file_content = models.FileField(upload_to=upload_in_chat_files, null=True, blank=True)
+# class TagChat(models.Model):
+#     message_tagged = models.ForeignKey(Chat, on_delete=models.CASCADE, null=True, blank=True, related_name='message_tagged')
+#     timestamp = models.DateTimeField(auto_now_add=True)
+#     sender = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='t_chat_sender')
+#     recipient = models.ForeignKey(BaseUser, on_delete=models.CASCADE, null=True, related_name='t_chat_recipient')
+#     content = models.TextField()
+#     file_content = models.FileField(upload_to=upload_in_chat_files, null=True, blank=True)
     
 class Group(models.Model):
     name = models.CharField(max_length=128, unique=True, null=False, blank=False)
