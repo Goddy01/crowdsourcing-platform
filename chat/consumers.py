@@ -31,10 +31,11 @@ class ChatConsumer(WebsocketConsumer):
             message = Chat.objects.filter(sender=sender, recipient=recipient, file_content__isnull=False).order_by('-timestamp').first()
             content = {
             'command': 'new_file_normal',
-            'message': self.tag_message_to_json(message)
+            'message': self.message_to_json(message)
                 }
 
         elif data['message_type'] == 'tagged':
+            print('DONE')
             message = Chat.objects.filter(sender=sender, recipient=recipient, file_content__isnull=False).order_by('-timestamp').first()
             content = {
                 'command': 'new_file_tagged',
@@ -61,7 +62,6 @@ class ChatConsumer(WebsocketConsumer):
         elif data['type'] == 'tagged':
             parent_message = data['parentMessage']
             message = data['message']
-            print('MESSAGE TAGGED: ', parent_message)
             message_tagged = Chat.objects.get(pk=parent_message)
             message = Chat.objects.create(
                 message_tagged = message_tagged,
@@ -97,13 +97,11 @@ class ChatConsumer(WebsocketConsumer):
     def messages_to_json(self, messages):
         result = []
         for message in messages:
-            print('EACH MESSAGE: ', message.message_tagged)
             if message.message_tagged is not None:
-                print('TAGGED AINT NONE')
                 result.append(
                     self.tag_message_to_json(message)
                 )
-            else:
+            elif message.message_tagged is None:
                 result.append(
                     self.message_to_json(message)
                 )
@@ -143,9 +141,10 @@ class ChatConsumer(WebsocketConsumer):
             tagged_file_content = message.message_tagged.file_content.url
         except:
             tagged_file_content = None
-        if message.message_tagged.content is not None:
+        print('MESSAGE: ', message)
+        try :
             tagged_content = message.message_tagged.content
-        else:
+        except:
             tagged_content = None
         return {
             'sender': message.sender.username,
@@ -168,7 +167,6 @@ class ChatConsumer(WebsocketConsumer):
         'tag_message': new_message
     }
     def connect(self):
-        print('6')
         self.room_group_name = 'chat_room'
         
         async_to_sync(self.channel_layer.group_add)(self.room_group_name, self.channel_name)
@@ -187,7 +185,6 @@ class ChatConsumer(WebsocketConsumer):
         )
 
     def send_message(self, message):
-        print('10')
         self.send(text_data=json.dumps(message))
 
     def chat_message(self, event):

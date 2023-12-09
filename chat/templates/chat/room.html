@@ -967,7 +967,7 @@ button:focus {
     var messageType = document.getElementById('message_type')
     messageType.value = 'normal';
 
-    function removeTaggedMessag() {
+    function removeTaggedMessage() {
       var parentMessageContent;
       document.getElementById('chat-message-input1').value = '';
       if (insertedTaggedMessage) {
@@ -976,7 +976,7 @@ button:focus {
       }
     }
 
-    removeTaggedMessag()
+    removeTaggedMessage()
 
     if (oldSockets.length > 0) {
       var previousSocket = oldSockets[oldSockets.length-1];
@@ -1246,7 +1246,7 @@ else if (data['command'] === 'new_file_tagged') {
           'message': message
         }));
         messageInputDom.value = '';
-        removeTaggedMessag()
+        removeTaggedMessage()
       }
 
       else {
@@ -1328,9 +1328,8 @@ else if (data['command'] === 'new_file_tagged') {
           // fileMsg.value = '';
            if (username === response.message_recipient) {
             receivedFileMessage(response)
-          } {
-            
-          }
+          } 
+          removeTaggedMessage()
         }
         
       })
