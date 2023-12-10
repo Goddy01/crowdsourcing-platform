@@ -15,6 +15,7 @@
     <style>
       body {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
@@ -41,6 +42,16 @@ a:focus {
   overflow: auto;
   display: flex;
   flex-direction: column-reverse;
+}
+
+#scrollToBottomIcon {
+    position: fixed;
+    bottom: 50px;
+    right: 20px;
+    color: #fff;
+    font-size: 20px;
+    border-radius: 50%;
+    cursor: pointer;
 }
 
 .floating, #floating-btn {  
@@ -912,6 +923,9 @@ button:focus {
         <ul id="chat-log">
         </ul>
       </div>
+      <div id="scrollToBottomIcon">
+        <i class="fa fa-arrow-circle-down" style="color: #2C3E50;padding: 10px;"></i>
+    </div>
       <div class="message-input" style="display: none;">
         <input type="file" name="file-message" id="file-msg1" hidden>
         <div class="wrap">
@@ -1229,7 +1243,6 @@ else if (data['command'] === 'new_file_tagged') {
 };
     function sendMessage() {
       if (messageType.value === 'normal') {
-        console.log('normal');
         var messageInputDom = document.querySelector('#chat-message-input1');
         var message = messageInputDom.value;
         friendsChatSocket.send(JSON.stringify({
@@ -1243,7 +1256,6 @@ else if (data['command'] === 'new_file_tagged') {
       }
 
       else if (messageType.value === 'tagged') {
-        console.log('tagged: ', parentMessageContent);
         var messageInputDom = document.querySelector('#chat-message-input1');
         var message = messageInputDom.value;
         friendsChatSocket.send(JSON.stringify({
@@ -1409,7 +1421,6 @@ else if (data['command'] === 'new_file_tagged') {
         pTag.style.padding = '15px 30px'
         pTag.style.wordWrap = 'break-word'
         pTag.id = 'original_' + `${data['pk']}`
-        console.log('ORG PK: ', pTag.id);
         var dropdownWrapper = document.createElement('div');
         dropdownWrapper.className = 'dropdown';
 
@@ -1461,7 +1472,6 @@ else if (data['command'] === 'new_file_tagged') {
         pTag.appendChild(hrefLink)
         pTag.style.padding = '10px 30px'
         pTag.id = 'original_' + `${data['pk']}`
-        console.log('ORG PK: ', pTag.id);
         pTag.style.backgroundColor = 'white'
         pTag.style.float = 'right'
         pTag.style.borderRadius = '10px'
@@ -1563,7 +1573,6 @@ else if (data['command'] === 'new_file_tagged') {
         pTag.style.padding = '15px 30px'
         
         pTag.id = 'original_' + `${data['pk']}`
-        console.log('pTagID: ', pTag.id);
         pTag.style.wordWrap = 'break-word'
         // Create a Bootstrap dropdown wrapper
         var dropdownWrapper = document.createElement('div');
@@ -1626,7 +1635,6 @@ else if (data['command'] === 'new_file_tagged') {
         pTag.appendChild(hrefLink)
         pTag.style.backgroundColor = '#435F7A'
         pTag.id = 'original_' + `${data['pk']}`
-        console.log('pTagID: ', pTag.id);
         pTag.style.padding = '10px 30px'
         pTag.style.borderRadius = '10px'
         pTag.style.border = '0px';
@@ -1693,6 +1701,7 @@ else if (data['command'] === 'new_file_tagged') {
 
             if (data['tagged_content']) {
             var tagBox = document.createElement('div');
+            tagBox.style.cursor = 'pointer'
             tagBox.id =data['tagged_pk']
             tagBox.textContent = data['tagged_content']
             tagBox.style.padding = '10px 30px'
@@ -1703,15 +1712,14 @@ else if (data['command'] === 'new_file_tagged') {
             msgListTag.appendChild(tagBox)
 
             tagBox.addEventListener('click', function() {
-              console.log('NIGGA');
         // Call a function to scroll to the tagged message
               gotoTaggedMessage(tagBox.id);
           });
           }
 
           else if (data['tagged_file_content'] !== null) {
-            console.log('FILE yo');
             var tagBox = document.createElement('a');
+            tagBox.style.cursor = 'pointer'
             tagBox.id =data['tagged_pk']
             tagBox.className = 'tag-box';
             // tagBox.href = data['tagged_file_content']
@@ -1724,7 +1732,6 @@ else if (data['command'] === 'new_file_tagged') {
             msgListTag.appendChild(tagBox)
 
             tagBox.addEventListener('click', function() {
-              console.log('NIGGA');
         // Call a function to scroll to the tagged message
               gotoTaggedMessage(tagBox.id);
           });
@@ -1765,7 +1772,6 @@ else if (data['command'] === 'new_file_tagged') {
               
             }
             // else if (username === response.message_sender){
-            //   console.log('DIDNT RECEIVE NUN');
             // }
             msgListTag.style.padding = '10px';
     }
@@ -1845,6 +1851,7 @@ else if (data['command'] === 'new_file_tagged') {
       
       if (data['tagged_content']) {
         var tagBox = document.createElement('div');
+        tagBox.style.cursor = 'pointer'
         tagBox.id = 'trigger_' + `${data['tagged_pk']}`
         tagBox.textContent = data['tagged_content']
         tagBox.style.padding = '10px 30px'
@@ -1855,15 +1862,14 @@ else if (data['command'] === 'new_file_tagged') {
         msgListTag.appendChild(tagBox)
 
         tagBox.addEventListener('click', function() {
-          console.log('NIGGA');
         // Call a function to scroll to the tagged message
               gotoTaggedMessage(tagBox.id);
           });
       }
 
       else if (data['tagged_file_content'] !== null) {
-        // console.log('FILE yo');
         var tagBox = document.createElement('a');
+        tagBox.style.cursor = 'pointer'
         tagBox.id ='trigger_' + `${data['tagged_pk']}`
         tagBox.className = 'tag-box';
         // tagBox.href = data['tagged_file_content']
@@ -1876,7 +1882,6 @@ else if (data['command'] === 'new_file_tagged') {
         msgListTag.appendChild(tagBox)
 
         tagBox.addEventListener('click', function() {
-          console.log('NIGGA');
         // Call a function to scroll to the tagged message
         gotoTaggedMessage(tagBox.id);
           });
@@ -1930,7 +1935,6 @@ else if (data['command'] === 'new_file_tagged') {
         pTag.style.padding = '15px 30px'
         pTag.style.wordWrap = 'break-word'
         pTag.id = 'original_' + `${data['pk']}`
-        console.log('ORG PK: ', pTag.id);
         var dropdownWrapper = document.createElement('div');
         dropdownWrapper.className = 'dropdown';
 
@@ -1988,7 +1992,6 @@ else if (data['command'] === 'new_file_tagged') {
         pTag.style.marginBottom = '10px';
         pTag.style.fontSize = '20px'
         pTag.id = 'original_' + `${data['pk']}`
-        console.log('ORG PK: ', pTag.id);
 
         var dropdownWrapper = document.createElement('div');
         dropdownWrapper.className = 'dropdown';
@@ -2038,11 +2041,10 @@ else if (data['command'] === 'new_file_tagged') {
       msgListTag.style.backgroundColor = '#DCDCDC'
       msgListTag.style.borderRadius = '10px'
       var imgTag = document.createElement('img');
-
-      console.log('DATA YO: ', data);
       
       if (data['tagged_content']) {
         var tagBox = document.createElement('div');
+        tagBox.style.cursor = 'pointer'
         tagBox.id = 'trigger_' + `${data['tagged_pk']}`
         tagBox.textContent = data['tagged_content']
         tagBox.style.padding = '10px 30px'
@@ -2053,15 +2055,14 @@ else if (data['command'] === 'new_file_tagged') {
         msgListTag.appendChild(tagBox)
 
         tagBox.addEventListener('click', function() {
-          console.log('NIGGA');
         // Call a function to scroll to the tagged message
         gotoTaggedMessage(tagBox.id);
           });
       }
 
       else if (data['tagged_file_content'] !== null) {
-        console.log('FILE yo');
         var tagBox = document.createElement('a');
+        tagBox.style.cursor = 'pointer'
         tagBox.id ='trigger_' + `${data['tagged_pk']}`
         tagBox.className = 'tag-box';
         // tagBox.href = data['tagged_file_content']
@@ -2074,7 +2075,6 @@ else if (data['command'] === 'new_file_tagged') {
         msgListTag.appendChild(tagBox)
 
         tagBox.addEventListener('click', function() {
-          console.log('NIGGA');
         // Call a function to scroll to the tagged message
         gotoTaggedMessage(tagBox.id);
           });
@@ -2124,7 +2124,6 @@ else if (data['command'] === 'new_file_tagged') {
         pTag.style.padding = '15px 30px'
         pTag.style.wordWrap = 'break-word'
         pTag.id = 'original_' + `${data['pk']}`
-        console.log('ORG PK: ', pTag.id);
         // Create a Bootstrap dropdown wrapper
         var dropdownWrapper = document.createElement('div');
         dropdownWrapper.className = 'dropdown';
@@ -2191,7 +2190,6 @@ else if (data['command'] === 'new_file_tagged') {
         pTag.style.marginBottom = '10px';
         pTag.style.fontSize = '20px'
         pTag.id = 'original_' + `${data['pk']}`
-        console.log('ORG PK: ', pTag.id);
         // pTag.appendChild(svgElement);
         // svgElement.setAttribute('transform','translate(-22,88)');
         // msgListTag.appendChild(pTag);
@@ -2307,13 +2305,10 @@ else if (data['command'] === 'new_file_tagged') {
     }
     
     function gotoTaggedMessage(taggedMsgPk) {
-      console.log('PK: ', taggedMsgPk);
       var messageId = 'original_' + taggedMsgPk.slice(8, taggedMsgPk.length)
-      console.log('ID: ', messageId);
       // Find the actual message element by its identifier or data attribute
       var messageElement = document.getElementById(messageId);
       messageElement = messageElement.parentElement
-      console.log('YO MAN: ', messageElement);
       messageElement.style.backgroundColor = '#50C878'; // Set your preferred background color
       messageElement.style.padding = '10px';
       messageElement.style.borderRadius = '10px';
@@ -2328,7 +2323,6 @@ else if (data['command'] === 'new_file_tagged') {
           messageElement.style.boxShadow = '';
           messageElement.style.height = '';
       }, 5000); // Adjust the time (in milliseconds) as needed
-      console.log('Goto: ', messageElement);
       if (messageElement) {
           // Scroll to the position of the message element
           messageElement.scrollIntoView({
@@ -2341,10 +2335,16 @@ else if (data['command'] === 'new_file_tagged') {
   };
   $('.friend-conversation').click(handleFriendClick);
 </script>
-
 <script>
-  
+  document.addEventListener("DOMContentLoaded", function() {
+      var element = document.getElementById('scrollToBottomIcon');
+      element.addEventListener('click', function () {
+          console.log('called');
+          window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      });
+  });
 </script>
+
 
 
 

@@ -97,12 +97,10 @@ class ChatConsumer(WebsocketConsumer):
         result = []
         for message in messages:
             if message.message_tagged is not None:
-                print('PK: ', message.pk)
                 result.append(
                     self.tag_message_to_json(message)
                 )
             elif message.message_tagged is None:
-                print('PK: ', message.pk)
                 result.append(
                     self.message_to_json(message)
                 )
