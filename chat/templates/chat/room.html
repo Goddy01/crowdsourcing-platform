@@ -970,6 +970,22 @@ button:focus {
 
 
 <script>
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
   var insertedTaggedMessage
     document.getElementsByClassName('friend-chat-tab')[0].addEventListener('click', function () {
       document.getElementById('content-2').style.display = 'none';
@@ -1288,21 +1304,6 @@ else if (data['command'] === 'new_file_tagged') {
       sendMessage()
     };
 
-    
-    function getCookie(name) {
-        var cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            var cookies = document.cookie.split(';');
-            for (var i = 0; i < cookies.length; i++) {
-                var cookie = jQuery.trim(cookies[i]);
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
     
     fileIcon.onclick = function(e) {
       fileMsg.click();
@@ -2578,6 +2579,20 @@ else if (data['command'] === 'new_file_tagged') {
       }
       
     }
+
+    groupChatSocket.onclose = function(e) {
+      console.error('Chat socket closed unexpectedly');
+    };
+
+    document.querySelector('#chat-message-input2').onkeyup = function(e) {
+      if (e.keyCode === 13) {  
+        document.querySelector('#chat-message-submit2').click();
+      }
+    };
+
+    document.querySelector('#chat-message-submit2').onclick = function(e) {
+      sendMessage()
+    };
     }
     $('.group-conversation').click(handleGroupClick)
 </script>
