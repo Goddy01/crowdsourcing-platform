@@ -227,7 +227,7 @@ class GroupChatConsumer(WebsocketConsumer):
             )
             content = {
                 'command': 'tag_new_group_message',
-                'message': self.group_message_to_json(new_message)
+                'message': self.tag_group_message_to_json(new_message)
             }
         return self.send_chat_message(content)
     
@@ -240,6 +240,27 @@ class GroupChatConsumer(WebsocketConsumer):
                 )
             elif message.message_tagged is None:
                 result.append(
-                    self.group_messages_to_json(message)
+                    self.group_message_to_json(message)
                 )
         return result
+    
+    def group_message_to_json(self, message):
+        try:
+            file_content = message.file_content.url
+        except:
+            file_content = None
+
+        try:
+            content = message.content
+        except:
+            content = None
+
+        return {
+            'sender': message.sender.username,
+            'group': message.group,
+            'content': content,
+            'file_content': file_content,
+            'timestamp': message.timestamp,
+            'sender_pfp_url': message.sender.pfp.url,
+            'message_pk': message.pk
+        }
