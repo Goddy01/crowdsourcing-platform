@@ -1175,7 +1175,6 @@ else if (data['command'] === 'tag_message') {
       
       else if (data['message'].recipient === username && data['message'].sender === oldFriends[oldFriends.length -1]) {
         receivedTaggedMessages(data['message'])
-        
       }
 
       if (data['message'].recipient === username && data['message'].sender === oldFriends[oldFriends.length -1]) {
@@ -2463,7 +2462,7 @@ else if (data['command'] === 'new_file_tagged') {
       groupChatSocket.onmessage = function(e) {
         var data = JSON.parse(e.data);
 
-        if (data['command'] === 'fetch_group_messages') {
+        if (data['command'] === 'group_messages') {
           var isUserInGroup = checkIfUserIsInGroup(username);
           for (let i = 0; i < data['messages'].length; i++) {
             if (typeof data['messages'][i].tagged_pk === 'undefined') {
@@ -2500,10 +2499,28 @@ else if (data['command'] === 'new_file_tagged') {
               receivedMessage(data['message'])
             }
 
-            if (isUserInGroup && data['message'].sender !== username) { 
+            if (isUserInGroup && data['message'].sender !== username && data['message'].group_name === oldGroups[oldGroups.length -1]) { 
               createNewMessageNotif(username, data['message'].pk)
             }
           }
+        }
+
+        else if (data['command'] === 'tagged_new_group_message') {
+          if (data['message'].sender === username) {
+          content2.querySelector('.floating').innerHTML = ''; 
+        }
+
+        if (data['message'].sender === username ) {
+          senderTaggedMessages(data['message']);
+        }
+
+        else if (isUserInGroup && data['message'].sender !== username && data['message'].group_name === oldGroups[oldGroups.length -1]) {
+          receivedTaggedMessages(data['message'])
+        }
+
+        if (isUserInGroup && data['message'].group_name === oldGroups[oldGroups.length -1] && data['message'].sender !== username) {
+          createNewMessageNotif(username, data['message'].pk)
+        }
         }
       }
     }

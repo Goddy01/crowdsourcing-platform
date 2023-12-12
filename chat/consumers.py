@@ -224,7 +224,7 @@ class GroupChatConsumer(WebsocketConsumer):
                 message_tagged = message_tagged
             )
             content = {
-                'command': 'tag_new_group_message',
+                'command': 'tagged_new_group_message',
                 'message': self.tagged_message_to_json(new_message)
             }
         return self.send_chat_message(content)
