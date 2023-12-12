@@ -6,6 +6,9 @@ from core.models import Project
 def upload_in_chat_files(instance, filename):
     return f'inchat_files/{instance.sender.username} -> {instance.recipient.username}-{filename}'
 
+def upload_group_inchat_files(instance, filename):
+    return f'group_inchat_files/{instance.sender.username} -> {instance.group.name}-{filename}'
+
 # class ChatManager(models.Manager):
 #     def by_sender_recipient(self, sender, recipient):
 #         qs = (Chat.objects
