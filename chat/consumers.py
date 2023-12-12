@@ -200,3 +200,33 @@ class GroupChatConsumer(WebsocketConsumer):
             'group_messages': group_messages
         }
         self.send_message(content)
+
+    def send_group_message(self, data):
+        content = {}
+        sender = get_object_or_404(BaseUser, username=self.scope['user'].username)
+        group = get_object_or_404(Group, pk=data['pk'])
+        message = data['message']
+        message_type = data['type']
+        if message_type == 'normal':
+            new_message = GroupChat.objects.create(
+                sender = sender,
+                content = message,
+                group = group
+            )
+            content = {
+                'command': 'new_group_message',
+                'message': self.group_message_to_json(new_message)
+            }
+        elif message_type == 'tagged':
+            message_tagged = GroupChat.objects.get(pk=data['parentMessagePk'])
+            new_message = GroupChat.objects.create(
+                sender=sender,
+                content = message,
+                group = group,
+                message_tagged = message_tagged
+            )
+            content = {
+                'command': 'tag_new_group_message',
+                'message': self.group_message_to_json(new_message)
+            }
+        return self.send_chat_message(content)
