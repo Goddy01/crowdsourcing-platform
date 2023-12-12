@@ -75,8 +75,6 @@ def get_group_members(request, group_pk):
 
 def send_file_message(request, sender, recipient, parent_message=None):
     if request.method == "POST" and request.FILES.get("file"):
-        print('R* : ', recipient)
-        tagged_file_content = None
         sender = BaseUser.objects.get(username=sender)
         recipient = BaseUser.objects.get(username=recipient)
         file = request.FILES['file']
@@ -86,18 +84,16 @@ def send_file_message(request, sender, recipient, parent_message=None):
                 recipient=recipient,
                 file_content=file
             )
-            print('FILE CREATED')
         if parent_message is not None:
             print('Parent Message: ', parent_message)
-            messages_tagged = Chat.objects.get(pk=parent_message)
+            message_tagged = Chat.objects.get(pk=parent_message)
             
             message  = Chat.objects.create(
                 sender=sender,
                 recipient=recipient,
                 file_content=file,
-                message_tagged = messages_tagged
+                message_tagged = message_tagged
             )
-            print('TAGGED FILE CREATED')
     return JsonResponse(data = 
         {
         'status': 'success', 
@@ -105,6 +101,36 @@ def send_file_message(request, sender, recipient, parent_message=None):
         'message_sender': message.sender.username, 
         'message_sender_pfp_url': message.sender.pfp.url, 
         'message_recipient': message.recipient.username, 
+        'message_recipient_url': message.recipient.pfp.url, 
+        'timestamp': message.timestamp
+        })
+
+
+def send_group_file_message(request, sender, groupPk, parent_message=None):
+    if request.method == "POST" and request.FILES.get("file"):
+        sender = BaseUser.objects.get(username=sender)
+        group = Group.objects.get(pk=groupPk)
+        file = request.FILES['file']
+        if parent_message is None:
+            message  = GroupChat.objects.create(
+                sender=sender,
+                group=group,
+                file_content=file
+            )
+        if parent_message is not None:
+            message_tagged = GroupChat.objects.get(pk=parent_message)
+            message  = GroupChat.objects.create(
+                sender=sender,
+                group=group,
+                file_content=file,
+                message_tagged = message_tagged
+            )
+    return JsonResponse(data = 
+        {
+        'status': 'success', 
+        'file_url': message.file_content.url, 
+        'message_sender': message.sender.username, 
+        'groupPk': message.group.pk, 
         'message_recipient_url': message.recipient.pfp.url, 
         'timestamp': message.timestamp
         })
