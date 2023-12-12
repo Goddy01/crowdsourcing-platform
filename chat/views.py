@@ -40,10 +40,15 @@ def room(request, room_name=None):
 
 
 def get_messages(sender, recipient):
-    qs1 = Chat.objects.filter(sender__username=sender, recipient__username=recipient).order_by('timestamp')
-    qs2 = Chat.objects.filter(sender__username=recipient, recipient__username=sender).order_by('timestamp')
+    qs1 = Chat.objects.filter(sender__username=sender, recipient__username=recipient)
+    qs2 = Chat.objects.filter(sender__username=recipient, recipient__username=sender)
 
     return qs1 | qs2
+
+def get_group_messages(logged_in_user, group_pk):
+    group = get_object_or_404(Group, group_pk)
+    if logged_in_user in group.members:
+        return GroupChat.objects.filter(group=group)
 
 # def set_all_message_to_seen(request, sender, recipient):
 #     messages = Chat.objects.filter(

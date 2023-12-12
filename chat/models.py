@@ -6,18 +6,18 @@ from core.models import Project
 def upload_in_chat_files(instance, filename):
     return f'inchat_files/{instance.sender.username} -> {instance.recipient.username}-{filename}'
 
-class ChatManager(models.Manager):
-    def by_sender_recipient(self, sender, recipient):
-        qs = (Chat.objects
-              .filter(sender__username=sender, recipient__username=recipient) |
-              Chat.objects.filter(sender__username=recipient, recipient__username=sender)
-              .order_by('timestamp'))
+# class ChatManager(models.Manager):
+#     def by_sender_recipient(self, sender, recipient):
+#         qs = (Chat.objects
+#               .filter(sender__username=sender, recipient__username=recipient) |
+#               Chat.objects.filter(sender__username=recipient, recipient__username=sender)
+#               .order_by('timestamp'))
 
-        # new_qs = []
-        # for queryset in qs:
-        #     new_qs.append(queryset)
+#         # new_qs = []
+#         # for queryset in qs:
+#         #     new_qs.append(queryset)
 
-        return qs
+#         return qs
 
 class Chat(models.Model):
     message_tagged = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='reply_to')
@@ -28,9 +28,9 @@ class Chat(models.Model):
     file_content = models.FileField(upload_to=upload_in_chat_files, null=True, blank=True)
     # is_seen = models.BooleanField(default=False)
 
-    # class Meta:
-    #     ordering = ('-timestamp', )
-    objects = ChatManager()
+    class Meta:
+        ordering = ('timestamp', )
+    # objects = ChatManager()
 
     # def __str__(self):
     #     return f'{self.sender.username} -- {self.recipient.username}'
@@ -66,8 +66,8 @@ class GroupChat(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     content = models.TextField()
 
-    # class Meta:
-    #     ordering = ('-timestamp', )
+    class Meta:
+        ordering = ('timestamp', )
 
     def __str__(self):
         return self.sender.username

@@ -44,7 +44,7 @@ a:focus {
   flex-direction: column-reverse;
 }
 
-#scrollToBottomIcon {
+/* #scrollToBottomIcon {
     position: fixed;
     bottom: 50px;
     right: 20px;
@@ -52,7 +52,7 @@ a:focus {
     font-size: 20px;
     border-radius: 50%;
     cursor: pointer;
-}
+} */
 
 .floating, #floating-btn {  
     animation-name: floating;
@@ -923,9 +923,9 @@ button:focus {
         <ul id="chat-log">
         </ul>
       </div>
-      <div id="scrollToBottomIcon">
+      <!-- <div id="scrollToBottomIcon">
         <i class="fa fa-arrow-circle-down" style="color: #2C3E50;padding: 10px;"></i>
-    </div>
+    </div> -->
       <div class="message-input" style="display: none;">
         <input type="file" name="file-message" id="file-msg1" hidden>
         <div class="wrap">
@@ -969,7 +969,6 @@ button:focus {
 
 
 <script>
-  
   var insertedTaggedMessage
     document.getElementsByClassName('friend-chat-tab')[0].addEventListener('click', function () {
       document.getElementById('content-2').style.display = 'none';
@@ -2335,7 +2334,7 @@ else if (data['command'] === 'new_file_tagged') {
   };
   $('.friend-conversation').click(handleFriendClick);
 </script>
-<script>
+<!-- <script>
   document.addEventListener("DOMContentLoaded", function() {
       var element = document.getElementById('scrollToBottomIcon');
       element.addEventListener('click', function () {
@@ -2343,7 +2342,7 @@ else if (data['command'] === 'new_file_tagged') {
           window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
       });
   });
-</script>
+</script> -->
 
 
 
@@ -2430,28 +2429,28 @@ else if (data['command'] === 'new_file_tagged') {
       content2.querySelector('.message-input').style.display = 'inline';
 
       // WEBSOCKER
-      var groupChatSocket = new ReconnectingWebSocket(
-        'ws://' + window.location.host + '/ws/chat/groups/'
-      );
+      // var groupChatSocket = new ReconnectingWebSocket(
+      //   'ws://' + window.location.host + '/ws/chat/groups/'
+      // );
       
 
-      groupChatSocket.onopen = function(e) {
-        fetchGroupMessages(groupPk);
-      }
+      // groupChatSocket.onopen = function(e) {
+      //   fetchGroupMessages(groupPk);
+      // }
 
-      groupChatSocket.onmessage = function(e) {
-        var data = JSON.parse(e.data);
+      // groupChatSocket.onmessage = function(e) {
+      //   var data = JSON.parse(e.data);
 
-        if (data['command'] === 'load_messages') {
-          for (let i = 0; i < data['messages'].length; i++) {
-            if (!addedTimestamps.includes(data['messages'][i].timestamp)) {
-              if (data['messages'][i].sender === username) {
-                senderMessages(data['messages'][i])
-              }
-            }
-          }
-        }
-      }
+      //   if (data['command'] === 'load_messages') {
+      //     for (let i = 0; i < data['messages'].length; i++) {
+      //       if (!addedTimestamps.includes(data['messages'][i].timestamp)) {
+      //         if (data['messages'][i].sender === username) {
+      //           senderMessages(data['messages'][i])
+      //         }
+      //       }
+      //     }
+      //   }
+      // }
     }
     $('.group-conversation').click(handleGroupClick)
 </script>

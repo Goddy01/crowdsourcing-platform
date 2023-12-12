@@ -191,8 +191,8 @@ class ChatConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps(message))
 
 
-# class GroupChatConsumer(WebsocketConsumer):
-#     def fetch_group_messages(self, data):
-#         sender = get_object_or_404(BaseUser, username=data['sender'])
-#         group = Group.objects.get(Group, pk=data['groupPk'])
-#         logged_in_user = get_object_or_404(BaseUser, username=self.scope['user'].username)
+class GroupChatConsumer(WebsocketConsumer):
+    def fetch_group_messages(self, data):
+        group = Group.objects.get(Group, pk=data['groupPk'])
+        logged_in_user = get_object_or_404(BaseUser, username=self.scope['user'].username)
+        
