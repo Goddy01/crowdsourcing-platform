@@ -197,7 +197,7 @@ class GroupChatConsumer(WebsocketConsumer):
         group_messages = get_group_messages(logged_in_user=logged_in_user, group_pk=data['groupPk'])
         content = {
             'command': 'group_messages',
-            'group_messages': group_messages
+            'group_messages': self.group_messages_to_json(group_messages)
         }
         self.send_message(content)
 
@@ -230,3 +230,16 @@ class GroupChatConsumer(WebsocketConsumer):
                 'message': self.group_message_to_json(new_message)
             }
         return self.send_chat_message(content)
+    
+    def group_messages_to_json(self, messages):
+        result = []
+        for message in messages:
+            if message.message_tagged is not None:
+                result.append(
+                    self.tag_group_message_to_json(message)
+                )
+            elif message.message_tagged is None:
+                result.append(
+                    self.group_messages_to_json(message)
+                )
+        return result
