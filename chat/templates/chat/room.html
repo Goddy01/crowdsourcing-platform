@@ -2642,6 +2642,15 @@ else if (data['command'] === 'new_file_tagged') {
         
       })
     }
+
+    function fetchGroupMessages(groupPk) {
+      
+      groupChatSocket.send(JSON.stringify({
+        'command': 'fetch_group_messages',
+        'sender': username,
+        'groupPk': groupPk
+      }));
+    }
     }
     $('.group-conversation').click(handleGroupClick)
 </script>

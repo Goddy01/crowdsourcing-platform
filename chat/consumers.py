@@ -191,7 +191,7 @@ class ChatConsumer(WebsocketConsumer):
 class GroupChatConsumer(WebsocketConsumer):
 
     def fetch_group_messages(self, data):
-        logged_in_user = get_object_or_404(BaseUser, username=self.scope['user'].username)
+        logged_in_user = get_object_or_404(BaseUser, username=data['sender'])
         group_messages = get_group_messages(logged_in_user=logged_in_user, group_pk=data['groupPk'])
         content = {
             'command': 'group_messages',
