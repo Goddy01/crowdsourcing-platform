@@ -69,6 +69,7 @@ class GroupChat(models.Model):
     sender = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     content = models.TextField()
+    file_content = models.FileField(upload_to=upload_group_inchat_files, null=True, blank=True)
 
     class Meta:
         ordering = ('timestamp', )
