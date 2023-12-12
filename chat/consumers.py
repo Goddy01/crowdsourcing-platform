@@ -27,15 +27,14 @@ class ChatConsumer(WebsocketConsumer):
         content = {}
         sender = BaseUser.objects.get(username=data['sender'])
         recipient = BaseUser.objects.get(username=data['recipient'])
+        message = Chat.objects.filter(sender=sender, recipient=recipient, file_content__isnull=False).order_by('-timestamp').first()
         if data['message_type'] == 'normal':
-            message = Chat.objects.filter(sender=sender, recipient=recipient, file_content__isnull=False).order_by('-timestamp').first()
             content = {
             'command': 'new_file_normal',
             'message': self.message_to_json(message)
                 }
 
         elif data['message_type'] == 'tagged':
-            message = Chat.objects.filter(sender=sender, recipient=recipient, file_content__isnull=False).order_by('-timestamp').first()
             content = {
                 'command': 'new_file_tagged',
                 'message': self.tag_message_to_json(message)
@@ -195,7 +194,7 @@ class GroupChatConsumer(WebsocketConsumer):
         group_messages = get_group_messages(logged_in_user=logged_in_user, group_pk=data['groupPk'])
         content = {
             'command': 'group_messages',
-            'group_messages': self.group_messages_to_json(group_messages)
+            'group_messages': self.messages_to_json(group_messages)
         }
         self.send_message(content)
 
@@ -213,7 +212,7 @@ class GroupChatConsumer(WebsocketConsumer):
             )
             content = {
                 'command': 'new_group_message',
-                'message': self.group_message_to_json(new_message)
+                'message': self.message_to_json(new_message)
             }
         elif message_type == 'tagged':
             message_tagged = GroupChat.objects.get(pk=data['parentMessagePk'])
@@ -225,24 +224,44 @@ class GroupChatConsumer(WebsocketConsumer):
             )
             content = {
                 'command': 'tag_new_group_message',
-                'message': self.tag_group_message_to_json(new_message)
+                'message': self.tag_message_to_json(new_message)
+            }
+        return self.send_chat_message(content)
+
+    def new_file_message(self, data):
+        content = {}
+        message_type = data['message_type']
+        sender = BaseUser.objects.get(username=data['sender'])
+        group = Group.objects.get(pk=data['groupPk'])
+        message = GroupChat.objects.filter(
+                sender=sender, group=group, file_content__isnull=False
+                ).order_by('-timestamp').first()
+        if message_type == 'normal':
+            content = {
+            'command': 'new_file_normal',
+            'message': self.message_to_json(message)
+                }
+        elif message_type == 'tagged':
+            content = {
+                'command': 'new_file_tagged',
+                'message': self.tag_message_to_json(message)
             }
         return self.send_chat_message(content)
     
-    def group_messages_to_json(self, messages):
+    def messages_to_json(self, messages):
         result = []
         for message in messages:
             if message.message_tagged is not None:
                 result.append(
-                    self.tag_group_message_to_json(message)
+                    self.tag_message_to_json(message)
                 )
             elif message.message_tagged is None:
                 result.append(
-                    self.group_message_to_json(message)
+                    self.message_to_json(message)
                 )
         return result
     
-    def group_message_to_json(self, message):
+    def message_to_json(self, message):
         try:
             file_content = message.file_content.url
         except:
@@ -263,7 +282,7 @@ class GroupChatConsumer(WebsocketConsumer):
             'message_pk': message.pk
         }
 
-    def tag_group_message_to_json(self, message):
+    def tagged_message_to_json(self, message):
         try:
             file_content = message.file_content.url
         except:
