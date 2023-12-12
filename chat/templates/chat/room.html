@@ -948,14 +948,15 @@ button:focus {
       <div class="messages">
         <div class="floating d-flex justify-content-center" id="floating">
         </div>
-        <ul id="chat-log">
+        <ul id="chat-log-2">
         </ul>
       </div>
       <div class="message-input" style="display: none;">
         <input type="file" name="file-message" id="file-msg2" hidden>
         <div class="wrap">
+        <input type="text" hidden value="normal" id="message_type2">
         <input id="chat-message-input2" type="text" placeholder="Write your message..." />
-        <i class="fa fa-paperclip attachment" aria-hidden="true"></i>
+        <i class="fa fa-paperclip attachment" aria-hidden="true" id="clip-2"></i>
         <button id="chat-message-submit2" class="submit">
           <i class="fa fa-paper-plane" aria-hidden="true"></i>
         </button>
@@ -989,7 +990,7 @@ button:focus {
       document.getElementById('chat-message-input1').value = '';
       if (insertedTaggedMessage) {
         insertedTaggedMessage.parentNode.removeChild(insertedTaggedMessage); 
-        insertedTaggedMessage = null; // Reset the reference
+        insertedTaggedMessage = null;
         messageType.value = 'normal';
       }
     }
@@ -2348,13 +2349,38 @@ else if (data['command'] === 'new_file_tagged') {
 
 
 <script>
+  var insertedTaggedMessage2
     document.getElementsByClassName('group-chat-tab')[0].addEventListener('click', function () {
       document.getElementById('content-1').style.display = 'none';
     })
+    var username = "{{ username }}"
 
     oldGroups = []
+    oldGroupSockets = []
 
     function handleGroupClick() {
+
+      var fileMsg = document.querySelector('#file-msg2')
+      var fileIcon = document.querySelector('#clip-2')
+      var messageType = document.getElementById('message_type2')
+      messageType.value = 'normal';
+
+      function removeTaggedMessage2() {
+      var parentMessageContent;
+      document.getElementById('chat-message-input2').value = '';
+      if (insertedTaggedMessage2) {
+        insertedTaggedMessage2.parentNode.removeChild(insertedTaggedMessage2); 
+        insertedTaggedMessage2 = null; // Reset the reference
+        messageType.value = 'normal';
+      }
+    }
+
+    removeTaggedMessage2()
+
+    if (oldGroupSockets.length > 0) {
+      var previousSocket = oldGroupSockets[oldGroupSockets.length-1];
+      previousSocket.close()
+    }
 
       groupMembersObject = {}
 
@@ -2362,14 +2388,11 @@ else if (data['command'] === 'new_file_tagged') {
       var content2 = document.getElementById('content-2')
       content2.style.display = 'block';
       var floatingClass = content2.querySelector('.floating')
-      var chatLog = content2.querySelector('#chat-log')
+      var chatLog = content2.querySelector('#chat-log-2')
       
       chatLog.innerHTML = ''
       floatingClass.innerHTML = ''
-      addedTimestamps = []
 
-      // var chatLog = document.getElementById("chat-log");
-      var username = "{{ username }}";
       var groupPk = $(this).data('group-pk')
       var groupName = $(this).data('group-name');
       var groupDesc = $(this).data('group-desc');
@@ -2382,15 +2405,10 @@ else if (data['command'] === 'new_file_tagged') {
         dataType: 'json',
         success: function(data) {
           groupMembersObject['members'] = data.members
+          console.log('GM: ', groupMembersObject);
         }
       })
 
-      // for (let member = 0; member < groupMembers.length; member++) {
-      //   console.log('Member: ', groupMembers[member].user);
-        
-      // }
-      console.log(typeof groupMembersObject);
-      console.log(groupMembersObject);
       var membersCount = $(this).data('members-count')
       var groupNameSlot = content2.querySelector('#group_name')
       var groupPfpSlot = content2.querySelector('#group_pfp')
@@ -2421,36 +2439,54 @@ else if (data['command'] === 'new_file_tagged') {
       createGroupDesc.textContent = groupDesc
       createGroupDesc.style.padding = '20px'
       createGroupDesc.style.position = 'absolute'
+      createGroupDesc.style.color = 'white'
       createGroupDesc.style.top = '90px'
+      createGroupDesc.style.borderTop = '1px solid white';
       // #d1ecf1
-      createGroupDesc.style.backgroundColor = 'whitesmoke'
+      createGroupDesc.style.backgroundColor = '#2C3E50'
       
       content2.querySelector('.messages').appendChild(createGroupDesc)
       content2.querySelector('.message-input').style.display = 'inline';
 
-      // WEBSOCKER
-      // var groupChatSocket = new ReconnectingWebSocket(
-      //   'ws://' + window.location.host + '/ws/chat/groups/'
-      // );
+      var groupChatSocket = new ReconnectingWebSocket(
+        'ws://' + window.location.host + '/ws/chat/groups/'
+      );
       
 
-      // groupChatSocket.onopen = function(e) {
-      //   fetchGroupMessages(groupPk);
-      // }
+      groupChatSocket.onopen = function(e) {
+        fetchGroupMessages(groupPk);
+      }
 
-      // groupChatSocket.onmessage = function(e) {
-      //   var data = JSON.parse(e.data);
+      function checkIfUserIsInGroup(userUsername) {
+       for (let i = 0; i < groupMembersObject.length; i++) {
+        const participant = groupMembersObject[i];
+        if (participant.username === userUsername) {
+          return true
+        }
+       }
+       return false
+      }
 
-      //   if (data['command'] === 'load_messages') {
-      //     for (let i = 0; i < data['messages'].length; i++) {
-      //       if (!addedTimestamps.includes(data['messages'][i].timestamp)) {
-      //         if (data['messages'][i].sender === username) {
-      //           senderMessages(data['messages'][i])
-      //         }
-      //       }
-      //     }
-      //   }
-      // }
+      groupChatSocket.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+
+        if (data['command'] === 'fetch_group_messages') {
+          for (let i = 0; i < data['messages'].length; i++) {
+            if (typeof data['messages'][i].tagged_pk === 'undefined') {
+
+              if (data['messages'][i].sender === username) {
+                senderMessages(data['messages'][i])
+              }
+
+            }
+
+            if (typeof data['messages'][i].tagged_pk !== 'undefined') {
+
+
+            }
+          }
+        }
+      }
     }
     $('.group-conversation').click(handleGroupClick)
 </script>
