@@ -1200,8 +1200,7 @@ else if (data['command'] === 'new_file_normal') {
       }
       
       else if (data['message'].recipient === username && data['message'].sender === oldFriends[oldFriends.length -1]) {
-        receivedMessage(data['message'])
-        
+        receivedMessage(data['message'])        
       }
 
       if (data['message'].recipient === username && data['message'].sender === oldFriends[oldFriends.length -1]) {
@@ -2521,6 +2520,20 @@ else if (data['command'] === 'new_file_tagged') {
         if (isUserInGroup && data['message'].group_name === oldGroups[oldGroups.length -1] && data['message'].sender !== username) {
           createNewMessageNotif(username, data['message'].pk)
         }
+        }
+
+        else if (data['command'] === 'new_file_normal') {
+          if (data['message'].sender === username) {
+            senderMessages(data['message']);
+          }
+
+          else if (data['message'].sender !== username && isUserInGroup && data['message'].group_name === oldGroups[oldGroups.length -1]) {
+            receivedMessage(data['message'])
+          }
+
+          if (isUserInGroup && data['message'].group_name === oldGroups[oldGroups.length -1] && data['message'].sender !== username) {
+            createNewMessageNotif(username, data['message'].pk)
+          }
         }
       }
     }
