@@ -2593,6 +2593,55 @@ else if (data['command'] === 'new_file_tagged') {
     document.querySelector('#chat-message-submit2').onclick = function(e) {
       sendMessage()
     };
+
+    fileIcon.onclick = function(e) {
+      fileMsg.click();
+    }
+
+    fileMsg.onchange = function(e) {
+      e.preventDefault()
+
+      
+      var fileMessageType;
+      if (messageType.value === 'normal') {
+        var sendFileUrl = "{% url 'chat:send_group_file_msg' sender=0 group_pk=1 %}".replace('0', username).replace('1', groupPk); 
+        fileMessageType = 'normal';
+      }
+      else if (messageType.value === 'tagged') {
+        var sendFileUrl = "{% url 'chat:send_group_file_msg_with_parent' sender=0 group_pk=1 parent_message=2 %}".replace('0', username).replace('1', groupPk).replace('2', parentMessageContent.pk); 
+        fileMessageType = 'tagged';
+      }
+      var file = fileMsg.files[0];
+      var formData = new FormData();
+      formData.append('file', file)
+      $.ajax({
+        processData: false,
+        contentType: false,
+        async: false,
+        type: 'POST',
+        cache: false,
+        url: sendFileUrl,
+        data: formData,
+        headers: {
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        success: function(response) {
+          groupChatSocket.send(JSON.stringify({
+            'command': `new_file_${fileMessageType}`,
+            'message': response,
+            'sender': username,
+            'message_type': fileMessageType,
+            'groupPk': groupPk
+          }));
+          // fileMsg.value = '';
+           if (username === response.message_recipient) {
+            receivedFileMessage(response)
+          } 
+          removeTaggedMessage2()
+        }
+        
+      })
+    }
     }
     $('.group-conversation').click(handleGroupClick)
 </script>

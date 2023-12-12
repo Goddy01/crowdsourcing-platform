@@ -106,7 +106,7 @@ def send_file_message(request, sender, recipient, parent_message=None):
         })
 
 
-def send_group_file_message(request, sender, groupPk, parent_message=None):
+def send_group_file_message(request, sender, group_pk, parent_message=None):
     if request.method == "POST" and request.FILES.get("file"):
         sender = BaseUser.objects.get(username=sender)
         group = Group.objects.get(pk=groupPk)
