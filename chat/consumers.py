@@ -37,7 +37,7 @@ class ChatConsumer(WebsocketConsumer):
         elif data['message_type'] == 'tagged':
             content = {
                 'command': 'new_file_tagged',
-                'message': self.tag_message_to_json(message)
+                'message': self.tagged_message_to_json(message)
             }
         return self.send_chat_message(content)
 
@@ -69,7 +69,7 @@ class ChatConsumer(WebsocketConsumer):
             )
             content = {
                 'command': 'tag_message',
-                'message': self.tag_message_to_json(message)
+                'message': self.tagged_message_to_json(message)
             }
             
         return self.send_chat_message(content)
@@ -97,7 +97,7 @@ class ChatConsumer(WebsocketConsumer):
         for message in messages:
             if message.message_tagged is not None:
                 result.append(
-                    self.tag_message_to_json(message)
+                    self.tagged_message_to_json(message)
                 )
             elif message.message_tagged is None:
                 result.append(
@@ -124,7 +124,7 @@ class ChatConsumer(WebsocketConsumer):
 
         }
     
-    def tag_message_to_json(self, message):
+    def tagged_message_to_json(self, message):
         try:
             file_content = message.file_content.url
         except:
@@ -189,6 +189,7 @@ class ChatConsumer(WebsocketConsumer):
 
 
 class GroupChatConsumer(WebsocketConsumer):
+
     def fetch_group_messages(self, data):
         logged_in_user = get_object_or_404(BaseUser, username=self.scope['user'].username)
         group_messages = get_group_messages(logged_in_user=logged_in_user, group_pk=data['groupPk'])
@@ -198,7 +199,7 @@ class GroupChatConsumer(WebsocketConsumer):
         }
         self.send_message(content)
 
-    def send_group_message(self, data):
+    def send_new_group_message(self, data):
         content = {}
         sender = get_object_or_404(BaseUser, username=self.scope['user'].username)
         group = get_object_or_404(Group, pk=data['pk'])
@@ -224,7 +225,7 @@ class GroupChatConsumer(WebsocketConsumer):
             )
             content = {
                 'command': 'tag_new_group_message',
-                'message': self.tag_message_to_json(new_message)
+                'message': self.tagged_message_to_json(new_message)
             }
         return self.send_chat_message(content)
 
@@ -244,7 +245,7 @@ class GroupChatConsumer(WebsocketConsumer):
         elif message_type == 'tagged':
             content = {
                 'command': 'new_file_tagged',
-                'message': self.tag_message_to_json(message)
+                'message': self.tagged_message_to_json(message)
             }
         return self.send_chat_message(content)
     
@@ -253,7 +254,7 @@ class GroupChatConsumer(WebsocketConsumer):
         for message in messages:
             if message.message_tagged is not None:
                 result.append(
-                    self.tag_message_to_json(message)
+                    self.tagged_message_to_json(message)
                 )
             elif message.message_tagged is None:
                 result.append(
@@ -313,6 +314,14 @@ class GroupChatConsumer(WebsocketConsumer):
             'tagged_msg_content': tagged_content,
             'tagged_msg_file_content': tagged_file_content,
         }
+
+        commands = {
+        'fetch_group_messages': fetch_group_messages,
+        'send_new_group_message': send_new_group_message,
+        'new_file_normal': new_file_message,
+        'new_file_tagged': new_file_message,
+        'tag_message': send_new_group_message
+    }
     def connect(self):
         self.room_group_name = 'chat_room'
         
