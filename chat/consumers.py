@@ -154,9 +154,7 @@ class ChatConsumer(WebsocketConsumer):
             'pk': message.pk,
             'tagged_pk': message.message_tagged.pk,
             'tagged_content': tagged_content,
-            'tagged_file_content': tagged_file_content,
-            
-
+            'tagged_file_content': tagged_file_content,    
         }
     commands = {
         'fetch_messages': fetch_messages,
@@ -260,7 +258,39 @@ class GroupChatConsumer(WebsocketConsumer):
             'group': message.group,
             'content': content,
             'file_content': file_content,
-            'timestamp': message.timestamp,
+            'timestamp': str(message.timestamp),
             'sender_pfp_url': message.sender.pfp.url,
             'message_pk': message.pk
+        }
+
+    def tag_group_message_to_json(self, message):
+        try:
+            file_content = message.file_content.url
+        except:
+            file_content = None
+        if message.content is not None:
+            content = message.content
+        else:
+            content = None
+
+
+        try:
+            tagged_file_content = message.message_tagged.file_content.url
+        except:
+            tagged_file_content = None
+        try :
+            tagged_content = message.message_tagged.content
+        except:
+            tagged_content = None
+        return {
+            'sender': message.sender.username,
+            'group': message.group,
+            'content': content,
+            'timestamp': str(message.timestamp),
+            'sender_pfp_url': message.sender.pfp.url,
+            'file_content': file_content,
+            'msg_pk': message.pk,
+            'tagged_msg_pk': message.message_tagged.pk,
+            'tagged_msg_content': tagged_content,
+            'tagged_msg_file_content': tagged_file_content,
         }
