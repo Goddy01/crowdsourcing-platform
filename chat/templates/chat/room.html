@@ -2479,8 +2479,12 @@ else if (data['command'] === 'new_file_tagged') {
             }
 
             if (typeof data['messages'][i].tagged_pk !== 'undefined') {
-
-
+              if (data['messages'][i].sender === username) {
+                  senderTaggedMessages(data['messages'][i])
+              }
+              else if (data['messages'][i].sender !== username && isUserInGroup) {
+                receivedTaggedMessages(data['messages'][i])
+              }
             }
           }
         }
