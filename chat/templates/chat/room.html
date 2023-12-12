@@ -2458,13 +2458,7 @@ else if (data['command'] === 'new_file_tagged') {
       }
 
       function checkIfUserIsInGroup(userUsername) {
-       for (let i = 0; i < groupMembersObject.length; i++) {
-        const participant = groupMembersObject[i];
-        if (participant.username === userUsername) {
-          return true
-        }
-       }
-       return false
+        return groupMembersObject.some(participant => participant.username === userUsername);
       }
 
       groupChatSocket.onmessage = function(e) {
