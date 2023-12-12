@@ -2465,12 +2465,16 @@ else if (data['command'] === 'new_file_tagged') {
         var data = JSON.parse(e.data);
 
         if (data['command'] === 'fetch_group_messages') {
+          var isUserInGroup = checkIfUserIsInGroup(username);
           for (let i = 0; i < data['messages'].length; i++) {
             if (typeof data['messages'][i].tagged_pk === 'undefined') {
 
               if (data['messages'][i].sender === username) {
                 senderMessages(data['messages'][i])
               }
+               else if (data['messages'][i].sender !== username && isUserInGroup) {
+                receivedMessage(data['messages'][i])
+               }
 
             }
 
