@@ -2504,7 +2504,7 @@ else if (data['command'] === 'new_file_tagged') {
           }
         }
 
-        else if (data['command'] === 'tagged_new_group_message') {
+        else if (data['command'] === 'tagged_new_group_message' || data['command'] === 'new_file_tagged') {
           if (data['message'].sender === username) {
           content2.querySelector('.floating').innerHTML = ''; 
         }
@@ -2523,6 +2523,9 @@ else if (data['command'] === 'new_file_tagged') {
         }
 
         else if (data['command'] === 'new_file_normal') {
+          if (data['message'].sender === username) {
+            content2.querySelector('.floating').innerHTML = ''; 
+          }
           if (data['message'].sender === username) {
             senderMessages(data['message']);
           }
