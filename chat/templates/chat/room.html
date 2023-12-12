@@ -2354,6 +2354,7 @@ else if (data['command'] === 'new_file_tagged') {
 
     oldGroups = []
     oldGroupSockets = []
+    oldGroupPk = []
 
     function handleGroupClick() {
 
@@ -2394,7 +2395,8 @@ else if (data['command'] === 'new_file_tagged') {
       var groupName = $(this).data('group-name');
       var groupDesc = $(this).data('group-desc');
       
-      
+      oldGroupPk.push(groupPk)
+
       getGroupMembersUrl = "{% url 'chat:get_group_members' group_pk=0 %}".replace('0', groupPk)
       $.ajax({
         url: getGroupMembersUrl,
@@ -2539,6 +2541,43 @@ else if (data['command'] === 'new_file_tagged') {
           }
         }
       }
+
+      // END OF GROUPCHATSOCKET.ONMESSAGE
+
+      function sendMessage() {
+      if (messageType.value === 'normal') {
+        var messageInputDom = document.querySelector('#chat-message-input2');
+        var message = messageInputDom.value;
+        groupChatSocket.send(JSON.stringify({
+        'command': 'send_new_group_message',
+        'message': message,
+        'type': 'normal',
+        'from': username,
+        'groupPk': groupPk
+      }));
+      messageInputDom.value = '';
+      }
+
+      else if (messageType.value === 'tagged') {
+        var messageInputDom = document.querySelector('#chat-message-input2');
+        var message = messageInputDom.value;
+        groupChatSocket.send(JSON.stringify({
+          'command': 'tag_group_message',
+          'from': username,
+          'type': 'tagged',
+          'groupPk': groupPk,
+          'parentMessagePk': parentMessageContent['pk'],
+          'message': message
+        }));
+        messageInputDom.value = '';
+        removeTaggedMessage()
+      }
+
+      else {
+        console.log('This instance is not pre-defined.');
+      }
+      
+    }
     }
     $('.group-conversation').click(handleGroupClick)
 </script>

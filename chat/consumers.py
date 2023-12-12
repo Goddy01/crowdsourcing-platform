@@ -201,8 +201,8 @@ class GroupChatConsumer(WebsocketConsumer):
 
     def send_new_group_message(self, data):
         content = {}
-        sender = get_object_or_404(BaseUser, username=self.scope['user'].username)
-        group = get_object_or_404(Group, pk=data['pk'])
+        sender = get_object_or_404(BaseUser, username=data['from'])
+        group = get_object_or_404(Group, pk=data['groupPk'])
         message = data['message']
         message_type = data['type']
         if message_type == 'normal':
@@ -315,13 +315,13 @@ class GroupChatConsumer(WebsocketConsumer):
             'tagged_msg_file_content': tagged_file_content,
         }
 
-        commands = {
-        'fetch_group_messages': fetch_group_messages,
-        'send_new_group_message': send_new_group_message,
-        'new_file_normal': new_file_message,
-        'new_file_tagged': new_file_message,
-        'tag_message': send_new_group_message
-    }
+    commands = {
+    'fetch_group_messages': fetch_group_messages,
+    'send_new_group_message': send_new_group_message,
+    'new_file_normal': new_file_message,
+    'new_file_tagged': new_file_message,
+    'tag_group_message': send_new_group_message
+}
     def connect(self):
         self.room_group_name = 'chat_room'
         
