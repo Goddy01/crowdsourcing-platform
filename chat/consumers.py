@@ -275,7 +275,7 @@ class GroupChatConsumer(WebsocketConsumer):
 
         return {
             'sender': message.sender.username,
-            'group': message.group,
+            'group_name': message.group.name,
             'content': content,
             'file_content': file_content,
             'timestamp': str(message.timestamp),
