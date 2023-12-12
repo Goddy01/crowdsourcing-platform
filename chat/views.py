@@ -49,6 +49,7 @@ def get_group_messages(logged_in_user, group_pk):
     group = get_object_or_404(Group, group_pk)
     if logged_in_user in group.members:
         return GroupChat.objects.filter(group=group)
+    return None
 
 # def set_all_message_to_seen(request, sender, recipient):
 #     messages = Chat.objects.filter(
