@@ -62,6 +62,7 @@ class Group(models.Model):
     @property
     def members_count(self):
         return self.members.count()
+        
     
 class GroupChat(models.Model):
     message_tagged = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='reply_to')

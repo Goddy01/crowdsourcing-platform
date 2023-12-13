@@ -46,10 +46,10 @@ def get_messages(sender, recipient):
     return qs1 | qs2
 
 def get_group_messages(logged_in_user, group_pk):
-    group = get_object_or_404(Group, group_pk)
-    if logged_in_user in group.members:
+    group = Group.objects.get(pk=group_pk)
+    logged_in_user = BaseUser.objects.get(username=logged_in_user)
+    if logged_in_user in group.members.all():
         return GroupChat.objects.filter(group=group)
-    return None
 
 # def set_all_message_to_seen(request, sender, recipient):
 #     messages = Chat.objects.filter(
@@ -131,6 +131,5 @@ def send_group_file_message(request, sender, group_pk, parent_message=None):
         'file_url': message.file_content.url, 
         'message_sender': message.sender.username, 
         'groupPk': message.group.pk, 
-        'message_recipient_url': message.recipient.pfp.url, 
         'timestamp': message.timestamp
         })
