@@ -56,8 +56,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'phonenumbers',
     'phonenumber_field',
-    'django_celery_beat',
-    'django_celery_results',
+    # 'django_celery_beat',
+    # 'django_celery_results',
     'social_django',
     'paystack',
     
