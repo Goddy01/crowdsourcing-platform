@@ -194,7 +194,7 @@ class GroupChatConsumer(WebsocketConsumer):
         group_messages = get_group_messages(logged_in_user=data['sender'], group_pk=data['groupPk'])
         content = {
             'command': 'group_messages',
-            'group_messages': self.messages_to_json(group_messages)
+            'messages': self.messages_to_json(group_messages)
         }
         self.send_message(content)
 

@@ -29,6 +29,7 @@
   -webkit-font-smoothing: antialiased;
 }
 
+
 .time {
   z-index: 9998;
 }
@@ -42,6 +43,7 @@ a:focus {
   overflow: auto;
   display: flex;
   flex-direction: column-reverse;
+  min-height: ;
 }
 
 /* #scrollToBottomIcon {
@@ -622,8 +624,8 @@ a:focus {
 }
 #frame .content .messages {
   height: auto;
-  min-height: calc(100% - 173px);
-  max-height: calc(100% - 173px);
+  min-height: calc(100% - 203px);
+  max-height: calc(100% - 203px);
   overflow-y: scroll;
   overflow-x: hidden;
   width: 100%;
@@ -2408,7 +2410,6 @@ else if (data['command'] === 'new_file_tagged') {
         dataType: 'json',
         success: function(data) {
           groupMembersObject['members'] = data.members
-          console.log('GM: ', groupMembersObject);
         }
       })
 
@@ -2462,8 +2463,8 @@ else if (data['command'] === 'new_file_tagged') {
 
       function checkIfUserIsInGroup(userUsername) {
         // Assuming groupMembersObject has a property named 'participants' that is an array
-        if (groupMembersObject && groupMembersObject.participants && Array.isArray(groupMembersObject.participants)) {
-          return groupMembersObject.participants.some(participant => participant.username === userUsername);
+        if (groupMembersObject && groupMembersObject.members && Array.isArray(groupMembersObject.members)) {
+          return groupMembersObject.members.some(members => members.username === userUsername);
         } else {
           return false; // Handle the case where the object structure is not as expected
         }
@@ -2660,6 +2661,162 @@ else if (data['command'] === 'new_file_tagged') {
         'groupPk': groupPk
       }));
     }
+
+
+    function senderMessages(data) {
+      var sender = data['sender'];
+      var msgListTag = document.createElement('li');
+      msgListTag.style.position = 'relative'
+      var imgTag = document.createElement('img');
+      
+
+      var time = document.createElement('p');
+      time.style.zIndex = '10000000'
+      time.className = 'time';
+      time.style.padding = '0 10px'
+      time.textContent = new Date(data['timestamp']).toLocaleString()
+      time.style.float = 'right';
+      time.style.fontStyle = 'italic';
+      time.style.marginTop = '-15px';
+      time.style.marginRight = '60px';
+      time.style.fontSize = '15px';
+      time.style.color = 'green'
+      
+      imgTag.src = data['sender_pfp_url'];
+      imgTag.style.width = "30px";
+      imgTag.style.height = "30px";
+      imgTag.style.borderRadius = "50%";
+
+      var svgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svgElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+      svgElement.setAttribute("height", "50");
+      svgElement.setAttribute("width", "12");
+      svgElement.style.float = 'right'
+      svgElement.setAttribute('transform','translate(22,65)');
+      svgElement.setAttribute("viewBox", "0 0 448 512");
+
+      var pathElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      pathElement.setAttribute("d", "M201.4 342.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 274.7 86.6 137.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z");
+      pathElement.setAttribute("fill", "#435F7A");
+
+      svgElement.appendChild(pathElement);
+      svgElement.style.marginTop = '-100px';
+      svgElement.style.fontSize = '10px'
+      
+      if (sender !== username) {
+        msgListTag.className = 'sent';
+      } else {
+      msgListTag.className = 'replies';
+        
+      }
+      
+      msgListTag.appendChild(imgTag);
+      if (data['content']) {
+        var pTag = document.createElement('p'); 
+        pTag.textContent = data['content'];
+        pTag.style.padding = '15px 30px'
+        pTag.style.wordWrap = 'break-word'
+        pTag.id = 'original_' + `${data['pk']}`
+        var dropdownWrapper = document.createElement('div');
+        dropdownWrapper.className = 'dropdown';
+
+        // svgElement.setAttribute('class', 'btn btn-secondary dropdown-toggle');
+        svgElement.setAttribute('type', 'button');
+        svgElement.setAttribute('id', 'dropdownMenuButton');
+        svgElement.setAttribute('data-toggle', 'dropdown');
+        svgElement.setAttribute('aria-haspopup', 'true');
+        svgElement.setAttribute('aria-expanded', 'false');
+
+
+        // Create the dropdown menu
+        var dropdownMenu = document.createElement('div');
+        dropdownMenu.className = 'dropdown-menu text-center';
+        dropdownMenu.style.minWidth = '40px'
+        dropdownMenu.setAttribute('aria-labelledby', 'dropdownMenuButton');
+
+        var dropdownItem = document.createElement('i');
+        dropdownItem.className = 'dropdown-item fa fa-reply text-center';
+        dropdownItem.href = '#';
+
+        dropdownMenu.appendChild(dropdownItem);
+
+        dropdownMenu.addEventListener('click', function() { 
+          if (data['content'].length > 15) {
+            tagMessageAndFocus(data['content'].slice(0, 14) + '....')
+          }
+
+          else if (data['content'].length <= 15) {
+            tagMessageAndFocus(data['content'])
+          }
+          parentMessageContent = data
+        })
+
+        dropdownWrapper.appendChild(svgElement);
+        dropdownWrapper.appendChild(dropdownMenu);
+        
+        msgListTag.appendChild(pTag);
+        pTag.appendChild(dropdownWrapper);
+
+        
+      }
+      if (data['file_content'] !== null) {
+        var pTag = document.createElement('button');
+        var hrefLink = document.createElement('a')
+        hrefLink.href = data['file_content'];
+        hrefLink.textContent = 'View File'
+        hrefLink.style.textDecoration = 'none'
+        pTag.appendChild(hrefLink)
+        pTag.style.padding = '10px 30px'
+        pTag.id = 'original_' + `${data['pk']}`
+        pTag.style.backgroundColor = 'white'
+        pTag.style.float = 'right'
+        pTag.style.borderRadius = '10px'
+        pTag.style.border = '0px';
+        pTag.style.marginBottom = '10px';
+        pTag.style.fontSize = '20px'
+
+        var dropdownWrapper = document.createElement('div');
+        dropdownWrapper.className = 'dropdown';
+
+        svgElement.setAttribute('type', 'button');
+        svgElement.setAttribute('id', 'dropdownMenuButton');
+        svgElement.setAttribute('data-toggle', 'dropdown');
+        svgElement.setAttribute('aria-haspopup', 'true');
+        svgElement.setAttribute('aria-expanded', 'false');
+
+        var dropdownMenu = document.createElement('div');
+        dropdownMenu.className = 'dropdown-menu text-center';
+        dropdownMenu.style.minWidth = '40px'
+        dropdownMenu.setAttribute('aria-labelledby', 'dropdownMenuButton');
+
+        var dropdownItem = document.createElement('i');
+        dropdownItem.className = 'dropdown-item fa fa-reply text-center';
+        dropdownItem.href = '#';
+
+        dropdownMenu.appendChild(dropdownItem);
+        dropdownMenu.addEventListener('click', function() { 
+          tagMessageAndFocus('File 📁')
+          parentMessageContent = data;
+        })
+
+        dropdownWrapper.appendChild(svgElement);
+        dropdownWrapper.appendChild(dropdownMenu);
+
+        msgListTag.appendChild(pTag);
+        pTag.appendChild(dropdownWrapper);
+        }
+
+         if (checkIfUserIsInGroup(username)) {
+          chatLog.appendChild(msgListTag); 
+         }
+
+          chatLog.appendChild(time)
+
+        msgListTag.style.padding = '10px';
+
+      }
+    
+
     }
     $('.group-conversation').click(handleGroupClick)
 </script>
