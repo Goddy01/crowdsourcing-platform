@@ -1507,17 +1507,20 @@ else if (data['command'] === 'new_file_tagged') {
         msgListTag.appendChild(pTag);
         pTag.appendChild(dropdownWrapper);
         }
-        if ( data['recipient'] === friendUsername) {
-        chatLog.appendChild(msgListTag); 
+        try {
+          if ( data['recipient'] === friendUsername) {
+            chatLog.appendChild(msgListTag); 
+          }
+        } catch (error) {
+         if (checkIfUserIsInGroup(username)) {
+          chatLog.appendChild(msgListTag); 
+         }
         }
 
           chatLog.appendChild(time)
 
         msgListTag.style.padding = '10px';
 
-        svgElement.onclick = function(e) {
-          
-        }
       }
     
 
@@ -2458,8 +2461,14 @@ else if (data['command'] === 'new_file_tagged') {
       }
 
       function checkIfUserIsInGroup(userUsername) {
-        return groupMembersObject.some(participant => participant.username === userUsername);
+        // Assuming groupMembersObject has a property named 'participants' that is an array
+        if (groupMembersObject && groupMembersObject.participants && Array.isArray(groupMembersObject.participants)) {
+          return groupMembersObject.participants.some(participant => participant.username === userUsername);
+        } else {
+          return false; // Handle the case where the object structure is not as expected
+        }
       }
+
 
       groupChatSocket.onmessage = function(e) {
         var data = JSON.parse(e.data);

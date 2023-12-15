@@ -72,7 +72,7 @@ def upload_location_id_card(instance, filename):
 class BaseUser(AbstractBaseUser, PermissionsMixin):
     last_name =                     models.CharField(max_length=256, null=True, blank=True)
     first_name =                    models.CharField(max_length=256, null=True, blank=True)
-    middle_name =                   models.CharField(max_length=256, null=True, blank=True)
+    middle_name =                   models.CharField(max_length=256, null=False, blank=False)
     username =                      models.CharField(max_length=256, unique=True, blank=True)
     date_of_birth =                 models.DateField(null=True, blank=True)
     email =                         models.EmailField(max_length=128, unique=True, blank=True)
