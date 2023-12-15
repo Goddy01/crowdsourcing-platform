@@ -100,6 +100,7 @@ class ChatConsumer(WebsocketConsumer):
                     self.tagged_message_to_json(message)
                 )
             elif message.message_tagged is None:
+                
                 result.append(
                     self.message_to_json(message)
                 )
@@ -279,7 +280,7 @@ class GroupChatConsumer(WebsocketConsumer):
             'file_content': file_content,
             'timestamp': str(message.timestamp),
             'sender_pfp_url': message.sender.pfp.url,
-            'message_pk': message.pk
+            'pk': message.pk
         }
 
     def tagged_message_to_json(self, message):
@@ -303,7 +304,7 @@ class GroupChatConsumer(WebsocketConsumer):
             tagged_content = None
         return {
             'sender': message.sender.username,
-            'group': message.group,
+            'group_name': message.group.name,
             'content': content,
             'timestamp': str(message.timestamp),
             'sender_pfp_url': message.sender.pfp.url,
