@@ -161,12 +161,12 @@ class KBAQuestion(models.Model):
 # CONTRIBUTOR Model
 class Innovator(models.Model):
     user =                          models.ForeignKey(BaseUser, on_delete=models.CASCADE, null=True, blank=True)
-    innovations_count =             models.IntegerField(db_default=0, null=True, blank=True)
-    upvotes_received =              models.IntegerField(db_default=0, null=True, blank=True)
-    downvotes_received =            models.IntegerField(db_default=0, null=True, blank=True)
-    reputation_score =              models.IntegerField(db_default=0)
-    is_investor =                   models.BooleanField(db_default=False)
-    account_balance = models.IntegerField(null=True, db_default=0)
+    innovations_count =             models.IntegerField(default=0, null=True, blank=True)
+    upvotes_received =              models.IntegerField(default=0, null=True, blank=True)
+    downvotes_received =            models.IntegerField(default=0, null=True, blank=True)
+    reputation_score =              models.IntegerField(default=0)   
+    is_investor =                   models.BooleanField(default=False)
+    account_balance = models.IntegerField(null=True, default=0)
     
     USERNAME_FIELD = "email"
     # REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'middle_name', 'phone_num']

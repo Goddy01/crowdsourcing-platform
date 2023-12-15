@@ -13,31 +13,31 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='innovator',
             name='account_balance',
-            field=models.IntegerField(db_default=models.Value(0), null=True),
+            field=models.IntegerField(default=0, null=True),
         ),
         migrations.AlterField(
             model_name='innovator',
             name='downvotes_received',
-            field=models.IntegerField(blank=True, db_default=models.Value(0), null=True),
+            field=models.IntegerField(blank=True, default=0, null=True),
         ),
         migrations.AlterField(
             model_name='innovator',
             name='innovations_count',
-            field=models.IntegerField(blank=True, db_default=models.Value(0), null=True),
+            field=models.IntegerField(blank=True, default=0, null=True),
         ),
         migrations.AlterField(
             model_name='innovator',
             name='is_investor',
-            field=models.BooleanField(db_default=models.Value(False)),
+            field=models.BooleanField(default=False),
         ),
         migrations.AlterField(
             model_name='innovator',
             name='reputation_score',
-            field=models.IntegerField(db_default=models.Value(0)),
+            field=models.IntegerField(default=0),
         ),
         migrations.AlterField(
             model_name='innovator',
             name='upvotes_received',
-            field=models.IntegerField(blank=True, db_default=models.Value(0), null=True),
+            field=models.IntegerField(blank=True, default=0, null=True),
         ),
     ]
