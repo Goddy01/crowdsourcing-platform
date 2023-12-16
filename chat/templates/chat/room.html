@@ -1148,14 +1148,15 @@ if (data['command'] === 'messages') {
 else if (data['command'] === 'new_message') {
   if (data['message'].sender === username || data['message'].sender === friendUsername) {
     var conversation = document.getElementById(`last_message_${friendUsername}`)
-    // else if (data['message'].content) {
+    if ((data['message'].recipient === username && data['message'].sender === friendUsername) || 
+    (data['message'].sender === username && data['message'].recipient === friendUsername)) {
         if (data['message'].content.length < 21) {
         conversation.textContent = data['message'].content
         }
         else if (data['message'].content) {
           conversation.textContent = data['message'].content.slice(0, 20) + "....." 
         }
-    // }
+    }
   }
   if (data['message'].sender === username) {
     content1.querySelector('.floating').innerHTML = ''; 
