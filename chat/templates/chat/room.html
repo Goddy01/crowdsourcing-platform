@@ -1125,7 +1125,7 @@ if (data['command'] === 'messages') {
     }
     if (typeof data['messages'][i].tagged_pk === 'undefined') {
       
-      if (data['messages'][i].sender === username) {
+      if (data['messages'][i].sender === username && data['messages'][i].recipient === friendUsername) {
         senderMessages(data['messages'][i])
       }
       else if (data['messages'][i].recipient === username && data['messages'][i].sender === friendUsername) {
@@ -1135,7 +1135,7 @@ if (data['command'] === 'messages') {
     } 
     if (typeof data['messages'][i].tagged_pk !== 'undefined') {
       
-      if (data['messages'][i].sender === username) {
+      if (data['messages'][i].sender === username && data['messages'][i].recipient === friendUsername) {
         senderTaggedMessages(data['messages'][i])
       }
       else if (data['messages'][i].recipient === username && data['messages'][i].sender === friendUsername) {
@@ -1162,7 +1162,7 @@ else if (data['command'] === 'new_message') {
     content1.querySelector('.floating').innerHTML = ''; 
   }
   
-      if (data['message'].sender === username ) {
+      if (data['message'].sender === username && data['message'].recipient === friendUsername) {
         senderMessages(data['message']);
       }
       
@@ -1193,7 +1193,7 @@ else if (data['command'] === 'tag_message') {
     content1.querySelector('.floating').innerHTML = ''; 
   }
   
-      if (data['message'].sender === username ) {
+      if (data['message'].sender === username && data['message'].recipient === friendUsername) {
         senderTaggedMessages(data['message']);
       }
       
@@ -1217,7 +1217,7 @@ else if (data['command'] === 'new_file_normal') {
         conversation.textContent = 'File 📁'
       }
   
-      if (data['message'].sender === username) {
+      if (data['message'].sender === username && data['message'].recipient === friendUsername) {
         senderMessages(data['message']);
       }
       
@@ -1242,7 +1242,7 @@ else if (data['command'] === 'new_file_tagged') {
         conversation.textContent = 'File 📁'
       }
   
-      if (data['message'].sender === username) {
+      if (data['message'].sender === username && data['message'].recipient === friendUsername) {
         senderTaggedMessages(data['message']);
       }
       
