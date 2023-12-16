@@ -75,8 +75,8 @@ class GroupChat(models.Model):
     class Meta:
         ordering = ('timestamp', )
 
-    def __str__(self):
-        return self.sender.username
+    # def __str__(self):
+    #     return self.sender.username
     
     def last_20_messages():
         return GroupChat.objects.order_by('-timestamp').all()[:10]
