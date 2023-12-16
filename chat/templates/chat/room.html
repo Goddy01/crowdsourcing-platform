@@ -937,7 +937,7 @@ button:focus {
         <div class="wrap">
         <input type="text" hidden value="normal" id="message_type">
         <input id="chat-message-input1" type="text" placeholder="Write your message..." />
-        <i class="fa fa-paperclip attachment text-white" id="clip-1" aria-hidden="true"></i>
+        <i class="fa fa-paperclip attachment text-white" id="clip-1" aria-hidden="true" style="color: white;"></i>
         <button id="chat-message-submit1" class="submit" style="background-color: #435F7A">
           <i class="fa fa-paper-plane" aria-hidden="true"></i>
         </button>
@@ -1216,7 +1216,8 @@ else if (data['command'] === 'new_file_normal') {
   if (data['message'].sender === username) {
     floatingClass.innerHTML = ''; 
   }
-      if (data['message'].sender === username || data['message'].sender === friendUsername) {
+  if ((data['message'].recipient === username && data['message'].sender === friendUsername) || 
+    (data['message'].sender === username && data['message'].recipient === friendUsername)) {
         var conversation = document.getElementById(`last_message_${friendUsername}`)
         conversation.textContent = 'File 📁'
       }
@@ -1225,11 +1226,11 @@ else if (data['command'] === 'new_file_normal') {
         senderMessages(data['message']);
       }
       
-      else if (data['message'].recipient === username && data['message'].sender === oldFriends[oldFriends.length -1]) {
-        receivedMessage(data['message'])        
+      else if (data['message'].recipient === username && data['message'].sender === friendUsername) {
+        receivedMessage(data['message'])
       }
 
-      if (data['message'].recipient === username && data['message'].sender === oldFriends[oldFriends.length -1]) {
+      if (data['message'].recipient === username && data['message'].sender === friendUsername) {
         createNewMessageNotif(username, data['message'].pk)
       }
     
@@ -1240,7 +1241,8 @@ else if (data['command'] === 'new_file_tagged') {
   if (data['message'].sender === username) {
     floatingClass.innerHTML = ''; 
   }
-      if (data['message'].sender === username || data['message'].sender === friendUsername) {
+  if ((data['message'].recipient === username && data['message'].sender === friendUsername) || 
+    (data['message'].sender === username && data['message'].recipient === friendUsername)) {
         var conversation = document.getElementById(`last_message_${friendUsername}`)
         conversation.textContent = 'File 📁'
       }
@@ -1249,12 +1251,12 @@ else if (data['command'] === 'new_file_tagged') {
         senderTaggedMessages(data['message']);
       }
       
-      else if (data['message'].recipient === username && data['message'].sender === oldFriends[oldFriends.length -1]) {
+      else if (data['message'].recipient === username && data['message'].sender === friendUsername) {
         receivedTaggedMessages(data['message'])
         
       }
 
-      if (data['message'].recipient === username && data['message'].sender === oldFriends[oldFriends.length -1]) {
+      if (data['message'].recipient === username && data['message'].sender === friendUsername) {
         createNewMessageNotif(username, data['message'].pk)
       }
     
@@ -2257,7 +2259,8 @@ else if (data['command'] === 'new_file_tagged') {
             // Create a new div for the tagged message
             var taggedMessageDiv = document.createElement('div');
             taggedMessageDiv.textContent = 'Tagged message: ' + message;
-            taggedMessageDiv.style.backgroundColor = '#eee';
+            taggedMessageDiv.style.backgroundColor = '#435F7A';
+            taggedMessageDiv.style.color = 'white';
             taggedMessageDiv.style.padding = '10px';
             // taggedMessageDiv.style.marginBottom = '10px';
             taggedMessageDiv.style.fontSize = '20px'
@@ -2267,8 +2270,8 @@ else if (data['command'] === 'new_file_tagged') {
             // Create a close button
             var closeButton = document.createElement('button');
             closeButton.textContent = 'x';
-            closeButton.style.backgroundColor = '#EEEEEE';
-            closeButton.style.color = '#435F7A'
+            closeButton.style.backgroundColor = '#435F7A';
+            closeButton.style.color = 'white'
             closeButton.style.marginTop = '-10px'
             closeButton.className = 'close-button';
             closeButton.addEventListener('click', function() {
