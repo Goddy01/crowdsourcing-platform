@@ -43,7 +43,6 @@ a:focus {
   overflow: auto;
   display: flex;
   flex-direction: column-reverse;
-  min-height: ;
 }
 
 /* #scrollToBottomIcon {
@@ -624,8 +623,8 @@ a:focus {
 }
 #frame .content .messages {
   height: auto;
-  min-height: calc(100% - 123px);
-  max-height: calc(100% - 123px);
+  min-height: calc(100% - 183px);
+  max-height: calc(100% - 183px);
   overflow-y: scroll;
   overflow-x: hidden;
   width: 100%;
@@ -1511,15 +1510,9 @@ else if (data['command'] === 'new_file_tagged') {
         msgListTag.appendChild(pTag);
         pTag.appendChild(dropdownWrapper);
         }
-        try {
           if ( data['recipient'] === friendUsername) {
             chatLog.appendChild(msgListTag); 
           }
-        } catch (error) {
-         if (checkIfUserIsInGroup(username)) {
-          chatLog.appendChild(msgListTag); 
-         }
-        }
 
           chatLog.appendChild(time)
 
@@ -2391,7 +2384,7 @@ else if (data['command'] === 'new_file_tagged') {
     removeTaggedMessage2()
 
 
-      groupMembersObject = []
+      var groupMembersObject = {}
 
       var addedTimestamps = []
       var content2 = document.getElementById('content-2')
@@ -2415,10 +2408,12 @@ else if (data['command'] === 'new_file_tagged') {
         type: 'GET',
         dataType: 'json',
         success: function(data) {
-          groupMembersObject.push(data['members'])
+          console.log('success data: ', data);
+          
         }
       })
 
+      console.log('in: ', groupMembersObject['members']);
       var membersCount = $(this).data('members-count')
       var groupNameSlot = content2.querySelector('#group_name')
       var groupPfpSlot = content2.querySelector('#group_pfp')
@@ -2471,7 +2466,7 @@ else if (data['command'] === 'new_file_tagged') {
       function checkIfUserIsInGroup(userUsername) {
         // Assuming groupMembersObject has a property named 'participants' that is an array
         for (let i = 0; i < groupMembersObject.length; i++) {
-          const member = groupMembersObject[i];
+          const member = groupMembersObject.members[i];
           console.log('member: ', member);
           
         }
@@ -2481,19 +2476,19 @@ else if (data['command'] === 'new_file_tagged') {
         //   return false; // Handle the case where the object structure is not as expected
         // }
       }
+      console.log('true? ', groupMembersObject['members']);
 
       var isUserInGroup = checkIfUserIsInGroup(username);
       groupChatSocket.onmessage = function(e) {
-        console.log('zoom');
         var data = JSON.parse(e.data);
+
         if (data['command'] === 'group_messages') {
           for (let i = 0; i < data['messages'].length; i++) {
             if (typeof data['messages'][i].tagged_pk === 'undefined') {
-
               if (data['messages'][i].sender === username) {
                 senderMessages(data['messages'][i])
               }
-               else if (data['messages'][i].sender !== username && isUserInGroup) {
+              else if (data['messages'][i].sender !== username && data['messages'][i].group_name === oldGroups[oldGroups.length -1]) {
                 receivedMessage(data['messages'][i])
                }
 
@@ -2503,7 +2498,7 @@ else if (data['command'] === 'new_file_tagged') {
               if (data['messages'][i].sender === username) {
                   senderTaggedMessages(data['messages'][i])
               }
-              else if (data['messages'][i].sender !== username && isUserInGroup) {
+              else if (data['messages'][i].sender !== username && data['messages'][i].group_name === oldGroups[oldGroups.length -1]) {
                 receivedTaggedMessages(data['messages'][i])
               }
             }
@@ -2519,11 +2514,11 @@ else if (data['command'] === 'new_file_tagged') {
               senderMessages(data['message']);
             }
 
-            else if (data['message'].sender !== username && isUserInGroup && data['message'].group_name === oldGroups[oldGroups.length -1]) {
+            else if (data['message'].sender !== username && data['message'].group_name === oldGroups[oldGroups.length -1]) {
               receivedMessage(data['message'])
             }
 
-            if (isUserInGroup && data['message'].sender !== username && data['message'].group_name === oldGroups[oldGroups.length -1]) { 
+            if (data['message'].sender !== username && data['message'].group_name === oldGroups[oldGroups.length -1]) { 
               createNewMessageNotif(username, data['message'].pk)
             }
         }
@@ -2537,11 +2532,11 @@ else if (data['command'] === 'new_file_tagged') {
           senderTaggedMessages(data['message']);
         }
 
-        else if (isUserInGroup && data['message'].sender !== username && data['message'].group_name === oldGroups[oldGroups.length -1]) {
+        else if (data['message'].sender !== username && data['message'].group_name === oldGroups[oldGroups.length -1]) {
           receivedTaggedMessages(data['message'])
         }
 
-        if (isUserInGroup && data['message'].group_name === oldGroups[oldGroups.length -1] && data['message'].sender !== username) {
+        if (data['message'].group_name === oldGroups[oldGroups.length -1] && data['message'].sender !== username) {
           createNewMessageNotif(username, data['message'].pk)
         }
         }
@@ -2554,11 +2549,11 @@ else if (data['command'] === 'new_file_tagged') {
             senderMessages(data['message']);
           }
 
-          else if (data['message'].sender !== username && isUserInGroup && data['message'].group_name === oldGroups[oldGroups.length -1]) {
+          else if (data['message'].sender !== username && data['message'].group_name === oldGroups[oldGroups.length -1]) {
             receivedMessage(data['message'])
           }
 
-          if (isUserInGroup && data['message'].group_name === oldGroups[oldGroups.length -1] && data['message'].sender !== username) {
+          if (data['message'].group_name === oldGroups[oldGroups.length -1] && data['message'].sender !== username) {
             createNewMessageNotif(username, data['message'].pk)
           }
         }
@@ -2583,12 +2578,13 @@ else if (data['command'] === 'new_file_tagged') {
       else if (messageType.value === 'tagged') {
         var messageInputDom = document.querySelector('#chat-message-input2');
         var message = messageInputDom.value;
+        console.log('PKK: ', parentMessageContent['tagged_pk']);
         groupChatSocket.send(JSON.stringify({
           'command': 'tag_group_message',
           'from': username,
           'type': 'tagged',
           'groupPk': groupPk,
-          'parentMessagePk': parentMessageContent['pk'],
+          'parentMessagePk': parentMessageContent['tagged_pk'],
           'message': message,
         }));
         messageInputDom.value = '';
@@ -2629,7 +2625,7 @@ else if (data['command'] === 'new_file_tagged') {
         fileMessageType = 'normal';
       }
       else if (messageType.value === 'tagged') {
-        var sendFileUrl = "{% url 'chat:send_group_file_msg_with_parent' sender=0 group_pk=1 parent_message=2 %}".replace('0', username).replace('1', groupPk).replace('2', parentMessageContent['tagged_pk']); 
+        var sendFileUrl = "{% url 'chat:send_group_file_msg_with_parent' sender=0 group_pk=1 parent_message=2 %}".replace('0', username).replace('1', groupPk).replace('2', parentMessageContent.pk); 
         fileMessageType = 'tagged';
       }
       var file = fileMsg.files[0];
@@ -2760,6 +2756,7 @@ else if (data['command'] === 'new_file_tagged') {
             tagMessageAndFocus(data['content'])
           }
           parentMessageContent = data
+          
         })
 
         dropdownWrapper.appendChild(svgElement);

@@ -205,7 +205,6 @@ class GroupChatConsumer(WebsocketConsumer):
         group = get_object_or_404(Group, pk=data['groupPk'])
         message = data['message']
         message_type = data['type']
-        print('DATUM: ', data)
         if message_type == 'normal':
             new_message = GroupChat.objects.create(
                 sender = sender,
@@ -273,7 +272,6 @@ class GroupChatConsumer(WebsocketConsumer):
             content = message.content
         except:
             content = None
-
         return {
             'sender': message.sender.username,
             'group_name': message.group.name,
@@ -281,7 +279,7 @@ class GroupChatConsumer(WebsocketConsumer):
             'file_content': file_content,
             'timestamp': str(message.timestamp),
             'sender_pfp_url': message.sender.pfp.url,
-            'pk': message.pk
+            'pk': message.pk,
         }
 
     def tagged_message_to_json(self, message):
@@ -337,16 +335,13 @@ class GroupChatConsumer(WebsocketConsumer):
         self.commands[data['command']](self, data)
 
     def send_chat_message(self, message):
-        print('chat1')
         async_to_sync(self.channel_layer.group_send)(
         self.room_group_name, {"type": "chat_message", "message": message}
         )
 
     def send_message(self, message):
-        print('chat2')
         self.send(text_data=json.dumps(message))
 
     def chat_message(self, event):
-        print('chat3')
         message = event["message"]
         self.send(text_data=json.dumps(message))
