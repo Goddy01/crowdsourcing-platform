@@ -308,7 +308,7 @@ class GroupChatConsumer(WebsocketConsumer):
             'timestamp': str(message.timestamp),
             'sender_pfp_url': message.sender.pfp.url,
             'file_content': file_content,
-            'msg_pk': message.pk,
+            'pk': message.pk,
             'tagged_pk': message.message_tagged.pk,
             'tagged_content': tagged_content,
             'tagged_file_content': tagged_file_content,

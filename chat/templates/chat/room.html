@@ -63,7 +63,7 @@ a:focus {
     margin-left: 30px;
     margin-top: 5px;
     position: absolute;
-    top: 10%;
+    top: 16%;
     left: 50%;
     right: 50%;
     transform: translate(-50%, -50%);
@@ -592,7 +592,7 @@ a:focus {
     width: calc(100% - 340px);
   }
 }
-#frame .content .contact-profile {
+#frame .content .contact-profile.p{
   width: 100%;
   height: 80px;
   line-height: 80px;
@@ -604,7 +604,7 @@ a:focus {
   float: left;
   margin: 9px 12px 0 9px;
 }
-#frame .content .contact-profile p {
+#frame .content .contact-profile {
   float: left;
   font-size: 18px;
 }
@@ -623,13 +623,13 @@ a:focus {
 }
 #frame .content .messages {
   height: auto;
-  min-height: calc(100% - 183px);
-  max-height: calc(100% - 183px);
+  min-height: calc(100% - 173px);
+  max-height: calc(100% - 173px);
   overflow-y: scroll;
   overflow-x: hidden;
   width: 100%;
-  padding-top: 20px;
-  padding-bottom: 100px;
+  padding-top: 50px;
+  padding-bottom: 50px;
 }
 @media screen and (max-width: 735px) {
   #frame .content .messages {
@@ -689,7 +689,7 @@ a:focus {
 }
 #frame .content .message-input {
   position: absolute;
-  bottom: 0;
+  bottom: -30px;
   width: 100%;
   z-index: 99;
 }
@@ -812,10 +812,14 @@ button:focus {
       <div id="contacts" style="background-color: #2C3E50;border-radius: 1px;" class="mt-5">
         <ul class="nav nav-tabs row no-gutters g-0" role="tablist">
           <li class="nav-item col-6 btn chat-type-change friend-chat-tab" id="Friend Conversations">
-            <a class="nav-link font-weight-bold" aria-current="page" href="#tabContent1"data-toggle="tab">Friends</a>
+            <a class="nav-link font-weight-bold" aria-current="page" href="#tabContent1"data-toggle="tab">
+              <i class="fa fa-user"></i>
+            </a>
           </li>
           <li class="nav-item col-6 btn chat-type-change group-chat-tab" id="Group Conversations">
-            <a class="nav-link font-weight-bold" aria-current="page" href="#tabContent2" data-toggle="tab">Groups</a>
+            <a class="nav-link font-weight-bold" aria-current="page" href="#tabContent2" data-toggle="tab">
+              <i class="fa fa-group"></i>
+            </a>
           </li>
         </ul>
         <!-- <p class="h4 text-center text-white p-3" style="border: none;background-color: #121a21;">Friends</p> -->
@@ -901,21 +905,20 @@ button:focus {
       </div>
     </div>
     <div class="content" id="content-1" style="display: none;">
-      <div class="contact-profile">
+      <div class="contact-profile" style="background-color: #2C3E50;margin-bottom: 60px;">
         <img src="" alt="" id="recipient_pfp" />
-        <p id="recipient_username"></p>
-        <!-- <p id="members-count-slot" style="display: block;"></p> -->
-        <div class="social-media">
-          <a href="" id="recipient_linkedin" style="display: none;">
+        <p id="recipient_username" style="margin-top: 20px;word-wrap: normal;width: 100vw;color: white;"></p>
+        <div class="social-media" style="background-color: #2C3E50;padding: 20px;right: 0px;display: flex; justify-content: flex-end;position: absolute;width: 100%;z-index: 100000;margin-top: 15px;">
+          <a href="" id="recipient_linkedin" style="display: none;color: white;">
             <i class="fa fa-linkedin" aria-hidden="true"></i>
           </a>
-          <a href="" id="recipient_facebook" style="display: none;">
+          <a href="" id="recipient_facebook" style="display: none;color: white;">
             <i class="fa fa-facebook" aria-hidden="true"></i>
           </a>
-          <a href="" id="recipient_twitter" style="display: none;">
+          <a href="" id="recipient_twitter" style="display: none;color: white;">
             <i class="fa fa-twitter" aria-hidden="true"></i>
           </a>
-          <a href="" id="recipient_instagram" style="display: none;">
+          <a href="" id="recipient_instagram" style="display: none;color: white;">
             <i class="fa fa-instagram" aria-hidden="true"></i>
           </a>
         </div>
@@ -923,44 +926,47 @@ button:focus {
       <div class="messages">
         <div class="floating d-flex justify-content-center" id="floating">
         </div>
-        <ul id="chat-log">
+        <ul id="chat-log" style="margin: 0px;">
         </ul>
       </div>
       <!-- <div id="scrollToBottomIcon">
         <i class="fa fa-arrow-circle-down" style="color: #2C3E50;padding: 10px;"></i>
     </div> -->
-      <div class="message-input" style="display: none;">
+      <div class="message-input" style="display: none;background-color: #435F7A;bottom: 0px;">
         <input type="file" name="file-message" id="file-msg1" hidden>
         <div class="wrap">
         <input type="text" hidden value="normal" id="message_type">
         <input id="chat-message-input1" type="text" placeholder="Write your message..." />
-        <i class="fa fa-paperclip attachment" id="clip-1" aria-hidden="true"></i>
-        <button id="chat-message-submit1" class="submit">
+        <i class="fa fa-paperclip attachment text-white" id="clip-1" aria-hidden="true"></i>
+        <button id="chat-message-submit1" class="submit" style="background-color: #435F7A">
           <i class="fa fa-paper-plane" aria-hidden="true"></i>
         </button>
         </div>
       </div>
     </div>
-    <div class="content" id="content-2" style="display: none;">
-      <div class="contact-profile" id="contact-profile-1">
-        <img src="" alt="" id="group_pfp" />
-        <p id="group_name"></p>
-        <p id="members-count-slot" style="display: block;"></p>
+    <div class="content" id="content-2" style="display: none">
+      <div class="contact-profile" id="contact-profile-1" style="width: 100%;margin-bottom: 75px;background-color: #2C3E50;">
+        <div style="background-color: #2C3E50;">
+          <img src="" alt="" id="group_pfp" style="width: 40px;height: 40px;border-radius: 50%;" />
+          <span id="group_name" style="font-size: 16px;word-wrap: break-word;"></span>
+          <p id="members-count-slot" style="color: white;margin-left: 60px;font-size: 16px;">Members: </p>
+          <p id="group-desc" style="z-index: 10000;background-color: #2C3E50;"></p>
+        </div>
       </div>
-      <div class="contact-profile" id="contact-profile-2"></div>
+      <!-- <div class="contact-profile" id="contact-profile-2"></div> -->
       <div class="messages">
         <div class="floating d-flex justify-content-center" id="floating">
         </div>
-        <ul id="chat-log-2">
+        <ul id="chat-log-2" style="margin: 0px;">
         </ul>
       </div>
-      <div class="message-input" style="display: none;">
+      <div class="message-input" style="display: none;background-color: #435F7A;bottom: 0px;">
         <input type="file" name="file-message" id="file-msg2" hidden>
         <div class="wrap">
         <input type="text" hidden value="normal" id="message_type2">
         <input id="chat-message-input2" type="text" placeholder="Write your message..." />
-        <i class="fa fa-paperclip attachment" aria-hidden="true" id="clip-2"></i>
-        <button id="chat-message-submit2" class="submit">
+        <i class="fa fa-paperclip attachment aria-hidden="true" id="clip-2" style="color: white;"></i>
+        <button id="chat-message-submit2" class="submit" style="background-color: #435F7A">
           <i class="fa fa-paper-plane" aria-hidden="true"></i>
         </button>
         </div>
@@ -2419,38 +2425,29 @@ else if (data['command'] === 'new_file_tagged') {
       var groupPfpSlot = content2.querySelector('#group_pfp')
       var contactProfile = content2.querySelector('#contact-profile-1')
       var contactProfile2 = content2.querySelector('#contact-profile-2')
-      var createGroupDesc = document.createElement('p');
+      var createGroupDesc = document.getElementById('group-desc');
       var groupCountSlot = content2.querySelector('#members-count-slot')
       
-      groupCountSlot.innerHTML = `Members: <span style="font-weight: bold;">${membersCount}</span>`;
-      groupCountSlot.style.position = 'absolute';
-      groupCountSlot.style.left = '80px';
-      groupCountSlot.style.float = 'left'
-      groupCountSlot.style.top = '35px'
-      contactProfile.style.backgroundColor = '#2C3E50'
-      contactProfile2.style.backgroundColor = '#2C3E50'
+      groupCountSlot.innerHTML = `Members: <span style="font-weight: bold">${membersCount}</span>`;
+      // contactProfile.style.backgroundColor = '#2C3E50'
+      // contactProfile2.style.backgroundColor = '#2C3E50'
       contactProfile.style.color = 'white'
-      contactProfile2.style.color = 'white'
-      contactProfile2.appendChild(groupCountSlot)
-      // createMembersCount.style.position = 'absolute';
-      // createMembersCount.style.right = '7px'
       oldGroups.push(groupName)
 
       groupNameSlot.textContent = groupName;
-      // contactProfile.appendChild(createMembersCount)
-      groupPfpSlot.style.marginTop = '20px'
       groupPfpSlot.src = "{% static 'images/group.jpg' %}"
       // document.getElementById('description').textContent = groupDesc
       createGroupDesc.textContent = groupDesc
       createGroupDesc.style.padding = '20px'
-      createGroupDesc.style.position = 'absolute'
+      createGroupDesc.style.position = 'fixed '
+      // createGroupDesc.style.position = 'static'
       createGroupDesc.style.color = 'white'
-      createGroupDesc.style.top = '90px'
+      // createGroupDesc.style.top = '190px'
       createGroupDesc.style.borderTop = '1px solid white';
       // #d1ecf1
-      createGroupDesc.style.backgroundColor = '#2C3E50'
+      // createGroupDesc.style.backgroundColor = '#2C3E50'
       
-      content2.querySelector('.messages').appendChild(createGroupDesc)
+      // content2.querySelector('.messages').appendChild(createGroupDesc)
       content2.querySelector('.message-input').style.display = 'inline';
 
       var groupChatSocket = new ReconnectingWebSocket(
@@ -2578,13 +2575,13 @@ else if (data['command'] === 'new_file_tagged') {
       else if (messageType.value === 'tagged') {
         var messageInputDom = document.querySelector('#chat-message-input2');
         var message = messageInputDom.value;
-        console.log('PKK: ', parentMessageContent['tagged_pk']);
+        console.log('PKK: ', parentMessageContent);
         groupChatSocket.send(JSON.stringify({
           'command': 'tag_group_message',
           'from': username,
           'type': 'tagged',
           'groupPk': groupPk,
-          'parentMessagePk': parentMessageContent['tagged_pk'],
+          'parentMessagePk': parentMessageContent['pk'],
           'message': message,
         }));
         messageInputDom.value = '';
@@ -2756,6 +2753,7 @@ else if (data['command'] === 'new_file_tagged') {
             tagMessageAndFocus(data['content'])
           }
           parentMessageContent = data
+          console.log('TAGGED DATA: ', parentMessageContent);
           
         })
 
@@ -2805,6 +2803,7 @@ else if (data['command'] === 'new_file_tagged') {
         dropdownMenu.addEventListener('click', function() { 
           tagMessageAndFocus('File 📁')
           parentMessageContent = data;
+          console.log('TAGGED DATA: ', parentMessageContent);
         })
 
         dropdownWrapper.appendChild(svgElement);
@@ -3186,6 +3185,7 @@ else if (data['command'] === 'new_file_tagged') {
             tagMessageAndFocus(data['content'])
           }
           parentMessageContent = data
+          console.log('TAGGED DATA: ', parentMessageContent);
         })
 
         dropdownWrapper.appendChild(svgElement);
@@ -3234,6 +3234,7 @@ else if (data['command'] === 'new_file_tagged') {
         dropdownMenu.addEventListener('click', function() { 
           tagMessageAndFocus('File 📁')
           parentMessageContent = data;
+          console.log('TAGGED DATA: ', parentMessageContent);
         })
 
         dropdownWrapper.appendChild(svgElement);
@@ -3472,18 +3473,19 @@ else if (data['command'] === 'new_file_tagged') {
             // Create a new div for the tagged message
             var taggedMessageDiv = document.createElement('div');
             taggedMessageDiv.textContent = 'Tagged message: ' + message;
-            taggedMessageDiv.style.backgroundColor = '#eee';
+            taggedMessageDiv.style.backgroundColor = '#435F7A';
+            taggedMessageDiv.style.color = 'white';
             taggedMessageDiv.style.padding = '10px';
             // taggedMessageDiv.style.marginBottom = '10px';
             taggedMessageDiv.style.fontSize = '20px'
-            // var messageType = document.getElementById('message_type')
+            // var messageType = document.getElementById('message_type2')
             messageType.value = 'tagged';
 
             // Create a close button
             var closeButton = document.createElement('button');
             closeButton.textContent = 'x';
-            closeButton.style.backgroundColor = '#EEEEEE';
-            closeButton.style.color = '#435F7A'
+            closeButton.style.backgroundColor = '#435F7A';
+            closeButton.style.color = 'white'
             closeButton.style.marginTop = '-10px'
             closeButton.className = 'close-button';
             closeButton.addEventListener('click', function() {
