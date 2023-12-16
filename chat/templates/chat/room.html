@@ -1128,7 +1128,7 @@ if (data['command'] === 'messages') {
       if (data['messages'][i].sender === username) {
         senderMessages(data['messages'][i])
       }
-      else if (data['messages'][i].recipient === username) {
+      else if (data['messages'][i].recipient === username && data['messages'][i].sender === friendUsername) {
         receivedMessage(data['messages'][i])
       }
       
@@ -1138,7 +1138,7 @@ if (data['command'] === 'messages') {
       if (data['messages'][i].sender === username) {
         senderTaggedMessages(data['messages'][i])
       }
-      else if (data['messages'][i].recipient === username) {
+      else if (data['messages'][i].recipient === username && data['messages'][i].sender === friendUsername) {
         receivedTaggedMessages(data['messages'][i])
       }
     } 
@@ -1166,30 +1166,28 @@ else if (data['command'] === 'new_message') {
         senderMessages(data['message']);
       }
       
-      else if (data['message'].recipient === username && data['message'].sender === oldFriends[oldFriends.length -1]) {
+      else if (data['message'].recipient === username && data['message'].sender === friendUsername) {
         receivedMessage(data['message'])
       }
 
-      if (data['message'].recipient === username && data['message'].sender === oldFriends[oldFriends.length -1]) {
+      if (data['message'].recipient === username && data['message'].sender === friendUsername) {
         
         createNewMessageNotif(username, data['message'].pk)
-      }
-      else if (data['message'].recipient === username && data['message'].sender !== oldFriends[oldFriends.length -1]) {
-
       }
 }
 
 else if (data['command'] === 'tag_message') {
   if (data['message'].sender === username || data['message'].sender === friendUsername) {
     var conversation = document.getElementById(`last_message_${friendUsername}`)
-    // else if (data['message'].content) {
+    if ((data['message'].recipient === username && data['message'].sender === friendUsername) || 
+    (data['message'].sender === username && data['message'].recipient === friendUsername)) {
         if (data['message'].content.length < 21) {
         conversation.textContent = data['message'].content
         }
         else if (data['message'].content) {
           conversation.textContent = data['message'].content.slice(0, 20) + "....." 
         }
-    // }
+    }
   }
   if (data['message'].sender === username) {
     content1.querySelector('.floating').innerHTML = ''; 
@@ -1199,16 +1197,13 @@ else if (data['command'] === 'tag_message') {
         senderTaggedMessages(data['message']);
       }
       
-      else if (data['message'].recipient === username && data['message'].sender === oldFriends[oldFriends.length -1]) {
+      else if (data['message'].recipient === username && data['message'].sender === friendUsername) {
         receivedTaggedMessages(data['message'])
       }
 
-      if (data['message'].recipient === username && data['message'].sender === oldFriends[oldFriends.length -1]) {
+      if (data['message'].recipient === username && data['message'].sender === friendUsername) {
         
         createNewMessageNotif(username, data['message'].pk)
-      }
-      else if (data['message'].recipient === username && data['message'].sender !== oldFriends[oldFriends.length -1]) {
-
       }
 }
 
