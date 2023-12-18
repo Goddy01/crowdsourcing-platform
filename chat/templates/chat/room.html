@@ -955,7 +955,7 @@ button:focus {
       </div>
       <!-- <div class="contact-profile" id="contact-profile-2"></div> -->
       <div class="messages">
-        <div class="floating d-flex justify-content-center" id="floating">
+        <div class="floating d-flex justify-content-center" id="floating2">
         </div>
         <ul id="chat-log-2" style="margin: 0px;">
         </ul>
@@ -2408,6 +2408,7 @@ else if (data['command'] === 'new_file_tagged') {
       var addedTimestamps = []
       var content2 = document.getElementById('content-2')
       content2.style.display = 'block';
+      var floating = content2.querySelector('#floating2');
       var floatingClass = content2.querySelector('.floating')
       var chatLog = content2.querySelector('#chat-log-2')
       
@@ -2526,7 +2527,7 @@ else if (data['command'] === 'new_file_tagged') {
             }
 
             if (data['message'].sender !== username && data['message'].group_name === groupName) { 
-              createNewMessageNotif(username, data['message'].pk)
+              createNewMessageNotif(groupName, data['message']['pk'])
             }
         }
 
@@ -2544,7 +2545,7 @@ else if (data['command'] === 'new_file_tagged') {
         }
 
         if (data['message'].group_name === groupName && data['message'].sender !== username) {
-          createNewMessageNotif(username, data['message'].pk)
+          createNewMessageNotif(groupName, data['message']['pk'])
         }
         }
 
@@ -2561,7 +2562,7 @@ else if (data['command'] === 'new_file_tagged') {
           }
 
           if (data['message'].group_name === groupName && data['message'].sender !== username) {
-            createNewMessageNotif(username, data['message'].pk)
+            createNewMessageNotif(groupName, data['message']['pk'])
           }
         }
       }
@@ -3004,7 +3005,7 @@ else if (data['command'] === 'new_file_tagged') {
     }
     
 
-    function createNewMessageNotif(msgID) {
+    function createNewMessageNotif(group_name, msgID) {
         var button = document.createElement('button');
         button.className = 'new-msg-btn button button-primary badge-pill floating-btn';
         button.style.padding = '0px 20px';
@@ -3014,6 +3015,7 @@ else if (data['command'] === 'new_file_tagged') {
         button.id = `msg_${msgID}_notif`
         // button.style.display = 'none';
         button.style.whiteSpace = 'nowrap';
+        button.style.zIndex = '1000000000'
 
         // Create the span element
         var span = document.createElement('span');
@@ -3027,9 +3029,11 @@ else if (data['command'] === 'new_file_tagged') {
         button.appendChild(span);
         button.appendChild(icon);
 
-        if (isUserInGroup) {
-          document.getElementsByClassName('floating')[0].innerHTML = ''
-          floating.appendChild(button); 
+        if (group_name === groupName) {
+          floatingClass.innerHTML = ''
+          console.log('done');
+          floating.appendChild(button);  
+        }
 
           // Add click event listener to the button
           button.onclick = function (e) {
@@ -3065,7 +3069,7 @@ else if (data['command'] === 'new_file_tagged') {
         };
 
 
-        }
+        // }
 
     }
 
