@@ -2378,11 +2378,11 @@ else if (data['command'] === 'new_file_tagged') {
 
       function atusernameFunc(data) {
 
-        var senderProfileUrl = "{% 'chat:sender_profile' sender_username=0 %}".replace('0', data['sender'])
+        var senderProfileUrl = "{% url 'chat:sender_profile' sender_username=0 %}".replace('0', data['sender'])
         atUsername = document.createElement('a')
         atUsername.textContent = `@${data['sender']}`
         atUsername.style.float = 'left'
-        // atUsername.style.left = '-80px'
+        atUsername.style.left = '80px'
         atUsername.style.fontSize = '13px'
         atUsername.style.position = 'relative';
         atUsername.href = senderProfileUrl
@@ -2844,8 +2844,8 @@ else if (data['command'] === 'new_file_tagged') {
       time2.textContent = new Date(data['timestamp']).toLocaleString()
       time2.style.float = 'left';
       time2.style.fontStyle = 'italic';
-      time2.style.marginTop = '-15px';
-      time2.style.marginLeft = '20px';
+      time2.style.marginTop = '0px';
+      time2.style.marginLeft = '10px';
       time2.style.fontSize = '15px';
       time2.style.color = 'green'
 
@@ -2994,8 +2994,11 @@ else if (data['command'] === 'new_file_tagged') {
         msgListTag.appendChild(pTag);
         pTag.appendChild(dropdownWrapper);
       }
+
+      atusernameFunc(data)
       if ( data['group_name'] === oldGroups[oldGroups.length-1]) {
-        chatLog.appendChild(msgListTag); 
+        chatLog.appendChild(msgListTag);
+        chatLog.appendChild(atUsername);
       chatLog.appendChild(time2) 
       }
       msgListTag.style.padding = '10px';

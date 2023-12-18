@@ -1,8 +1,8 @@
 from django.http import JsonResponse
-from accounts.models import BaseUser
+from accounts.models import BaseUser, Innovator
 from itertools import chain
 from django.db.models import Q
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.safestring import mark_safe
 import json
 from django.contrib.auth.decorators import login_required
@@ -133,3 +133,7 @@ def send_group_file_message(request, sender, group_pk, parent_message=None):
         'groupPk': message.group.pk, 
         'timestamp': message.timestamp
         })
+
+def sender_profile(sender_username):
+    innovator_pk = Innovator.objects.get(user__username=sender_username).pk
+    return redirect('accounts:profile_with_arg', innovator_pk)

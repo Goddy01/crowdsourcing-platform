@@ -13,5 +13,6 @@ urlpatterns = [
     path('<group_pk>/<sender>/send-file', views.send_group_file_message, name='send_group_file_msg'),
     path('<group_pk>/<parent_message>/<sender>/send-file', views.send_group_file_message, name='send_group_file_msg_with_parent'),
     path('<group_pk>/get-group-members', views.get_group_members, name='get_group_members'),
+    path('<sender_username>/sender-profile', views.sender_profile, name='sender_profile')
 
 ]
