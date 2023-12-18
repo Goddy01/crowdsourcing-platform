@@ -2374,6 +2374,23 @@ else if (data['command'] === 'new_file_tagged') {
       var messageType = document.getElementById('message_type2')
       messageType.value = 'normal';
 
+      var atUsername;
+
+      function atusernameFunc(data) {
+
+        var senderProfileUrl = "{% 'chat:sender_profile' sender_username=0 %}".replace('0', data['sender'])
+        atUsername = document.createElement('a')
+        atUsername.textContent = `@${data['sender']}`
+        atUsername.style.float = 'left'
+        // atUsername.style.left = '-80px'
+        atUsername.style.fontSize = '13px'
+        atUsername.style.position = 'relative';
+        atUsername.href = senderProfileUrl
+        atUsername.style.top = '-23px';
+        atUsername.style.display = 'block';
+        atUsername.style.textDecoration = 'none';
+      }
+
       function removeTaggedMessage2() {
       var parentMessageContent;
       document.getElementById('chat-message-input2').value = '';
@@ -2707,13 +2724,6 @@ else if (data['command'] === 'new_file_tagged') {
         
       }
 
-      var bm = document.createElement('div')
-          bm.textContent = data['sender']
-          bm.style.float = 'right'
-          bm.style.marginRight = '60px'
-          bm.style.display = 'block'
-      
-      msgListTag.appendChild(bm)
       msgListTag.appendChild(imgTag);
       if (data['content']) {
         var pTag = document.createElement('p'); 
@@ -2814,7 +2824,6 @@ else if (data['command'] === 'new_file_tagged') {
         if ( data['group_name'] === oldGroups[oldGroups.length-1]) {
         chatLog.appendChild(msgListTag); 
         }
-          chatLog.appendChild(bm)
           chatLog.appendChild(time)
 
         msgListTag.style.padding = '10px';
