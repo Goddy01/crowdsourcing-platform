@@ -2378,7 +2378,7 @@ else if (data['command'] === 'new_file_tagged') {
 
       function atusernameFunc(data) {
 
-        var senderProfileUrl = "{% url 'chat:sender_profile' sender_username=0 %}".replace('0', data['sender'])
+        var senderProfileUrl = "{% url 'chat:sender_profile' 0 %}".replace('0', data['sender'])
         atUsername = document.createElement('a')
         atUsername.textContent = `@${data['sender']}`
         atUsername.style.float = 'left'
@@ -2821,10 +2821,10 @@ else if (data['command'] === 'new_file_tagged') {
         pTag.appendChild(dropdownWrapper);
         }
 
-        if ( data['group_name'] === oldGroups[oldGroups.length-1]) {
+        if ( data['group_name'] === groupName) {
         chatLog.appendChild(msgListTag); 
+        chatLog.appendChild(time)
         }
-          chatLog.appendChild(time)
 
         msgListTag.style.padding = '10px';
 
@@ -2844,7 +2844,7 @@ else if (data['command'] === 'new_file_tagged') {
       time2.textContent = new Date(data['timestamp']).toLocaleString()
       time2.style.float = 'left';
       time2.style.fontStyle = 'italic';
-      time2.style.marginTop = '0px';
+      time2.style.marginTop = '-3px';
       time2.style.marginLeft = '10px';
       time2.style.fontSize = '15px';
       time2.style.color = 'green'
@@ -2996,10 +2996,10 @@ else if (data['command'] === 'new_file_tagged') {
       }
 
       atusernameFunc(data)
-      if ( data['group_name'] === oldGroups[oldGroups.length-1]) {
+      if ( data['group_name'] === groupName) {
         chatLog.appendChild(msgListTag);
         chatLog.appendChild(atUsername);
-      chatLog.appendChild(time2) 
+        chatLog.appendChild(time2) 
       }
       msgListTag.style.padding = '10px';
     }
@@ -3251,12 +3251,10 @@ else if (data['command'] === 'new_file_tagged') {
         msgListTag.appendChild(pTag);
         pTag.appendChild(dropdownWrapper);
         }
-        if ( data['group_name'] === oldGroups[oldGroups.length-1]) {
+        if ( data['group_name'] === groupName) {
         chatLog.appendChild(msgListTag); 
+        chatLog.appendChild(time)
         }
-
-          chatLog.appendChild(time)
-
         msgListTag.style.padding = '10px';
 
       }
@@ -3316,8 +3314,8 @@ else if (data['command'] === 'new_file_tagged') {
       time2.textContent = new Date(data['timestamp']).toLocaleString()
       time2.style.float = 'left';
       time2.style.fontStyle = 'italic';
-      // time2.style.marginTop = '-25px';
-      time2.style.marginLeft = '20px';
+      // time2.style.marginTop = '-3px';
+      time2.style.marginLeft = '10px';
       time2.style.fontSize = '15px';
       time2.style.color = 'green'
 
@@ -3465,11 +3463,12 @@ else if (data['command'] === 'new_file_tagged') {
         msgListTag.appendChild(pTag);
         pTag.appendChild(dropdownWrapper);
       }
-      
-      if ( data['group_name'] === oldGroups[oldGroups.length-1]) {
+      atusernameFunc(data)
+      if ( data['group_name'] === groupName) {
           chatLog.appendChild(msgListTag); 
+          chatLog.appendChild(atUsername);
+          chatLog.appendChild(time2)
          }
-      chatLog.appendChild(time2)
       msgListTag.style.padding = '10px';
     }
 

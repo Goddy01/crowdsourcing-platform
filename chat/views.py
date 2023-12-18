@@ -134,6 +134,6 @@ def send_group_file_message(request, sender, group_pk, parent_message=None):
         'timestamp': message.timestamp
         })
 
-def sender_profile(sender_username):
+def sender_profile(request, sender_username):
     innovator_pk = Innovator.objects.get(user__username=sender_username).pk
     return redirect('accounts:profile_with_arg', innovator_pk)
