@@ -2524,11 +2524,12 @@ else if (data['command'] === 'new_file_tagged') {
 
             else if (data['message'].sender !== username && data['message'].group_name === groupName) {
               receivedMessage(data['message'])
-            }
-
-            if (data['message'].sender !== username && data['message'].group_name === groupName) { 
               createNewMessageNotif(groupName, data['message']['pk'])
             }
+
+            // if (data['message'].sender !== username && data['message'].group_name === groupName) { 
+            //   createNewMessageNotif(groupName, data['message']['pk'])
+            // }
         }
 
         else if (data['command'] === 'tagged_new_group_message' || data['command'] === 'new_file_tagged') {
@@ -3005,73 +3006,7 @@ else if (data['command'] === 'new_file_tagged') {
     }
     
 
-    function createNewMessageNotif(group_name, msgID) {
-        var button = document.createElement('button');
-        button.className = 'new-msg-btn button button-primary badge-pill floating-btn';
-        button.style.padding = '0px 20px';
-        button.style.height = '70px';
-        button.style.width = '250px';
-        button.style.fontFamily = "";
-        button.id = `msg_${msgID}_notif`
-        // button.style.display = 'none';
-        button.style.whiteSpace = 'nowrap';
-        button.style.zIndex = '1000000000'
-
-        // Create the span element
-        var span = document.createElement('span');
-        span.style.fontSize = '18px';
-        span.textContent = 'New Message';
-        var icon = document.createElement('i');
-        icon.className = 'fa fa-arrow-circle-down';
-        icon.style.fontSize = '15px';
-        icon.style.margin = "0px 5px";
-
-        button.appendChild(span);
-        button.appendChild(icon);
-
-        if (group_name === groupName) {
-          floatingClass.innerHTML = ''
-          console.log('done');
-          floating.appendChild(button);  
-        }
-
-          // Add click event listener to the button
-          button.onclick = function (e) {
-            floatingClass.innerHTML = '';
-            // Specify that it is a new message
-            var messageElements = document.getElementsByClassName('sent');
-            if (messageElements.length > 0) {
-                var messageElement = messageElements[messageElements.length - 1];
-
-                // Apply the hovering effect immediately
-                messageElement.style.backgroundColor = '#50C878'; // Set your preferred background color
-                messageElement.style.padding = '10px';
-                messageElement.style.borderRadius = '15px';
-                messageElement.style.boxShadow = '0 8px 10px rgba(0, 0, 0, 0.1)';
-
-                // Set a timeout to remove the styles after 5 seconds
-                setTimeout(function () {
-                    messageElement.style.backgroundColor = ''; // Reset the background color
-                    messageElement.style.padding = '10px';
-                    messageElement.style.borderRadius = '';
-                    messageElement.style.boxShadow = '';
-                    messageElement.style.height = '';
-                }, 5000); // Adjust the time (in milliseconds) as needed
-
-                if (messageElement) {
-          // Scroll to the position of the message element
-                  messageElement.scrollIntoView({
-                      behavior: 'smooth',
-                      block: 'start',
-                  });
-              }
-            }
-        };
-
-
-        // }
-
-    }
+    
 
     function senderTaggedMessages(data) {
       var sender = data['sender'];
