@@ -63,7 +63,7 @@ a:focus {
     margin-left: 30px;
     margin-top: 5px;
     position: absolute;
-    top: 16%;
+    top: 18%;
     left: 50%;
     right: 50%;
     transform: translate(-50%, -50%);
@@ -2361,6 +2361,8 @@ else if (data['command'] === 'new_file_tagged') {
     oldGroupSockets = []
     oldGroupPk = []
 
+    var notif_counter = 0;
+
     function handleGroupClick() {
 
       if (oldGroupSockets.length > 0) {
@@ -2617,6 +2619,7 @@ else if (data['command'] === 'new_file_tagged') {
 
     document.querySelector('#chat-message-submit2').onclick = function(e) {
       sendMessage2()
+      notif_counter = 0
     };
 
     fileIcon.onclick = function(e) {
@@ -3006,7 +3009,94 @@ else if (data['command'] === 'new_file_tagged') {
     }
     
 
-    
+    function createNewMessageNotif(group_name, msgID) {
+
+        notif_counter += 1
+        var button = document.createElement('p');
+        button.className = 'new-msg-btn floating-btn';
+        button.style.padding = '0px 20px';
+        button.style.height = '30px';
+        // button.style.width = '100%';
+        button.style.fontFamily = "";
+        button.id = `msg_${msgID}_notif`
+        // button.style.display = 'none';
+        button.style.whiteSpace = 'nowrap';
+        button.style.zIndex = '1000000000'
+        button.style.borderRadius = '10px'
+
+        if (notif_counter === 1) {
+          button.textContent = `You have ${notif_counter} new message`
+        }
+        else if (notif_counter > 1) {
+          button.textContent = `You have ${notif_counter} new messages`
+        }
+
+        // Create the span element
+        // var span = document.createElement('span');
+        // span.style.fontSize = '18px';
+        // span.textContent = 'New Message';
+        // var icon = document.createElement('i');
+        // icon.className = 'fa fa-arrow-circle-down';
+        // icon.style.fontSize = '15px';
+        // icon.style.margin = "0px 5px";
+
+        // button.appendChild(span);
+        // button.appendChild(icon);
+
+        if (group_name === groupName) {
+          floatingClass.innerHTML = ''
+          console.log('done');
+          floating.appendChild(button);
+        }
+
+          // Add click event listener to the button
+          button.onclick = function (e) {
+            floatingClass.innerHTML = '';
+            var messageElements = document.getElementsByClassName('sent');
+
+            if (messageElements.length > 0) {
+                for (let index = 1; index <= notif_counter; index++) {
+                    console.log('index: ', index);
+                    var messageElement = messageElements[messageElements.length - index];
+                    console.log('MESSAGE ELEMENT: ', messageElement);
+
+                    // Apply the hovering effect immediately
+                    messageElement.style.backgroundColor = '#50C878'; // Set your preferred background color
+                    messageElement.style.padding = '10px';
+                    messageElement.style.borderRadius = '15px';
+                    messageElement.style.boxShadow = '0 8px 10px rgba(0, 0, 0, 0.1)';
+
+                    // Create a closure for the current message element
+                    (function (currentElement) {
+                        // Set a timeout to remove the styles after 5 seconds
+                        setTimeout(function () {
+                            console.log('removed');
+                            currentElement.style.backgroundColor = ''; // Reset the background color
+                            currentElement.style.padding = '10px';
+                            currentElement.style.borderRadius = '';
+                            currentElement.style.boxShadow = '';
+                            currentElement.style.height = '';
+                            notif_counter = 0
+                        }, 5000); // Adjust the time (in milliseconds) as needed
+                    })(messageElement);
+
+                    if (messageElement) {
+                        // Scroll to the position of the message element
+                        messageElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start',
+                        });
+                    }
+                }
+            }
+        };
+
+        };
+
+
+        // }
+
+    // }
 
     function senderTaggedMessages(data) {
       var sender = data['sender'];
