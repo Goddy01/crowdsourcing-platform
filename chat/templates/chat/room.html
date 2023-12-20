@@ -1308,7 +1308,10 @@ else if (data['command'] === 'new_file_tagged') {
     };
 
     document.querySelector('#chat-message-submit1').onclick = function(e) {
+      var messageInput = document.querySelector('#chat-message-input1');
+      if (messageInput.value.trim() !== '' || fileMsg.files.length > 0) {
       sendMessage()
+      }
     };
 
     
@@ -2618,8 +2621,13 @@ else if (data['command'] === 'new_file_tagged') {
     };
 
     document.querySelector('#chat-message-submit2').onclick = function(e) {
+      var messageInput = document.querySelector('#chat-message-input2');
+      if (messageInput.value.trim() !== '' || fileMsg.files.length > 0) {
+      document.querySelector('#chat-message-input2');
+      
       sendMessage2()
       notif_counter = 0
+    }
     };
 
     fileIcon.onclick = function(e) {
@@ -3015,7 +3023,8 @@ else if (data['command'] === 'new_file_tagged') {
         var button = document.createElement('p');
         button.className = 'new-msg-btn floating-btn';
         button.style.padding = '0px 20px';
-        button.style.height = '30px';
+        // button.style.height = '30px';
+        button.style.cursor = 'pointer';
         // button.style.width = '100%';
         button.style.fontFamily = "";
         button.id = `msg_${msgID}_notif`
