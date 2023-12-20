@@ -995,6 +995,8 @@ function getCookie(name) {
     return cookieValue;
 }
 
+var notif_counter = 0;
+
   var insertedTaggedMessage
     document.getElementsByClassName('friend-chat-tab')[0].addEventListener('click', function () {
       document.getElementById('content-2').style.display = 'none';
@@ -1783,27 +1785,25 @@ else if (data['command'] === 'new_file_tagged') {
     }
 
     function createNewMessageNotif(recipientName, msgID) {
-        var button = document.createElement('button');
-        button.className = 'new-msg-btn button button-primary badge-pill floating-btn';
+
+        notif_counter += 1
+        var button = document.createElement('p');
+        button.className = 'new-msg-btn floating-btn';
         button.style.padding = '0px 20px';
-        button.style.height = '70px';
-        button.style.width = '250px';
+        button.style.cursor = 'pointer';
         button.style.fontFamily = "";
         button.id = `msg_${msgID}_notif`
-        // button.style.display = 'none';
         button.style.whiteSpace = 'nowrap';
+        button.style.zIndex = '1000000000'
+        button.style.borderRadius = '10px'
 
-        // Create the span element
-        var span = document.createElement('span');
-        span.style.fontSize = '18px';
-        span.textContent = 'New Message';
-        var icon = document.createElement('i');
-        icon.className = 'fa fa-arrow-circle-down';
-        icon.style.fontSize = '15px';
-        icon.style.margin = "0px 5px";
+        if (notif_counter === 1) {
+          button.textContent = `You have ${notif_counter} new message`
+        }
+        else if (notif_counter > 1) {
+          button.textContent = `You have ${notif_counter} new messages`
+        }
 
-        button.appendChild(span);
-        button.appendChild(icon);
 
         if (recipientName === username) {
           document.getElementsByClassName('floating')[0].innerHTML = ''
@@ -1815,30 +1815,39 @@ else if (data['command'] === 'new_file_tagged') {
             // Specify that it is a new message
             var messageElements = document.getElementsByClassName('sent');
             if (messageElements.length > 0) {
-                var messageElement = messageElements[messageElements.length - 1];
+              for (let index = 1; index <= notif_counter; index++) {
+                    console.log('index: ', index);
+                    var messageElement = messageElements[messageElements.length - index];
+                    console.log('MESSAGE ELEMENT: ', messageElement);
 
-                // Apply the hovering effect immediately
-                messageElement.style.backgroundColor = '#50C878'; // Set your preferred background color
-                messageElement.style.padding = '10px';
-                messageElement.style.borderRadius = '15px';
-                messageElement.style.boxShadow = '0 8px 10px rgba(0, 0, 0, 0.1)';
-
-                // Set a timeout to remove the styles after 5 seconds
-                setTimeout(function () {
-                    messageElement.style.backgroundColor = ''; // Reset the background color
+                    // Apply the hovering effect immediately
+                    messageElement.style.backgroundColor = '#50C878'; // Set your preferred background color
                     messageElement.style.padding = '10px';
-                    messageElement.style.borderRadius = '';
-                    messageElement.style.boxShadow = '';
-                    messageElement.style.height = '';
-                }, 5000); // Adjust the time (in milliseconds) as needed
+                    messageElement.style.borderRadius = '15px';
+                    messageElement.style.boxShadow = '0 8px 10px rgba(0, 0, 0, 0.1)';
 
-                if (messageElement) {
-          // Scroll to the position of the message element
-                  messageElement.scrollIntoView({
-                      behavior: 'smooth',
-                      block: 'start',
-                  });
-              }
+                    // Create a closure for the current message element
+                    (function (currentElement) {
+                        // Set a timeout to remove the styles after 5 seconds
+                        setTimeout(function () {
+                            console.log('removed');
+                            currentElement.style.backgroundColor = ''; // Reset the background color
+                            currentElement.style.padding = '10px';
+                            currentElement.style.borderRadius = '';
+                            currentElement.style.boxShadow = '';
+                            currentElement.style.height = '';
+                            notif_counter = 0
+                        }, 5000); // Adjust the time (in milliseconds) as needed
+                    })(messageElement);
+
+                    if (messageElement) {
+                        // Scroll to the position of the message element
+                        messageElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start',
+                        });
+                    }
+                }
             }
         };
 
@@ -3054,7 +3063,6 @@ else if (data['command'] === 'new_file_tagged') {
 
         if (group_name === groupName) {
           floatingClass.innerHTML = ''
-          console.log('done');
           floating.appendChild(button);
         }
 
