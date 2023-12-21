@@ -1,5 +1,8 @@
 import json
+from urllib.parse import urlparse
 from django.db.models import Q
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 from django.core.mail import send_mass_mail
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import AsyncWebsocketConsumer, WebsocketConsumer, SyncConsumer
@@ -205,12 +208,12 @@ class GroupChatConsumer(WebsocketConsumer):
 
     def send_new_group_message(self, data):
         content = {}
-        sender = get_object_or_404(BaseUser, username=data['from'])
+        sender = BaseUser.objects.get(username=data['from'])
         group = Group.objects.get(pk=data['groupPk'])
         
         message = data['message']
         message_type = data['type']
-        new_message = ''
+        new_message = None
         if message_type == 'normal':
             new_message = GroupChat.objects.create(
                 sender = sender,
@@ -233,15 +236,23 @@ class GroupChatConsumer(WebsocketConsumer):
                 'command': 'tagged_new_group_message',
                 'message': self.tagged_message_to_json(new_message)
             }
+        
+        origin = self.scope.get('headers', {}).get(b'origin', b'')
+        domain = urlparse(origin.decode('utf-8')).hostname
+        print('DOMAIN: ', domain)
         recipient_list = new_message.get_group_members_emails
         mail_group_name = new_message.group.name
-        mail_message = (
-                f"New Message from {mail_group_name}",
-                f"We wanted to inform you that you have received a new message from {mail_group_name}",
-                from_email,
-                recipient_list,
-            )
-        send_mass_mail((mail_message, ), fail_silently=True)
+        subject = f"New Message from {mail_group_name}"
+        html_message = render_to_string(
+            'chat/new_msg_notif.html', {
+            'sender': sender,
+            'domain': domain,
+            'recipient_list': recipient_list,
+            'date_received': new_message.timestamp
+            }
+        )
+        
+        send_mass_mail(subject=subject, html_message=html_message, from_email=from_email, recipient=recipient_list, fail_silently=True)
         return self.send_chat_message(content)
 
     def new_file_message(self, data):
