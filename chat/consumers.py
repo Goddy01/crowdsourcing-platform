@@ -3,7 +3,7 @@ from urllib.parse import urlparse
 from django.db.models import Q
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-from django.core.mail import send_mass_mail
+from django.core.mail import send_mass_mail, send_mail
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import AsyncWebsocketConsumer, WebsocketConsumer, SyncConsumer
 from .models import Chat, GroupChat, Group
@@ -237,9 +237,11 @@ class GroupChatConsumer(WebsocketConsumer):
                 'message': self.tagged_message_to_json(new_message)
             }
         
-        origin = self.scope.get('headers', {}).get(b'origin', b'')
-        domain = urlparse(origin.decode('utf-8')).hostname
-        print('DOMAIN: ', domain)
+        header_tuple = self.scope.get('headers', [])[0]
+        address = header_tuple[1].decode('utf-8')
+        ip_address, port = address.split(':')
+        domain = f"{ip_address}:{port}"
+        
         recipient_list = new_message.get_group_members_emails
         mail_group_name = new_message.group.name
         subject = f"New Message from {mail_group_name}"
@@ -253,7 +255,7 @@ class GroupChatConsumer(WebsocketConsumer):
             }
         )
         
-        send_mass_mail(subject=subject, html_message=html_message, from_email=from_email, recipient=recipient_list, fail_silently=True)
+        send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=recipient_list, fail_silently=True)
         return self.send_chat_message(content)
 
     def new_file_message(self, data):
