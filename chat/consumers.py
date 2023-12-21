@@ -234,14 +234,14 @@ class GroupChatConsumer(WebsocketConsumer):
                 'message': self.tagged_message_to_json(new_message)
             }
         recipient_list = new_message.get_group_members_emails
-        mail_group_name = new_message.group.group_name
+        mail_group_name = new_message.group.name
         mail_message = (
                 f"New Message from {mail_group_name}",
                 f"We wanted to inform you that you have received a new message from {mail_group_name}",
                 from_email,
                 recipient_list,
             )
-        send_mass_mail(mail_message, fail_silently=True)
+        send_mass_mail((mail_message, ), fail_silently=True)
         return self.send_chat_message(content)
 
     def new_file_message(self, data):
