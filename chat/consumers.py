@@ -248,7 +248,8 @@ class GroupChatConsumer(WebsocketConsumer):
             'sender': sender,
             'domain': domain,
             'recipient_list': recipient_list,
-            'date_received': new_message.timestamp
+            'date_received': new_message.timestamp,
+            'message': new_message,
             }
         )
         
