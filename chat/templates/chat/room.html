@@ -2502,6 +2502,87 @@ else if (data['command'] === 'new_file_tagged') {
         // }
       }
 
+      function createNewMentionedNotif(data, group_name, msgID) {
+
+        if (groupMembersObject.members && groupMembersObject.members.length > 0) {
+          for (let index = 0; index < groupMembersObject.members.length; index++) {
+            var groupMember = groupMembersObject.members[index];
+
+            if (groupMember.username === username) {
+              if (data['message'].content.includes(`@${username}`)) {
+
+                  var button = document.createElement('p');
+                  button.className = 'new-msg-btn floating-btn';
+                  button.style.padding = '0px 20px';
+                  button.style.cursor = 'pointer';
+                  button.style.fontFamily = "";
+                  button.id = `msg_${msgID}_notif`;
+                  button.style.whiteSpace = 'nowrap';
+                  button.style.zIndex = '1000000000';
+                  button.style.borderRadius = '10px';
+                  button.textContent = `You were mentioned in a message`;
+
+                  if (group_name === groupName) {
+                    floatingClass.innerHTML = '';
+                    floating.appendChild(button);
+                  }
+
+                  button.onclick = function (e) {
+                  floatingClass.innerHTML = '';
+                  var messageElements = document.getElementsByClassName('sent');
+                  var filteredElements = [];
+
+                  for (var i = 0; i < messageElements.length; i++) {
+                    // messageElements = []
+                      var currentElement = messageElements[i];
+                      var pElement = currentElement.querySelector('p');
+
+                      if (pElement && pElement.textContent.includes(`@${username}`)) {
+                        console.log('TEXTCONTENT: ', pElement.textContent);
+                          // Add the element to the filteredElements array
+                          filteredElements.push(currentElement);
+                      }
+
+                  }
+
+                  if (filteredElements.length > 0) {
+                    console.log('MESSAGE ELEMENTS: ', filteredElements);
+                      for (let index = 0; index < filteredElements.length; index++) {
+                          var messageElement = filteredElements[index];
+                          messageElement.style.backgroundColor = '#50C878'; // Set your preferred background color
+                          messageElement.style.padding = '10px';
+                          messageElement.style.borderRadius = '15px';
+                          messageElement.style.boxShadow = '0 8px 10px rgba(0, 0, 0, 0.1)';
+
+                          (function (currentElement) {
+                              setTimeout(function () {
+                                  console.log('removed');
+                                  currentElement.style.backgroundColor = ''; // Reset the background color
+                                  currentElement.style.padding = '10px';
+                                  currentElement.style.borderRadius = '';
+                                  currentElement.style.boxShadow = '';
+                                  currentElement.style.height = '';
+                                  notif_counter = 0
+                              }, 5000); // Adjust the time (in milliseconds) as needed
+                          })(messageElement);
+
+                          if (messageElement) {
+                              // Scroll to the position of the message element
+                              messageElement.scrollIntoView({
+                                  behavior: 'smooth',
+                                  block: 'start',
+                              });
+                          }
+                      }
+                  }
+              };
+                // }
+              }
+            }
+          }
+        }
+        }
+
       var isUserInGroup = checkIfUserIsInGroup(username);
       groupChatSocket.onmessage = function(e) {
         var data = JSON.parse(e.data);
@@ -2541,95 +2622,7 @@ else if (data['command'] === 'new_file_tagged') {
             else if (data['message'].sender !== username && data['message'].group_name === groupName) {
             receivedMessage(data['message']);
             createNewMessageNotif(groupName, data['message']['pk']);
-            console.log('GMO: ', groupMembersObject);
-
-            // Check if groupMembersObject has a 'members' property and is iterable
-            if (groupMembersObject.members && groupMembersObject.members.length > 0) {
-              for (let index = 0; index < groupMembersObject.members.length; index++) {
-                console.log('why?????');
-                var groupMember = groupMembersObject.members[index];
-                console.log('GM: ', groupMember);
-
-                if (groupMember.username === username) {
-                  console.log('I am here', data['message'].content);
-
-                  if (data['message'].content.includes(`@${username}`)) {
-                    console.log('E DEY');
-
-                    function createNewMentionedNotif(group_name, msgID) {
-                      var button = document.createElement('p');
-                      button.className = 'new-msg-btn floating-btn';
-                      button.style.padding = '0px 20px';
-                      button.style.cursor = 'pointer';
-                      button.style.fontFamily = "";
-                      button.id = `msg_${msgID}_notif`;
-                      button.style.whiteSpace = 'nowrap';
-                      button.style.zIndex = '1000000000';
-                      button.style.borderRadius = '10px';
-                      button.textContent = `You were mentioned in a message`;
-
-                      if (group_name === groupName) {
-                        floatingClass.innerHTML = '';
-                        floating.appendChild(button);
-                      }
-
-                      button.onclick = function (e) {
-                      floatingClass.innerHTML = '';
-                      var messageElements = document.getElementsByClassName('sent');
-                      var filteredElements = [];
-
-                      for (var i = 0; i < messageElements.length; i++) {
-                        // messageElements = []
-                          var currentElement = messageElements[i];
-                          var pElement = currentElement.querySelector('p');
-
-                          if (pElement && pElement.textContent.includes(`@${username}`)) {
-                            console.log('TEXTCONTENT: ', pElement.textContent);
-                              // Add the element to the filteredElements array
-                              filteredElements.push(currentElement);
-                          }
-
-                      }
-
-                      if (filteredElements.length > 0) {
-                        console.log('MESSAGE ELEMENTS: ', filteredElements);
-                          for (let index = 0; index < filteredElements.length; index++) {
-                              var messageElement = filteredElements[index];
-                              messageElement.style.backgroundColor = '#50C878'; // Set your preferred background color
-                              messageElement.style.padding = '10px';
-                              messageElement.style.borderRadius = '15px';
-                              messageElement.style.boxShadow = '0 8px 10px rgba(0, 0, 0, 0.1)';
-
-                              (function (currentElement) {
-                                  setTimeout(function () {
-                                      console.log('removed');
-                                      currentElement.style.backgroundColor = ''; // Reset the background color
-                                      currentElement.style.padding = '10px';
-                                      currentElement.style.borderRadius = '';
-                                      currentElement.style.boxShadow = '';
-                                      currentElement.style.height = '';
-                                      notif_counter = 0
-                                  }, 5000); // Adjust the time (in milliseconds) as needed
-                              })(messageElement);
-
-                              if (messageElement) {
-                                  // Scroll to the position of the message element
-                                  messageElement.scrollIntoView({
-                                      behavior: 'smooth',
-                                      block: 'start',
-                                  });
-                              }
-                          }
-                      }
-                  };
-                    }
-
-                    // Call the function with appropriate arguments
-                    createNewMentionedNotif(groupName, data['message']['pk']);
-                  }
-                }
-              }
-            }
+            createNewMentionedNotif(data, groupName, data['message']['pk']);
           }
 
 
@@ -2653,11 +2646,12 @@ else if (data['command'] === 'new_file_tagged') {
 
         else if (data['message'].sender !== username && data['message'].group_name === groupName) {
           receivedTaggedMessages(data['message'])
+          createNewMessageNotif(groupName, data['message']['pk'])
+          if (data['command'] === 'tagged_new_group_message') {
+            createNewMentionedNotif(data, groupName, data['message']['pk']);
+          }
         }
 
-        if (data['message'].group_name === groupName && data['message'].sender !== username) {
-          createNewMessageNotif(groupName, data['message']['pk'])
-        }
         }
 
         else if (data['command'] === 'new_file_normal') {
