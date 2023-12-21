@@ -105,6 +105,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     signup_with_google =            models.BooleanField(default=False)
     is_moderator = models.BooleanField(default=False)
     is_innovator = models.BooleanField(default=False)
+    receive_msg_email_notif = models.BooleanField(default=True)
 
 
     USERNAME_FIELD = "email"
