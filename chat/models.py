@@ -62,7 +62,6 @@ class Group(models.Model):
     @property
     def members_count(self):
         return self.members.count()
-        
     
 class GroupChat(models.Model):
     message_tagged = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='reply_to')
@@ -80,3 +79,12 @@ class GroupChat(models.Model):
     
     def last_20_messages():
         return GroupChat.objects.order_by('-timestamp').all()[:10]
+    
+    @property
+    def get_group_members_emails(self):
+        member_emails = []
+        members = self.group.members.all()
+        for member in members:
+            if member.receive_msg_email_notif and member != self.sender:
+                member_emails.append(member.email)
+        return member_emails

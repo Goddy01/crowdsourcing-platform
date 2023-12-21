@@ -1250,14 +1250,8 @@ else if (data['command'] === 'new_file_tagged') {
       
       else if (data['message'].recipient === username && data['message'].sender === friendUsername) {
         receivedTaggedMessages(data['message'])
-        
-      }
-
-      if (data['message'].recipient === username && data['message'].sender === friendUsername) {
         createNewMessageNotif(username, data['message'].pk)
       }
-    
-    
 }
 
 
@@ -2664,9 +2658,6 @@ else if (data['command'] === 'new_file_tagged') {
 
           else if (data['message'].sender !== username && data['message'].group_name === groupName) {
             receivedMessage(data['message'])
-          }
-
-          if (data['message'].group_name === groupName && data['message'].sender !== username) {
             createNewMessageNotif(groupName, data['message']['pk'])
           }
         }

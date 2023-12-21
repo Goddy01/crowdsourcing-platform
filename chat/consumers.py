@@ -1,12 +1,16 @@
 import json
 from django.db.models import Q
+from django.core.mail import send_mass_mail
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import AsyncWebsocketConsumer, WebsocketConsumer, SyncConsumer
 from .models import Chat, GroupChat, Group
 from accounts.models import BaseUser
 from .views import get_messages, get_group_messages, get_group_members
 from django.shortcuts import get_object_or_404
+from django.conf import settings
 
+
+from_email = settings.EMAIL_HOST_USER
 
 class ChatConsumer(WebsocketConsumer):
     def fetch_messages(self, data):
@@ -46,6 +50,7 @@ class ChatConsumer(WebsocketConsumer):
         sender = data['from']
         sender_user = BaseUser.objects.get(username=sender)
         recipient = BaseUser.objects.get(username=data['to'])
+        message = ''
         if data['type'] == 'normal':
             message = Chat.objects.create(
                 sender=sender_user,
@@ -71,7 +76,6 @@ class ChatConsumer(WebsocketConsumer):
                 'command': 'tag_message',
                 'message': self.tagged_message_to_json(message)
             }
-            
         return self.send_chat_message(content)
     
     def tag_message(self, data):
@@ -202,9 +206,11 @@ class GroupChatConsumer(WebsocketConsumer):
     def send_new_group_message(self, data):
         content = {}
         sender = get_object_or_404(BaseUser, username=data['from'])
-        group = get_object_or_404(Group, pk=data['groupPk'])
+        group = Group.objects.get(pk=data['groupPk'])
+        
         message = data['message']
         message_type = data['type']
+        new_message = ''
         if message_type == 'normal':
             new_message = GroupChat.objects.create(
                 sender = sender,
@@ -227,6 +233,15 @@ class GroupChatConsumer(WebsocketConsumer):
                 'command': 'tagged_new_group_message',
                 'message': self.tagged_message_to_json(new_message)
             }
+        recipient_list = new_message.get_group_members_emails
+        mail_group_name = new_message.group.group_name
+        mail_message = (
+                f"New Message from {mail_group_name}",
+                f"We wanted to inform you that you have received a new message from {mail_group_name}",
+                from_email,
+                recipient_list,
+            )
+        send_mass_mail(mail_message, fail_silently=True)
         return self.send_chat_message(content)
 
     def new_file_message(self, data):
