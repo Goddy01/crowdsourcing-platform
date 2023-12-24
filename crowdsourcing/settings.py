@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'phonenumbers',
     'phonenumber_field',
+    'django_celery_beat',
+    'django_celery_results',
     'social_django',
     'paystack',
     
@@ -82,6 +84,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware'
 ]
+
+
 
 # CORS Config
 CORS_ORIGIN_ALLOW_ALL = True
