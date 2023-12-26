@@ -145,15 +145,16 @@ def sender_profile(request, sender_username):
 
 def send_new_group_msg_email_alert(new_message, sender, domain, get_group_members_emails):
     recipient_list = get_group_members_emails
-    mail_group_name = new_message.group.name
+    mail_group_name = new_message['group_name']
     subject = f"New Message from {mail_group_name}"
     html_message = render_to_string(
         'chat/new_msg_notif.html', {
         'sender': sender,
         'domain': domain,
         'recipient_list': recipient_list,
-        'date_received': new_message.timestamp,
+        'date_received': new_message['timestamp'],
         'message': new_message,
+        'group_name': mail_group_name
         }
     )
     

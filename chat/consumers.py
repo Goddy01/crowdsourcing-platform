@@ -261,9 +261,9 @@ class GroupChatConsumer(WebsocketConsumer):
                     'new_message': serialized_message,
                     'sender': sender.username,
                     'domain': domain,
-                    'get_group_members_emails': get_group_members_emails,
+                    'get_group_members_emails': get_group_members_emails
                 },
-                countdown=60
+                countdown=20
             )
 
         return self.send_chat_message(content)
