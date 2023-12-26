@@ -143,8 +143,8 @@ def sender_profile(request, sender_username):
     innovator_pk = Innovator.objects.get(user__username=sender_username).pk
     return redirect('accounts:profile_with_arg', innovator_pk)
 
-def send_new_group_msg_email_alert(new_message, sender, domain):
-    recipient_list = new_message.get_group_members_emails
+def send_new_group_msg_email_alert(new_message, sender, domain, get_group_members_emails):
+    recipient_list = get_group_members_emails
     mail_group_name = new_message.group.name
     subject = f"New Message from {mail_group_name}"
     html_message = render_to_string(

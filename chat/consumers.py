@@ -244,7 +244,27 @@ class GroupChatConsumer(WebsocketConsumer):
         ip_address, port = address.split(':')
         domain = f"{ip_address}:{port}"
         
-        send_new_group_msg_email_alert_task(new_message=new_message, sender=sender, domain=domain)
+        serialized_message = {
+            'id': new_message.id,
+            'sender_username': new_message.sender.username,
+            'group_name': new_message.group.name,
+            'content': new_message.content,
+            'timestamp': str(new_message.timestamp),
+            # Add other fields as needed
+        }
+
+        get_group_members_emails = new_message.get_group_members_emails
+
+        # Pass only the necessary information to Celery
+        task = send_new_group_msg_email_alert_task.apply_async(
+                kwargs={
+                    'new_message': serialized_message,
+                    'sender': sender.username,
+                    'domain': domain,
+                    'get_group_members_emails': get_group_members_emails,
+                },
+                countdown=60
+            )
 
         return self.send_chat_message(content)
 
