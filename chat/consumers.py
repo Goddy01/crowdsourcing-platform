@@ -1,6 +1,7 @@
 import json
 from urllib.parse import urlparse
 from django.db.models import Q
+from .views import send_new_group_msg_email_alert
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.core.mail import send_mass_mail, send_mail
@@ -242,20 +243,8 @@ class GroupChatConsumer(WebsocketConsumer):
         ip_address, port = address.split(':')
         domain = f"{ip_address}:{port}"
         
-        recipient_list = new_message.get_group_members_emails
-        mail_group_name = new_message.group.name
-        subject = f"New Message from {mail_group_name}"
-        html_message = render_to_string(
-            'chat/new_msg_notif.html', {
-            'sender': sender,
-            'domain': domain,
-            'recipient_list': recipient_list,
-            'date_received': new_message.timestamp,
-            'message': new_message,
-            }
-        )
-        
-        send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=recipient_list, fail_silently=True)
+        # send_new_group_msg_email_alert
+
         return self.send_chat_message(content)
 
     def new_file_message(self, data):

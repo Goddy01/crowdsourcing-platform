@@ -1,4 +1,6 @@
 from django.http import JsonResponse
+from django.template.loader import render_to_string
+from django.core.mail import send_mass_mail, send_mail
 from accounts.models import BaseUser, Innovator
 from itertools import chain
 from django.db.models import Q
@@ -137,3 +139,19 @@ def send_group_file_message(request, sender, group_pk, parent_message=None):
 def sender_profile(request, sender_username):
     innovator_pk = Innovator.objects.get(user__username=sender_username).pk
     return redirect('accounts:profile_with_arg', innovator_pk)
+
+def send_new_group_msg_email_alert(new_message, sender, domain, recipient_list, html_message, subject, from_email):
+    recipient_list = new_message.get_group_members_emails
+    mail_group_name = new_message.group.name
+    subject = f"New Message from {mail_group_name}"
+    html_message = render_to_string(
+        'chat/new_msg_notif.html', {
+        'sender': sender,
+        'domain': domain,
+        'recipient_list': recipient_list,
+        'date_received': new_message.timestamp,
+        'message': new_message,
+        }
+    )
+    
+    send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=recipient_list, fail_silently=True)
