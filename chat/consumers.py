@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 from django.db.models import Q
 from .views import send_new_group_msg_email_alert
 from django.template.loader import render_to_string
+from .tasks import send_new_group_msg_email_alert_task
 from django.utils.html import strip_tags
 from django.core.mail import send_mass_mail, send_mail
 from asgiref.sync import async_to_sync
@@ -243,7 +244,7 @@ class GroupChatConsumer(WebsocketConsumer):
         ip_address, port = address.split(':')
         domain = f"{ip_address}:{port}"
         
-        # send_new_group_msg_email_alert
+        send_new_group_msg_email_alert_task(new_message=new_message, sender=sender, domain=domain)
 
         return self.send_chat_message(content)
 

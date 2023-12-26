@@ -11,6 +11,9 @@ from django.contrib.auth.decorators import login_required
 from accounts.models import Connection, Innovator
 from .models import Chat, Group, GroupChat
 from django.core.serializers import serialize
+from django.conf import settings
+
+from_email = settings.EMAIL_HOST_USER
 
 def index(request):
     return render(request, 'chat/chat.html')
@@ -140,7 +143,7 @@ def sender_profile(request, sender_username):
     innovator_pk = Innovator.objects.get(user__username=sender_username).pk
     return redirect('accounts:profile_with_arg', innovator_pk)
 
-def send_new_group_msg_email_alert(new_message, sender, domain, recipient_list, html_message, subject, from_email):
+def send_new_group_msg_email_alert(new_message, sender, domain):
     recipient_list = new_message.get_group_members_emails
     mail_group_name = new_message.group.name
     subject = f"New Message from {mail_group_name}"
