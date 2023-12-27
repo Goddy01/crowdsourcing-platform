@@ -151,7 +151,7 @@ def send_new_group_msg_email_alert(new_message, sender, domain, get_group_member
     logged_in_user = new_message['logged_in_user']
     
     for recipient in recipient_list:
-        if f'@{BaseUser.objects.get(email=recipient).username.lower()}' in content.lower():
+        if f'@{BaseUser.objects.get(email=recipient).username.lower()}' not in content.lower():
             html_message = render_to_string(
                 'chat/new_msg_notif.html', {
                 'sender': sender,
@@ -166,7 +166,7 @@ def send_new_group_msg_email_alert(new_message, sender, domain, get_group_member
                 }
             )
             send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=recipient_list, fail_silently=True)
-        elif f'@{BaseUser.objects.get(email=recipient).username.lower()}' not in content.lower():
+        elif f'@{BaseUser.objects.get(email=recipient).username.lower()}' in content.lower():
             html_message = render_to_string(
                 'chat/new_msg_notif.html', {
                 'sender': sender,
