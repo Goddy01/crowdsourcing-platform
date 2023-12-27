@@ -115,10 +115,19 @@
 														<tr>
 															<td class="pad">
 																<h3 style="margin: 0; color: #1e0e4b; direction: ltr; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 16px; font-weight: 400; letter-spacing: normal; line-height: 120%; text-align: left; margin-top: 0; margin-bottom: 0;">
-                                                                    <span class="tinyMce-placeholder">
-                                                                        We wanted to inform you that you have received a new message from {{ group_name }} on {{ message.timestamp }}. View 
+                                                                    {% if type == 'normal' %}
+																	<span class="tinyMce-placeholder">	
+                                                                        We wanted to inform you that you have received a new message from {{ group_name }} 
+																		on {{ message.timestamp }}. View 
                                                                         <a href="http://{{ domain }}{% url 'chat:chat' %}">Message</a>
                                                                     </span>
+																	{% elif type == 'tagged' %}
+																	<span class="tinyMce-placeholder">	
+                                                                        We wanted to inform you that you were tagged in a message that was sent to this group: {{ group_name }} 
+																		on {{ message.timestamp }}. View 
+                                                                        <a href="http://{{ domain }}{% url 'chat:chat' %}">Message</a>
+                                                                    </span>
+																	{% endif %}
                                                                 </h3>
 															</td>
 														</tr>

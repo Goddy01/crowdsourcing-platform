@@ -250,6 +250,7 @@ class GroupChatConsumer(WebsocketConsumer):
             'group_name': new_message.group.name,
             'content': new_message.content,
             'timestamp': str(new_message.timestamp),
+            'logged_in_user': self.scope['user'].email
             # Add other fields as needed
         }
 
