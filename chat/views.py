@@ -156,7 +156,7 @@ def send_new_group_msg_email_alert(new_message, sender, domain, get_group_member
                 'chat/new_msg_notif.html', {
                 'sender': sender,
                 'domain': domain,
-                'recipient_list': recipient_list,
+                'recipient_list': recipient,
                 'date_received': new_message['timestamp'],
                 'message': new_message,
                 'group_name': mail_group_name,
@@ -165,13 +165,13 @@ def send_new_group_msg_email_alert(new_message, sender, domain, get_group_member
                 'type': 'normal'
                 }
             )
-            send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=recipient_list, fail_silently=True)
+            send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=[recipient], fail_silently=True)
         elif f'@{BaseUser.objects.get(email=recipient).username.lower()}' in content.lower():
             html_message = render_to_string(
                 'chat/new_msg_notif.html', {
                 'sender': sender,
                 'domain': domain,
-                'recipient_list': recipient_list,
+                'recipient_list': recipient,
                 'date_received': new_message['timestamp'],
                 'message': new_message,
                 'group_name': mail_group_name,
@@ -180,4 +180,4 @@ def send_new_group_msg_email_alert(new_message, sender, domain, get_group_member
                 'type': 'tagged'
                 }
             )
-            send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=recipient_list, fail_silently=True)
+            send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=[recipient], fail_silently=True)
