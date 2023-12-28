@@ -166,7 +166,8 @@ def send_new_group_msg_email_alert(new_message, sender, domain, get_group_member
                     'group_name': mail_group_name,
                     'content': content,
                     'logged_in_user': logged_in_user,
-                    'type': 'normal'
+                    'type': 'normal',
+                    'content_type': 'text'
                     }
                 )
                 send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=[recipient], fail_silently=True)
@@ -181,7 +182,8 @@ def send_new_group_msg_email_alert(new_message, sender, domain, get_group_member
                     'group_name': mail_group_name,
                     'content': content,
                     'logged_in_user': logged_in_user,
-                    'type': 'tagged'
+                    'type': 'tagged',
+                    'content_type': 'text'
                     }
                 )
                 send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=[recipient], fail_silently=True)
@@ -195,7 +197,8 @@ def send_new_group_msg_email_alert(new_message, sender, domain, get_group_member
                     'message': new_message,
                     'group_name': mail_group_name,
                     'logged_in_user': logged_in_user,
-                    'type': 'normal'
+                    'type': 'normal',
+                    'content_type': 'file'
                     }
                 )
-        send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=[recipient], fail_silently=True)
+        send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=[recipient_list], fail_silently=True)
