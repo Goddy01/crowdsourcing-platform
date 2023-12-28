@@ -2498,7 +2498,12 @@ else if (data['command'] === 'new_file_tagged') {
             var groupMember = groupMembersObject.members[index];
 
             if (groupMember.username === username) {
-              if (data['message'].content.includes(`@${username}`)) {
+              var ind = data['message'].content.indexOf(`@${username}`);
+              var usernameEndIndex = ind + `@${username}`.length;
+
+              // Check if the username is followed by a space or it is the last word in the string
+              if (data['message'].content[usernameEndIndex] === ' ' || usernameEndIndex === data['message'].content.length) {
+              // if (data['message'].content.includes(`@${username}`)) {
 
                   var button = document.createElement('p');
                   button.className = 'new-msg-btn floating-btn';
