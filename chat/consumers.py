@@ -200,6 +200,36 @@ class ChatConsumer(WebsocketConsumer):
 
 class GroupChatConsumer(WebsocketConsumer):
 
+    def send_email_in_consumer(self, new_message, sender, content_type):
+        header_tuple = self.scope.get('headers', [])[0]
+        address = header_tuple[1].decode('utf-8')
+        ip_address, port = address.split(':')
+        domain = f"{ip_address}:{port}"
+        
+        serialized_message = {
+            'id': new_message.id,
+            'sender_username': new_message.sender.username,
+            'group_name': new_message.group.name,
+            'content': new_message.content,
+            'timestamp': str(new_message.timestamp),
+            'logged_in_user': self.scope['user'].email
+            # Add other fields as needed
+        }
+
+        get_group_members_emails = new_message.get_group_members_emails
+
+        # Pass only the necessary information to Celery
+        task = send_new_group_msg_email_alert_task.apply_async(
+                kwargs={
+                    'new_message': serialized_message,
+                    'sender': sender.username,
+                    'domain': domain,
+                    'get_group_members_emails': get_group_members_emails,
+                    'content_type': content_type
+                },
+                countdown=20
+            )
+
     def fetch_group_messages(self, data):
         group_messages = get_group_messages(logged_in_user=data['sender'], group_pk=data['groupPk'])
         content = {
@@ -239,33 +269,7 @@ class GroupChatConsumer(WebsocketConsumer):
                 'message': self.tagged_message_to_json(new_message)
             }
         
-        header_tuple = self.scope.get('headers', [])[0]
-        address = header_tuple[1].decode('utf-8')
-        ip_address, port = address.split(':')
-        domain = f"{ip_address}:{port}"
-        
-        serialized_message = {
-            'id': new_message.id,
-            'sender_username': new_message.sender.username,
-            'group_name': new_message.group.name,
-            'content': new_message.content,
-            'timestamp': str(new_message.timestamp),
-            'logged_in_user': self.scope['user'].email
-            # Add other fields as needed
-        }
-
-        get_group_members_emails = new_message.get_group_members_emails
-
-        # Pass only the necessary information to Celery
-        task = send_new_group_msg_email_alert_task.apply_async(
-                kwargs={
-                    'new_message': serialized_message,
-                    'sender': sender.username,
-                    'domain': domain,
-                    'get_group_members_emails': get_group_members_emails
-                },
-                countdown=20
-            )
+        self.send_email_in_consumer(new_message, sender, 'text')
 
         return self.send_chat_message(content)
 
@@ -287,6 +291,8 @@ class GroupChatConsumer(WebsocketConsumer):
                 'command': 'new_file_tagged',
                 'message': self.tagged_message_to_json(message)
             }
+        self.send_email_in_consumer(message, sender, 'file')
+
         return self.send_chat_message(content)
     
     def messages_to_json(self, messages):

@@ -143,41 +143,59 @@ def sender_profile(request, sender_username):
     innovator_pk = Innovator.objects.get(user__username=sender_username).pk
     return redirect('accounts:profile_with_arg', innovator_pk)
 
-def send_new_group_msg_email_alert(new_message, sender, domain, get_group_members_emails):
+def send_new_group_msg_email_alert(new_message, sender, domain, get_group_members_emails, content_type):
     recipient_list = get_group_members_emails
     mail_group_name = new_message['group_name']
     content = new_message['content']
+    file_content = None
+    content_type = content_type
+
     subject = f"New Message from {mail_group_name}"
     logged_in_user = new_message['logged_in_user']
     
-    for recipient in recipient_list:
-        if f'@{BaseUser.objects.get(email=recipient).username.lower()}' not in content.lower():
-            html_message = render_to_string(
-                'chat/new_msg_notif.html', {
-                'sender': sender,
-                'domain': domain,
-                'recipient_list': recipient,
-                'date_received': new_message['timestamp'],
-                'message': new_message,
-                'group_name': mail_group_name,
-                'content': content,
-                'logged_in_user': logged_in_user,
-                'type': 'normal'
-                }
-            )
-            send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=[recipient], fail_silently=True)
-        elif f'@{BaseUser.objects.get(email=recipient).username.lower()}' in content.lower():
-            html_message = render_to_string(
-                'chat/new_msg_notif.html', {
-                'sender': sender,
-                'domain': domain,
-                'recipient_list': recipient,
-                'date_received': new_message['timestamp'],
-                'message': new_message,
-                'group_name': mail_group_name,
-                'content': content,
-                'logged_in_user': logged_in_user,
-                'type': 'tagged'
-                }
-            )
-            send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=[recipient], fail_silently=True)
+    if content_type == 'text':
+        for recipient in recipient_list:
+            if f'@{BaseUser.objects.get(email=recipient).username.lower()}' not in content.lower():
+                html_message = render_to_string(
+                    'chat/new_msg_notif.html', {
+                    'sender': sender,
+                    'domain': domain,
+                    'recipient_list': recipient,
+                    'date_received': new_message['timestamp'],
+                    'message': new_message,
+                    'group_name': mail_group_name,
+                    'content': content,
+                    'logged_in_user': logged_in_user,
+                    'type': 'normal'
+                    }
+                )
+                send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=[recipient], fail_silently=True)
+            elif f'@{BaseUser.objects.get(email=recipient).username.lower()}' in content.lower():
+                html_message = render_to_string(
+                    'chat/new_msg_notif.html', {
+                    'sender': sender,
+                    'domain': domain,
+                    'recipient_list': recipient,
+                    'date_received': new_message['timestamp'],
+                    'message': new_message,
+                    'group_name': mail_group_name,
+                    'content': content,
+                    'logged_in_user': logged_in_user,
+                    'type': 'tagged'
+                    }
+                )
+                send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=[recipient], fail_silently=True)
+    else:
+        html_message = render_to_string(
+                    'chat/new_msg_notif.html', {
+                    'sender': sender,
+                    'domain': domain,
+                    'recipient_list': recipient_list,
+                    'date_received': new_message['timestamp'],
+                    'message': new_message,
+                    'group_name': mail_group_name,
+                    'logged_in_user': logged_in_user,
+                    'type': 'normal'
+                    }
+                )
+        send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=[recipient], fail_silently=True)
