@@ -171,19 +171,30 @@
                             <!-- <div class="ms-3 "> -->
                                 <!-- <div class="fw-bold"> -->
                             </div>
-                            {% if contrib.innovation.owner.user.pk == request.user.pk and not contrib.accepted %}
+                            {% if contrib.innovation.owner.user.pk == request.user.pk %}
+                            {% if not contrib.accepted %}
                             <a href="{% url 'accept_contribution' contrib.pk %}" style="text-decoration: none;">
                                 <button class="button button-primary button-outline">
                                     Accept
                                 </button>
                             </a>
                             {% endif %}
-                            {% if contrib.innovation.owner.user.pk == request.user.pk and contrib.accepted %}
+                            
+                            {% if contrib.accepted %}
                             <a href="{% url 'unaccept_contribution' contrib.pk %}" style="text-decoration: none;">
                                 <button class="button button-primary button-outline">
                                     Unaccept
                                 </button>
                             </a>
+                            {% endif %}
+
+                            {% if contrib.accepted and not contrib.is_paid %}
+                            <a href="" style="text-decoration: none;">
+                                <button class="button button-primary button-outline" style="float: right;">
+                                    Pay
+                                </button>
+                            </a>
+                            {% endif %}
                             {% endif %}
                         </div>
                             {% endfor %}
