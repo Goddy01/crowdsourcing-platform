@@ -143,9 +143,10 @@ def sender_profile(request, sender_username):
     innovator_pk = Innovator.objects.get(user__username=sender_username).pk
     return redirect('accounts:profile_with_arg', innovator_pk)
 
-def send_friend_new_msg_alert(new_message, sender, domain, content_type, recipient, recipient_fullname):
+def send_friend_new_msg_alert(new_message, sender, domain, content_type, recipient, recipient_fullname, sender_fullname):
     html_message = None
     recipient_fullname = recipient_fullname
+    sender_fullname = sender_fullname
     subject = f"New message from your friend, {sender}"
     if content_type == 'text':
         html_message = render_to_string(
@@ -154,6 +155,7 @@ def send_friend_new_msg_alert(new_message, sender, domain, content_type, recipie
             'domain': domain,
             'recipient_list': [recipient],
             'recipient_fullname': recipient_fullname,
+            'sender_fullname': sender_fullname,
             'date_received': new_message['timestamp'],
             'message': new_message,
             'content': new_message['content'],
@@ -168,6 +170,7 @@ def send_friend_new_msg_alert(new_message, sender, domain, content_type, recipie
             'domain': domain,
             'recipient_list': [recipient],
             'recipient_fullname': recipient_fullname,
+            'sender_fullname': sender_fullname,
             'date_received': new_message['timestamp'],
             'message': new_message,
             'content': new_message['content'],

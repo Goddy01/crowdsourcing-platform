@@ -18,5 +18,6 @@ def send_friend_new_msg_email_alert_task(new_message, sender, domain, **kwargs):
     content_type = kwargs.get('content_type')
     recipient = kwargs.get('recipient')
     recipient_fullname = kwargs.get('recipient_fullname')
+    sender_fullname = kwargs.get('sender_fullname')
     logger.info('FRIEND NEW MSG EMAIL ALERT SENT')
-    return send_friend_new_msg_alert(new_message=new_message, sender = sender, domain = domain, content_type=content_type, recipient=recipient, recipient_fullname=recipient_fullname)
+    return send_friend_new_msg_alert(new_message=new_message, sender = sender, domain = domain, content_type=content_type, recipient=recipient, recipient_fullname=recipient_fullname, sender_fullname = sender_fullname)

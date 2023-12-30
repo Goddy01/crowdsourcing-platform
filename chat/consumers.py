@@ -42,7 +42,8 @@ class ChatConsumer(WebsocketConsumer):
                     'domain': domain,
                     'recipient': serialized_message['recipient'],
                     'content_type': content_type,
-                    'recipient_fullname': new_message.recipient.get_full_name()
+                    'recipient_fullname': new_message.recipient.get_full_name(),
+                    'sender_fullname': new_message.sender.get_full_name()
                 },
                 countdown=15
             )
