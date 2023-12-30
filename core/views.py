@@ -228,6 +228,7 @@ def innovation_detail(request, pk):
     else:
         contribution_form = MakeContributionForm()
     context['contribution_form'] = contribution_form
+    context['is_answered'] = Contribution.objects.filter(innovation__pk=pk, accepted=True).exists()
     return render(request, 'core/innovation-details.html', context)
 
 def pay_contributor(request, contribution_pk):
