@@ -107,6 +107,7 @@ class Contribution(models.Model):
     downvoted_by = models.ManyToManyField(account_models.Innovator, related_name='downvoted_contributions', blank=True)
     accepted = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True, null=True)
+    is_paid = models.BooleanField(default=False)
 
     def __str__(self):
         if self.contributor is not None:

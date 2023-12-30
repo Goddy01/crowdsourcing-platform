@@ -128,7 +128,7 @@
                         </p>
                         {% else %}
                         {% for contrib in contributions %}
-                        <div class="mb-5 py-3 px-5" style="border-top: 1px solid rgb(191, 206, 196);">
+                        <div class="mb-5 py-3" style="border-top: 1px solid rgb(191, 206, 196);">
                             <p class="col-2">
                                 <a href="{% url 'accounts:profile_with_arg' contrib.contributor.pk %}" style="text-decoration: none;color: black;font-weight: bold;">
                                     {{ contrib.contributor.user.username }}
