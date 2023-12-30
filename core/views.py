@@ -1405,11 +1405,12 @@ def approve_send_money_request(request, sender, recipient, amount_to_send, send_
             post_balance = sender.account_balance,
             type = 'OUTGOING TRANSFER'
         )
-        contribution = Contribution.objects.get(pk=contribution_pk)
-        innovation = contribution.innovation
-        innovation.reward_paid = True
-        innovation.save(update_fields=['reward_paid'])
         send_money.create_receive_money_instance()
+        if contribution_pk is not None:
+            contribution = Contribution.objects.get(pk=contribution_pk)
+            innovation = contribution.innovation
+            innovation.reward_paid = True
+            innovation.save(update_fields=['reward_paid'])
     else:
         return HttpResponseForbidden('You have already responded to this request')
     return HttpResponse(f'You have successfully sent ₦{amount_to_send} to {recipient}.')
