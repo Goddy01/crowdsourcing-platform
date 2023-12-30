@@ -143,6 +143,37 @@ def sender_profile(request, sender_username):
     innovator_pk = Innovator.objects.get(user__username=sender_username).pk
     return redirect('accounts:profile_with_arg', innovator_pk)
 
+def send_friend_new_msg_alert(new_message, sender, domain, content_type, recipient):
+    html_message = None
+    subject = f"New message from your friend, {sender}"
+    if content_type == 'text':
+        html_message = render_to_string(
+            'chat/friend_new_msg_notif.html', {
+            'sender': sender,
+            'domain': domain,
+            'recipient_list': [recipient],
+            'date_received': new_message['timestamp'],
+            'message': new_message,
+            'content': new_message['content'],
+            'type': 'normal',
+            'content_type': 'text'
+            }
+        )
+    elif content_type == 'file':
+        html_message = render_to_string(
+            'chat/friend_new_msg_notif.html', {
+            'sender': sender,
+            'domain': domain,
+            'recipient_list': [recipient],
+            'date_received': new_message['timestamp'],
+            'message': new_message,
+            'content': new_message['content'],
+            'type': 'normal',
+            'content_type': 'file'
+            }
+        )
+    send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=[recipient], fail_silently=True)
+
 def send_new_group_msg_email_alert(new_message, sender, domain, get_group_members_emails, content_type):
     recipient_list = get_group_members_emails
     mail_group_name = new_message['group_name']
