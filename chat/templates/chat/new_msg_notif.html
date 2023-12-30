@@ -115,6 +115,7 @@
 														<tr>
 															<td class="pad">
 																<h3 style="margin: 0; color: #1e0e4b; direction: ltr; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 16px; font-weight: 400; letter-spacing: normal; line-height: 120%; text-align: left; margin-top: 0; margin-bottom: 0;">
+																	{% if message.has_parent_message == 'no' %}
 																	{% if content_type == 'text' %}
                                                                     {% if type == 'normal' %}
 																	<span class="tinyMce-placeholder">	
@@ -133,6 +134,13 @@
 																	{% elif content_type == 'file' %}
 																	<span class="tinyMce-placeholder">	
                                                                         We wanted to inform you that you have received a new file message from {{ group_name }} 
+																		on {{ message.timestamp }}. View 
+                                                                        <a href="http://{{ domain }}{% url 'chat:chat' %}">Message</a>
+                                                                    </span>
+																	{% endif %}
+																	{% elif message.has_parent_message == 'yes' %}
+																	<span class="tinyMce-placeholder">	
+                                                                        We wanted to inform you that your message was tagged in this group: {{ group_name }} 
 																		on {{ message.timestamp }}. View 
                                                                         <a href="http://{{ domain }}{% url 'chat:chat' %}">Message</a>
                                                                     </span>

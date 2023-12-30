@@ -200,7 +200,7 @@ class ChatConsumer(WebsocketConsumer):
 
 class GroupChatConsumer(WebsocketConsumer):
 
-    def send_email_in_consumer(self, new_message, sender, content_type):
+    def send_email_in_consumer(self, new_message, sender, content_type, parent_message):
         header_tuple = self.scope.get('headers', [])[0]
         address = header_tuple[1].decode('utf-8')
         ip_address, port = address.split(':')
@@ -212,7 +212,8 @@ class GroupChatConsumer(WebsocketConsumer):
             'group_name': new_message.group.name,
             'content': new_message.content,
             'timestamp': str(new_message.timestamp),
-            'logged_in_user': self.scope['user'].email
+            'logged_in_user': self.scope['user'].email,
+            'has_parent_message': parent_message
             # Add other fields as needed
         }
 
@@ -227,7 +228,7 @@ class GroupChatConsumer(WebsocketConsumer):
                     'get_group_members_emails': get_group_members_emails,
                     'content_type': content_type
                 },
-                countdown=20
+                countdown=5
             )
 
     def fetch_group_messages(self, data):
@@ -256,6 +257,7 @@ class GroupChatConsumer(WebsocketConsumer):
                 'command': 'new_group_message',
                 'message': self.message_to_json(new_message)
             }
+            self.send_email_in_consumer(new_message, sender, 'text', 'no')
         elif message_type == 'tagged':
             message_tagged = GroupChat.objects.get(pk=data['parentMessagePk'])
             new_message = GroupChat.objects.create(
@@ -269,7 +271,7 @@ class GroupChatConsumer(WebsocketConsumer):
                 'message': self.tagged_message_to_json(new_message)
             }
         
-        self.send_email_in_consumer(new_message, sender, 'text')
+            self.send_email_in_consumer(new_message, sender, 'text', 'yes')
 
         return self.send_chat_message(content)
 
@@ -286,12 +288,13 @@ class GroupChatConsumer(WebsocketConsumer):
             'command': 'new_file_normal',
             'message': self.message_to_json(message)
                 }
+            self.send_email_in_consumer(message, sender, 'file', 'no')
         elif message_type == 'tagged':
             content = {
                 'command': 'new_file_tagged',
                 'message': self.tagged_message_to_json(message)
             }
-        self.send_email_in_consumer(message, sender, 'file')
+            self.send_email_in_consumer(message, sender, 'file', 'yes')
 
         return self.send_chat_message(content)
     

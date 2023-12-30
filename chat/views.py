@@ -188,7 +188,7 @@ def send_new_group_msg_email_alert(new_message, sender, domain, get_group_member
                             'group_name': mail_group_name,
                             'content': content,
                             'logged_in_user': logged_in_user,
-                            'type': 'tagged',
+                            'type': 'normal',
                             'content_type': 'text'
                         }
                     )
