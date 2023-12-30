@@ -3,7 +3,7 @@ from urllib.parse import urlparse
 from django.db.models import Q
 from .views import send_new_group_msg_email_alert
 from django.template.loader import render_to_string
-from .tasks import send_new_group_msg_email_alert_task
+from .tasks import send_new_group_msg_email_alert_task, send_friend_new_msg_email_alert_task
 from django.utils.html import strip_tags
 from django.core.mail import send_mass_mail, send_mail
 from asgiref.sync import async_to_sync
@@ -18,7 +18,7 @@ from django.conf import settings
 from_email = settings.EMAIL_HOST_USER
 
 class ChatConsumer(WebsocketConsumer):
-    def send_email_in_consumer(self, new_message, sender, recipient, content_type):
+    def send_email_in_consumer(self, new_message, sender, content_type):
         header_tuple = self.scope.get('headers', [])[0]
         address = header_tuple[1].decode('utf-8')
         ip_address, port = address.split(':')
@@ -35,12 +35,12 @@ class ChatConsumer(WebsocketConsumer):
         }
 
         # Pass only the necessary information to Celery
-        task = send_new_group_msg_email_alert_task.apply_async(
+        task = send_friend_new_msg_email_alert_task.apply_async(
                 kwargs={
                     'new_message': serialized_message,
                     'sender': sender.username,
                     'domain': domain,
-                    'recipient': serialized_message['recipient'],
+                    'recipient': serialized_message['recipient'].email,
                     'content_type': content_type
                 },
                 countdown=15
@@ -75,7 +75,7 @@ class ChatConsumer(WebsocketConsumer):
                 'command': 'new_file_tagged',
                 'message': self.tagged_message_to_json(message)
             }
-        self.send_email_in_consumer(message, sender.get_full_name(), recipient.get_full_name(), 'file')
+        self.send_email_in_consumer(message, sender.get_full_name(), 'file')
         return self.send_chat_message(content)
 
     def new_message(self, data):
@@ -109,7 +109,7 @@ class ChatConsumer(WebsocketConsumer):
                 'command': 'tag_message',
                 'message': self.tagged_message_to_json(message)
             }
-        self.send_email_in_consumer(message, sender_user.get_full_name(), recipient.get_full_name(), 'text')
+        self.send_email_in_consumer(message, sender_user.get_full_name(), 'text')
         return self.send_chat_message(content)
     
     def tag_message(self, data):
