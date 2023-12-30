@@ -87,6 +87,7 @@ class Innovation(models.Model):
     downvotes = models.IntegerField()
     num_of_contributions = models.IntegerField(blank=True, null=True)
     reward = models.DecimalField(max_digits=255, decimal_places=2, null=False, blank=False)
+    reward_paid = models.BooleanField(default=False)
     views = models.IntegerField()
     approved_by = models.ForeignKey(account_models.Moderator, on_delete=models.SET_NULL, null=True, blank=True)
 

@@ -230,6 +230,47 @@ def innovation_detail(request, pk):
     context['contribution_form'] = contribution_form
     return render(request, 'core/innovation-details.html', context)
 
+def pay_contributor(request, contribution_pk):
+    contribution = Contribution.objects.get(pk=contribution_pk)
+    innovation = contribution.innovation
+
+    sender = contribution.innovation.owner
+    recipient_username = contribution.contributor.user.username
+    amount_to_send = contribution.innovation.reward
+    recipient = contribution.contributor
+
+    if amount_to_send != 0 and amount_to_send is not None and sender.account_balance >= amount_to_send:
+        send_money = SendMoney.objects.create(
+            amount = amount_to_send,
+            sender = sender,
+            recipient = recipient,
+            pre_balance = sender.account_balance,
+            post_balance = sender.account_balance - amount_to_send,
+            is_approved = False
+        )
+        current_site = get_current_site(request)
+        subject = 'NIN Confirmation'
+        html_message = loader.render_to_string(
+            'core/confirm_nin.html', {
+            'user': BaseUser.objects.get(pk=request.user.pk),
+            'domain': current_site.domain,
+            'amount': int(amount_to_send),
+            'date': datetime.datetime.now(),
+            'sender': sender,
+            'recipient': recipient,
+            'amount_to_send': amount_to_send,
+            'send_money_pk': send_money.pk,
+            'contribution_pk': contribution.pk
+        }, request=request
+        )
+        to_email = f'{request.user.email}'
+        from_email = settings.EMAIL_HOST_USER
+        send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
+        messages.success(request, f'Your request to transfer money to {recipient.user.username} has been received. You will receive an email for confirmation, soon.')
+        # Create the link to your one_time_link view, including the unique_token
+    else:
+        messages.error(request, 'Insufficient Balance')
+    return redirect('innovation_details', innovation.pk)
 
 @login_required
 def upvote_contribution(request, contribution_pk):
@@ -1337,7 +1378,7 @@ def reject_withdrawal_request(request, withdrawal_pk, type):
     return render(request, 'core/withdrawal_requests.html', context)
 
 @login_required
-def approve_send_money_request(request, sender, recipient, amount_to_send, send_money_pk):
+def approve_send_money_request(request, sender, recipient, amount_to_send, send_money_pk, contribution_pk=None):
     send_money = SendMoney.objects.get(pk=send_money_pk)
     if send_money.is_approved == False:
         sender = Innovator.objects.get(user__username=sender)
@@ -1364,6 +1405,10 @@ def approve_send_money_request(request, sender, recipient, amount_to_send, send_
             post_balance = sender.account_balance,
             type = 'OUTGOING TRANSFER'
         )
+        contribution = Contribution.objects.get(pk=contribution_pk)
+        innovation = contribution.innovation
+        innovation.reward_paid = True
+        innovation.save(update_fields=['reward_paid'])
         send_money.create_receive_money_instance()
     else:
         return HttpResponseForbidden('You have already responded to this request')

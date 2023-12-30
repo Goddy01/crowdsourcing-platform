@@ -188,9 +188,9 @@
                             </a>
                             {% endif %}
 
-                            {% if contrib.accepted and not contrib.is_paid %}
+                            {% if contrib.accepted and not contrib.is_paid and contrib.innovation.reward > 0 %}
                             <a href="" style="text-decoration: none;">
-                                <button class="button button-primary button-outline" style="float: right;">
+                                <button class="button button-primary button-outline" style="float: right;" id="pay-contributor">
                                     Pay
                                 </button>
                             </a>
@@ -208,6 +208,11 @@
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     </div>
+    <script>
+        $('#pay-contributor').click(function () {
+            
+        })
+    </script>
     <script>
         // Function to hide the toast element
         function hideToast() {
