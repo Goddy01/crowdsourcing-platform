@@ -25,8 +25,8 @@
         {% endfor %}
     </ul>
     {% endif %}
-    <div class="row" style="width: 100vw;">
-        <div class="col-lg-6">
+    <div class="row">
+        <div class="col-lg-8 col-xl-8 col-md-12 cols-sm-12">
             <!-- Post content-->
                     <!-- Post content-->
                     <div style="padding: 20px 60px;width: 100%;border-radius: 10px;border: 1px rgb(219, 214, 214) solid;" class="bg-light">
@@ -118,8 +118,8 @@
                     </section>
                 </div>
                 <!-- Side widgets-->
-                <div class="col-lg-3 p-3 px-5 bg-light mb-4" style="border-radius: 10px;border: 1px solid rgb(197, 194, 194);margin-left: 5%;">
-                    <p class="h5 text-center" style="margin-left: 27px;">Contributions</p>
+                <div class="col-lg-4 col-xl-4 col-md-12 col-sm-12 bg-light mb-4" style="border-radius: 10px;border: 1px solid rgb(197, 194, 194);">
+                    <p class="fw-bold text-center" style="margin-left: 27px;">Contributions</p>
                     <!-- Search widget-->
                     <div class="d-flex mb-4 row">
                         {% if not contributions %}
@@ -128,9 +128,9 @@
                         </p>
                         {% else %}
                         {% for contrib in contributions %}
-                        <div class="mx-2 mb-5 py-3" style="border-radius: 10px;border: 1px solid rgb(191, 206, 196);">
+                        <div class="mb-5 py-3 px-5" style="border-top: 1px solid rgb(191, 206, 196);">
                             <p class="col-2">
-                                <a href="{% url 'accounts:profile_with_arg' contrib.contributor.pk %}" style="text-decoration: none;color: black;font-weight: bold;" class="h5">
+                                <a href="{% url 'accounts:profile_with_arg' contrib.contributor.pk %}" style="text-decoration: none;color: black;font-weight: bold;">
                                     {{ contrib.contributor.user.username }}
                                 </a>
                             </p>
