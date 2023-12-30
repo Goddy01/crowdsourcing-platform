@@ -18,6 +18,35 @@ from django.conf import settings
 from_email = settings.EMAIL_HOST_USER
 
 class ChatConsumer(WebsocketConsumer):
+    def send_email_in_consumer(self, new_message, sender, recipient, content_type):
+        header_tuple = self.scope.get('headers', [])[0]
+        address = header_tuple[1].decode('utf-8')
+        ip_address, port = address.split(':')
+        domain = f"{ip_address}:{port}"
+        
+        serialized_message = {
+            'id': new_message.id,
+            'sender_username': new_message.sender.username,
+            'recipient': new_message.recipient,
+            'content': new_message.content,
+            'timestamp': str(new_message.timestamp),
+            'logged_in_user': self.scope['user'].email,
+            # Add other fields as needed
+        }
+
+        get_group_members_emails = new_message.get_group_members_emails
+
+        # Pass only the necessary information to Celery
+        task = send_new_group_msg_email_alert_task.apply_async(
+                kwargs={
+                    'new_message': serialized_message,
+                    'sender': sender.username,
+                    'domain': domain,
+                    'recipient': serialized_message['recipient'],
+                    'content_type': content_type
+                },
+                countdown=15
+            )
     def fetch_messages(self, data):
         sender = BaseUser.objects.get(username=data['sender'])
         recipient = BaseUser.objects.get(username=data.get('recipient'))
@@ -228,7 +257,7 @@ class GroupChatConsumer(WebsocketConsumer):
                     'get_group_members_emails': get_group_members_emails,
                     'content_type': content_type
                 },
-                countdown=5
+                countdown=15
             )
 
     def fetch_group_messages(self, data):
