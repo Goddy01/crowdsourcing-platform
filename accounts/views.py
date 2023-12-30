@@ -260,6 +260,18 @@ def others_profile(request, innovator_pk):
     print('FRIENDS: ', friends)
     return render(request, 'accounts/others_profile.html', {'innovator': innovator, 'innovator_skills': innovator_skills, 'innovator_services': innovator_services, 'projects': projects, 'conn_request': conn_request,  'conn_already_sent': conn_request.exists(), 'friends': friends})
 
+def set_new_msg_email_alert_preference(request, checkbox):
+    checkbox = checkbox.lower()
+    user = BaseUser.objects.get(username=request.user.username)
+    if checkbox == 'checked':
+        user.receive_msg_email_notif = True
+    elif checkbox == 'unchecked':
+        user.receive_msg_email_notif = False
+    user.save(update_fields=['receive_msg_email_notif'])
+
+    return JsonResponse(status=200)
+
+
 def edit_profile(request):
     user = BaseUser.objects.get(username=request.user.username)
     try:

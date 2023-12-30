@@ -390,13 +390,16 @@ input:checked + .slider:before {
         <!-- <p class="text-muted mt-3 mb-0"><span class="me-1">Note:</span>Minimum size 300px x 300px</p> -->
         </div>
 
-        <div>
-          <b style="font-size: 15px;">Get email alerts for new messages</b>
-          <label class="switch" style="float: right;">
-            <input type="checkbox">
-            <span class="slider round"></span>
-          </label>
-        </div>
+        
+        <form id="new-msg-email-alert-form">
+          <div>
+            <b style="font-size: 15px;">Get email alerts for new messages</b>
+            <label class="switch" style="float: right;">
+              <input type="checkbox" id="email-alert-checkbox" >
+              <span class="slider round"></span>
+            </label>
+          </div>
+        </form>
         
         <div class="col-md-12  d-flex justify-content-center">
           <label class="form-label">About Me
@@ -761,8 +764,21 @@ input:checked + .slider:before {
 <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
-<script type="text/javascript">
-	
+<script>
+	$('#email-alert-checkbox').click(function () {
+    var emailAlertCheckbox = $('#email-alert-checkbox')
+    if (emailAlertCheckbox.prop('checked')) {
+      $.ajax({
+        url: "{% url 'accounts:set_new_msg_email_alert_preference' checked %}",
+        dataType: 'json',
+      })
+    } else {
+      $.ajax({
+        url: "{% url 'accounts:set_new_msg_email_alert_preference' unchecked %}",
+        dataType: 'json',
+      })
+    }
+  })
 </script>
 </body>
 <script>
