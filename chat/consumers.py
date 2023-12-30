@@ -34,8 +34,6 @@ class ChatConsumer(WebsocketConsumer):
             # Add other fields as needed
         }
 
-        get_group_members_emails = new_message.get_group_members_emails
-
         # Pass only the necessary information to Celery
         task = send_new_group_msg_email_alert_task.apply_async(
                 kwargs={
