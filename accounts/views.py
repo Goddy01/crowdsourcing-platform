@@ -269,7 +269,7 @@ def set_new_msg_email_alert_preference(request, checkbox):
         user.receive_msg_email_notif = False
     user.save(update_fields=['receive_msg_email_notif'])
 
-    return JsonResponse(status=200)
+    return JsonResponse(data=user.receive_msg_email_notif, status=200, safe=False)
 
 
 def edit_profile(request):

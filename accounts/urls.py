@@ -29,7 +29,7 @@ urlpatterns = [
     path('friend-requests/<conn_request_pk>/decline-request', views.decline_conn_request, name='decline_conn_request'),
     path('friends', views.friends_list, name='friends_list'),
     path('friends/<friend_pk>/remove-friend', views.remove_friend, name='remove_friend'),
-    path('set_new_msg_email_alert_preference/checkbox', views.set_new_msg_email_alert_preference, name='set_new_msg_email_alert_preference'),
+    path('set_new_msg_email_alert_preference/<str:checkbox>/', views.set_new_msg_email_alert_preference, name='set_new_msg_email_alert_preference'),
     # path('make-payment/', views.deposit_money, name='make_payment'),
     # path('password-change', views.change_password, name='change_password'),
 ]
