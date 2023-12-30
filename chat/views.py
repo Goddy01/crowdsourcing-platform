@@ -190,75 +190,77 @@ def send_new_group_msg_email_alert(new_message, sender, domain, get_group_member
     subject = f"New Message from {mail_group_name}"
     logged_in_user = new_message['logged_in_user']
     
-    if content_type == 'text':
-        for recipient in recipient_list:
-            recipient_username = BaseUser.objects.get(email=recipient).username.lower()
-            if f'@{recipient_username}' not in content.lower():
+    for recipient in recipient_list:
+        recipient_obj = BaseUser.objects.get(email=recipient)
+        recipient_username = recipient_obj.username.lower()
+        if recipient_obj.receive_msg_email_notif:
+            if content_type == 'text':
+                if f'@{recipient_username}' not in content.lower():
+                    html_message = render_to_string(
+                        'chat/new_msg_notif.html', {
+                        'sender': sender,
+                        'domain': domain,
+                        'recipient_list': recipient,
+                        'date_received': new_message['timestamp'],
+                        'message': new_message,
+                        'group_name': mail_group_name,
+                        'content': content,
+                        'logged_in_user': logged_in_user,
+                        'type': 'normal',
+                        'content_type': 'text'
+                        }
+                    )
+                    send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=[recipient], fail_silently=True)
+                elif f'@{recipient_username}' in content.lower():
+                    username_index = content.lower().find(f'@{recipient_username}')
+                    username_index += (len(f'@{recipient_username}') - 1)
+
+                    # Check if the username is followed by a space or it is at the end of the string
+                    if username_index + 1 == len(content) or content[username_index + 1] == ' ':
+                        html_message = render_to_string(
+                            'chat/new_msg_notif.html', {
+                                'sender': sender,
+                                'domain': domain,
+                                'recipient_list': recipient,
+                                'date_received': new_message['timestamp'],
+                                'message': new_message,
+                                'group_name': mail_group_name,
+                                'content': content,
+                                'logged_in_user': logged_in_user,
+                                'type': 'normal',
+                                'content_type': 'text'
+                            }
+                        )
+                        send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=[recipient], fail_silently=True)
+                    else:
+                        html_message = render_to_string(
+                            'chat/new_msg_notif.html', {
+                                'sender': sender,
+                                'domain': domain,
+                                'recipient_list': recipient,
+                                'date_received': new_message['timestamp'],
+                                'message': new_message,
+                                'group_name': mail_group_name,
+                                'content': content,
+                                'logged_in_user': logged_in_user,
+                                'type': 'normal',
+                                'content_type': 'text'
+                            }
+                        )
+                        send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=[recipient], fail_silently=True)
+
+            elif content_type == 'file':
                 html_message = render_to_string(
-                    'chat/new_msg_notif.html', {
-                    'sender': sender,
-                    'domain': domain,
-                    'recipient_list': recipient,
-                    'date_received': new_message['timestamp'],
-                    'message': new_message,
-                    'group_name': mail_group_name,
-                    'content': content,
-                    'logged_in_user': logged_in_user,
-                    'type': 'normal',
-                    'content_type': 'text'
-                    }
-                )
-                send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=[recipient], fail_silently=True)
-            elif f'@{recipient_username}' in content.lower():
-                username_index = content.lower().find(f'@{recipient_username}')
-                username_index += (len(f'@{recipient_username}') - 1)
-
-                # Check if the username is followed by a space or it is at the end of the string
-                if username_index + 1 == len(content) or content[username_index + 1] == ' ':
-                    html_message = render_to_string(
-                        'chat/new_msg_notif.html', {
+                            'chat/new_msg_notif.html', {
                             'sender': sender,
                             'domain': domain,
                             'recipient_list': recipient,
                             'date_received': new_message['timestamp'],
                             'message': new_message,
                             'group_name': mail_group_name,
-                            'content': content,
                             'logged_in_user': logged_in_user,
                             'type': 'normal',
-                            'content_type': 'text'
-                        }
-                    )
-                    send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=[recipient], fail_silently=True)
-                else:
-                    html_message = render_to_string(
-                        'chat/new_msg_notif.html', {
-                            'sender': sender,
-                            'domain': domain,
-                            'recipient_list': recipient,
-                            'date_received': new_message['timestamp'],
-                            'message': new_message,
-                            'group_name': mail_group_name,
-                            'content': content,
-                            'logged_in_user': logged_in_user,
-                            'type': 'normal',
-                            'content_type': 'text'
-                        }
-                    )
-                    send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=[recipient], fail_silently=True)
-
-    else:
-        html_message = render_to_string(
-                    'chat/new_msg_notif.html', {
-                    'sender': sender,
-                    'domain': domain,
-                    'recipient_list': recipient_list,
-                    'date_received': new_message['timestamp'],
-                    'message': new_message,
-                    'group_name': mail_group_name,
-                    'logged_in_user': logged_in_user,
-                    'type': 'normal',
-                    'content_type': 'file'
-                    }
-                )
-        send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=recipient_list, fail_silently=True)
+                            'content_type': 'file'
+                            }
+                        )
+                send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=recipient_list, fail_silently=True)

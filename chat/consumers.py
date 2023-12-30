@@ -77,7 +77,8 @@ class ChatConsumer(WebsocketConsumer):
                 'command': 'new_file_tagged',
                 'message': self.tagged_message_to_json(message)
             }
-        self.send_email_in_consumer(message, sender.get_full_name(), 'file')
+        if recipient.receive_msg_email_notif:
+            self.send_email_in_consumer(message, sender.get_full_name(), 'file')
         return self.send_chat_message(content)
 
     def new_message(self, data):
@@ -111,7 +112,8 @@ class ChatConsumer(WebsocketConsumer):
                 'command': 'tag_message',
                 'message': self.tagged_message_to_json(message)
             }
-        self.send_email_in_consumer(message, sender_user.get_full_name(), 'text')
+        if recipient.receive_msg_email_notif:
+            self.send_email_in_consumer(message, sender_user.get_full_name(), 'text')
         return self.send_chat_message(content)
     
     def tag_message(self, data):
