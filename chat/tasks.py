@@ -15,8 +15,8 @@ def send_new_group_msg_email_alert_task(new_message, sender, domain, **kwargs):
 
 @shared_task
 def send_friend_new_msg_email_alert_task(new_message, sender, domain, **kwargs):
-    recipient = kwargs.get('recipient')
     content_type = kwargs.get('content_type')
     recipient = kwargs.get('recipient')
+    recipient_fullname = kwargs.get('recipient_fullname')
     logger.info('FRIEND NEW MSG EMAIL ALERT SENT')
-    return send_friend_new_msg_alert(new_message=new_message, sender = sender, domain = domain, content_type=content_type, recipient=recipient)
+    return send_friend_new_msg_alert(new_message=new_message, sender = sender, domain = domain, content_type=content_type, recipient=recipient, recipient_fullname=recipient_fullname)

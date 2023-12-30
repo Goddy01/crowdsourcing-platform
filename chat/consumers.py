@@ -27,7 +27,7 @@ class ChatConsumer(WebsocketConsumer):
         serialized_message = {
             'id': new_message.id,
             'sender_username': new_message.sender.username,
-            'recipient': new_message.recipient,
+            'recipient': new_message.recipient.email,
             'content': new_message.content,
             'timestamp': str(new_message.timestamp),
             'logged_in_user': self.scope['user'].email,
@@ -38,10 +38,11 @@ class ChatConsumer(WebsocketConsumer):
         task = send_friend_new_msg_email_alert_task.apply_async(
                 kwargs={
                     'new_message': serialized_message,
-                    'sender': sender.username,
+                    'sender': serialized_message['sender_username'],
                     'domain': domain,
-                    'recipient': serialized_message['recipient'].email,
-                    'content_type': content_type
+                    'recipient': serialized_message['recipient'],
+                    'content_type': content_type,
+                    'recipient_fullname': new_message.recipient.get_full_name()
                 },
                 countdown=15
             )
