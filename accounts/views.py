@@ -897,3 +897,6 @@ def remove_friend(request, friend_pk):
     else:
         return JsonResponse({'error': 'You are not friends with the user you want to remove'})
     return JsonResponse(data= {'status': 'success'})
+
+def testimonials(request):
+    return render(request, 'accounts/testimonials.html')
