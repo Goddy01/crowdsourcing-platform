@@ -218,7 +218,7 @@
                         <input type="hidden" name="product_id" id="product_id" value="{{ product.product_id }}"/>
                         <div class="rating-wrapper mb-4">
                             <span class="mb-0 mr-2 text-fade font-weight-semi-bold">Your Rating:  </span>
-                            <div style="display: inline;" class="text-primary">
+                            <div style="display: inline;" class="text-success">
                                 <input type="radio" id="star-1" name="rating" value="1" hidden><label for="star-1" class="far fa-star not-active" id="s-1"></label>
                                 <input type="radio" id="star-2" name="rating" value="2" hidden><label for="star-2" class="far fa-star not-active" id="s-2"></label>
                                 <input type="radio" id="star-3" name="rating" value="3" hidden><label for="star-3" class="far fa-star not-active" id="s-3"></label>
@@ -380,4 +380,73 @@
     </div>
 </div>
 </div>
+<script>
+    let star1 = document.getElementById('s-1')
+    star1.addEventListener("click", function (){showStar(1)});
+    let star2 = document.getElementById('s-2')
+    star2.addEventListener("click", function (){showStar(2)});
+    let star3 = document.getElementById('s-3')
+    star3.addEventListener("click", function (){showStar(3)});
+    let star4 = document.getElementById('s-4')
+    star4.addEventListener("click", function (){showStar(4)});
+    let star5 = document.getElementById('s-5')
+    star5.addEventListener("click", function (){showStar(5)});
+    function showStar(star_num) {
+        // console.log(`star-#{star_num}`)
+        if (star_num == 1) {
+            // Activates star1 when clicked
+            star1.setAttribute('class', 'fas fa-star active')
+            if (! star1.classList.contains('not-active')) {
+                // Activates star1 when clicked and deactivates others
+                star2.setAttribute('class', 'far fa-star not-active')
+                star3.setAttribute('class', 'far fa-star not-active')
+                star4.setAttribute('class', 'far fa-star not-active')
+                star5.setAttribute('class', 'far fa-star not-active')
+            }
+        }
+        else if (star_num == 2) {
+            // Activates star1 & star2 when clicked
+            star1.setAttribute('class', 'fas fa-star active')
+            star2.setAttribute('class', 'fas fa-star active')
+            if (! star2.classList.contains('not-active')) {
+                // Activates star1, star2 and deactivates others
+                star3.setAttribute('class', 'far fa-star not-active')
+                star4.setAttribute('class', 'far fa-star not-active')
+                star5.setAttribute('class', 'far fa-star not-active')
+            }
+        }
+        else if (star_num == 3) {
+            // Activates star1, star2 & star3 when clicked
+            star1.setAttribute('class', 'fas fa-star active')
+            star2.setAttribute('class', 'fas fa-star active')
+            star3.setAttribute('class', 'fas fa-star active')
+            if (! star3.classList.contains('not-active')) {
+                // Activates star1-star3 and deactivates others
+                star4.setAttribute('class', 'far fa-star not-active')
+                star5.setAttribute('class', 'far fa-star not-active')
+            }
+        }
+        else if (star_num == 4) {
+            // Activates star1-star4 when clicked
+            star1.setAttribute('class', 'fas fa-star active')
+            star2.setAttribute('class', 'fas fa-star active')
+            star3.setAttribute('class', 'fas fa-star active')
+            star4.setAttribute('class', 'fas fa-star active')
+            if (! star4.classList.contains('not-active')) {
+                // Activates star1-star4 and deactivates others
+                star5.setAttribute('class', 'far fa-star not-active')
+            }
+        }
+        else if (star_num == 5) {
+            // Activates star1-star5 when clicked
+            star1.setAttribute('class', 'fas fa-star active')
+            star2.setAttribute('class', 'fas fa-star active')
+            star3.setAttribute('class', 'fas fa-star active')
+            star4.setAttribute('class', 'fas fa-star active')
+            star5.setAttribute('class', 'fas fa-star active')
+            
+        }
+
+    }
+</script>
 {% endblock content %}
