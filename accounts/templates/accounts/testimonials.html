@@ -204,6 +204,14 @@
             border-radius: 0;
             height: 30px;
         }
+
+        #submit-review-button {
+            border-color: #198754;
+            color: #fff;
+        }
+        #submit-review-button:hover {
+            border-color: #198754;
+        }
     </style>
 <div class="container">
 <div class="col-md-12">
@@ -217,7 +225,7 @@
                         {% csrf_token %}
                         <input type="hidden" name="product_id" id="product_id" value="{{ product.product_id }}"/>
                         <div class="rating-wrapper mb-4">
-                            <span class="mb-0 mr-2 text-fade font-weight-semi-bold">Your Rating:  </span>
+                            <span class="mb-0 mr-2 text-fade fw-bold">Your Rating:  </span>
                             <div style="display: inline;" class="text-success">
                                 <input type="radio" id="star-1" name="rating" value="1" hidden><label for="star-1" class="far fa-star not-active" id="s-1"></label>
                                 <input type="radio" id="star-2" name="rating" value="2" hidden><label for="star-2" class="far fa-star not-active" id="s-2"></label>
@@ -227,11 +235,11 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="id_user_review" class="font-weight-semi-bold">Your Review:  </label>
+                            <label for="id_user_review" class="mb-0 mr-2 text-fade fw-bold" style="font-size: 16px;">Your Review:  </label>
                             <textarea id="id_user_review" cols="30" rows="5" class="form-control" name="user_review"></textarea>
                         </div>
                         <div class="form-group mb-0">
-                            <input type="submit" value="Leave Your Review" class="btn btn-primary px-3">
+                            <input id="submit-review-button" type="submit" value="Leave Your Review" class="btn px-3" style="background-color: #198754;">
                         </div>
                     </form>
                 </div>

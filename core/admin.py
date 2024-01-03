@@ -1,6 +1,6 @@
 from import_export.admin import ImportExportModelAdmin
 from django.contrib import admin
-from .models import Project, Innovation, Contribution, Reward_Payment, Make_Investment, Transaction, DepositMoney, Withdrawal, SendMoney, WithdrawProjectFunds, ProjectMilestone
+from .models import Project, Innovation, Contribution, Reward_Payment, Make_Investment, Transaction, DepositMoney, Withdrawal, SendMoney, WithdrawProjectFunds, ProjectMilestone, Testimony
 # Register your models here.
 class ProjectAdmin(ImportExportModelAdmin):
     readonly_fields = ('date_created',)
@@ -40,3 +40,4 @@ admin.site.register(Withdrawal, WithdrawalAdmin)
 admin.site.register(SendMoney, SendMoneyAdmin)
 admin.site.register(WithdrawProjectFunds, WithdrawProjectFundsAdmin)
 admin.site.register(ProjectMilestone, ProjectMilestoneAdmin)
+admin.site.register(Testimony)

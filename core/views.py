@@ -1533,3 +1533,19 @@ def update_milestone(request, milestone_pk):
         )
     context['update_milestone_details_form'] = update_milestone_details_form
     return render(request, 'core/update-milestone-details.html', context)
+
+def testify(request, testified_person_pk):
+    testified_person = Innovator.objects.get(pk=testified_person_pk)
+    if request.method == 'POST':
+        star_1 = request.POST.get('star-1')
+        star_2 = request.POST.get('star-2')
+        star_3 = request.POST.get('star-3')
+        star_4 = request.POST.get('star-4')
+        star_5 = request.POST.get('star-5')
+
+        star_list = [star_1, star_2, star_3, star_4, star_5]
+        highest = star_list[0]
+        for star in star_list:
+            if highest < star:
+                highest = star
+    return render(request, 'core/testimonials.html')
