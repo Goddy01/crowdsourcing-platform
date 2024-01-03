@@ -18,7 +18,7 @@ from django.db.models import Q
 from .models import Project, Innovation, Contribution, Reward_Payment, Make_Investment, Transaction, DepositMoney, Withdrawal, SendMoney, WithdrawProjectFunds, ProjectMilestone
 from accounts.models import KBAQuestion
 from django_countries import countries
-from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm, MyInvestmentForm, InvestmentStatusForm, StatementTypeForm, WithdrawalRequestAuthorizationForm, FilterWithdrawalRequestForm, FilterConfirmationClickedForm, KBQForm, ConfirmNINForm, AddMilestoneForm, UpdateMilestoneDetailsForm, AddTestimonyForm
+from .forms import CreateProjectForm, CreateInnovationForm, MakeContributionForm, MyInvestmentForm, InvestmentStatusForm, StatementTypeForm, WithdrawalRequestAuthorizationForm, FilterWithdrawalRequestForm, FilterConfirmationClickedForm, KBQForm, ConfirmNINForm, AddMilestoneForm, UpdateMilestoneDetailsForm
 from accounts.models import Innovator, Moderator, BaseUser
 from django.utils import timezone
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseForbidden
@@ -1533,31 +1533,3 @@ def update_milestone(request, milestone_pk):
         )
     context['update_milestone_details_form'] = update_milestone_details_form
     return render(request, 'core/update-milestone-details.html', context)
-
-def testify(request, testified_person_pk):
-    testified_person = Innovator.objects.get(pk=testified_person_pk)
-    testifier = Innovator.objects.get(user__pk=request.user.pk)
-    star_1 = request.POST.get('star-1')
-    star_2 = request.POST.get('star-2')
-    star_3 = request.POST.get('star-3')
-    star_4 = request.POST.get('star-4')
-    star_5 = request.POST.get('star-5')
-    star_list = [star_1, star_2, star_3, star_4, star_5]
-    add_testimony_form = AddTestimonyForm()
-
-    if request.method == 'POST':
-        add_testimony_form = AddTestimonyForm(request.POST)
-
-        highest = star_list[0]
-        for star in star_list:
-            if highest < star:
-                highest = star
-
-        if add_testimony_form.is_valid():
-            add_testimony_obj = add_testimony_form.save(commit=False)
-            add_testimony_obj.testified_person = testified_person
-            add_testimony_form.testifier = testifier
-            add_testimony_form.rating = highest
-        messages.success(request, 'Your testimony has been posted!')
-
-    return render(request, 'core/testimonials.html', {'add_testimony_form': add_testimony_form})

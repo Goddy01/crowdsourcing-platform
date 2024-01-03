@@ -30,7 +30,7 @@ urlpatterns = [
     path('friends', views.friends_list, name='friends_list'),
     path('friends/<friend_pk>/remove-friend', views.remove_friend, name='remove_friend'),
     path('set_new_msg_email_alert_preference/<str:checkbox>/', views.set_new_msg_email_alert_preference, name='set_new_msg_email_alert_preference'),
-    path('testimonials', views.testimonials, name='testimonials'),
+    path('<testified_person_pk>/testify', views.testify, name='testify'),
     # path('make-payment/', views.deposit_money, name='make_payment'),
     # path('password-change', views.change_password, name='change_password'),
 ]

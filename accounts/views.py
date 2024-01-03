@@ -5,7 +5,7 @@ from django.db.models import Q
 from datetime import datetime
 from django.utils.safestring import mark_safe
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404, HttpResponseRedirect
-from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm, UpdateUserResidentialInfoForm, UpdateUserSocialsForm, ChangePasswordForm, UpdateUserSkillsForm, UpdateInnovatorServicesForm, UpdateUserServiceForm, UpdateUserNINForm, UpdateKBAQuestionForm
+from .forms import InnovatorSignInForm, InnovatorSignUpForm, BaseUserSignUpForm, ModeratorSignUpForm, ModeratorSignInForm, UpdatePersonalProfileForm, UpdateUserResidentialInfoForm, UpdateUserSocialsForm, ChangePasswordForm, UpdateUserSkillsForm, UpdateInnovatorServicesForm, UpdateUserServiceForm, UpdateUserNINForm, UpdateKBAQuestionForm, AddTestimonyForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -24,7 +24,7 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.forms import formset_factory
 from django.forms.models import modelformset_factory
-from .models import InnovatorSkill, Service, ConnectionRequest, Connection
+from .models import InnovatorSkill, Service, ConnectionRequest, Connection, Testimony
 from django import forms
 from django.contrib import messages
 from core.models import Project
@@ -898,5 +898,31 @@ def remove_friend(request, friend_pk):
         return JsonResponse({'error': 'You are not friends with the user you want to remove'})
     return JsonResponse(data= {'status': 'success'})
 
-def testimonials(request):
-    return render(request, 'accounts/testimonials.html')
+def testify(request, testified_person_pk):
+    testified_person = Innovator.objects.get(pk=testified_person_pk)
+    testifier = Innovator.objects.get(user__pk=request.user.pk)
+    testimonies = Testimony.objects.filter(testified_person__pk=testified_person_pk)
+    star_1 = request.POST.get('star-1')
+    star_2 = request.POST.get('star-2')
+    star_3 = request.POST.get('star-3')
+    star_4 = request.POST.get('star-4')
+    star_5 = request.POST.get('star-5')
+    star_list = [star_1, star_2, star_3, star_4, star_5]
+    add_testimony_form = AddTestimonyForm()
+
+    if request.method == 'POST':
+        add_testimony_form = AddTestimonyForm(request.POST)
+
+        highest = star_list[0]
+        for star in star_list:
+            if highest < star:
+                highest = star
+
+        if add_testimony_form.is_valid():
+            add_testimony_obj = add_testimony_form.save(commit=False)
+            add_testimony_obj.testified_person = testified_person
+            add_testimony_form.testifier = testifier
+            add_testimony_form.rating = highest
+        messages.success(request, 'Your testimony has been posted!')
+
+    return render(request, 'core/testimonials.html', {'add_testimony_form': add_testimony_form, 'testimonies': testimonies})

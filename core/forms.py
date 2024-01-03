@@ -1,4 +1,4 @@
-from .models import Project, Innovation, Contribution, Transaction, Withdrawal, WithdrawProjectFunds, ProjectMilestone, Testimony
+from .models import Project, Innovation, Contribution, Transaction, Withdrawal, WithdrawProjectFunds, ProjectMilestone
 from accounts.models import KBAQuestion
 from django import forms
 from ckeditor.fields import RichTextFormField
@@ -272,8 +272,3 @@ class UpdateMilestoneDetailsForm(forms.ModelForm):
     class Meta:
         model = ProjectMilestone
         fields = ('status', )
-
-class AddTestimonyForm(forms.ModelForm):
-    class Meta:
-        model = Testimony
-        fields = ('testifier', 'testified_person', 'review', 'rating')

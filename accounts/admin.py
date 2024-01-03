@@ -1,6 +1,6 @@
 from import_export.admin import ImportExportModelAdmin
 from django.contrib import admin
-from .models import BaseUser, Innovator, Moderator, InnovatorSkill, KBAQuestion, ConnectionRequest, Connection
+from .models import BaseUser, Innovator, Moderator, InnovatorSkill, KBAQuestion, ConnectionRequest, Connection, Testimony
 from django.contrib.auth.admin import UserAdmin
 # Register your models here.
 class AccountAdmin(UserAdmin):
@@ -18,3 +18,4 @@ admin.site.register(Moderator)
 admin.site.register(InnovatorSkill)
 admin.site.register(ConnectionRequest, ConnectionRequestAdmin)
 admin.site.register(Connection)
+admin.site.register(Testimony)

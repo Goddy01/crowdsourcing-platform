@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django import forms
-from .models import Innovator, Moderator, BaseUser, InnovatorSkill, Service, KBAQuestion
+from .models import Innovator, Moderator, BaseUser, InnovatorSkill, Service, KBAQuestion, Testimony
 from django.contrib.auth import authenticate, password_validation
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm, SetPasswordForm
 from django.utils.translation import gettext_lazy as _
@@ -453,3 +453,7 @@ class UpdateKBAQuestionForm(forms.ModelForm):
         # widgets = {
         #     'kba_question': forms.Select(attrs={'class': 'form-control'}),
         # }
+class AddTestimonyForm(forms.ModelForm):
+    class Meta:
+        model = Testimony
+        fields = ('testifier', 'testified_person', 'review', 'rating')

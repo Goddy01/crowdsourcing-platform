@@ -238,3 +238,10 @@ class Connection(models.Model):
     def last_chat_with_conn(self):
         chats = apps.get_model('chat.Chat').objects.filter(sender=self.user1.user, recipient=self.user2.user).order_by('timestamp') | apps.get_model('chat.Chat').objects.filter(sender=self.user2.user, recipient=self.user1.user).order_by('-timestamp')
         return chats.first()
+    
+class Testimony(models.Model):
+    testifier = models.ForeignKey(Innovator, on_delete=models.CASCADE, null=False, blank=False, related_name='testifier')
+    testified_person = models.ForeignKey(Innovator, on_delete=models.CASCADE, null=False, blank=False, related_name='testified_person')
+    review = models.TextField(null=False, blank=False, max_length=1000)
+    date_added = models.DateTimeField(auto_now_add=True)
+    rating = models.IntegerField(null=False, blank=False)

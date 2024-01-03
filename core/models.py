@@ -256,10 +256,3 @@ class ProjectMilestone(models.Model):
     date_added = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True, null=True)
     status = models.CharField(max_length=254, blank=False, null=True, choices=MILESTONE_STATUS)
-
-class Testimony(models.Model):
-    testifier = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE, null=False, blank=False, related_name='testifier')
-    testified_person = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE, null=False, blank=False, related_name='testified_person')
-    review = models.TextField(null=False, blank=False, max_length=1000)
-    date_added = models.DateTimeField(auto_now_add=True)
-    rating = models.IntegerField(null=False, blank=False)
