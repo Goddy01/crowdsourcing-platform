@@ -1543,6 +1543,7 @@ def testify(request, testified_person_pk):
     star_4 = request.POST.get('star-4')
     star_5 = request.POST.get('star-5')
     star_list = [star_1, star_2, star_3, star_4, star_5]
+    add_testimony_form = AddTestimonyForm()
 
     if request.method == 'POST':
         add_testimony_form = AddTestimonyForm(request.POST)
@@ -1557,5 +1558,6 @@ def testify(request, testified_person_pk):
             add_testimony_obj.testified_person = testified_person
             add_testimony_form.testifier = testifier
             add_testimony_form.rating = highest
+        messages.success(request, 'Your testimony has been posted!')
 
-    return render(request, 'core/testimonials.html')
+    return render(request, 'core/testimonials.html', {'add_testimony_form': add_testimony_form})
