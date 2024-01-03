@@ -456,4 +456,4 @@ class UpdateKBAQuestionForm(forms.ModelForm):
 class AddTestimonyForm(forms.ModelForm):
     class Meta:
         model = Testimony
-        fields = ('testifier', 'testified_person', 'review', 'rating')
+        fields = ('review', )

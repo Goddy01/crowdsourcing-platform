@@ -902,27 +902,39 @@ def testify(request, testified_person_pk):
     testified_person = Innovator.objects.get(pk=testified_person_pk)
     testifier = Innovator.objects.get(user__pk=request.user.pk)
     testimonies = Testimony.objects.filter(testified_person__pk=testified_person_pk)
-    star_1 = request.POST.get('star-1')
-    star_2 = request.POST.get('star-2')
-    star_3 = request.POST.get('star-3')
-    star_4 = request.POST.get('star-4')
-    star_5 = request.POST.get('star-5')
-    star_list = [star_1, star_2, star_3, star_4, star_5]
+    investors = Make_Investment.objects.filter(investment__innovator=testified_person)
+    print('INVESTORS: ', investors)
+    rating = request.POST.get('rating')
+    
     add_testimony_form = AddTestimonyForm()
-
     if request.method == 'POST':
         add_testimony_form = AddTestimonyForm(request.POST)
-
-        highest = star_list[0]
-        for star in star_list:
-            if highest < star:
-                highest = star
+        print(1)
 
         if add_testimony_form.is_valid():
+            print(2)
             add_testimony_obj = add_testimony_form.save(commit=False)
-            add_testimony_obj.testified_person = testified_person
-            add_testimony_form.testifier = testifier
-            add_testimony_form.rating = highest
-        messages.success(request, 'Your testimony has been posted!')
+            rating = request.POST.get('rating')
+            review = add_testimony_obj.review
 
-    return render(request, 'core/testimonials.html', {'add_testimony_form': add_testimony_form, 'testimonies': testimonies})
+            if rating is None:
+                print(3)
+                messages.error(request, 'Provide star ratings')
+            
+            if review is None:
+                print(4)
+                messages.error(request, 'Provide your review')
+
+            if rating is not None and review is not None:
+                print(5)
+                add_testimony_obj.testified_person = testified_person
+                add_testimony_obj.testifier = testifier
+                add_testimony_obj.rating = rating
+                add_testimony_obj.save()
+                messages.success(request, 'Your testimony has been posted!')
+                return redirect('accounts:testify', testified_person_pk)
+        else:
+            for field, errors in add_testimony_form.errors.items():
+                print(f"Field: {field}, Errors: {', '.join(errors)}")
+
+    return render(request, 'accounts/testimonials.html', {'add_testimony_form': add_testimony_form, 'testimonies': testimonies})
