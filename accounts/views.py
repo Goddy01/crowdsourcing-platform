@@ -909,6 +909,11 @@ def testify(request, testified_person_pk):
     context['testimonies'] = testimonies
     context['testimonies_count'] = testimonies[0].instances_count()
     context['average_rating'] = testimonies[0].average_rating()
+    context['star_1'] = testimonies[0].star_rating_freq(1)
+    context['star_2'] = testimonies[0].star_rating_freq(2)
+    context['star_3'] = testimonies[0].star_rating_freq(3)
+    context['star_4'] = testimonies[0].star_rating_freq(4)
+    context['star_5'] = testimonies[0].star_rating_freq(5)
 
     add_testimony_form = AddTestimonyForm()
 

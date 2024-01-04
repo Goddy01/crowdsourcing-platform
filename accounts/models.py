@@ -254,3 +254,16 @@ class Testimony(models.Model):
         for testimony in Testimony.objects.filter(testified_person=self.testified_person):
             rating_list.append(testimony.rating)
         return round(sum(rating_list)/len(rating_list), 1)
+    
+    def star_rating_freq(self, star_number):
+        testimonies = Testimony.objects.filter(testified_person=self.testified_person)
+        star_number_freq = 0
+
+        if self.instances_count() > 0:
+            for testimony in testimonies:
+                if testimony.rating == star_number:
+                    star_number_freq += 1
+
+            return round((star_number_freq / self.instances_count()) * 100, 1)
+
+        return 0
