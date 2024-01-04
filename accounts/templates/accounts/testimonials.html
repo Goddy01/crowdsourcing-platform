@@ -397,8 +397,9 @@
     var offset = 2;  // Initial offset, showing the first two reviews
     
     function loadMoreReviews() {
+        /get_reviews/?offset=${offset}&limit=10
         // Fetch more reviews from the server
-        fetch(`/get_reviews/?offset=${offset}&limit=10`)
+        fetch("{% url 'accounts:get_testimonies' %}?offset=" + offset + '&limit=10')
             .then(response => response.json())
             .then(data => {
                 // Append the new reviews to the existing reviews container
