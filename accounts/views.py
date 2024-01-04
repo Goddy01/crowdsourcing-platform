@@ -1,4 +1,5 @@
 from crowdsourcing import settings
+from django.core.serializers import serialize
 from django.utils.html import strip_tags
 from django.template import loader
 from django.db.models import Q
@@ -919,23 +920,15 @@ def testify(request, testified_person_pk):
 
     if request.method == 'POST':
         add_testimony_form = AddTestimonyForm(request.POST)
-        print(1)
-
         if add_testimony_form.is_valid():
-            print(2)
             add_testimony_obj = add_testimony_form.save(commit=False)
             review = add_testimony_obj.review
-
             if rating is None:
-                print(3)
                 messages.error(request, 'Provide star ratings')
-            
             if review is None:
-                print(4)
                 messages.error(request, 'Provide your review')
 
             if rating is not None and review is not None:
-                print(5)
                 add_testimony_obj.testified_person = testified_person
                 add_testimony_obj.testifier = testifier
                 add_testimony_obj.rating = rating
@@ -952,6 +945,9 @@ def testify(request, testified_person_pk):
 def get_testimonies(request):
     offset = int(request.GET.get('offset', 0))
     limit = int(request.GET.get('limit', 10))
-    testimonies = Testimony.objects.all()[offset:offset + limit]
-    testimonies_html = render_to_string('accounts/testimonials.html', {'testimonies': testimonies})
-    return JsonResponse({'testimonies_html': testimonies_html})
+    testimonies = Testimony.objects.all()[offset:offset+limit]
+
+    # Serialize the testimonies to JSON
+    testimonies_json = serialize('json', testimonies)
+
+    return JsonResponse({'testimonies': testimonies_json})
