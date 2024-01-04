@@ -907,6 +907,8 @@ def testify(request, testified_person_pk):
     rating = request.POST.get('rating')
     context = {}
     context['testimonies'] = testimonies
+    context['testimonies_count'] = testimonies[0].instances_count()
+    context['average_rating'] = testimonies[0].average_rating()
 
     add_testimony_form = AddTestimonyForm()
 

@@ -245,3 +245,12 @@ class Testimony(models.Model):
     review = models.TextField(null=False, blank=False, max_length=1000)
     date_added = models.DateTimeField(auto_now_add=True)
     rating = models.IntegerField(null=False, blank=False)
+
+    def instances_count(self):
+        return Testimony.objects.filter(testified_person=self.testified_person).count()
+
+    def average_rating(self):
+        rating_list = []
+        for testimony in Testimony.objects.filter(testified_person=self.testified_person):
+            rating_list.append(testimony.rating)
+        return round(sum(rating_list)/len(rating_list), 1)
