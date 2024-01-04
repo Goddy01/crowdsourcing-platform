@@ -394,6 +394,21 @@
 </div>
 </div>
 <script>
+    var offset = 2;  // Initial offset, showing the first two reviews
+    
+    function loadMoreReviews() {
+        // Fetch more reviews from the server
+        fetch(`/get_reviews/?offset=${offset}&limit=10`)
+            .then(response => response.json())
+            .then(data => {
+                // Append the new reviews to the existing reviews container
+                document.getElementById('reviews-container').innerHTML += data.reviews_html;
+                offset += 10;  // Increment the offset for the next batch
+            });
+    }
+    </script>
+    
+<script>
     let star1 = document.getElementById('s-1')
     star1.addEventListener("click", function (){showStar(1)});
     let star2 = document.getElementById('s-2')
