@@ -454,6 +454,12 @@ class UpdateKBAQuestionForm(forms.ModelForm):
         #     'kba_question': forms.Select(attrs={'class': 'form-control'}),
         # }
 class AddTestimonyForm(forms.ModelForm):
+    rating = forms.CharField(required=True, error_messages={
+        'required': 'Please provide your rating.'
+    })
+    review = forms.CharField(required=True, error_messages={
+        'required': 'Please provide your review.'
+    })
     class Meta:
         model = Testimony
-        fields = ('review', )
+        fields = ['review', 'rating']

@@ -905,8 +905,11 @@ def testify(request, testified_person_pk):
     investors = Make_Investment.objects.filter(investment__innovator=testified_person)
     print('INVESTORS: ', investors)
     rating = request.POST.get('rating')
-    
+    context = {}
+    context['testimonies'] = testimonies
+
     add_testimony_form = AddTestimonyForm()
+
     if request.method == 'POST':
         add_testimony_form = AddTestimonyForm(request.POST)
         print(1)
@@ -914,7 +917,6 @@ def testify(request, testified_person_pk):
         if add_testimony_form.is_valid():
             print(2)
             add_testimony_obj = add_testimony_form.save(commit=False)
-            rating = request.POST.get('rating')
             review = add_testimony_obj.review
 
             if rating is None:
@@ -937,4 +939,5 @@ def testify(request, testified_person_pk):
             for field, errors in add_testimony_form.errors.items():
                 print(f"Field: {field}, Errors: {', '.join(errors)}")
 
-    return render(request, 'accounts/testimonials.html', {'add_testimony_form': add_testimony_form, 'testimonies': testimonies})
+    context['add_testimony_form'] = add_testimony_form
+    return render(request, 'accounts/testimonials.html', context)

@@ -3,17 +3,15 @@
 {% load static %}
 {% block title %}Testimonials{% endblock title %}
 {% block content %}
-<link rel="stylesheet" href="https://allyoucan.cloud/cdn/icofont/1.0.1/icofont.css" integrity="sha384-jbCTJB16Q17718YM9U22iJkhuGbS0Gd2LjaWb4YJEZToOPmnKDjySVa323U+W7Fv" crossorigin="anonymous">
+<!-- <link rel="stylesheet" href="https://allyoucan.cloud/cdn/icofont/1.0.1/icofont.css" integrity="sha384-jbCTJB16Q17718YM9U22iJkhuGbS0Gd2LjaWb4YJEZToOPmnKDjySVa323U+W7Fv" crossorigin="anonymous"> -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"> -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
     
         <!-- Animate.css  -->
-        <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
     
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
@@ -32,6 +30,15 @@
             display: inline-block;
             margin: 0 -17px 0 0;
         }
+        @media (min-width: 1200px) {
+                .toastDiv {
+                position: absolute;
+                right: -110px;
+                top: 3rem;
+                z-index: 5
+                }
+                
+            }
         .total-like {
             border: 1px solid;
             border-radius: 50px;
@@ -70,65 +77,6 @@
             line-height: 29px;
             text-align: right;
             width: 10%;
-        }
-        .restaurant-slider-pics {
-            bottom: 0;
-            font-size: 12px;
-            left: 0;
-            z-index: 999;
-            padding: 0 10px;
-        }
-        .restaurant-slider-view-all {
-            bottom: 15px;
-            right: 15px;
-            z-index: 999;
-        }
-        .offer-dedicated-nav .nav-link.active,
-        .offer-dedicated-nav .nav-link:hover,
-        .offer-dedicated-nav .nav-link:focus {
-            border-color: #00B951;
-            color: #00B951;
-        }
-        .offer-dedicated-nav .nav-link {
-            border-bottom: 2px solid #fff;
-            color: #000000;
-            padding: 16px 0;
-            font-weight: 600;
-        }
-        .offer-dedicated-nav .nav-item {
-            margin: 0 37px 0 0;
-        }
-        .restaurant-detailed-action-btn {
-            margin-top: 12px;
-        }
-        .restaurant-detailed-header-right .btn-success {
-            border-radius: 3px;
-            height: 45px;
-            margin: -18px 0 18px;
-            min-width: 130px;
-            padding: 7px;
-        }
-        .text-black {
-            color: #000000;
-        }
-        .icon-overlap {
-            bottom: -23px;
-            font-size: 74px;
-            opacity: 0.23;
-            position: absolute;
-            right: -32px;
-        }
-        .menu-list img {
-            width: 41px;
-            height: 41px;
-            object-fit: cover;
-        }
-        .restaurant-detailed-header-left img {
-            width: 88px;
-            height: 88px;
-            border-radius: 3px;
-            object-fit: cover;
-            box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075)!important;
         }
         .reviews-members .media .mr-3 {
             width: 56px;
@@ -158,9 +106,6 @@
             padding: 0 13px;
             vertical-align: top;
         }
-        .restaurant-detailed-ratings-and-reviews hr {
-            margin: 0 -24px;
-        }
         .graph-star-rating-header .star-rating {
             font-size: 17px;
         }
@@ -187,18 +132,6 @@
             text-align: right;
             width: 10%;
         }
-        .restaurant-slider-pics {
-            bottom: 0;
-            font-size: 12px;
-            left: 0;
-            z-index: 999;
-            padding: 0 10px;
-        }
-        .restaurant-slider-view-all {
-            bottom: 15px;
-            right: 15px;
-            z-index: 999;
-        }
 
         .progress {
             background: #f2f4f8 none repeat scroll 0 0;
@@ -216,60 +149,62 @@
     </style>
 <div class="container">
     {% if add_testimony_form.errors %}
-                  <div class="card toast mb-2 bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto;">
-                <!-- <div class="toast-header d-flex justify-content-end">
-                  <button type="button" class="ml-2 mb-1 close d-flex justify-content-end" data-dismiss="toast" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div> -->
-                <div class="toast-body text-white m-2">
-                  <ul>
-                    {% for field in add_testimony_form %}
-                    {% for error in field.errors %}
-                    <li class="ml-2">{{ error }}</li>
-                    {% endfor %}
-                    {% endfor %}
-                  </ul>        
-                </div>
-              </div>
-    {% endif %}
-    {% if add_testimony_form.non_field_errors %}
-            <!-- <div class="row justify-content-center mb-2"> -->
-            <div class="col-lg-8 col-xl-3 toastDiv">
-              <!-- Then put toasts within -->
-          <div class="card toast m-auto bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin-bottom: 1rem !important;">
-            <!-- <div class="toast-header d-flex justify-content-end"> -->
-              <!-- <button type="button" class="ml-2 mb-1 close d-flex justify-content-end" data-dismiss="toast" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button> -->
-            <!-- </div> -->
-            <div class="toast-body text-white"">
-              {{add_testimony_form.non_field_errors}}
-            </div>
+    <div aria-live="polite" aria-atomic="true" style="position: relative;z-index: 9999;">
+        <div class="toast" style="position: absolute; top: 0; right: 0;">
+          <div class="toast-header">
+            <!-- <img src="..." class="rounded mr-2" alt="..."> -->
+            <strong class="mr-auto">Error Messages</strong>
+            <!-- <small>11 mins ago</small> -->
+            <!-- <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button> -->
           </div>
-    {% endif %}
-    <ul>
-            <div class="col-lg-8 col-xl-5 toastDiv mt-5 mx-auto">
-                <!-- Then put toasts within -->
-            <div class="card toast mb-2 bg-gray animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto">
-            <div class="toast-body text-white m-2">
-                {% if messages %}
-                <ul class="messages">
-                    {% for message in messages %}
-                    {% if message.tags == 'alert-success' %}
-                    <li class="text-success" style="list-style: disc;">{{ message }}</li>
-                    {% elif message.tags == 'alet-danger' %}
-                    <li class="text-danger" style="list-style: disc;">{{ message }}</li>
-                    {% elif message.tags == 'alet-info' %}
-                    <li class="text-info" style="list-style: disc;">{{ message }}</li>
-                    {% endif %}
+          <div class="toast-body">
+            {% for field in add_testimony_form %}
+                    {% for error in field.errors %}
+                        <p class="ml-2 text-danger">{{ error }}</p>
                     {% endfor %}
-                </ul>
-                {% endif %}
-            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+{% if add_testimony_form.non_field_errors %}
+    <div class="col-lg-8 col-xl-3 toastDiv">
+        <div class="card toast m-auto bg-danger animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin-bottom: 1rem !important;">
+            <div class="toast-body text-white">
+                {{ add_testimony_form.non_field_errors }}
             </div>
         </div>
-    </ul>
+    </div>
+{% endif %}
+
+{% if messages %}
+<div aria-live="polite" aria-atomic="true" style="position: relative;z-index: 9999;">
+    <div class="toast" style="position: absolute; top: 0; right: 0;">
+      <div class="toast-header">
+        <!-- <img src="..." class="rounded mr-2" alt="..."> -->
+        <strong class="mr-auto">Success Messages</strong>
+        <!-- <small>11 mins ago</small> -->
+        <!-- <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button> -->
+      </div>
+      <div class="toast-body">
+        {% for message in messages %}
+            {% if 'alert-success' in message.tags %}
+                <p class="text-success" style="list-style: disc;">{{ message }}</p>
+            {% elif 'alert-danger' in message.tags %}
+                <p class="text-danger" style="list-style: disc;">{{ message }}</p>
+            {% elif 'alert-info' in message.tags %}
+                <p class="text-info" style="list-style: disc;">{{ message }}</p>
+            {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
 <div class="col-md-12">
     <div class="offer-dedicated-body-left">
         <div class="tab-content" id="pills-tabContent">
@@ -277,7 +212,7 @@
 
                 <div class="bg-white rounded shadow-sm p-4 mb-5 rating-review-select-page">
                     <h5 class="mb-4">Leave your Review and Rating</h5>
-                    <form action="{% url 'accounts:testify' innovator.pk  %}" method="POST">
+                    <form action="{% url 'accounts:testify' innovator.pk  %}" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="product_id" id="product_id" value="{{ product.product_id }}"/>
                         <div class="rating-wrapper mb-4">
@@ -512,5 +447,14 @@
         }
 
     }
+</script>
+<script>
+    $(document).ready(function(){
+      $('.toast').toast('show');
+    });
+  
+    setTimeout(function() {
+      $('.toast').toast('hide')
+    }, 9999);
 </script>
 {% endblock content %}
