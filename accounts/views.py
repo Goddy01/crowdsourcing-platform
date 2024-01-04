@@ -948,3 +948,10 @@ def testify(request, testified_person_pk):
 
     context['add_testimony_form'] = add_testimony_form
     return render(request, 'accounts/testimonials.html', context)
+
+def get_testimonies(request):
+    offset = int(request.GET.get('offset', 0))
+    limit = int(request.GET.get('limit', 10))
+    testimonies = Testimony.objects.all()[offset:offset + limit]
+    testimonies_html = render_to_string('accounts/testimonials.html', {'testimonies': testimonies})
+    return JsonResponse({'testimonies_html': testimonies_html})
