@@ -373,11 +373,11 @@
             testimonies.forEach(testimony => {
                 var reviewElement = document.createElement('div');
                 reviewElement.classList.add('reviews-members', 'pt-4', 'pb-4')
-
+                console.log('Yo: ', testimony);
                 reviewElement.innerHTML = `<div class="reviews-members pt-4 pb-4">
                         <div class="media">
                             <a href="#">
-                                <img alt="Generic placeholder image" src="http://bootdey.com/img/Content/avatar/avatar1.png" class="mr-3 rounded-pill">
+                                <img alt="Generic placeholder image" src="${testimony.fields.review}" class="mr-3 rounded-pill">
                             </a>
                             <div class="media-body">
                                 <div class="reviews-members-header">

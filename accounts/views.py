@@ -956,7 +956,21 @@ def get_testimonies(request):
     limit = int(request.GET.get('limit', 10))
     testimonies = Testimony.objects.all()[offset:offset+limit]
 
-    # Serialize the testimonies to JSON
-    testimonies_json = serialize('json', testimonies)
+    serialized_testimonies = []
+    for testimony in testimonies:
+        serialized_testimonies.append(
+            {
+                'testifier_pfp': testimony.testifier.user.pfp,
+                'testifier_fullname': testimony.testifier.user.get_full_name(),
+                'rating': testimony.rating,
+                'review': testimony.review,
+                'date_added': testimony.date_added,
+                'likes': testimony.likes,
+                'dislikes': testimony.dislikes,
+            }
+        )
 
-    return JsonResponse({'testimonies': testimonies_json})
+    # Serialize the testimonies to JSON
+    # testimonies_json = serialize('json', testimonies)
+
+    return JsonResponse({'testimonies': serialized_testimonies})
