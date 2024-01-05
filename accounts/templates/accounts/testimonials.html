@@ -322,8 +322,34 @@
                 <div class="bg-white rounded shadow-sm p-4 mb-4 restaurant-detailed-ratings-and-reviews" id="reviews-container">
                     <a href="#" class="btn btn-outline-primary btn-sm float-right">Top Rated</a>
                     <h5 class="mb-1">All Ratings and Reviews</h5>
-                    
-                    <a onclick="loadMoreReviews()" class="text-center w-100 d-block mt-4 font-weight-bold" href="#">See All Reviews</a>
+                    <!-- <div class="reviews-members pt-4 pb-4">
+                        <div class="media">
+                            <a href="#">
+                                <img alt="Generic placeholder image" src="http://bootdey.com/img/Content/avatar/avatar1.png" class="mr-3 rounded-pill">
+                            </a>
+                            <div class="media-body">
+                                <div class="reviews-members-header">
+                                    <span class="star-rating float-right">
+                                          <a href="#"><i class="icofont-ui-rating active"></i></a>
+                                          <a href="#"><i class="icofont-ui-rating active"></i></a>
+                                          <a href="#"><i class="icofont-ui-rating active"></i></a>
+                                          <a href="#"><i class="icofont-ui-rating active"></i></a>
+                                          <a href="#"><i class="icofont-ui-rating"></i></a>
+                                          </span>
+                                    <h6 class="mb-1"><a class="text-black" href="#">Singh Osahan</a></h6>
+                                    <p class="text-gray">Tue, 20 Mar 2020</p>
+                                </div>
+                                <div class="reviews-members-body">
+                                    <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections </p>
+                                </div>
+                                <div class="reviews-members-footer">
+                                    <a class="total-like text-decoration-none" href="#"><i class="fa fa-thumbs-up"></i> 856M</a> 
+                                    <a class="total-like text-decoration-none" href="#"><i class="fa fa-thumbs-down"></i> 158K</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                    <a onclick="loadMoreReviews()" class="text-decoration-none text-center w-100 d-block mt-4 font-weight-bold" href="#">See All Reviews</a>
                 </div>
             </div>
         </div>
@@ -331,6 +357,7 @@
 </div>
 </div>
 <script>
+    
     var offset = 2;  // Initial offset, showing the first two reviews
     
     function loadMoreReviews() {
@@ -344,7 +371,39 @@
             // Append the new reviews to the existing reviews container
             var reviewsContainer = document.getElementById('reviews-container');
             testimonies.forEach(testimony => {
-                reviewsContainer.innerHTML += testimony.fields.review;  // Assuming 'review' is the field name
+                var reviewElement = document.createElement('div');
+                reviewElement.classList.add('reviews-members', 'pt-4', 'pb-4')
+
+                reviewElement.innerHTML = `<div class="reviews-members pt-4 pb-4">
+                        <div class="media">
+                            <a href="#">
+                                <img alt="Generic placeholder image" src="http://bootdey.com/img/Content/avatar/avatar1.png" class="mr-3 rounded-pill">
+                            </a>
+                            <div class="media-body">
+                                <div class="reviews-members-header">
+                                    <span class="star-rating float-right">
+                                          <a href="#"><i class="icofont-ui-rating active"></i></a>
+                                          <a href="#"><i class="icofont-ui-rating active"></i></a>
+                                          <a href="#"><i class="icofont-ui-rating active"></i></a>
+                                          <a href="#"><i class="icofont-ui-rating active"></i></a>
+                                          <a href="#"><i class="icofont-ui-rating"></i></a>
+                                          </span>
+                                    <h6 class="mb-1"><a class="text-black" href="#">Singh Osahan</a></h6>
+                                    <p class="text-gray">Tue, 20 Mar 2020</p>
+                                </div>
+                                <div class="reviews-members-body">
+                                    <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections </p>
+                                </div>
+                                <div class="reviews-members-footer">
+                                    <a class="total-like text-decoration-none" href="#"><i class="fa fa-thumbs-up"></i> 856M</a> 
+                                    <a class="total-like text-decoration-none" href="#"><i class="fa fa-thumbs-down"></i> 158K</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`
+                reviewsContainer.appendChild(reviewElement)
+
+                // reviewsContainer.innerHTML += testimony.fields.review;  // Assuming 'review' is the field name
             });
 
             offset += 10;  // Increment the offset for the next batch
