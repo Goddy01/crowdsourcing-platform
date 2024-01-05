@@ -185,7 +185,7 @@
     <div class="toast" style="position: absolute; top: 0; right: 0;">
       <div class="toast-header">
         <!-- <img src="..." class="rounded mr-2" alt="..."> -->
-        <strong class="mr-auto">Success Messages</strong>
+        <strong class="mr-auto">Messages</strong>
         <!-- <small>11 mins ago</small> -->
         <!-- <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -211,8 +211,8 @@
             <div class="tab-pane fade active show" id="pills-reviews" role="tabpanel" aria-labelledby="pills-reviews-tab">
 
                 <div class="bg-white rounded shadow-sm p-4 mb-5 rating-review-select-page">
-                    <h5 class="mb-4">Leave your Review and Rating</h5>
-                    <form action="{% url 'accounts:testify' innovator.pk  %}" method="post">
+                    <h5 class="mb-4">Leave your review and rating for {{ testified_person_fullname }}</h5>
+                    <form action="{% url 'accounts:testify' testified_person_pk  %}" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="product_id" id="product_id" value="{{ product.product_id }}"/>
                         <div class="rating-wrapper mb-4">
@@ -230,7 +230,7 @@
                             <textarea id="id_user_review" cols="30" rows="5" class="form-control" name="review"></textarea>
                         </div>
                         <div class="form-group mb-0">
-                            <input id="submit-review-button" type="submit" value="Leave Your Review" class="btn px-3" style="background-color: #198754;">
+                            <input id="submit-review-button" type="submit" value="Submit" class="btn px-3" style="background-color: #198754;">
                         </div>
                     </form>
                 </div>
@@ -320,35 +320,8 @@
                     </div> -->
                 </div>
                 <div class="bg-white rounded shadow-sm p-4 mb-4 restaurant-detailed-ratings-and-reviews" id="reviews-container">
-                    <a href="#" class="btn btn-outline-primary btn-sm float-right">Top Rated</a>
+                    <!-- <a href="#" class="btn btn-outline-primary btn-sm float-right">Top Rated</a> -->
                     <h5 class="mb-1">All Ratings and Reviews</h5>
-                    <!-- <div class="reviews-members pt-4 pb-4">
-                        <div class="media">
-                            <a href="#">
-                                <img alt="Generic placeholder image" src="http://bootdey.com/img/Content/avatar/avatar1.png" class="mr-3 rounded-pill">
-                            </a>
-                            <div class="media-body">
-                                <div class="reviews-members-header">
-                                    <span class="star-rating float-right">
-                                          <a href="#"><i class="icofont-ui-rating active"></i></a>
-                                          <a href="#"><i class="icofont-ui-rating active"></i></a>
-                                          <a href="#"><i class="icofont-ui-rating active"></i></a>
-                                          <a href="#"><i class="icofont-ui-rating active"></i></a>
-                                          <a href="#"><i class="icofont-ui-rating"></i></a>
-                                          </span>
-                                    <h6 class="mb-1"><a class="text-black" href="#">Singh Osahan</a></h6>
-                                    <p class="text-gray">Tue, 20 Mar 2020</p>
-                                </div>
-                                <div class="reviews-members-body">
-                                    <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections </p>
-                                </div>
-                                <div class="reviews-members-footer">
-                                    <a class="total-like text-decoration-none" href="#"><i class="fa fa-thumbs-up"></i> 856M</a> 
-                                    <a class="total-like text-decoration-none" href="#"><i class="fa fa-thumbs-down"></i> 158K</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
                     <a onclick="loadMoreReviews()" class="text-decoration-none text-center w-100 d-block mt-4 font-weight-bold" href="#">See All Reviews</a>
                 </div>
             </div>
@@ -362,11 +335,12 @@
     
     function loadMoreReviews() {
     // Fetch more reviews from the server
-    fetch("{% url 'accounts:get_testimonies' %}?offset=" + offset + '&limit=10')
+    fetch("{% url 'accounts:get_testimonies' testified_person_pk %}?offset=" + offset + '&limit=10')
         .then(response => response.json())
         .then(data => {
             // Parse the JSON data
-            var testimonies = JSON.parse(data.testimonies);
+            var testimonies = data.get_testimonies
+            
 
             // Append the new reviews to the existing reviews container
             var reviewsContainer = document.getElementById('reviews-container');
@@ -374,33 +348,43 @@
                 var reviewElement = document.createElement('div');
                 reviewElement.classList.add('reviews-members', 'pt-4', 'pb-4')
                 console.log('Yo: ', testimony);
-                reviewElement.innerHTML = `<div class="reviews-members pt-4 pb-4">
+                var options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+                var date_added = new Date(testimony.date_added).toLocaleString('en-US', options);
+                var profileUrl = "{% url 'accounts:profile_with_arg' '0' %}".replace('0', testimony.testifier_pk);
+
+                var starHtml = '';
+                for (var i = 0; i < testimony.rating; i++) {
+                    starHtml += "<i class='fas fa-star active text-success mt-2'></i>";
+                }
+                console.log('PK: ', profileUrl);
+
+                reviewElement.innerHTML = `<div class="reviews-members pb-4">
                         <div class="media">
-                            <a href="#">
-                                <img alt="Generic placeholder image" src="${testimony.fields.review}" class="mr-3 rounded-pill">
+                            <a href="${profileUrl}">
+                                <img alt="Generic placeholder image" src="${testimony.testifier_pfp}" class="mr-3 rounded-pill">
                             </a>
                             <div class="media-body">
                                 <div class="reviews-members-header">
-                                    <span class="star-rating float-right">
-                                          <a href="#"><i class="icofont-ui-rating active"></i></a>
-                                          <a href="#"><i class="icofont-ui-rating active"></i></a>
-                                          <a href="#"><i class="icofont-ui-rating active"></i></a>
-                                          <a href="#"><i class="icofont-ui-rating active"></i></a>
-                                          <a href="#"><i class="icofont-ui-rating"></i></a>
-                                          </span>
-                                    <h6 class="mb-1"><a class="text-black" href="#">Singh Osahan</a></h6>
-                                    <p class="text-gray">Tue, 20 Mar 2020</p>
+                                    <h6 class="mb-3 mt-2" style="display: inline"><a class="text-black" href="${profileUrl}">${testimony.testifier_fullname}</a></h6>
+                                    <span class="font-italic" style="display: inline">
+                                        ( ${date_added} )
+                                    </span>
+                                    <p>
+                                    ${starHtml}
+                                    </p>
                                 </div>
-                                <div class="reviews-members-body">
-                                    <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections </p>
+                                <div class="reviews-members-body" style="margin-top: 5px">
+                                    ${testimony.review}
+                                    
                                 </div>
-                                <div class="reviews-members-footer">
-                                    <a class="total-like text-decoration-none" href="#"><i class="fa fa-thumbs-up"></i> 856M</a> 
-                                    <a class="total-like text-decoration-none" href="#"><i class="fa fa-thumbs-down"></i> 158K</a>
+                                <div class="reviews-members-footer mt-2">
+                                    <a class="total-like text-success text-decoration-none" href="#"><i class="fa fa-thumbs-up"></i> ${testimony.likes}</a> 
+                                    <a class="total-like text-danger text-decoration-none" href="#"><i class="fa fa-thumbs-down"></i> ${testimony.dislikes}</a>
                                 </div>
                             </div>
                         </div>
-                    </div>`
+                    </div>
+                    <hr>`
                 reviewsContainer.appendChild(reviewElement)
 
                 // reviewsContainer.innerHTML += testimony.fields.review;  // Assuming 'review' is the field name

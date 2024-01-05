@@ -901,12 +901,17 @@ def remove_friend(request, friend_pk):
 
 def testify(request, testified_person_pk):
     testified_person = Innovator.objects.get(pk=testified_person_pk)
+
     testifier = Innovator.objects.get(user__pk=request.user.pk)
     testimonies = Testimony.objects.filter(testified_person__pk=testified_person_pk)
     investors = Make_Investment.objects.filter(investment__innovator=testified_person)
     print('INVESTORS: ', investors)
     rating = request.POST.get('rating')
+
     context = {}
+    context['testified_person_pk'] = testified_person.pk
+    context['testifier_pk'] = testifier.pk
+    context['testified_person_fullname'] = testified_person.user.get_full_name()
     context['testimonies'] = testimonies
     if testimonies.count() > 0:
         context['testimonies_count'] = testimonies[0].instances_count()
@@ -926,41 +931,50 @@ def testify(request, testified_person_pk):
         context['star_5'] = 0
 
     add_testimony_form = AddTestimonyForm()
-
     if request.method == 'POST':
-        add_testimony_form = AddTestimonyForm(request.POST)
-        if add_testimony_form.is_valid():
-            add_testimony_obj = add_testimony_form.save(commit=False)
-            review = add_testimony_obj.review
-            if rating is None:
-                messages.error(request, 'Provide star ratings')
-            if review is None:
-                messages.error(request, 'Provide your review')
-
-            if rating is not None and review is not None:
-                add_testimony_obj.testified_person = testified_person
-                add_testimony_obj.testifier = testifier
-                add_testimony_obj.rating = rating
-                add_testimony_obj.save()
-                messages.success(request, 'Your testimony has been posted!')
-                return redirect('accounts:testify', testified_person_pk)
+        if not Make_Investment.objects.filter(investment__innovator=testified_person, sender=testifier).exists():
+            messages.info(request, "You cannot submit a testimony because you have not invested in this person's project before.")
+            return redirect('accounts:testify', testified_person_pk)
         else:
-            for field, errors in add_testimony_form.errors.items():
-                print(f"Field: {field}, Errors: {', '.join(errors)}")
+            if Testimony.objects.filter(testifier=testifier, testified_person=testified_person).count() == 0:
+                add_testimony_form = AddTestimonyForm(request.POST)
+                if add_testimony_form.is_valid():
+                    add_testimony_obj = add_testimony_form.save(commit=False)
+                    review = add_testimony_obj.review
+                    context['review'] = review
+                    if rating is None:
+                        messages.error(request, 'Provide star ratings')
+                    if review is None:
+                        messages.error(request, 'Provide your review')
 
+                    if rating is not None and review is not None:
+                        add_testimony_obj.testified_person = testified_person
+                        add_testimony_obj.testifier = testifier
+                        add_testimony_obj.rating = rating
+                        add_testimony_obj.save()
+                        messages.success(request, 'Your testimony has been posted!')
+                        return redirect('accounts:testify', testified_person_pk)
+                else:
+                    for field, errors in add_testimony_form.errors.items():
+                        print(f"Field: {field}, Errors: {', '.join(errors)}")
+            else:
+                messages.info(request, f'You have already submitted a testimony about {testified_person.user.get_full_name()}')
     context['add_testimony_form'] = add_testimony_form
     return render(request, 'accounts/testimonials.html', context)
 
-def get_testimonies(request):
+
+def get_testimonies(request, testified_person_pk):
     offset = int(request.GET.get('offset', 0))
     limit = int(request.GET.get('limit', 10))
-    testimonies = Testimony.objects.all()[offset:offset+limit]
+    testified_person = Innovator.objects.get(pk=testified_person_pk)
+    testimonies = Testimony.objects.filter(testified_person=testified_person).order_by('-date_added')
 
     serialized_testimonies = []
     for testimony in testimonies:
         serialized_testimonies.append(
             {
-                'testifier_pfp': testimony.testifier.user.pfp,
+                'testifier_pfp': testimony.testifier.user.pfp.url,
+                'testifier_pk': testimony.testifier.pk,
                 'testifier_fullname': testimony.testifier.user.get_full_name(),
                 'rating': testimony.rating,
                 'review': testimony.review,
@@ -970,7 +984,4 @@ def get_testimonies(request):
             }
         )
 
-    # Serialize the testimonies to JSON
-    # testimonies_json = serialize('json', testimonies)
-
-    return JsonResponse({'testimonies': serialized_testimonies})
+    return JsonResponse({'get_testimonies': serialized_testimonies}, safe=False)
