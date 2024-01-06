@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title>Chat</title>
     <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,300' rel='stylesheet' type='text/css'>
     
     <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css'>
@@ -45,15 +46,15 @@ a:focus {
   flex-direction: column-reverse;
 }
 
-/* #scrollToBottomIcon {
+#scrollToBottomIcon {
     position: fixed;
-    bottom: 50px;
-    right: 20px;
+    bottom: 70px;
+    right: 0px;
     color: #fff;
     font-size: 20px;
     border-radius: 50%;
     cursor: pointer;
-} */
+}
 
 .floating, #floating-btn {  
     animation-name: floating;
@@ -924,9 +925,9 @@ button:focus {
         <ul id="chat-log" style="margin: 0px;">
         </ul>
       </div>
-      <!-- <div id="scrollToBottomIcon">
-        <i class="fa fa-arrow-circle-down" style="color: #2C3E50;padding: 10px;"></i>
-    </div> -->
+      <div id="scrollToBottomIcon" class="text-center">
+        <i id="scrollToBottomIcon2" class="fa fa-arrow-circle-down text-center" style="color: #2C3E50;padding: 10px;"></i>
+    </div>
       <div class="message-input" style="display: none;background-color: #435F7A;bottom: 0px;">
         <input type="file" name="file-message" id="file-msg1" hidden>
         <div class="wrap">
@@ -2336,16 +2337,42 @@ else if (data['command'] === 'new_file_tagged') {
     }
   
   };
+
+  var element = document.getElementById('scrollToBottomIcon2');
+element.addEventListener('click', function () {
+  var chatLog = document.getElementById('chat-log');
+
+  // Check if 'chatLog' is not null and if it has child elements (messages)
+  if (chatLog && chatLog.children.length > 0) {
+    var messageItems = chatLog.getElementsByTagName('li');
+    var lastMessage = messageItems[messageItems.length - 1];
+
+    console.log('called');
+    lastMessage.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+  } else {
+    console.log('No messages to scroll.');
+  }
+});
+
   $('.friend-conversation').click(handleFriendClick);
 </script>
 <!-- <script>
-  document.addEventListener("DOMContentLoaded", function() {
+  document.addEventListener('DOMContentLoaded', function () {
       var element = document.getElementById('scrollToBottomIcon');
+      var messages = document.getElementById('chat-log')
+      console.log('Messages: ', messages);
+      var lastMessage = messages[messages.length -1]
       element.addEventListener('click', function () {
           console.log('called');
-          window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+          lastMessage.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start',
+          });
       });
-  });
+    });
 </script> -->
 
 
