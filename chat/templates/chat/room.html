@@ -46,7 +46,7 @@ a:focus {
   flex-direction: column-reverse;
 }
 
-#scrollToBottomIcon {
+.scrollToBottomIcon {
     position: fixed;
     bottom: 70px;
     right: 0px;
@@ -925,7 +925,7 @@ button:focus {
         <ul id="chat-log" style="margin: 0px;">
         </ul>
       </div>
-      <div id="scrollToBottomIcon" class="text-center">
+      <div id="scrollToBottomIcon" class="text-center scrollToBottomIcon">
         <i id="scrollToBottomIcon2" class="fa fa-arrow-circle-down text-center" style="color: #2C3E50;padding: 10px;"></i>
     </div>
       <div class="message-input" style="display: none;background-color: #435F7A;bottom: 0px;">
@@ -955,6 +955,9 @@ button:focus {
         </div>
         <ul id="chat-log-2" style="margin: 0px;">
         </ul>
+      </div>
+      <div id="scrollToBottomIcon" class="text-center scrollToBottomIcon">
+        <i id="scrollToBottomIconGroup2" class="fa fa-arrow-circle-down text-center" style="color: #2C3E50;padding: 10px;"></i>
       </div>
       <div class="message-input" style="display: none;background-color: #435F7A;bottom: 0px;">
         <input type="file" name="file-message" id="file-msg2" hidden>
@@ -2404,6 +2407,26 @@ element.addEventListener('click', function () {
       messageType.value = 'normal';
 
       var atUsername;
+
+      var element = document.getElementById('scrollToBottomIconGroup2');
+      element.addEventListener('click', function () {
+        var chatLog = document.getElementById('chat-log-2');
+
+        // Check if 'chatLog' is not null and if it has child elements (messages)
+        if (chatLog && chatLog.children.length > 0) {
+          var messageItems = chatLog.getElementsByTagName('li');
+          var lastMessage = messageItems[messageItems.length - 1];
+
+          console.log('called');
+          lastMessage.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          });
+        } else {
+          console.log('No messages to scroll.');
+        }
+      });
+
 
       function atusernameFunc(data) {
 
