@@ -70,6 +70,12 @@ class Project(models.Model):
     @property
     def count_make_investments_instances(self):
         return self.the_investment.count()
+    
+    def total_investment_capital_balance(self):
+        amount = 0
+        for project in Project.objects.filter(innovator=self.innovator):
+            amount += project.fund_raised
+        return amount
 
     def __str__(self):
         return f"Project: {self.name} by {self.innovator.user.username}"
