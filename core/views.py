@@ -38,9 +38,13 @@ load_dotenv()
 
 # Create your views here.
 def home(request):
+    current_date = datetime.date.today()
     context = {}
-    context['new_projects'] = Project.objects.filter().order_by('-date_created')[:5]
-    context['popular_projects'] = Project.objects.annotate(num_investors=Count('the_investment')).order_by('-num_investors')[:8]
+    new_projects = Project.objects.filter(investment_deadline__gte=current_date).order_by('-date_created')
+    context['new_projects'] = new_projects[:5]
+
+    popular_projects = all_popular_projects = Project.objects.annotate(num_investors=Count('the_investment')).filter(investment_deadline__gte=current_date).order_by('-num_investors')
+    context['popular_projects'] = popular_projects
     # .num_investors
     return render(request, 'index.html', context)
 
@@ -89,6 +93,7 @@ def pagination(request, items_list, num_of_pages):
 
 
 def projects_list(request):
+    current_date = datetime.date.today()
     context = {}
     # print('ON RE: ', request.META.get('HTTP_REFERER'))
     if request.GET.get('from_expected_return'):
@@ -98,24 +103,32 @@ def projects_list(request):
         to_expected_return = request.GET.get('to_expected_return')
         context['to_expected_return'] = to_expected_return
         request.session['to_expected_return'] = to_expected_return
-
+        # projects = []
+        # all_projects = []
         if from_expected_return:
             # print('FROM: ', from_expected_return)
             if to_expected_return:
                 # print('TO: ', to_expected_return)
                 projects = Project.objects.filter(
-                    Q(expected_return__range=(int(from_expected_return), int(to_expected_return)))
+                    Q(expected_return__range=(int(from_expected_return), int(to_expected_return)), investment_deadline__gte=current_date)
                 )
                 # projects = pagination(request, projects, 4)
             else:
                 projects = Project.objects.filter(
-                    Q(expected_return__gte=int(from_expected_return))
+                    Q(expected_return__gte=int(from_expected_return), investment_deadline__gte=current_date)
                 )
-                projects = pagination(request, projects, 4)
+            # for project in all_projects:
+            #     if project.investment_deadline >= current_date:
+            #         projects.append(project)
+            projects = pagination(request, projects, 4)
             context['projects'] = projects
     else:
         # request.GET
-        projects = Project.objects.all()
+        projects = Project.objects.filter(investment_deadline__gte=current_date).order_by('-date_created')
+        
+        # for project in all_projects:
+        #     if project.investment_deadline >= current_date:
+        #         projects.append(project)
         projects = pagination(request, projects, 4)
         context['projects'] = projects
     return render(request, 'core/projects.html', context)
