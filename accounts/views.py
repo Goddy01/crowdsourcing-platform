@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from crowdsourcing import settings
 from django.core.serializers import serialize
 from django.utils.html import strip_tags
@@ -875,9 +876,16 @@ def decline_conn_request(request, conn_request_pk):
 @login_required
 def friends_list(request):
     user = Innovator.objects.get(user__pk=request.user.pk)
+    friends_list = []
     friends = Connection.objects.filter(Q(user1=user) | Q(user2=user)
     )
-    return render(request, 'accounts/friends-list.html', {'friends': friends})
+    for conn in friends:
+        if conn.user1 == user:
+            friends_list.append(conn.user2)
+        elif conn.user2 == user:
+            friends_list.append(conn.user1)
+    friends_list = pagination(request, friends_list, 10)
+    return render(request, 'accounts/friends-list.html', {'friends': friends_list})
 
 @login_required
 def remove_friend(request, friend_pk):
@@ -991,3 +999,35 @@ def get_testimonies(request, testified_person_pk):
         )
 
     return JsonResponse({'get_testimonies': serialized_testimonies}, safe=False)
+
+def pagination(request, object, num_of_pages):
+    page_number = request.GET.get('page', 1)
+    objects_paginator = Paginator(object, num_of_pages)
+    try:
+        objects = objects_paginator.page(page_number)
+    except PageNotAnInteger:
+        objects = objects_paginator.page(1)
+    except EmptyPage:
+        objects = objects_paginator.page(objects_paginator.num_pages)
+    return objects
+
+def search_people(request):
+    context = {}
+    query = request.GET.get('query')
+    people = []
+    logged_in_user = request.user
+    context['query'] = query.lower()
+    if request.method == 'GET':
+        if query is not None:
+            people = Innovator.objects.filter(
+                Q(user__first_name__icontains=query) | Q(user__last_name__icontains=query) | Q(user__middle_name__icontains=query) | Q(user__username__icontains=query) | Q(user__job_title__icontains=query)
+            ).distinct()
+            
+            if not people:
+                messages.info(request, "No person's details matches your search terms.")
+                request.session['no_result'] = True
+                return redirect('accounts:friends_list')
+            people = pagination(request, people, 10)
+            context['friends'] = people
+            request.session['no_result'] = False
+    return render(request, 'accounts/friends-list.html', context)

@@ -32,6 +32,7 @@ urlpatterns = [
     path('set_new_msg_email_alert_preference/<str:checkbox>/', views.set_new_msg_email_alert_preference, name='set_new_msg_email_alert_preference'),
     path('<testified_person_pk>/testify', views.testify, name='testify'),
     path('<testified_person_pk>/get_testimonies', views.get_testimonies, name='get_testimonies'),
+    path('search-people', views.search_people, name='search_people'),
     # path('make-payment/', views.deposit_money, name='make_payment'),
     # path('password-change', views.change_password, name='change_password'),
 ]

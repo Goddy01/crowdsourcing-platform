@@ -163,18 +163,18 @@
 										</span>
 									</li>
 								{% else %}
-									<li class="page-item"><a class="page-numbers" href="?{% if query %}query={{query}}&{% endif %}page={{ i }}&query={{ query }}">{{ i }}</a></li>
+									<li class="page-item"><a class="page-numbers" href="?{% if query %}query={{query}}&{% endif %}page={{ i }}">{{ i }}</a></li>
 								{% endif %}
 							{% endfor %}
 							
 							{% if projects.has_next %}
 								<li class="page-item">
-								<a class="page-numbers" href="?{% if query %}query={{query}}&{% endif %}page={{ projects.next_page_number }}&query={{ query }}">Next
+								<a class="page-numbers" href="?{% if query %}query={{query}}&{% endif %}page={{ projects.next_page_number }}">Next
 									
 								</a>
 								</li>
 								<li class="page-item">
-								<a class="page-numbers"  href="?{% if query %}query={{query}}&{% endif %}page={{ projects.paginator.num_pages }}&query={{ query }}">Last</a>
+								<a class="page-numbers"  href="?{% if query %}query={{query}}&{% endif %}page={{ projects.paginator.num_pages }}">Last</a>
 								</li>
 							{% endif %}
 						</ul>
@@ -182,7 +182,7 @@
 						<ul class="pagination pg-grey justify-content-center" style="list-style: none;">
 							{% if projects.has_previous %}
 								<li class="page-item">
-								<a class="page-numbers" href="?page={{projects.previous_page_number}}">Previous</a>
+								<a class="page-numbers" href="?{% if query %}query={{query}}&{% endif %}&page={{projects.previous_page_number}}">Previous</a>
 								</li>
 							{% endif %}
 						
@@ -195,18 +195,18 @@
 										</span>
 									</li>
 								{% else %}
-									<li class="page-item"><a class="page-numbers" href="?page={{ i }}">{{ i }}</a></li>
+									<li class="page-item"><a class="page-numbers" href="?{% if query %}query={{query}}&{% endif %}page={{ i }}">{{ i }}</a></li>
 								{% endif %}
 							{% endfor %}
 							
 							{% if projects.has_next %}
 								<li class="page-item">
-								<a class="page-numbers" href="?page={{ projects.next_page_number }}">Next
+								<a class="page-numbers" href="?{% if query %}query={{query}}&{% endif %}page={{ projects.next_page_number }}">Next
 									
 								</a>
 								</li>
 								<li class="page-item">
-								<a class="page-numbers"  href="?page={{ projects.paginator.num_pages }}">Last</a>
+								<a class="page-numbers"  href="?{% if query %}query={{query}}&{% endif %}page={{ projects.paginator.num_pages }}">Last</a>
 								</li>
 							{% endif %}
 						</ul>

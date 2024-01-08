@@ -1531,8 +1531,8 @@ def update_milestone(request, milestone_pk):
     context['update_milestone_details_form'] = update_milestone_details_form
     return render(request, 'core/update-milestone-details.html', context)
 
-def pagination(request, object, num_of_pages, query):
-    request.session['query'] = query
+def pagination(request, object, num_of_pages):
+    # request.session['query'] = query
     page_number = request.GET.get('page', 1)
     objects_paginator = Paginator(object, num_of_pages)
     try:
@@ -1545,7 +1545,7 @@ def pagination(request, object, num_of_pages, query):
 
 def search_projects(request):
     context = {}
-    query = request.GET.get('query') or request.session.get('query')
+    query = request.GET.get('query')
     context['query'] = query
     if request.method == 'GET':
         if query is not None:
@@ -1555,6 +1555,6 @@ def search_projects(request):
             if not projects:
                 messages.info(request, 'No project matches your search terms.')
                 return redirect('projects')
-            projects = pagination(request, projects, 2, query)
+            projects = pagination(request, projects, 2)
             context['projects'] = projects
     return render(request, 'core/projects.html', context)

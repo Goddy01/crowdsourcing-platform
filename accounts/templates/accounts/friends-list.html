@@ -92,10 +92,10 @@
             border: 1px solid #000;
         }
         /*==================================================
-        Nearby People CSS
+        Nearby friends CSS
         ==================================================*/
 
-        .people-nearby .google-maps{
+        .friends-nearby .google-maps{
         background: #f8f8f8;
         border-radius: 4px;
         border: 1px solid #f1f2f2;
@@ -103,13 +103,13 @@
         margin-bottom: 20px;
         }
 
-        .people-nearby .google-maps .map{
+        .friends-nearby .google-maps .map{
         height: 300px;
         width: 100%;
         border: none;
         }
 
-        .people-nearby .nearby-user{
+        .friends-nearby .nearby-user{
         padding: 20px 0;
         border-top: 1px solid #f1f2f2;
         border-bottom: 1px solid #f1f2f2;
@@ -125,98 +125,125 @@
 </head>
 <body>
     <div class="container" style="margin: 0 auto; padding: 30px;margin-top: 100px;">
-        <a href="{%url 'accounts:friend_requests' %}">
-            View Friend Requests
-        </a>
-        <h2>Friends ({{ friends|length }})</h2>
-        
-        {% if messages %}
-                <ul>
-                    <div class="col-lg-8 col-xl-5 toastDiv mt-5 mx-auto">
-                        <!-- Then put toasts within -->
-                    <div class="card toast mb-2 bg-gray animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto">
-                    <div class="toast-body text-white m-2">
-                        
-                        <ul class="messages">
-                            {% for message in messages %}
-                            <li 
-                            {% if message.tags == 'alert-success' %}
-                             class="text-success" 
-                            {% elif message.tags == 'alert-info' %}
-                            class="text-info" 
-                            {% elif message.tags == 'alert-error' %}
-                            class="text-danger" 
-                             {% endif %} style="list-style: disc;">{{ message }}</li>
-                            {% endfor %}
-                        </ul>
-                        
-                    </div>
-                    </div>
-                </div>
-                </ul>
-                {% endif %}
-        <div class="row">
-            <div class="col-md-8">
-                <div class="people-nearby">
+        <form action="{% url 'accounts:search_people' %}" method="get">
+            <input class="" name="query" type="text" placeholder="Search for friends" value="{% if query %}{{ query }}{% endif %}">
+        </form>
+        {% if request.session.no_result %}
+            <h3>No result for your search</h3>
+        {% endif %}
 
-                  {% for friend in friends %}
-                  {% if friend.user1.user.username == request.user.username %}
-                  <div class="nearby-user" style="margin-bottom: 50px;background-color: #EDF5FD;padding: 30px;border-radius: 5px;">
-                    <div class="row">
-                      <div class="col-md-2 col-sm-2">
-                        <img src="{{ friend.user2.user.pfp.url }}" alt="user" class="profile-photo-lg">
-                      </div>
-                      <div class="col-md-7 col-sm-7">
-                        <h5 style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;margin: 0px;padding: 0px;">
-                            <a href="{% url 'accounts:profile_with_arg' friend.user2.pk %}" class="profile-link">
-                                {% if friend.user2.user.middle_name %}
-                                <p>{{ friend.user2.user.last_name }}, {{ friend.user2.user.first_name }} {{ friend.user2.user.middle_name }}</p>
-                                {% else %}
-                                <p>{{ friend.user2.user.first_name }} {{ friend.user2.user.last_name }}</p>
-                                {% endif %}
-                            </a>
-                        </h5>
-                        <p style="margin-top: -10px;">{{ friend.user2.user.job_title }}</p>
-                      </div>
-                      <div class="col-md-3 col-sm-3 mt-2 col-lg-3">
-                        <span class="remove-friend-btn btn btn-danger pull-left" data-friend-pk="{{ friend.user2.pk }}" >Remove Friend</span>
-                        <span class="add-friend-btn btn btn-success pull-left" style="display: none;" data-friend-pk="{{ friend.user2.pk }}">Add Back</span>
-                        <span class="request-sent-btn btn btn-success pull-left" style="display: none;">Request Sent</span>
-                      </div>
-                    </div>
-                  </div>
-                  {% elif friend.user1.user.username != request.user.username %}
-                  <div class="nearby-user" style="margin-bottom: 50px;background-color: #EDF5FD;padding: 30px;border-radius: 5px;">
-                    <div class="row">
-                      <div class="col-md-2 col-sm-2">
-                        <img src="{{ friend.user1.user.pfp.url }}" alt="user" class="profile-photo-lg">
-                      </div>
-                      <div class="col-md-7 col-sm-7">
-                        <h5 style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;margin: 0px;padding: 0px;">
-                            <a href="{% url 'accounts:profile_with_arg' friend.user1.pk %}" class="profile-link">
-                                {% if friend.user1.user.middle_name %}
-                                <p>{{ friend.user1.user.last_name }}, {{ friend.user1.user.first_name }} {{ friend.user1.user.middle_name }}</p>
-                                {% else %}
-                                <p>{{ friend.user1.user.first_name }} {{ friend.user1.user.last_name }}</p>
-                                {% endif %}
-                            </a>
-                        </h5>
-                        <p style="margin-top: -10px;">{{ friend.user1.user.job_title }}</p>
-                      </div>
-                      <div class="col-md-3 col-sm-3 mt-2 col-lg-3">
-                        <span class="remove-friend-btn btn btn-danger pull-left" data-friend-pk="{{ friend.user1.pk }}" >Remove Friend</span>
-                        <span class="add-friend-btn btn btn-success pull-left" style="display: none;" data-friend-pk="{{ friend.user1.pk }}">Add Back</span>
-                        <span class="request-sent-btn btn btn-success pull-left" style="display: none;">Request Sent</span>
-                      </div>
-                    </div>
-                  </div>
-                  {% endif %}
-                  {% endfor %}
+        {% if not request.session.no_result %}
+        <div>
+            <div>
+                <a href="{%url 'accounts:friend_requests' %}">
+                    View Friend Requests
+                </a>
+            </div>
+            <!-- <h2>Friends ({{ friends|length }})</h2> -->
+        
+        <!-- {% if messages %}
+            <ul>
+                <div class="col-lg-8 col-xl-5 toastDiv mt-5 mx-auto"> -->
+                    <!-- Then put toasts within -->
+                <!-- <div class="card toast mb-2 bg-gray animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto">
+                <div class="toast-body text-white m-2">
+                    
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li 
+                        {% if message.tags == 'alert-success' %}
+                            class="text-success" 
+                        {% elif message.tags == 'alert-info' %}
+                        class="text-info" 
+                        {% elif message.tags == 'alert-error' %}
+                        class="text-danger" 
+                            {% endif %} style="list-style: disc;">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    
+                </div>
                 </div>
             </div>
+            </ul>
+            {% endif %} -->
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="friends-nearby">
+                    {% for friend in friends %}
+                    <div class="nearby-user" style="margin-bottom: 50px;background-color: #EDF5FD;padding: 30px;border-radius: 5px;">
+                        <div class="row">
+                        <div class="col-md-2 col-sm-2">
+                            <img src="{{ friend.user.pfp.url }}" alt="user" class="profile-photo-lg">
+                        </div>
+                        <div class="col-md-7 col-sm-7">
+                            <h5 style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;margin: 0px;padding: 0px;">
+                                <a href="{% url 'accounts:profile_with_arg' friend.pk %}" class="profile-link">
+                                    {% if friend.user.middle_name %}
+                                    <p>{{ friend.user.last_name }}, {{ friend.user.first_name }} {{ friend.user.middle_name }}</p>
+                                    {% else %}
+                                    <p>{{ friend.user.first_name }} {{ friend.user.last_name }}</p>
+                                    {% endif %}
+                                </a>
+                            </h5>
+                            <p style="margin-top: -10px;">{{ friend.user.job_title }}</p>
+                        </div>
+                        {% if not query %}
+                        <div class="col-md-3 col-sm-3 mt-2 col-lg-3">
+                            <span class="remove-friend-btn btn btn-danger pull-left" data-friend-pk="{{ friend.pk }}" >Remove Friend</span>
+                            <span class="add-friend-btn btn btn-success pull-left" style="display: none;" data-friend-pk="{{ friend.pk }}">Add Back</span>
+                            <span class="request-sent-btn btn btn-success pull-left" style="display: none;">Request Sent</span>
+                        </div>
+                        {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                    </div>
+                </div>
+                <ul class="pagination pg-grey justify-content-center" style="list-style: none;">
+                    {% if friends.has_previous %}
+                        <li class="page-item">
+                        <a class="page-numbers" href="?{% if query %}query={{query}}&{% endif %}&page={{friends.previous_page_number}}">Previous</a>
+                        </li>
+                    {% endif %}
+                
+                    {% for i in friends.paginator.page_range %}
+                        {% if friends.number == i %}
+                            <li class="page-item active">
+                                <span class="page-numbers current">
+                                    {{ i }}
+                                    <span class="sr-only">(current)</span>
+                                </span>
+                            </li>
+                        {% else %}
+                            <li class="page-item"><a class="page-numbers" href="?{% if query %}query={{query}}&{% endif %}page={{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if friends.has_next %}
+                        <li class="page-item">
+                        <a class="page-numbers" href="?{% if query %}query={{query}}&{% endif %}page={{ friends.next_page_number }}">Next
+                            
+                        </a>
+                        </li>
+                        <li class="page-item">
+                        <a class="page-numbers"  href="?{% if query %}query={{query}}&{% endif %}page={{ friends.paginator.num_pages }}">Last</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
         </div>
+        {% endif %}
     </div>
 </body>
+<script>
+    $(document).ready(function(){
+      $('.toast').toast('show');
+    });
+  
+    setTimeout(function() {
+      $('.toast').toast('hide')
+    }, 9999);
+</script>
 <script>
     // Function to get the value of a cookie by name
         var removeFriendURL = "{% url 'accounts:remove_friend' friend_pk=0 %}"; // Use '0' as a placeholder
