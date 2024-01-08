@@ -76,22 +76,6 @@ def add_project(request):
         create_project_form = CreateProjectForm()
     return render(request, 'core/add-project.html', {'countries': countries, 'create_project_form': create_project_form, 'project_creation_request': project_creation_request})
 
-def pagination(request, items_list, num_of_pages):
-    # if 'from_expected_return' in request.session:
-    #     del request.session['from_expected_return']
-    # if 'to_expected_return' in request.session:
-    #     del request.session['to_expected_return']
-    page_number = request.GET.get('page', 1)
-    project_paginator = Paginator(items_list.order_by('-pk'), num_of_pages)
-    try:
-        projects = project_paginator.page(page_number)
-    except PageNotAnInteger:
-        projects = project_paginator.page(1)
-    except EmptyPage:
-        projects = project_paginator.page(project_paginator.num_pages)
-    return projects
-
-
 def projects_list(request):
     current_date = datetime.date.today()
     context = {}
@@ -1546,3 +1530,31 @@ def update_milestone(request, milestone_pk):
         )
     context['update_milestone_details_form'] = update_milestone_details_form
     return render(request, 'core/update-milestone-details.html', context)
+
+def pagination(request, object, num_of_pages, query):
+    request.session['query'] = query
+    page_number = request.GET.get('page', 1)
+    objects_paginator = Paginator(object, num_of_pages)
+    try:
+        objects = objects_paginator.page(page_number)
+    except PageNotAnInteger:
+        objects = objects_paginator.page(1)
+    except EmptyPage:
+        objects = objects_paginator.page(objects_paginator.num_pages)
+    return objects
+
+def search_projects(request):
+    context = {}
+    query = request.GET.get('query') or request.session.get('query')
+    context['query'] = query
+    if request.method == 'GET':
+        if query is not None:
+            projects = Project.objects.filter(
+                Q(name__icontains=query) | Q(motto__icontains=query)
+            ).order_by('-date_created').distinct()
+            if not projects:
+                messages.info(request, 'No project matches your search terms.')
+                return redirect('projects')
+            projects = pagination(request, projects, 2, query)
+            context['projects'] = projects
+    return render(request, 'core/projects.html', context)
