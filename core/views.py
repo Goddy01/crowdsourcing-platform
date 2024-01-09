@@ -1571,8 +1571,8 @@ def search_innovations(request):
             ).order_by('-date_created').distinct()
             if not innovations:
                 request.session['search_innovations_no_result'] = True
-                return redirect('innovations-list')
+                return redirect('innovations_list')
             innovations = pagination(request, innovations, 4)
             context['innovations'] = innovations
             request.session['search_innovations_no_result'] = False
-    return render(request, 'core/innovations-list')
+    return render(request, 'core/innovations-list.html', context)
