@@ -1017,6 +1017,7 @@ def search_people(request):
     people = []
     logged_in_user = request.user
     context['query'] = query.lower()
+    request.session['people_query'] = query
     if request.method == 'GET':
         if query is not None:
             people = Innovator.objects.filter(
@@ -1024,10 +1025,10 @@ def search_people(request):
             ).distinct()
             
             if not people:
-                messages.info(request, "No person's details matches your search terms.")
                 request.session['no_result'] = True
-                return redirect('accounts:friends_list')
-            people = pagination(request, people, 10)
-            context['friends'] = people
-            request.session['no_result'] = False
+                # return redirect('accounts:friends_list')
+            else:
+                people = pagination(request, people, 10)
+                context['friends'] = people
+                request.session['no_result'] = False
     return render(request, 'accounts/friends-list.html', context)

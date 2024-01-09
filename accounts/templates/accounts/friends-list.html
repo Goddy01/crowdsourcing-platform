@@ -126,46 +126,23 @@
 <body>
     <div class="container" style="margin: 0 auto; padding: 30px;margin-top: 100px;">
         <form action="{% url 'accounts:search_people' %}" method="get">
-            <input class="" name="query" type="text" placeholder="Search for friends" value="{% if query %}{{ query }}{% endif %}">
+            <input class="" name="query" type="text" placeholder="Search for friends by name, username, and job title" value="{% if query %}{{ query }}{% endif %}">
         </form>
-        {% if request.session.no_result %}
-            <h3>No result for your search</h3>
+        {% if request.session.no_result and query %}
+            <h3 class="mb-5">No person's profile matches "{{ request.session.people_query }}"</h3>
         {% endif %}
-
-        {% if not request.session.no_result %}
+        {% if not request.session.no_result and query %}
+            {% if query %}
+            <h3 class="mb-5">Results for "{{ query }}"</h3>
+            {% endif %}
+        {% endif %}
+        
         <div>
             <div>
                 <a href="{%url 'accounts:friend_requests' %}">
                     View Friend Requests
                 </a>
             </div>
-            <!-- <h2>Friends ({{ friends|length }})</h2> -->
-        
-        <!-- {% if messages %}
-            <ul>
-                <div class="col-lg-8 col-xl-5 toastDiv mt-5 mx-auto"> -->
-                    <!-- Then put toasts within -->
-                <!-- <div class="card toast mb-2 bg-gray animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto">
-                <div class="toast-body text-white m-2">
-                    
-                    <ul class="messages">
-                        {% for message in messages %}
-                        <li 
-                        {% if message.tags == 'alert-success' %}
-                            class="text-success" 
-                        {% elif message.tags == 'alert-info' %}
-                        class="text-info" 
-                        {% elif message.tags == 'alert-error' %}
-                        class="text-danger" 
-                            {% endif %} style="list-style: disc;">{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                    
-                </div>
-                </div>
-            </div>
-            </ul>
-            {% endif %} -->
             <div class="row">
                 <div class="col-md-8">
                     <div class="friends-nearby">
@@ -232,7 +209,7 @@
                 </ul>
             </div>
         </div>
-        {% endif %}
+        
     </div>
 </body>
 <script>
