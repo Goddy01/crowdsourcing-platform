@@ -23,6 +23,22 @@
         right: 15px; /* Adjust the right distance as needed */
         z-index: 1000; /* Ensure it's above other elements */
     }
+    .sub-menu {
+    display: none;  /* Hide sub-menus by default */
+    }
+
+    /* Style for sub-menu */
+    .menu-item-has-children:hover .sub-menu {
+        display: block;  /* Show sub-menu on hover for larger screens */
+    }
+
+    /* Adjust styles for small screens (mobile devices) */
+    @media screen and (max-width: 767px) {
+        .menu-item-has-children:hover .sub-menu {
+            display: none;  /* Hide sub-menu on hover for small screens */
+        }
+    }
+
     </style>
     
     
@@ -51,14 +67,10 @@
 			<nav class="main-navigation">
 				<ul id="menu-main" class="menu px-3">
                     <li class="menu-item-has-children" style="display: inline;">
-						<a href="{% url 'contact_us' %}" style="font-weight: 600;">Help<em class="mdi mdi-chevron-down"></em></a>
-						<ul class="sub-menu">
-							<li><a href="">Help &amp; Support</a></li>
-							<li><a href="{% url 'contact_us' %}">Contact Us</a></li>
-						</ul>
+						<a href="{% url 'contact_us' %}" style="font-weight: 600;">Contact Us</a>
 					</li>
                     <li class="menu-item-has-children" style="display: inline;">
-						<a href="{% url 'innovations_list' %}"  style="font-weight: 600;">
+						<a style="font-weight: 600;">
                             {% if request.user.is_innovator %}
                             Innovate
                             {% else %}
@@ -95,7 +107,7 @@
 					</li> -->
                     {% if request.user.is_innovator %}
 					<li class="menu-item-has-children" style="cursor: pointer;display: inline;">
-						<a href=""  style="font-weight: 600;">Account Balance<em class="mdi mdi-chevron-down"></em></a>
+						<a style="font-weight: 600;">Account Balance<em class="mdi mdi-chevron-down"></em></a>
 						<ul class="sub-menu">
 							<li data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                 <a>Personal Account Balance</a>
@@ -108,7 +120,7 @@
                     {%  endif %}
                     {% if not request.user.is_authenticated %}
                     <li class="menu-item-has-children" style="display: inline;">
-						<a  style="font-weight: 600;">Login<em class="mdi mdi-chevron-down"></em></a>
+						<a style="font-weight: 600;">Login<em class="mdi mdi-chevron-down"></em></a>
 						<ul class="sub-menu">
 							<li><a href="{% url 'accounts:innovator_login' %}">Login as an Innovator</a></li>
 							<li><a href="{% url 'accounts:moderator_login' %}">Login as a Moderator</a></li>
@@ -116,7 +128,7 @@
 					</li>
                     {% endif %}
 					<li class="menu-item-has-children" style="display: inline;">
-						<a href="{% url 'accounts:profile' %}">
+						<a>
                             <span class="account-details">
                                 <span class="account-name" style="font-weight: 600;">
                                     {% if request.user.is_authenticated %}
@@ -307,6 +319,17 @@
 <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
 <script src="{% static 'js/fancybox.min.js' %}"></script>
 <script src="{% static 'js/functions.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+$(document).ready(function(){
+    // Toggle sub-menu on click
+    $('.menu-item-has-children').click(function(){
+        $(this).children('.sub-menu').toggle();
+    });
+});
+</script>
+
 </body>
 {% block js %}
 {% endblock js %}
