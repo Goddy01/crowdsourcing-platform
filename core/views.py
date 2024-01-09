@@ -1547,6 +1547,7 @@ def search_projects(request):
     context = {}
     query = request.GET.get('query')
     context['query'] = query
+    request.session['project_query'] = query
     if request.method == 'GET':
         if query is not None:
             projects = Project.objects.filter(
@@ -1563,6 +1564,7 @@ def search_projects(request):
 def search_innovations(request):
     context = {}
     query = request.GET.get('query')
+    request.session['innovation_query'] = query
     context['query'] = query
     if request.method == 'GET':
         if query is not None:

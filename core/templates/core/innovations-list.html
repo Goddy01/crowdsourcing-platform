@@ -20,9 +20,11 @@
                 <input class="" name="query" type="text" placeholder="Search innovations" value="{% if query %}{{ query }}{% endif %}">
             </form>
             {% if request.session.search_innovations_no_result %}
-            <h3>No innovation matches your search query</h3>
+            <h3>No innovation matches "{{ request.session.innovation_query }}"</h3>
             {% else %}
-            <h3 class="mb-5">Result for "{{ query }}"</h3>
+            {% if query %}
+            <h3 class="mb-5">Results for "{{ query }}"</h3>
+            {% endif %}
             <div class="row">
                 <!-- innovation entries-->
                 <div class="col-lg-8">

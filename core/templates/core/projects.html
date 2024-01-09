@@ -67,6 +67,12 @@
 				<form action="{% url 'search_projects' %}" method="get">
 					<input class="" name="query" type="text" placeholder="Search projects" value="{% if query %}{{ query }}{% endif %}">
 				</form>
+				{% if request.session.search_projects_no_result %}
+				<h3>No investment project matches "{{request.session.project_query}}"</h3>
+				{% else %}
+				{% if query %}
+				<h3 class="mb-5">Results for "{{ query }}"</h3>
+				{% endif %}
 				<div class="project-listing">
                     {% for project in projects %}
 					<div class="entry-project project-status-active">
@@ -213,6 +219,7 @@
 						{% endif %}
 					</nav>
 				</div>
+				{% endif %}
 			</div>
 		</main>
 	</div>
