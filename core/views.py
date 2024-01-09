@@ -1553,8 +1553,26 @@ def search_projects(request):
                 Q(name__icontains=query) | Q(motto__icontains=query)
             ).order_by('-date_created').distinct()
             if not projects:
-                messages.info(request, 'No project matches your search terms.')
+                request.session['search_projects_no_result'] = True
                 return redirect('projects')
             projects = pagination(request, projects, 2)
             context['projects'] = projects
+            request.session['search_projects_no_result'] = False
     return render(request, 'core/projects.html', context)
+
+def search_innovations(request):
+    context = {}
+    query = request.GET.get('query')
+    context['query'] = query
+    if request.method == 'GET':
+        if query is not None:
+            innovations = Innovation.objects.filter(
+                Q(title__icontains=query) | Q(description__icontains=query)
+            ).order_by('-date_created').distinct()
+            if not innovations:
+                request.session['search_innovations_no_result'] = True
+                return redirect('innovations-list')
+            innovations = pagination(request, innovations, 4)
+            context['innovations'] = innovations
+            request.session['search_innovations_no_result'] = False
+    return render(request, 'core/innovations-list')

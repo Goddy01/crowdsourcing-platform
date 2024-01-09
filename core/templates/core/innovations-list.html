@@ -16,6 +16,9 @@
         </header>
         <!-- Page content-->
         <div class="container">
+            <form action="" method="get">
+                <input class="" name="query" type="text" placeholder="Search innovations" value="{% if query %}{{ query }}{% endif %}">
+            </form>
             <div class="row">
                 <!-- innovation entries-->
                 <div class="col-lg-8">
