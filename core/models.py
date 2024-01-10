@@ -1,4 +1,5 @@
 from collections.abc import Iterable
+from django.contrib.postgres.fields import ArrayField
 import uuid
 from django.db import models, IntegrityError
 from accounts import models as account_models
@@ -33,7 +34,31 @@ def upload_project_milestone_gallery(instance, filename):
     return f'project_milestone_gallery/{instance.project.innovator.user.last_name}-{instance.project.innovator.user.first_name}-{instance.project.innovator.user.middle_name}/project-{instance.title}/-{filename}'
 
 # PROJECT
+class BusinessCategory(models.Model):
+    name = models.CharField(max_length=254, unique=True)
+
+    def __str__(self):
+        return self.name
+
 class Project(models.Model):
+    BUSINESS_TYPE_CATEGORIES = (
+        ("REAL ESTATE", "Real Estate"),
+        ("TRANSPORTATION", "Transportation"),
+        ("FORESTRY", "Forestry"),
+        ("AGRICULTURE", "Agriculture"),
+        ("CONSTRUCTION", "Construction"),
+        ("ENERGY", "Energy"),
+        ("TECHNOLOGY", "Technology"),
+        ("HEALTHCARE", "Healthcare"),
+        ("CONSUMER GOODS", "Consumer Goods"),
+        ("FINANCE AND BANKING", "Finance and Banking"),
+        ("HOSPITALITY AND TOURISM", "Hospitality and Tourism"),
+        ("ENTERTAINMENT AND MEDIA", "Entertainment and Media"),
+        ("MANUFACTURING", "Manufacturing"),
+        ("MINING AND NATURAL RESOURCES", "Mining and Natural Resources"),
+        ("ENVIRONMENTAL AND SUSTAINABILITY", "Environmental and Sustainability"),
+        ("EDUCATION AND EDTECH", "Education and Edtech"),
+    )
     innovator = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE)
     status = models.CharField(max_length=255, null=True, blank=True, default='YET TO BE REVIEWED')
     name = models.CharField(max_length=255, null=False, blank=False, unique=True)
@@ -55,7 +80,7 @@ class Project(models.Model):
     image_2 = models.ImageField(upload_to=upload_project_gallery, blank=False, null=False)
     image_3 = models.ImageField(upload_to=upload_project_gallery, blank=False, null=False)
     video = models.FileField(upload_to=upload_project_gallery,null=True, validators=[FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv'])])    
-    business_type = models.CharField(max_length=255)
+    business_type = ArrayField(models.CharField(max_length=255, choices = BUSINESS_TYPE_CATEGORIES))
     approved_by = models.ForeignKey(account_models.Moderator, on_delete=models.SET_NULL, null=True, related_name='approved_name', blank=True)
 
     @property

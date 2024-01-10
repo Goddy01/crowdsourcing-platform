@@ -41,9 +41,6 @@ class CreateProjectForm(forms.ModelForm):
     video = forms.FileField(error_messages={
         'required': 'Please attach a video explaining the project details'
     })
-    business_type = forms.ChoiceField(error_messages={
-        'required': 'Please select a category where the project belongs'
-    })
     innovator_user_agreement = forms.BooleanField(error_messages={
         'required': 'Please check the innovator user agreement box'
     })
@@ -65,7 +62,9 @@ class CreateProjectForm(forms.ModelForm):
         ("ENVIRONMENTAL AND SUSTAINABILITY", "Environmental and Sustainability"),
         ("EDUCATION AND EDTECH", "Education and Edtech"),
         )
-    business_type = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=BUSINESS_CHOICES)
+    business_type = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=BUSINESS_CHOICES, error_messages={
+        'required': 'Please select a category where the project belongs'
+    })
     # STATUS_CHOICES = (
     #     ("ACCEPTED", "Accepted"),
     #     ("DECLINED", "Declined"),
@@ -76,6 +75,9 @@ class CreateProjectForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = ['name', 'motto', 'description', 'target', 'expected_return', 'term_months', 'country', 'investment_deadline', 'image_1', 'image_2', 'image_3', 'video', 'business_type', 'innovator_user_agreement']
+        # widgets = {
+        #     'business_category': forms.SelectMultiple(choices=Project.BUSINESS_TYPE_CATEGORIES),
+        # }
 
 class CreateInnovationForm(forms.ModelForm):
     title = forms.CharField(error_messages={
