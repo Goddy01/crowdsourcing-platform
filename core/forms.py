@@ -31,13 +31,13 @@ class CreateProjectForm(forms.ModelForm):
         'required': 'Please enter the investment deadline of the project'
     })
     image_1 = forms.ImageField(error_messages={
-        'required': 'Please attach the first image about the project'
+        'required': 'Please attach the first image of the project'
     })
     image_2 = forms.ImageField(error_messages={
-        'required': 'Please attach the second image about the project'
+        'required': 'Please attach the second image of the project'
     })
     image_3 = forms.ImageField(error_messages={
-        'required': 'Please attach the third image about the project'
+        'required': 'Please attach the third image of the project'
     })
     video = forms.FileField(error_messages={
         'required': 'Please attach a video explaining the project details'
@@ -80,7 +80,7 @@ class CreateInnovationForm(forms.ModelForm):
         'required': 'Please enter the title of the innovation'
         })
     description = RichTextFormField(error_messages={
-        'required': 'Please enter the description about the innovation'
+        'required': 'Please enter the description of the innovation'
         })
     CATEGORY_CHOICES = (
             ("TECHNOLOGY AND SOFTWARE", "Technology and Software"),
@@ -105,14 +105,14 @@ class CreateInnovationForm(forms.ModelForm):
             ("CYBERSECURITY", "Cybersecurity"),
         )
     category = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=CATEGORY_CHOICES, error_messages={
-        'required': 'Please enter the reward amount'
+        'required': 'Please enter at least one category that the innovation belongs to.'
     })
-    reward = forms.IntegerField(error_messages={
-        'required': 'Please enter the reward amount'
-    })
+    # reward = forms.IntegerField(error_messages={
+    #     'required': 'Please enter the reward amount'
+    # })
     class Meta:
         model = Innovation
-        fields = ['title', 'description', 'image', 'category', 'reward']
+        fields = ['title', 'description', 'image', 'category']
 
 class MakeContributionForm(forms.ModelForm):
     contribution = RichTextFormField(required=False)
@@ -236,22 +236,22 @@ class AddMilestoneForm(forms.ModelForm):
         'required': 'Please enter the target date of the milestone'
     })
     progress_report = RichTextFormField(error_messages={
-        'required': 'Please give progress report about the project'
+        'required': 'Please give progress report of the project'
         })
     status = forms.ChoiceField(error_messages={
         'required': 'Please the status of the milestone'
     }, choices=MILESTONE_STATUS)
     image_1 = forms.ImageField(error_messages={
-        'required': 'Please attach the first image about the milestone'
+        'required': 'Please attach the first image of the milestone'
     })
     # image_2 = forms.ImageField(error_messages={
-    #     'required': 'Please attach the second image about the milestone'
+    #     'required': 'Please attach the second image of the milestone'
     # })
     # image_3 = forms.ImageField(error_messages={
-    #     'required': 'Please attach the third image about the milestone'
+    #     'required': 'Please attach the third image of the milestone'
     # })
     video = forms.FileField(error_messages={
-        'required': 'Please attach a video about the milestone'
+        'required': 'Please attach a video of the milestone'
     })
     class Meta:
         model = ProjectMilestone

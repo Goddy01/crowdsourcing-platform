@@ -173,15 +173,16 @@ def add_innovation(request):
         add_innovation_form = CreateInnovationForm(request.POST or None, request.FILES or None)
         if add_innovation_form.is_valid():
             context['title'] = add_innovation_form.cleaned_data['title']
-            context['reward'] = add_innovation_form.cleaned_data['reward']
-            if not Innovation.objects.filter(title=request.POST.get('title'), owner=innovator.pk).exists():
-                innovation_object = add_innovation_form.save(commit=False)
-                innovation_object.owner = innovator
-                innovation_object.save()
-                context['add_innovation_success'] = 'Innovation has been submitted. A moderator will reach out to you soon.'
-                return redirect('home')
-            else:
-                context['innovation_unique_error'] = 'You have already created a similar innovation.'
+            # context['reward'] = add_innovation_form.cleaned_data['reward']
+            # if not Innovation.objects.filter(title__icontains=request.POST.get('title'), owner=innovator.pk).exists():
+            innovation_object = add_innovation_form.save(commit=False)
+            innovation_object.owner = innovator
+            innovation_object.save()
+            messages.success(request, 'Innovation has been posted.')
+            return redirect('innovations_list')
+            # else:
+            #     messages.error(request, 'You have already created an innovation with similar title.')
+            #     return redirect('add_innovation')
         else:
             print('ERRORS: ', add_innovation_form.errors.as_data())
     else:
@@ -191,7 +192,7 @@ def add_innovation(request):
 
 def innovations_list(request):
     context = {}
-    innovations = Innovation.objects.all().order_by('date_created')
+    innovations = Innovation.objects.all().order_by('-date_created')
     innovations = pagination(request, innovations, 4)
     context['innovations'] = innovations
     return render(request, 'core/innovations-list.html', context)

@@ -114,22 +114,22 @@ class Innovation(models.Model):
     description = RichTextField(null=True, blank=False)
     owner = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(upload_to=upload_innovation_images, blank=True, null=True)
+    image = models.ImageField(upload_to=upload_innovation_images, blank=True, null=True, max_length=500)
     status = models.CharField(default='Unapproved', max_length=255)
     category = models.CharField(max_length=255, null=True, blank=False)
-    upvotes = models.IntegerField()
-    downvotes = models.IntegerField()
+    upvotes = models.IntegerField(default=0)
+    downvotes = models.IntegerField(default=0)
     num_of_contributions = models.IntegerField(blank=True, null=True)
-    reward = models.DecimalField(max_digits=255, decimal_places=2, null=False, blank=False)
-    reward_paid = models.BooleanField(default=False)
-    views = models.IntegerField()
+    reward = models.DecimalField(max_digits=255, decimal_places=2, null=True, blank=True)
+    # reward_paid = models.BooleanField(default=False)
+    views = models.IntegerField(default=0)
     approved_by = models.ForeignKey(account_models.Moderator, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f"Innovation: {self.title} by {self.owner.user.username}"
     
-    class Meta:
-        unique_together = ('title', 'owner')
+    # class Meta:
+    #     unique_together = ('title', 'owner')
 
 class Contribution(models.Model):
     contribution = RichTextField(null=True, blank=True)

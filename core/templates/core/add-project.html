@@ -36,7 +36,13 @@
             {% if messages %}
             <div class="d-flex justify-content-center" style="margin-top: 15px;">
                 {% for message in messages %}
-                <p class="ml-2 text-white p-3 d-flex justify-content-center" style="background-color: rgb(52, 190, 52);color: white;font-weight: 500;width: 40%;">{{ message }}</p>
+                {% if message.tags == 'alert-success' %}
+                <p class="ml-2 text-white p-3 d-flex justify-content-center bg-success" style="color: white;font-weight: 500;width: 40%;">{{ message }}</p>
+                {% elif message.tags == 'alert-danger' %}
+                <p class="ml-2 text-white p-3 d-flex justify-content-center bg-danger" style="color: white;font-weight: 500;width: 40%;">{{ message }}</p>
+                {% elif message.tags == 'alert-info' %}
+                <p class="ml-2 text-white p-3 d-flex justify-content-center bg-info" style="color: white;font-weight: 500;width: 40%;">{{ message }}</p>
+                {% endif %}
                 {% endfor %}
             </div>
             {% endif %}

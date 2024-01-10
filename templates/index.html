@@ -201,7 +201,7 @@
                             </span>
                         </div>
                         <div class="project-details">
-                            <h3 class="project-title"><a href="single-project.html">{{ project.name }}</a></h3>
+                            <h3 class="project-title"><a href="{% url 'project_details' project.pk %}">{{ project.name }}</a></h3>
                             <p class="project-summary">{{ project.description|truncatewords:50 }}</p>
                             <div class="project-specs">
                                 <div class="project-return">

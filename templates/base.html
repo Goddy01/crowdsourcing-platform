@@ -149,6 +149,7 @@
 							<li><a href="{% url 'statement' %}">Statement</a></li>
 							<li><a href="{% url 'deposit' %}">Funding</a></li>
 							{% if request.user.is_innovator %}
+                            <li><a href="{% url 'add_innovation' %}">Add Innovation</a></li>
                             <li><a href="{% url 'add_project' %}">Add Investment Project</a></li>
                             {% endif %}
                             brev
