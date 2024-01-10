@@ -42,7 +42,7 @@ class Project(models.Model):
     motto = models.CharField(max_length=255, null=False, blank=False)
     description = models.TextField(null=True, blank=True, max_length=10000)
     target = models.DecimalField(max_digits=255, decimal_places=2, null=False, blank=False)
-    fund_raised = models.DecimalField(max_digits=255, decimal_places=2, null=True, blank=True, )
+    fund_raised = models.DecimalField(max_digits=255, decimal_places=2, default=0)
     amount_left = models.DecimalField(max_digits=255, decimal_places=2, null=True, blank=True, )
     expected_return = ExpectedReturnField(blank=False, null=False)
     term_months = models.IntegerField(null=False, blank=False)
@@ -53,10 +53,10 @@ class Project(models.Model):
     innovator_user_agreement = models.BooleanField(default=False, null=True, blank=True)
     certified_by = models.ForeignKey(account_models.Moderator, on_delete=models.CASCADE, null=True, blank=True)
     # PROJECT GALLERY
-    image_1 = models.ImageField(upload_to=upload_project_gallery, blank=False, null=False)
-    image_2 = models.ImageField(upload_to=upload_project_gallery, blank=False, null=False)
-    image_3 = models.ImageField(upload_to=upload_project_gallery, blank=False, null=False)
-    video = models.FileField(upload_to=upload_project_gallery,null=True, validators=[FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv'])])    
+    image_1 = models.ImageField(upload_to=upload_project_gallery, blank=False, null=False, max_length=500)
+    image_2 = models.ImageField(upload_to=upload_project_gallery, blank=False, null=False, max_length=500)
+    image_3 = models.ImageField(upload_to=upload_project_gallery, blank=False, null=False, max_length=500)
+    video = models.FileField(upload_to=upload_project_gallery,null=True, validators=[FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv'])], max_length=500)
     business_type = models.CharField(max_length=100, blank=True)
     approved_by = models.ForeignKey(account_models.Moderator, on_delete=models.SET_NULL, null=True, related_name='approved_name', blank=True)
 

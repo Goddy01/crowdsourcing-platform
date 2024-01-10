@@ -60,13 +60,11 @@ def add_project(request):
             project_obj = create_project_form.save(commit=False)
             project_obj.innovator = Innovator.objects.get(user__username=request.user.username)
             create_project_form.instance.set_business_categories_list(create_project_form.cleaned_data['business_type'])
-            # business_type = project_obj.cleaned_data['business_type']
-            # print('B TYPE: ', business_type)
-            # project_obj.business_type = []
             if create_project_form.cleaned_data['innovator_user_agreement']:
                 project_obj.innovator_user_agreement = True
             project_obj.save()
-            project_creation_request = 'Thank you for submitting your project details. Your project creation request has been sent to a moderator for review. A moderator will carefully assess your project to ensure that the provided information aligns with our user agreement and complies with legal regulations. Please allow some time for our team to review your project thoroughly. We appreciate your patience. If there are any additional details or documents required, a moderator will reach out to you for clarification. We value your commitment to our platform and look forward to the possibility of bringing your project to our community. Once again, thank you for choosing our platform to showcase your project, and we will be in touch with you soon.'
+            messages.info(request, 'Thank you for submitting your investment project. Your investment project creation request has been sent to a moderator for review. A moderator will carefully assess the investment project to ensure that the provided information aligns with our user agreement and complies with legal regulations. Please allow some time for our team to review your project thoroughly. We appreciate your patience. If there are any additional details or documents required, a moderator will reach out to you for clarification. We value your commitment to our platform and look forward to the possibility of bringing your investment project to our community. Once again, thank you for choosing our platform to showcase your investment project, and we will be in touch with you soon.')
+            return redirect('add_project')
 
         else:
             print(create_project_form.errors.as_data())

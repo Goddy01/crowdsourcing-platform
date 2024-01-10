@@ -180,8 +180,8 @@
                             <a href="{% url 'project_details' project.pk %}">
                                 <img src="{{ project.image_1.url }}" width="800" height="600" alt="">
                                 <span class="project-industry" title="Investment type">
-                                    <em class="mdi mdi-information"></em> 
-                                    Sector &mdash; 
+                                    <!-- <em class="mdi mdi-information"></em>  -->
+                                    <b>Sector &mdash; </b>
                                     {% for category in project.get_business_categories_list %}
                                     {% if forloop.counter != project.get_business_categories_list|length %}
                                     {{ category }},
@@ -289,8 +289,8 @@
                             <a href="{% url 'project_details' project.pk %}">
                                 <img src="{{ project.image_1.url }}" alt="" style="width: 800px;height: 300px;">
                                 <span class="project-industry" title="Investment type">
-                                    <em class="mdi mdi-information"></em> 
-                                    Sector &mdash; 
+                                    <!-- <em class="mdi mdi-information"></em>  -->
+                                    <b>Sector &mdash; </b>
                                     {% for category in project.get_business_categories_list %}
                                     {% if forloop.counter != project.get_business_categories_list|length %}
                                     {{ category }},
