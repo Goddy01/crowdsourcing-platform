@@ -1,3 +1,4 @@
+import json, re
 from collections.abc import Iterable
 from django.contrib.postgres.fields import ArrayField
 import uuid
@@ -34,31 +35,7 @@ def upload_project_milestone_gallery(instance, filename):
     return f'project_milestone_gallery/{instance.project.innovator.user.last_name}-{instance.project.innovator.user.first_name}-{instance.project.innovator.user.middle_name}/project-{instance.title}/-{filename}'
 
 # PROJECT
-class BusinessCategory(models.Model):
-    name = models.CharField(max_length=254, unique=True)
-
-    def __str__(self):
-        return self.name
-
 class Project(models.Model):
-    BUSINESS_TYPE_CATEGORIES = (
-        ("REAL ESTATE", "Real Estate"),
-        ("TRANSPORTATION", "Transportation"),
-        ("FORESTRY", "Forestry"),
-        ("AGRICULTURE", "Agriculture"),
-        ("CONSTRUCTION", "Construction"),
-        ("ENERGY", "Energy"),
-        ("TECHNOLOGY", "Technology"),
-        ("HEALTHCARE", "Healthcare"),
-        ("CONSUMER GOODS", "Consumer Goods"),
-        ("FINANCE AND BANKING", "Finance and Banking"),
-        ("HOSPITALITY AND TOURISM", "Hospitality and Tourism"),
-        ("ENTERTAINMENT AND MEDIA", "Entertainment and Media"),
-        ("MANUFACTURING", "Manufacturing"),
-        ("MINING AND NATURAL RESOURCES", "Mining and Natural Resources"),
-        ("ENVIRONMENTAL AND SUSTAINABILITY", "Environmental and Sustainability"),
-        ("EDUCATION AND EDTECH", "Education and Edtech"),
-    )
     innovator = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE)
     status = models.CharField(max_length=255, null=True, blank=True, default='YET TO BE REVIEWED')
     name = models.CharField(max_length=255, null=False, blank=False, unique=True)
@@ -80,7 +57,7 @@ class Project(models.Model):
     image_2 = models.ImageField(upload_to=upload_project_gallery, blank=False, null=False)
     image_3 = models.ImageField(upload_to=upload_project_gallery, blank=False, null=False)
     video = models.FileField(upload_to=upload_project_gallery,null=True, validators=[FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv'])])    
-    business_type = ArrayField(models.CharField(max_length=255, choices = BUSINESS_TYPE_CATEGORIES))
+    business_type = models.CharField(max_length=100, blank=True)
     approved_by = models.ForeignKey(account_models.Moderator, on_delete=models.SET_NULL, null=True, related_name='approved_name', blank=True)
 
     @property
@@ -101,7 +78,33 @@ class Project(models.Model):
         for project in Project.objects.filter(innovator=self.innovator):
             amount += project.fund_raised
         return amount
+    
+    def get_business_categories_list(self):
+        """Return a list of individual business categories."""
+        # content_inside_brackets = self.business_type[self.business_type.find('[') + 1:self.business_type.rfind(']')]
 
+        # # Split the content into a list based on commas
+        # category_list = [category.strip(" '") for category in content_inside_brackets.split(',')]
+
+        # # Print the result
+        # return category_list
+
+        matches = re.search(r'\[([^\]]+)\]', self.business_type)
+
+        # Check if there are matches and extract the content
+        if matches:
+            content_inside_brackets = matches.group(1)
+            # Split the content into a list based on commas
+            category_list = [category.strip(" '") for category in content_inside_brackets.split(',')]
+            # Print the result
+            return category_list
+        else:
+            return None
+
+    def set_business_categories_list(self, categories):
+        """Set business categories based on a list."""
+        self.business_type = ','.join(categories)
+        
     def __str__(self):
         return f"Project: {self.name} by {self.innovator.user.username}"
     

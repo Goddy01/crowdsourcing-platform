@@ -127,10 +127,11 @@
 					<div class="col-12">
 						<h3>Project description</h3>
 						<p>Sector: 
-                                <span class="badge bg-success text-decoration-none link-light" href="#!">
-									{% for b in project.business_type %}
-									{{ b }}
-									{% endfor %}
+									{% for category in project.get_business_categories_list %}
+									<span class="badge bg-success text-decoration-none link-light" href="#!">
+                                    {{ category }}
+									</span>
+                                    {% endfor %}
 								</span>
 						</p>
 						<p>{{ project.description }}</p>

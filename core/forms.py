@@ -4,6 +4,7 @@ from django import forms
 from ckeditor.fields import RichTextFormField
 from accounts import forms as account_forms
 
+
 class CreateProjectForm(forms.ModelForm):
     name = forms.CharField(error_messages={
         'required': 'Please enter the name of the project'
@@ -61,16 +62,11 @@ class CreateProjectForm(forms.ModelForm):
         ("MINING AND NATURAL RESOURCES", "Mining and Natural Resources"),
         ("ENVIRONMENTAL AND SUSTAINABILITY", "Environmental and Sustainability"),
         ("EDUCATION AND EDTECH", "Education and Edtech"),
-        )
+    )
     business_type = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=BUSINESS_CHOICES, error_messages={
         'required': 'Please select a category where the project belongs'
     })
-    # STATUS_CHOICES = (
-    #     ("ACCEPTED", "Accepted"),
-    #     ("DECLINED", "Declined"),
-    #     ("REVIEW IN PROGRESS", "Review in Progress"),
-    #     ("YET TO BE REVIEWED", "Yet to be reviewed"),
-    #     )
+    
     # status = forms.MultipleChoiceField(widget=forms.RadioSelect, choices=STATUS_CHOICES)
     class Meta:
         model = Project

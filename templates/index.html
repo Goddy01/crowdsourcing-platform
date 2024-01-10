@@ -179,7 +179,17 @@
                         <div class="project-media">
                             <a href="{% url 'project_details' project.pk %}">
                                 <img src="{{ project.image_1.url }}" width="800" height="600" alt="">
-                                <span class="project-industry" title="Investment type"><em class="mdi mdi-information"></em> Business &mdash; {{project.business_type}}</span>
+                                <span class="project-industry" title="Investment type">
+                                    <em class="mdi mdi-information"></em> 
+                                    Sector &mdash; 
+                                    {% for category in project.get_business_categories_list %}
+                                    {% if forloop.counter != project.get_business_categories_list|length %}
+                                    {{ category }},
+                                    {% else %}
+                                    {{ category }}
+                                    {% endif %}
+                                    {% endfor %}
+                                </span>
                                 <!-- <span class="project-country" title="Estonia"><img class="office-country" src="{% static 'images/ee.svg' %}" width="24" alt=""> <em class="screen-reader-text">Estonia</em></span> -->
                             </a>
                             <span class="project-status" style="background-color: #00B951;"><em class="mdi mdi-plus"></em> 
@@ -273,12 +283,22 @@
                 <h2 class="entry-title">Popular Projects</h2>
                 <div class="project-listing grid-format">
                     {% for project in popular_projects %}
-                    {% if project.num_investors > 0 %}
+                    <!-- {% if project.num_investors > 0 %} -->
                     <div class="entry-project project-status-funded">
                         <div class="project-media">
                             <a href="{% url 'project_details' project.pk %}">
                                 <img src="{{ project.image_1.url }}" alt="" style="width: 800px;height: 300px;">
-                                <span class="project-industry" title="Investment type"><em class="mdi mdi-information"></em> Business &mdash; {{ project.business_type }}</span>
+                                <span class="project-industry" title="Investment type">
+                                    <em class="mdi mdi-information"></em> 
+                                    Sector &mdash; 
+                                    {% for category in project.get_business_categories_list %}
+                                    {% if forloop.counter != project.get_business_categories_list|length %}
+                                    {{ category }},
+                                    {% else %}
+                                    {{ category }}
+                                    {% endif %}
+                                    {% endfor %}
+                                </span>
                                 <!-- <span class="project-country" title="Latvia"><img class="office-country" src="{% static 'images/lv.svg' %}" width="33" alt=""> <em class="screen-reader-text">Latvia</em></span> -->
                             </a>
                             <span class="project-status">Investments Made: {{ project.num_investors }}</span>
@@ -310,7 +330,7 @@
                             </div>
                         </div>
                     </div>
-                    {% endif %}
+                    <!-- {% endif %} -->
                     {% endfor %}
                 </div>
                 <!-- <div class="pagination">

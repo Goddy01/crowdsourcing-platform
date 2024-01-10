@@ -59,6 +59,7 @@ def add_project(request):
         if create_project_form.is_valid():
             project_obj = create_project_form.save(commit=False)
             project_obj.innovator = Innovator.objects.get(user__username=request.user.username)
+            create_project_form.instance.set_business_categories_list(create_project_form.cleaned_data['business_type'])
             # business_type = project_obj.cleaned_data['business_type']
             # print('B TYPE: ', business_type)
             # project_obj.business_type = []
