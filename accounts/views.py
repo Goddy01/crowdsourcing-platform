@@ -951,36 +951,37 @@ def testify(request, testified_person_pk):
         context['star_4'] = 0
         context['star_5'] = 0
 
-    add_testimony_form = AddTestimonyForm()
-    if request.method == 'POST':
-        if not Make_Investment.objects.filter(investment__innovator=testified_person, sender=testifier).exists():
-            messages.info(request, "You cannot submit a testimony because you have not invested in this person's project before.")
-            return redirect('accounts:testify', testified_person_pk)
-        else:
-            if Testimony.objects.filter(testifier=testifier, testified_person=testified_person).count() == 0:
-                add_testimony_form = AddTestimonyForm(request.POST)
-                if add_testimony_form.is_valid():
-                    add_testimony_obj = add_testimony_form.save(commit=False)
-                    review = add_testimony_obj.review
-                    context['review'] = review
-                    if rating is None:
-                        messages.error(request, 'Provide star ratings')
-                    if review is None:
-                        messages.error(request, 'Provide your review')
-
-                    if rating is not None and review is not None:
-                        add_testimony_obj.testified_person = testified_person
-                        add_testimony_obj.testifier = testifier
-                        add_testimony_obj.rating = rating
-                        add_testimony_obj.save()
-                        messages.success(request, 'Your testimony has been posted!')
-                        return redirect('accounts:testify', testified_person_pk)
-                else:
-                    for field, errors in add_testimony_form.errors.items():
-                        print(f"Field: {field}, Errors: {', '.join(errors)}")
+    if request.user != testimonies[0].testified_person.user:
+        add_testimony_form = AddTestimonyForm()
+        if request.method == 'POST':
+            if not Make_Investment.objects.filter(investment__innovator=testified_person, sender=testifier).exists():
+                messages.info(request, "You cannot submit a testimony because you have not invested in this person's project before.")
+                return redirect('accounts:testify', testified_person_pk)
             else:
-                messages.info(request, f'You have already submitted a testimony about {testified_person.user.get_full_name()}')
-    context['add_testimony_form'] = add_testimony_form
+                if Testimony.objects.filter(testifier=testifier, testified_person=testified_person).count() == 0:
+                    add_testimony_form = AddTestimonyForm(request.POST)
+                    if add_testimony_form.is_valid():
+                        add_testimony_obj = add_testimony_form.save(commit=False)
+                        review = add_testimony_obj.review
+                        context['review'] = review
+                        if rating is None:
+                            messages.error(request, 'Provide star ratings')
+                        if review is None:
+                            messages.error(request, 'Provide your review')
+
+                        if rating is not None and review is not None:
+                            add_testimony_obj.testified_person = testified_person
+                            add_testimony_obj.testifier = testifier
+                            add_testimony_obj.rating = rating
+                            add_testimony_obj.save()
+                            messages.success(request, 'Your testimony has been posted!')
+                            return redirect('accounts:testify', testified_person_pk)
+                    else:
+                        for field, errors in add_testimony_form.errors.items():
+                            print(f"Field: {field}, Errors: {', '.join(errors)}")
+                else:
+                    messages.info(request, f'You have already submitted a testimony about {testified_person.user.get_full_name()}')
+        context['add_testimony_form'] = add_testimony_form
     return render(request, 'accounts/testimonials.html', context)
 
 

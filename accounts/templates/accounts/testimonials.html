@@ -204,7 +204,7 @@
     <div class="offer-dedicated-body-left">
         <div class="tab-content" id="pills-tabContent">
             <div class="tab-pane fade active show" id="pills-reviews" role="tabpanel" aria-labelledby="pills-reviews-tab">
-
+                {% if request.user != testimonies.0.testified_person.user %}
                 <div class="bg-white rounded shadow-sm p-4 mb-5 rating-review-select-page">
                     <h5 class="mb-4">Leave your review and rating for {{ testified_person_fullname }}</h5>
                     <form action="{% url 'accounts:testify' testified_person_pk  %}" method="post">
@@ -229,6 +229,9 @@
                         </div>
                     </form>
                 </div>
+                {% else %}
+                <h5 class="mb-4">Your review and ratings</h5>
+                {% endif %}
 
                 <div class="bg-white rounded shadow-sm p-4 mb-4 clearfix graph-star-rating">
                     <h5 class="mb-0 mb-4">Ratings and Reviews</h5>
