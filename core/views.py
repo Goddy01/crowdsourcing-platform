@@ -417,6 +417,7 @@ def deposit_money(request):
 
 @login_required
 def invest(request, investment_pk):
+    from .tasks import send_funding_completed_email_task
     context = {}
     investment = Project.objects.get(pk=investment_pk)
     investor = Innovator.objects.get(user__pk=request.user.pk)
@@ -443,26 +444,10 @@ def invest(request, investment_pk):
                 current_investment.completed = True
                 current_investment.save(update_fields=['completed'])
                 current_site = get_current_site(request)
-                subject = f'Hurray {investment_owner.user.get_full_name()}, Your Investment Project "{investment.name}" Has Successfully Reached Its Funding Goal. 🎉🍾'
-                html_message = loader.render_to_string(
-                    'core/fund_raising_completed.html', {
-                        'user': investment_owner.user,
-                        'domain': current_site.domain,
-                        'investment_project': investment,
-                        'date': datetime.datetime.now()
 
-                    }
-                )
-                to_email = [f'{investment_owner.user.email}']
-                from_email = settings.EMAIL_HOST_USER
-                send_mail(
-                    subject=subject,
-                    message=strip_tags(html_message),
-                    from_email=from_email,
-                    recipient_list=to_email,
-                    fail_silently=True,
-                    html_message=html_message
-                )
+                # SENDS EMAIL ABOUT THAT THE FUNDING GOAL HAS BEEN REACHED TO THE PROJECT OWNER AND THE PROJECT INVESTORS
+                send_funding_completed_email_task(investment_pk)
+                
 
             # Create investment and transaction records
             invest = Make_Investment.objects.create(
@@ -1597,3 +1582,53 @@ def search_innovations(request):
             context['innovations'] = innovations
             request.session['search_innovations_no_result'] = False
     return render(request, 'core/innovations-list.html', context)
+
+def send_funding_completed_email(investment_pk):
+    investment = Project.objects.get(pk=investment_pk)
+
+    # FOR PROJECT OWNER
+    investment_owner = investment.innovator
+    subject = f'Hurray {investment_owner.user.get_full_name()}, Your Investment Project "{investment.name}" Has Successfully Reached Its Funding Goal. 🎉🍾'
+    html_message = loader.render_to_string(
+        'core/fund_raising_completed.html', {
+            'user': investment_owner.user,
+            'investment_project': investment,
+            'date': datetime.datetime.now()
+
+        }
+    )
+    to_email = [f'{investment_owner.user.email}']
+    from_email = settings.EMAIL_HOST_USER
+    send_mail(
+        subject=subject,
+        message=strip_tags(html_message),
+        from_email=from_email,
+        recipient_list=to_email,
+        fail_silently=True,
+        html_message=html_message
+    )
+
+
+    # FOR INVESTORS
+    recipients = Make_Investment.objects.filter(investment=investment).sender.user
+    # recipient_list = []
+    for recipient in recipients:
+        subject = f'Hurray {recipient.get_full_name()}, An Investment Project Named "{investment.name}" That You Invested In Has Successfully Reached Its Funding Goal. 🎉🍾'
+        html_message = loader.render_to_string(
+            'core/fund_raising_completed_investors.html', {
+                'user': recipient,
+                'investment_project': investment,
+                'date': datetime.datetime.now()
+
+            }
+        )
+        to_email = [f'{recipient.email}']
+        from_email = settings.EMAIL_HOST_USER
+        send_mail(
+            subject=subject,
+            message=strip_tags(html_message),
+            from_email=from_email,
+            recipient_list=to_email,
+            fail_silently=True,
+            html_message=html_message
+        )
