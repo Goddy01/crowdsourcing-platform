@@ -1616,8 +1616,8 @@ def send_funding_completed_email(investment_pk):
 
     # FOR INVESTORS
     recipients = Make_Investment.objects.filter(investment=investment)
-    # recipient_list = []
-    for recipient in recipients:
+    members = Group.objects.get(investment_project=investment).get_group_members
+    for recipient in members:
         subject = f'Hurray {recipient.get_full_name()}, An Investment Project Named "{investment.name}" That You Invested In Has Successfully Reached Its Funding Goal. 🎉🍾'
         html_message = loader.render_to_string(
             'core/fund_raising_completed_investors.html', {

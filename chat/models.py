@@ -62,13 +62,14 @@ class Group(models.Model):
     @property
     def members_count(self):
         return self.members.count()
+    
     @property
-    def get_group_members_emails(self):
-        member_emails = []
+    def get_group_members(self):
+        members = []
         for member in self.members.all():
             if member != self.project.innovator.user:
-                member_emails.append(member.email)
-        return member_emails
+                members.append(member)
+        return members
     
 class GroupChat(models.Model):
     message_tagged = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='reply_to')
