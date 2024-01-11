@@ -7,6 +7,7 @@ from celery.utils.log import get_task_logger
 logger = get_task_logger(__name__)
 
 @shared_task
-def send_funding_completed_email_task(investment_pk):
+def send_funding_completed_email_task(**kwargs):
+    investment_pk = kwargs.get('investment_pk')
     logger.info('FUNDING GOAL REACHED EMAIL SENT')
     return send_funding_completed_email(investment_pk)

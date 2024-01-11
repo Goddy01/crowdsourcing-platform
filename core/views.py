@@ -446,7 +446,12 @@ def invest(request, investment_pk):
                 current_site = get_current_site(request)
 
                 # SENDS EMAIL ABOUT THAT THE FUNDING GOAL HAS BEEN REACHED TO THE PROJECT OWNER AND THE PROJECT INVESTORS
-                send_funding_completed_email_task(investment_pk)
+                send_funding_completed_email_task.apply_async(
+                    kwargs= {
+                        'investment_pk': investment_pk
+                    },
+                    countdown=10
+                )
                 
 
             # Create investment and transaction records
@@ -1610,7 +1615,7 @@ def send_funding_completed_email(investment_pk):
 
 
     # FOR INVESTORS
-    recipients = Make_Investment.objects.filter(investment=investment).sender.user
+    recipients = Make_Investment.objects.filter(investment=investment)
     # recipient_list = []
     for recipient in recipients:
         subject = f'Hurray {recipient.get_full_name()}, An Investment Project Named "{investment.name}" That You Invested In Has Successfully Reached Its Funding Goal. 🎉🍾'
