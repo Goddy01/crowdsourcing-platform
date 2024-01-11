@@ -1,0 +1,199 @@
+{% autoescape off %}
+<!DOCTYPE html>
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
+
+<head>
+	<title></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"><!--[if mso]><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch><o:AllowPNG/></o:OfficeDocumentSettings></xml><![endif]-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f7f7f7;
+        }
+        .form-container {
+            max-width: 400px;
+            height: 500px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 50px;
+            margin-top: 50px;
+        }
+        .form-container h2 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .form-control {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+    </style>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			padding: 0;
+		}
+
+		a[x-apple-data-detectors] {
+			color: inherit !important;
+			text-decoration: inherit !important;
+		}
+
+		#MessageViewBody a {
+			color: inherit;
+			text-decoration: none;
+		}
+
+		p {
+			line-height: inherit
+		}
+
+		.desktop_hide,
+		.desktop_hide table {
+			mso-hide: all;
+			display: none;
+			max-height: 0px;
+			overflow: hidden;
+		}
+
+		.image_block img+div {
+			display: none;
+		}
+
+		@media (max-width:520px) {
+			.desktop_hide table.icons-inner {
+				display: inline-block !important;
+			}
+
+			.icons-inner {
+				text-align: center;
+			}
+
+			.icons-inner td {
+				margin: 0 auto;
+			}
+
+			.mobile_hide {
+				display: none;
+			}
+
+			.row-content {
+				width: 100% !important;
+			}
+
+			.stack .column {
+				width: 100%;
+				display: block;
+			}
+
+			.mobile_hide {
+				min-height: 0;
+				max-height: 0;
+				max-width: 0;
+				overflow: hidden;
+				font-size: 0px;
+			}
+
+			.desktop_hide,
+			.desktop_hide table {
+				display: table !important;
+				max-height: none !important;
+			}
+		}
+	</style><!--[if true]><style>.forceBgColor{background-color: white !important}</style><![endif]-->
+</head>
+
+<body class="forceBgColor" style="background-color: transparent; margin: 0; padding: 0; -webkit-text-size-adjust: none; text-size-adjust: none;">
+	<table class="nl-container" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: transparent;">
+		<tbody>
+			<tr>
+				<td>
+					<table class="row row-1" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
+						<tbody>
+							<tr>
+								<td>
+									<table class="row-content stack" align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000; width: 500px; margin: 0 auto;" width="500">
+										<tbody>
+											<tr>
+												<td class="column column-1" width="100%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;">
+													<table class="heading_block block-1" width="100%" border="0" cellpadding="10" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
+														<tr>
+                                                            <td class="pad">
+                                                                <h1 style="margin: 0; color: #4e8e4c; direction: ltr; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 45px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: center; margin-top: 0; margin-bottom: 0;"><span class="tinyMce-placeholder">Summit</span></h1>
+                                                            </td>
+														</tr>
+                                                        <td>
+                                                            <h6 style="font-size: 14px; margin: 0; color: #040c04; direction: ltr; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-weight: 500; letter-spacing: normal; line-height: 120%; margin-top: 0; margin-bottom: 0;">
+                                                                <h2 class="tinyMce-placeholder">
+                                                                    <span style="font-weight: bold;margin-bottom: 20px;">Hurray {{ user.get_full_name }}, Your Investment Project "{{ investment_project.name }}" Has Successfully Reached Its Funding Goal. 🎉🍾</span>
+                                                                </h2>
+                                                                <p style="font-weight: bold;">From Summit Team</p>
+                                                                    <p>
+                                                                        <p>Dear {{ user.username|title }},</p>
+                                                                        <p>
+                                                                        We happy to inform you that your investment project with the name "{{ investment_project.name }}" has successfully reached its funding goal. 
+                                                                        This achievement is a testament to the support and enthusiasm of our community of investors who believe in the potential of your project. 
+                                                                        We want to extend our heartfelt congratulations to you on reaching this significant milestone. 
+                                                                        What's Next?
+
+                                                                        <b>Project Update</b>: Consider providing a brief update or thank-you message to the investors who supported your project. This can help foster a sense of community and engagement.
+
+                                                                        <b>Timeline</b>: Share any relevant timelines for the next steps in your project. Whether it's production, development, or delivery, keeping your investors informed enhances transparency and trust.
+
+                                                                        <b>Communication</b>: We encourage you to stay connected with your investors through our platform. Regular updates, progress reports, and any important announcements can be shared with the community.
+
+                                                                        Once again, congratulations on this incredible achievement! We are excited to witness the continued success of your project.
+
+                                                                        If you have any questions or need assistance, please feel free to reach out to our support team.
+                                                                        <p style="margin-bottom: 20px;">Best regards,</p>
+                                                                         -<p style="font-weight: bold;">Summit</p>
+                                                                        <p style="font-weight: bold;">contact@summit.com</p>
+                                                                    </p>
+                                                            </h6>
+                                                            
+                                                        </td>
+                                                        <tr>
+                                                            
+                                                        </tr>
+													</table>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+		</tbody>
+	</table><!-- End -->
+</body>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</html>
+{% endautoescape %}

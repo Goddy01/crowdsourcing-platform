@@ -448,7 +448,7 @@ def invest(request, investment_pk):
                 current_site = get_current_site(request)
                 subject = f'Hurray {investment_owner.user.get_full_name()}, Your Investment Project "{investment.name}" Has Successfully Reached Its Funding Goal. 🎉🍾'
                 html_message = loader.render_to_string(
-                    'core/fund_raising_completed', {
+                    'core/fund_raising_completed.html', {
                         'user': investment_owner.user,
                         'domain': current_site.domain,
                         'investment_project': investment,
