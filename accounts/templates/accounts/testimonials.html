@@ -325,70 +325,151 @@
 </div>
 </div>
 <script>
-    
     var offset = 2;  // Initial offset, showing the first two reviews
-    
+
     function loadMoreReviews() {
-    // Fetch more reviews from the server
-    fetch("{% url 'accounts:get_testimonies' testified_person_pk %}?offset=" + offset + '&limit=10')
-        .then(response => response.json())
-        .then(data => {
-            // Parse the JSON data
-            var testimonies = data.get_testimonies
-            
+        // Fetch more reviews from the server
+        fetch("{% url 'accounts:get_testimonies' testified_person_pk %}?offset=" + offset + '&limit=10')
+            .then(response => response.json())
+            .then(data => {
+                // Parse the JSON data
+                var testimonies = data.get_testimonies;
 
-            // Append the new reviews to the existing reviews container
-            var reviewsContainer = document.getElementById('reviews-container');
-            testimonies.forEach(testimony => {
-                var reviewElement = document.createElement('div');
-                reviewElement.classList.add('reviews-members', 'pt-4', 'pb-4')
-                console.log('Yo: ', testimony);
-                var options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
-                var date_added = new Date(testimony.date_added).toLocaleString('en-US', options);
-                var profileUrl = "{% url 'accounts:profile_with_arg' '0' %}".replace('0', testimony.testifier_pk);
+                // Append the new reviews to the existing reviews container
+                var reviewsContainer = document.getElementById('reviews-container');
+                testimonies.forEach(testimony => {
+                    var reviewElement = document.createElement('div');
+                    reviewElement.classList.add('reviews-members', 'pt-4', 'pb-4');
+                    console.log('Yo: ', testimony);
+                    var options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+                    var date_added = new Date(testimony.date_added).toLocaleString('en-US', options);
+                    var testimonyPk = testimony.testimony_pk;
+                    var profileUrl = "{% url 'accounts:profile_with_arg' '0' %}".replace('0', testimony.testifier_pk);
 
-                var starHtml = '';
-                for (var i = 0; i < testimony.rating; i++) {
-                    starHtml += "<i class='fas fa-star active text-success mt-2'></i>";
-                }
-                console.log('PK: ', profileUrl);
+                    var starHtml = '';
+                    for (var i = 0; i < testimony.rating; i++) {
+                        starHtml += "<i class='fas fa-star active text-success mt-2'></i>";
+                    }
+                    console.log('PK: ', profileUrl);
 
-                reviewElement.innerHTML = `<div class="reviews-members pb-4">
-                        <div class="media">
-                            <a href="${profileUrl}">
-                                <img alt="Generic placeholder image" src="${testimony.testifier_pfp}" class="mr-3 rounded-pill">
-                            </a>
-                            <div class="media-body">
-                                <div class="reviews-members-header">
-                                    <h6 class="mb-3 mt-2" style="display: inline"><a class="text-black" href="${profileUrl}">${testimony.testifier_fullname}</a></h6>
-                                    <span class="font-italic" style="display: inline">
-                                        ( ${date_added} )
-                                    </span>
-                                    <p>
-                                    ${starHtml}
-                                    </p>
-                                </div>
-                                <div class="reviews-members-body" style="margin-top: 5px">
-                                    ${testimony.review}
-                                    
-                                </div>
-                                <div class="reviews-members-footer mt-2">
-                                    <a class="total-like text-success text-decoration-none" href="#"><i class="fa fa-thumbs-up"></i> ${testimony.likes}</a> 
-                                    <a class="total-like text-danger text-decoration-none" href="#"><i class="fa fa-thumbs-down"></i> ${testimony.dislikes}</a>
+                    reviewElement.innerHTML = `<div class="reviews-members pb-4">
+                            <div class="media">
+                                <a href="${profileUrl}">
+                                    <img alt="Generic placeholder image" src="${testimony.testifier_pfp}" class="mr-3 rounded-pill">
+                                </a>
+                                <div class="media-body">
+                                    <div class="reviews-members-header">
+                                        <h6 class="mb-3 mt-2" style="display: inline"><a class="text-black" href="${profileUrl}">${testimony.testifier_fullname}</a></h6>
+                                        <span class="font-italic" style="display: inline">
+                                            ( ${date_added} )
+                                        </span>
+                                        <p>
+                                        ${starHtml}
+                                        </p>
+                                    </div>
+                                    <div class="reviews-members-body" style="margin-top: 5px">
+                                        ${testimony.review}
+                                        
+                                    </div>
+                                    <div class="reviews-members-footer mt-2" style="cursor: pointer;">
+                                        <span class="total-like text-success text-decoration-none upvote-btn" data-testimony-pk="${testimonyPk}">
+                                            <i class="fa fa-thumbs-up"></i> 
+                                            <span id="upvote-count-${testimonyPk}">${testimony.upvotes}</span>
+                                        </span> 
+                                        <span class="total-like text-danger text-decoration-none downvote-btn" data-testimony-pk="${testimonyPk}">
+                                            <i class="fa fa-thumbs-down"></i> 
+                                            <span id="downvote-count-${testimonyPk}">${testimony.downvotes}</span>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <hr>`
-                reviewsContainer.appendChild(reviewElement)
+                        <hr>`;
 
-                // reviewsContainer.innerHTML += testimony.fields.review;  // Assuming 'review' is the field name
+                    reviewsContainer.appendChild(reviewElement);
+
+                    // Move the click event handling inside the forEach loop
+                    setupClickHandlers(testimonyPk);
+                });
+
+                offset += 10;  // Increment the offset for the next batch
             });
+    }
 
-            offset += 10;  // Increment the offset for the next batch
+    function setupClickHandlers(testimonyPk) {
+        var upvoteURL = "{% url 'accounts:upvote_testimony' testimony_pk=0 %}".replace('0', testimonyPk);
+        var downvoteURL = "{% url 'accounts:downvote_testimony' testimony_pk=0 %}".replace('0', testimonyPk);
+
+        // Function to get CSRF token from cookies
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Upvote button click handler
+        $('.upvote-btn[data-testimony-pk="' + testimonyPk + '"]').on('click', function () {
+            console.log('clicked +1');
+
+            var csrftoken = getCookie('csrftoken');
+
+            $.ajax({
+                type: 'POST',
+                url: upvoteURL,
+                data: {
+                    csrfmiddlewaretoken: csrftoken
+                },
+                success: function (data) {
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        var upvoteCount = $('#upvote-count-' + testimonyPk);
+                        upvoteCount.text(data.upvotes);
+
+                        var downvoteCount = $('#downvote-count-' + testimonyPk);
+                        downvoteCount.text(data.downvotes);
+                    }
+                }
+            });
         });
-}
-</script>    
+
+        // Downvote button click handler
+        $('.downvote-btn[data-testimony-pk="' + testimonyPk + '"]').on('click', function () {
+            console.log('clicked -1');
+
+            var csrftoken = getCookie('csrftoken');
+
+            $.ajax({
+                type: 'POST',
+                url: downvoteURL,
+                data: {
+                    csrfmiddlewaretoken: csrftoken
+                },
+                success: function (data) {
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        var downvoteCount = $('#downvote-count-' + testimonyPk);
+                        downvoteCount.text(data.downvotes);
+
+                        var upvoteCount = $('#upvote-count-' + testimonyPk);
+                        upvoteCount.text(data.upvotes);
+                    }
+                }
+            });
+        });
+    }
+</script>
+
     
 <script>
     let star1 = document.getElementById('s-1')
@@ -467,5 +548,9 @@
     setTimeout(function() {
       $('.toast').toast('hide')
     }, 9999);
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
 </script>
 {% endblock content %}

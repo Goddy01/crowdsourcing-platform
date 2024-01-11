@@ -33,6 +33,8 @@ urlpatterns = [
     path('<testified_person_pk>/testify', views.testify, name='testify'),
     path('<testified_person_pk>/get_testimonies', views.get_testimonies, name='get_testimonies'),
     path('search-people', views.search_people, name='search_people'),
+    path('<testimony_pk>/upvote', views.upvote_testimony, name='upvote_testimony'),
+    path('<testimony_pk>/downvote', views.downvote_testimony, name='downvote_testimony'),
     # path('make-payment/', views.deposit_money, name='make_payment'),
     # path('password-change', views.change_password, name='change_password'),
 ]

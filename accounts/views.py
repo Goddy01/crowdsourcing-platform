@@ -987,14 +987,15 @@ def get_testimonies(request, testified_person_pk):
     for testimony in testimonies:
         serialized_testimonies.append(
             {
+                'testimony_pk': testimony.pk,
                 'testifier_pfp': testimony.testifier.user.pfp.url,
                 'testifier_pk': testimony.testifier.pk,
                 'testifier_fullname': testimony.testifier.user.get_full_name(),
                 'rating': testimony.rating,
                 'review': testimony.review,
                 'date_added': testimony.date_added,
-                'likes': testimony.likes,
-                'dislikes': testimony.dislikes,
+                'upvotes': testimony.upvotes,
+                'downvotes': testimony.downvotes,
             }
         )
 
@@ -1043,7 +1044,7 @@ def upvote_testimony(request, testimony_pk):
     # Check if the user has previously downvoted and remove the downvote
     elif user in testimony.downvoted_by.all() and user not in testimony.upvoted_by.all():
         testimony.downvoted_by.remove(user)
-        if testimony.downvotes == -1:
+        if testimony.downvotes == 1:
             testimony.downvotes = 0
         else:
             testimony.downvotes += 1
@@ -1054,7 +1055,7 @@ def upvote_testimony(request, testimony_pk):
         testimony.upvoted_by.add(user)
         testimony.upvotes += 1
         testimony.save()
-    return JsonResponse({'upvotes': testimony.upvoted_by.count()})
+    return JsonResponse({'upvotes': testimony.upvoted_by.count(), 'downvotes': testimony.downvoted_by.count()})
 
 @login_required
 def downvote_testimony(request, testimony_pk):
@@ -1070,13 +1071,13 @@ def downvote_testimony(request, testimony_pk):
         testimony.upvoted_by.remove(user)
         testimony.upvotes -=1
         if testimony.downvotes == 0:
-            testimony.downvotes = -1
+            testimony.downvotes = 1
         else:
-            testimony.downvotes -= 1
+            testimony.downvotes += 1
         testimony.downvoted_by.add(user)
         testimony.save()
     elif user not in testimony.upvoted_by.all() and user not in testimony.downvoted_by.all():
         testimony.downvoted_by.add(user)
-        testimony.downvotes -= 1
+        testimony.downvotes += 1
         testimony.save()
-    return JsonResponse({'downvotes': testimony.downvoted_by.count()})
+    return JsonResponse({'downvotes': testimony.downvoted_by.count(), 'upvotes': testimony.upvoted_by.count()})
