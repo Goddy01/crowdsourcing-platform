@@ -1,6 +1,6 @@
 from django.db import models
 from accounts.models import BaseUser, Innovator
-from core.models import Project
+from core.models import Project, Make_Investment
 # Create your models here.
 
 def upload_in_chat_files(instance, filename):
@@ -65,10 +65,13 @@ class Group(models.Model):
     
     @property
     def get_group_members(self):
+        project_owner = self.investment_project.innovator.user
         members = []
         for member in self.members.all():
-            if member != self.project.innovator.user:
+            if member != project_owner:
                 members.append(member)
+            if Make_Investment.objects.filter(sender__user=project_owner).exists():
+                members.append(project_owner)
         return members
     
 class GroupChat(models.Model):
