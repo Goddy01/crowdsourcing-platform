@@ -445,6 +445,27 @@ def invest(request, investment_pk):
             investment.amount_left = investment.target - investment.fund_raised
             if investment.amount_left == 0 and investment.fund_raised:
                 investment.complete = True
+                current_site = get_current_site(request)
+                subject = f'Hurray {investment_owner.user.get_full_name()}, Your Investment Project "{investment.name}" Has Successfully Reached Its Funding Goal. 🎉🍾'
+                html_message = loader.render_to_string(
+                    'core/fund_raising_completed', {
+                        'user': investment_owner.user,
+                        'domain': current_site.domain,
+                        'investment_project': investment,
+                        'date': datetime.datetime.now()
+
+                    }
+                )
+                to_email = [f'{investment_owner.user.email}']
+                from_email = settings.EMAIL_HOST_USER
+                send_mail(
+                    subject=subject,
+                    message=strip_tags(html_message),
+                    from_email=from_email,
+                    recipient_list=to_email,
+                    fail_silently=True,
+                    html_message=html_message
+                )
             investment.save()
             invest = Make_Investment.objects.create(
                 send_to=investment.innovator,
