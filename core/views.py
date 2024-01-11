@@ -40,7 +40,7 @@ load_dotenv()
 def home(request):
     current_date = datetime.date.today()
     context = {}
-    new_projects = Project.objects.filter(investment_deadline__gte=current_date).order_by('-date_created')
+    new_projects = Project.objects.filter(investment_deadline__gte=current_date, completed=False).order_by('-date_created')
     context['new_projects'] = new_projects[:5]
 
     popular_projects = all_popular_projects = Project.objects.annotate(num_investors=Count('the_investment')).filter(investment_deadline__gte=current_date).order_by('-num_investors')
@@ -90,12 +90,12 @@ def projects_list(request):
             if to_expected_return:
                 # print('TO: ', to_expected_return)
                 projects = Project.objects.filter(
-                    Q(expected_return__range=(int(from_expected_return), int(to_expected_return)), investment_deadline__gte=current_date)
+                    Q(expected_return__range=(int(from_expected_return), int(to_expected_return)), investment_deadline__gte=current_date, completed=False)
                 )
                 # projects = pagination(request, projects, 4)
             else:
                 projects = Project.objects.filter(
-                    Q(expected_return__gte=int(from_expected_return), investment_deadline__gte=current_date)
+                    Q(expected_return__gte=int(from_expected_return), investment_deadline__gte=current_date, completed=False)
                 )
             # for project in all_projects:
             #     if project.investment_deadline >= current_date:
@@ -104,7 +104,7 @@ def projects_list(request):
             context['projects'] = projects
     else:
         # request.GET
-        projects = Project.objects.filter(investment_deadline__gte=current_date).order_by('-date_created')
+        projects = Project.objects.filter(investment_deadline__gte=current_date, completed=False).order_by('-date_created')
         
         # for project in all_projects:
         #     if project.investment_deadline >= current_date:
@@ -426,25 +426,22 @@ def invest(request, investment_pk):
     if request.method == 'POST' and 'invest' in request.POST:
         amount = int(request.POST.get('amount'))
         if amount <= investor.account_balance:
-            # if request.user.username == investment_owner.user.username:
-            # else:
+            # Deduct the amount from the investor's account balance
             investor.account_balance -= amount
             investor.save()
-            # print('ACCOUNT BALANCE: ', investor.account_balance)
-            investment.target -= amount
-            # if investment_owner.account_balance is None:
-            #     investment_owner.account_balance = 0
-            # investment_owner.account_balance += amount
-            # investment_owner.save()
 
-            if investment.fund_raised is None:
-                investment.fund_raised = 0
-            investment.fund_raised += amount
-            if investment.amount_left is None:
-                investment.amount_left = 0
-            investment.amount_left = investment.target - investment.fund_raised
-            if investment.amount_left == 0 and investment.fund_raised:
-                investment.complete = True
+            # Update the investment project details
+            # investment.target -= amount
+            investment.fund_raised = (investment.fund_raised or 0) + amount
+            investment.amount_left = max(0, investment.target - investment.fund_raised)
+            investment.save()
+
+            # Check if the investment project is fully funded
+            current_investment = Project.objects.get(pk=investment_pk)
+            if current_investment.amount_left == 0 and current_investment.fund_raised == current_investment.target:
+                print('reached')
+                current_investment.completed = True
+                current_investment.save(update_fields=['completed'])
                 current_site = get_current_site(request)
                 subject = f'Hurray {investment_owner.user.get_full_name()}, Your Investment Project "{investment.name}" Has Successfully Reached Its Funding Goal. 🎉🍾'
                 html_message = loader.render_to_string(
@@ -466,51 +463,61 @@ def invest(request, investment_pk):
                     fail_silently=True,
                     html_message=html_message
                 )
-            investment.save()
+
+            # Create investment and transaction records
             invest = Make_Investment.objects.create(
                 send_to=investment.innovator,
                 send_from=investor,
                 sender=investor,
                 amount=amount,
+                expected_return=amount * investment.expected_return,
                 investment=investment,
-                expected_return=amount*investment.expected_return
             )
+
+            # Create investor's transaction record
             transaction = Transaction.objects.create(
                 owner=investor,
-                description= f"You have invested ₦{amount} in {investment.name}",
-                successful = not False,
-                reference_code = invest.reference_code,
-                amount = amount,
-                pre_balance = investor.account_balance + amount,
-                post_balance = investor.account_balance,
-                type='OUTGOING INVESTMENT'
+                description=f"You have invested ₦{amount} in {investment.name}",
+                successful=not False,
+                reference_code=invest.reference_code,
+                amount=amount,
+                pre_balance=investor.account_balance + amount,
+                post_balance=investor.account_balance,
+                type='OUTGOING INVESTMENT',
             )
+
+            # Create project owner's transaction record
             transaction = Transaction.objects.create(
                 owner=investment_owner,
-                description= f"Investor {investor.user.username} invested ₦{amount} in your project --{investment.name}",
-                successful = not False,
-                reference_code = invest.reference_code,
-                amount = amount,
-                pre_balance = investment.fund_raised - amount,
-                post_balance = investment.fund_raised,
-                type='INCOMING INVESTMENT'
+                description=f"Investor {investor.user.username} invested ₦{amount} in your project --{investment.name}",
+                successful=not False,
+                reference_code=invest.reference_code,
+                amount=amount,
+                pre_balance=investment.fund_raised - amount,
+                post_balance=investment.fund_raised,
+                type='INCOMING INVESTMENT',
             )
+
+            # Add investor to the investment group
             associated_investments = investment.count_make_investments_instances
             if associated_investments == 1:
                 new_group = Group.objects.create(
-                    name = f'{investment.name} by {investment.innovator.user.get_full_name()}',
-                    description = f'This is the community dedicated to investors who have contributed to the {investment.name} project. Please adhere to our community guidelines. The project owner ({investment.innovator.user.get_full_name()}), will regularly share updates on the progress of the investment project with all members.',
-                    investment_project = investment
-                    )
+                    name=f'{investment.name} by {investment.innovator.user.get_full_name()}',
+                    description=f'This is the community dedicated to investors who have contributed to the {investment.name} project. Please adhere to our community guidelines. The project owner ({investment.innovator.user.get_full_name()}), will regularly share updates on the progress of the investment project with all members.',
+                    investment_project=investment
+                )
                 new_group.members.add(investment.innovator.user)
                 if not new_group.members.filter(pk=investor.user.pk).exists():
                     new_group.members.add(investor.user)
             else:
                 group = Group.objects.get(
-                    investment_project = investment
+                    investment_project=investment
                 )
                 group.members.add(investor.user)
+
+            # Set the latest transaction in the context for display
             context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
+
             messages.success(request, 'Thank you for investing in this project. You will be added to the investment group chat if this is your first investment in this project.')
             return redirect('project_details', investment_pk)
         else:

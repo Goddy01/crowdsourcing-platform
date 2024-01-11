@@ -81,7 +81,13 @@
 								<img src="{{ project.image_1.url }}" style="width: 600px;height: 650px;border-radius: 3%;" alt="">
 								<span class="project-industry" title="Investment type"><em class="mdi mdi-information"></em> Business &mdash; 
 									
-										{{ project.business_type|title }}
+									{% for category in project.get_business_categories_list %}
+                                    {% if forloop.counter != project.get_business_categories_list|length %}
+                                    {{ category }},
+                                    {% else %}
+                                    {{ category }}
+                                    {% endif %}
+                                    {% endfor %}
 								</span>
 								<span class="project-country" title="Estonia"><img class="office-country" src="assets/images/ee.svg" width="24" alt=""> <em class="screen-reader-text">{{ project.country }}</em></span>
 							</a>

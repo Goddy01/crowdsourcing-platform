@@ -219,6 +219,7 @@
                             </div>
                             <div class="project-progress">
                                 <div class="progress-bar" style="background-color: red;">
+                                    
                                     <div class="progress-current" style="width:{{ project.fund_raised_percentage }}%;background-color: green;"></div>
                                 </div>
                                 <div class="progress-info">
@@ -230,13 +231,8 @@
                                             {{ project.fund_raised }}
                                             {% endif %}
                                         </strong> invested</div>
-                                    <div class="progress-amount-left"><strong><span class="currency-sign">₦</span>
-                                        {% if project.fund_raised is None or project.fund_raised == 0 %}
-                                        {{ project.target }}
-                                        {% else %}
-                                        {{ project.target|sub:project.fund_raised }}
-                                        {% endif %}
-                                    </strong>Amount Left</div>
+                                    <div class="progress-amount-left">Target: <strong><span class="currency-sign">₦</span>{{ project.target }}
+                                    </strong></div>
                                 </div>
                             </div>
                             <div class="project-actions">

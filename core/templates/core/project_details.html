@@ -250,21 +250,24 @@
 							</form> -->
 							
 							{% if is_past_deadline %}
-								<button type="submit" name="invest" class="mb-5">The investment deadline of this investment has passed.</button>
+								<button type="submit" name="invest" class="mb-5 button button-primary button-default">The investment deadline of this investment has passed.</button>
 							{% else %}
-								{% if project.status.title == 'Approved' %}
+								{% if project.status.title == 'Approved' and not project.completed %}
 								<form method="POST" id="payForm" action="{% url 'invest' project.pk %}">
 								{% csrf_token %}
 								<div class="mb-3">
 								<label for="exampleInputPassword1" class="form-label">Amount</label>
 								<input type="number" class="form-control" id="amount" name="amount">
-								<button type="submit" name="invest" class="mb-5">Invest</button>
+								<button type="submit" name="invest" class="mb-5 button button-primary button-default">Invest</button>
 								</div>
 								</form>
 								{% elif project.status.title == 'Declined' %}
-								<button type="submit" name="invest" class="mb-5">This project has been declined because it does not adhere to the platform's policy.</button>
-								{% else %}
-								<button type="submit" name="invest" class="mb-5">Wait till the project is approved before you can invest</button>
+								<button type="submit" name="invest" class="mb-5 button button-primary button-default">This project has been declined because it does not adhere to the platform's policy.</button>
+								{% elif project.status.title == 'Yet To be Reviewed' %}
+								<button type="submit" name="invest" class="mb-5 button button-primary button-default">Wait till the project is approved before you can invest</button>
+								{% endif %}
+								{% if project.completed %}
+								<button type="submit" name="invest" class="mb-5 button button-primary button-default">Funding Goal Reached</button>
 								{% endif %}
 							{% endif %}
 					</div>
