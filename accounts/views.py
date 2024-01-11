@@ -1032,3 +1032,51 @@ def search_people(request):
                 context['friends'] = people
                 request.session['no_result'] = False
     return render(request, 'accounts/friends-list.html', context)
+
+@login_required
+def upvote_testimony(request, testimony_pk):
+    testimony = Testimony.objects.get(pk=testimony_pk)
+    user = Innovator.objects.get(user__pk=request.user.pk)
+    if user in testimony.upvoted_by.all():
+        return JsonResponse({'error': 'You have already upvoted this testimony'})
+
+    # Check if the user has previously downvoted and remove the downvote
+    elif user in testimony.downvoted_by.all() and user not in testimony.upvoted_by.all():
+        testimony.downvoted_by.remove(user)
+        if testimony.downvotes == -1:
+            testimony.downvotes = 0
+        else:
+            testimony.downvotes += 1
+        testimony.upvotes += 1
+        testimony.upvoted_by.add(user)
+        testimony.save()
+    elif user not in testimony.upvoted_by.all() and user not in testimony.downvoted_by.all():
+        testimony.upvoted_by.add(user)
+        testimony.upvotes += 1
+        testimony.save()
+    return JsonResponse({'upvotes': testimony.upvoted_by.count()})
+
+@login_required
+def downvote_testimony(request, testimony_pk):
+    testimony = Testimony.objects.get(pk=testimony_pk)
+    user = Innovator.objects.get(user__pk=request.user.pk)
+
+    # Check if the user has already downvoted this testimony
+    if user in testimony.downvoted_by.all():
+        return JsonResponse({'error': 'You have already downvoted this testimony'})
+
+    # Check if the user has previously upvoted and remove the upvote
+    elif user in testimony.upvoted_by.all() and user not in testimony.downvoted_by.all():
+        testimony.upvoted_by.remove(user)
+        testimony.upvotes -=1
+        if testimony.downvotes == 0:
+            testimony.downvotes = -1
+        else:
+            testimony.downvotes -= 1
+        testimony.downvoted_by.add(user)
+        testimony.save()
+    elif user not in testimony.upvoted_by.all() and user not in testimony.downvoted_by.all():
+        testimony.downvoted_by.add(user)
+        testimony.downvotes -= 1
+        testimony.save()
+    return JsonResponse({'downvotes': testimony.downvoted_by.count()})

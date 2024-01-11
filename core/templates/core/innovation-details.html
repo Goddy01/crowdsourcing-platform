@@ -140,7 +140,7 @@
                         {% for contrib in contributions %}
                         <div class="mb-5 py-3" style="border-top: 1px solid rgb(191, 206, 196);">
                             <p class="col-2">
-                                <a href="{% url 'accounts:profile_with_arg' contrib.contributor.pk %}" style="text-decoration: none;font-weight: bold;">
+                                <a href="{% url 'accounts:profile_with_arg' contrib.contributor.pk %}" style="text-decoration: none;font-style: italic;">
                                     @{{ contrib.contributor.user.username }}
                                 </a>
                             </p>
@@ -307,25 +307,4 @@
             });
         });
     </script>
-    
-    
-
-    
-    <!-- <script>
-        function handleReply(response_id) {
-            
-            const reply_form_container = document.querySelector(`#reply-form-container-${response_id}`)
-            if (reply_form_container) {
-                reply_form_container.style.display = 'block';
-            }
-            event.preventDefault();
-        }
-
-        function handleCancel(response_id) {
-            const reply_form_container = document.querySelector(`#reply-form-container-${response_id}`)
-            if (reply_form_container) {
-                reply_form_container.style.display = 'none';
-            }
-}
-    </script> -->
 {%endblock content %}

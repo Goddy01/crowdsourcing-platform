@@ -245,8 +245,10 @@ class Testimony(models.Model):
     review = models.TextField(null=False, blank=False, max_length=1000)
     date_added = models.DateTimeField(auto_now_add=True)
     rating = models.IntegerField(null=False, blank=False)
-    likes = models.IntegerField(default=0)
-    dislikes = models.IntegerField(default=0)
+    upvote = models.IntegerField(default=0)
+    downvote = models.IntegerField(default=0)
+    upvoted_by = models.ManyToManyField(Innovator, related_name='upvoted_testimonies', blank=True)
+    downvoted_by = models.ManyToManyField(Innovator, related_name='downvoted_testimonies', blank=True)
 
     def instances_count(self):
         return Testimony.objects.filter(testified_person=self.testified_person).count()
