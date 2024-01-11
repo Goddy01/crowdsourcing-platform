@@ -209,18 +209,25 @@ def sign_out(request):
     return redirect('home')
 
 def profile(request):
+    user = None
     if not request.user.is_authenticated:
         return redirect('accounts:innovator_login')
     try:
         user = BaseUser.objects.get(username=request.user.username)
     except BaseUser.DoesNotExist:
         return HttpResponse('User Not Found!')
-    # else:
-    #     user = BaseUser.objects.get(username=request.user.username)
+    else:
+        testimonies = Testimony.objects.filter(testified_person__user=user)
+        if testimonies.count() >= 3:
+            preview_testimonies = testimonies[0:2]
+        else:
+            preview_testimonies = testimonies
     return render(request, 'accounts/profile.html', {
         'user': user,
         'user_skills': InnovatorSkill.objects.filter(innovator__user__pk=request.user.pk),
-        'user_services': Service.objects.filter(user__pk=request.user.pk)
+        'user_services': Service.objects.filter(user__pk=request.user.pk),
+        'testimonies': testimonies,
+        'preview_testimonies': preview_testimonies,
         
     })
 
