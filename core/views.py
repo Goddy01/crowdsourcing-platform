@@ -280,10 +280,7 @@ def upvote_contribution(request, contribution_pk):
     # Check if the user has previously downvoted and remove the downvote
     elif user in contribution.downvoted_by.all() and user not in contribution.upvoted_by.all():
         contribution.downvoted_by.remove(user)
-        if contribution.downvotes == -1:
-            contribution.downvotes = 0
-        else:
-            contribution.downvotes += 1
+        contribution.downvotes -= 1
         contribution.upvotes += 1
         contribution.upvoted_by.add(user)
         contribution.save()
@@ -291,7 +288,7 @@ def upvote_contribution(request, contribution_pk):
         contribution.upvoted_by.add(user)
         contribution.upvotes += 1
         contribution.save()
-    return JsonResponse({'upvotes': contribution.upvoted_by.count()})
+    return JsonResponse({'upvotes': contribution.upvoted_by.count(), 'downvotes': contribution.downvoted_by.count()})
 
 @login_required
 def downvote_contribution(request, contribution_pk):
@@ -306,17 +303,14 @@ def downvote_contribution(request, contribution_pk):
     elif user in contribution.upvoted_by.all() and user not in contribution.downvoted_by.all():
         contribution.upvoted_by.remove(user)
         contribution.upvotes -=1
-        if contribution.downvotes == 0:
-            contribution.downvotes = -1
-        else:
-            contribution.downvotes -= 1
+        contribution.downvotes += 1
         contribution.downvoted_by.add(user)
         contribution.save()
     elif user not in contribution.upvoted_by.all() and user not in contribution.downvoted_by.all():
         contribution.downvoted_by.add(user)
-        contribution.downvotes -= 1
+        contribution.downvotes += 1
         contribution.save()
-    return JsonResponse({'downvotes': contribution.downvoted_by.count()})
+    return JsonResponse({'upvotes': contribution.upvoted_by.count(), 'downvotes': contribution.downvoted_by.count()})
 
 @login_required
 def accept_contribution(request, contribution_pk):

@@ -275,8 +275,11 @@
                         } else {
                             // Increment the upvote count on the page
                             var upvoteCount = $('#upvote-count-' + contribPk);
-                            upvoteCount.text(parseInt(upvoteCount.text()) + 1);
-                            location.reload(); // Reload the page
+                            upvoteCount.text(data.upvotes);
+
+                            var downvoteCount = $('#downvote-count-' + contribPk);
+                            downvoteCount.text(data.downvotes);
+                            
                         }
                     }
                 });
@@ -297,10 +300,12 @@
                         if (data.error) {
                             alert(data.error); // Display an error message if the user has already downvoted
                         } else {
+                            var upvoteCount = $('#upvote-count-' + contribPk);
+                            upvoteCount.text(data.upvotes);
                             // Decrement the downvote count on the page
                             var downvoteCount = $('#downvote-count-' + contribPk);
-                            downvoteCount.text(parseInt(downvoteCount.text()) - 1);
-                            location.reload(); // Reload the page
+                            downvoteCount.text(data.downvotes);
+
                         }
                     }
                 });
