@@ -1044,10 +1044,7 @@ def upvote_testimony(request, testimony_pk):
     # Check if the user has previously downvoted and remove the downvote
     elif user in testimony.downvoted_by.all() and user not in testimony.upvoted_by.all():
         testimony.downvoted_by.remove(user)
-        if testimony.downvotes == 1:
-            testimony.downvotes = 0
-        else:
-            testimony.downvotes += 1
+        testimony.downvotes -= 1
         testimony.upvotes += 1
         testimony.upvoted_by.add(user)
         testimony.save()
@@ -1070,10 +1067,7 @@ def downvote_testimony(request, testimony_pk):
     elif user in testimony.upvoted_by.all() and user not in testimony.downvoted_by.all():
         testimony.upvoted_by.remove(user)
         testimony.upvotes -=1
-        if testimony.downvotes == 0:
-            testimony.downvotes = 1
-        else:
-            testimony.downvotes += 1
+        testimony.downvotes += 1
         testimony.downvoted_by.add(user)
         testimony.save()
     elif user not in testimony.upvoted_by.all() and user not in testimony.downvoted_by.all():
