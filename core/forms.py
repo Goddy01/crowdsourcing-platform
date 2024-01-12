@@ -232,9 +232,9 @@ class AddMilestoneForm(forms.ModelForm):
     description = forms.CharField(error_messages={
         'required': 'Please enter the description of the milestone'
     })
-    target_date = forms.DateField(error_messages={
-        'required': 'Please enter the target date of the milestone'
-    })
+    # target_date = forms.DateField(error_messages={
+    #     'required': 'Please enter the target date of the milestone'
+    # })
     progress_report = RichTextFormField(error_messages={
         'required': 'Please give progress report of the project'
         })
@@ -244,18 +244,18 @@ class AddMilestoneForm(forms.ModelForm):
     image_1 = forms.ImageField(error_messages={
         'required': 'Please attach the first image of the milestone'
     })
-    # image_2 = forms.ImageField(error_messages={
-    #     'required': 'Please attach the second image of the milestone'
-    # })
-    # image_3 = forms.ImageField(error_messages={
-    #     'required': 'Please attach the third image of the milestone'
-    # })
-    video = forms.FileField(error_messages={
-        'required': 'Please attach a video of the milestone'
+    image_2 = forms.ImageField(error_messages={
+        'required': 'Please attach the second image of the milestone'
     })
+    image_3 = forms.ImageField(error_messages={
+        'required': 'Please attach the third image of the milestone'
+    })
+    # video = forms.FileField(error_messages={
+    #     'required': 'Please attach a video of the milestone'
+    # })
     class Meta:
         model = ProjectMilestone
-        fields = ('title', 'description', 'target_date', 'progress_report', 'image_1', 'image_2', 'image_3', 'video', 'status')
+        fields = ('title', 'description', 'progress_report', 'image_1', 'image_2', 'image_3', 'status')
 
 class UpdateMilestoneDetailsForm(forms.ModelForm):
     MILESTONE_STATUS = (

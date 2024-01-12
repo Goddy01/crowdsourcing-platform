@@ -59,7 +59,8 @@ def add_project(request):
         if create_project_form.is_valid():
             project_obj = create_project_form.save(commit=False)
             project_obj.innovator = Innovator.objects.get(user__username=request.user.username)
-            create_project_form.instance.set_business_categories_list(create_project_form.cleaned_data['business_type'])
+            project_obj.amount_left = create_project_form.cleaned_data.get('target')
+
             if create_project_form.cleaned_data['innovator_user_agreement']:
                 project_obj.innovator_user_agreement = True
             project_obj.save()

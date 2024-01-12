@@ -91,17 +91,17 @@
                             <label for="name">Description</label>
                             <textarea cols="30" rows="10" id="description" name="description" class="underline"></textarea>
                         </div>
-                        <div class="mb-5">
+                        <!-- <div class="mb-5">
                             <label for="motto">Target Date</label>
                             <input type="date"  name="target_date" class="underline" required>
-                        </div>
+                        </div> -->
                         <div class="mb-5">
-                            <p class="label">Progress Report</p>
+                            <label style="display: block;">Progress Report</label>
                             {{ add_milestone_form.media }}
                             {{ add_milestone_form.progress_report }}
                         </div>
                         <div class="mb-5">
-                            <p class="label">Status</p>
+                            <label class="label" style="display: block;">Status</label>
                             {{ add_milestone_form.status }}
                         </div>
                         <!-- images -->

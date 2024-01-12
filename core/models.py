@@ -282,7 +282,7 @@ class ProjectMilestone(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=254, null=True, blank=True)
     description = models.TextField(null=True, blank=True, max_length=10000)
-    target_date = models.DateField()
+    # target_date = models.DateField()
     progress_report = RichTextField(null=True, blank=True)
     # PROJECT MILESTONE GALLERY
     image_1 = models.ImageField(upload_to=upload_project_milestone_gallery, blank=True, null=True, max_length=254)

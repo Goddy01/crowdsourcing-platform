@@ -274,7 +274,15 @@
             </td>
             <td class="">%{{ project.expected_return }}</td>
             <td class="">{{ project.term_months }}</td>
-            <td class="">{{ project.business_type }}</td>
+            <td class="">
+                {% for category in project.get_business_categories_list %}
+                {% if forloop.counter != project.get_business_categories_list|length %}
+                {{ category }},
+                {% else %}
+                {{ category }}
+                {% endif %}
+                {% endfor %}
+            </td>
             
             <td class="text-success">
                 <div class="dropdown">
