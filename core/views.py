@@ -1451,9 +1451,11 @@ def add_milestone(request, project_pk):
 
                 # SENDS EMAIL TO EVERY INVESTOR ABOUT THE ADDITION OF A NEW MILESTONE
                 current_site = get_current_site(request)
+                
+
+                
                 subject = f'Update: New Milestone Added to "{milestone.project.name}" Investment Project'
                 # investments = Make_Investment.objects.filter(investment__pk=project_pk)
-                investors = Innovator.objects.filter(send_from__investment=project)
                 for investor in investors:
                     html_message = loader.render_to_string(
                         'core/send-milestone-addition-notification.html', {
@@ -1528,7 +1530,7 @@ def update_milestone(request, milestone_pk):
             instance=milestone, initial= {
                 'title': milestone.title,
                 'description': milestone.description,
-                'target_date': milestone.target_date,
+                # 'target_date': milestone.target_date,
                 'progress_report': milestone.progress_report,
                 'image_1': milestone.image_1,
                 'image_2': milestone.image_2,
@@ -1638,3 +1640,23 @@ def send_funding_completed_email(investment_pk):
             fail_silently=True,
             html_message=html_message
         )
+
+def send_new_milestone_email(investment_pk, current_site, milestone_pk):
+    investment = Project.objects.get(pk=investment_pk)
+    investors = Group.objects.get(investment_project=investment).get_group_members
+    milestone = ProjectMilestone.objects.get(pk=milestone_pk)
+
+    subject = f'Update: New Milestone Added to "{milestone.project.name}" Investment Project'
+    for investor in investors:
+        html_message = loader.render_to_string(
+            'core/send-milestone-addition-notification.html', {
+            'user': investor.user,
+            'domain': current_site.domain,
+            'project': investment,
+            'milestone_title': milestone.title,
+            'milestone': milestone,
+        }
+        )
+        to_email = f'{investor.user.email}'
+        from_email = settings.EMAIL_HOST_USER
+        send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
