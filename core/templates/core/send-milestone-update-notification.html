@@ -147,20 +147,16 @@
 														</tr>
                                                         <td>
                                                             <h6 style="font-size: 14px; margin: 0; color: #040c04; direction: ltr; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-weight: 500; letter-spacing: normal; line-height: 120%; margin-top: 0; margin-bottom: 0;">
-                                                                <h2 class="tinyMce-placeholder">Update: The 
-                                                                    <span style="font-weight: bold;margin-bottom: 20px;">{{ milestone.title }} </span>Milestone from
-                                                                    <span style="font-weight: bold;margin-bottom: 20px;">{{milestone.project.name}} </span>
-                                                                    Investment Project was updated.
-                                                                </h2>
+                                                                
                                                                 <p style="font-weight: bold;">From Summit Team</p>
                                                                     <p>
                                                                         <p>Dear {{ user.username|title }},</p>
                                                                         <p>
                                                                         We hope this message finds you well. We are writing to inform you that 
                                                                         <span style="font-weight: bold;">{{ milestone.title }} </span>
-                                                                        milestone from 
-                                                                        <span style="font-weight: bold;">{{ milestone.project.name }}</span>
-                                                                         investment project was updated on 
+                                                                        milestone of the investment project 
+                                                                        <span style="font-weight: bold;">"{{ milestone.project.name }}"</span>
+                                                                        was updated on 
                                                                              <span style="font-weight: bold;">{{ milestone.date_updated }}</span>
                                                                              <span>
                                                                                 Click 

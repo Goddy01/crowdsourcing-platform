@@ -1434,7 +1434,7 @@ def reject_send_money_request(request, amount_to_send, recipient, send_money_pk)
     return HttpResponse(f'Your request to send  ₦{amount_to_send} to {recipient.user.username} failed due to disapproval from the owner of this account.')
 
 def add_milestone(request, project_pk):
-    from .tasks import send_new_milestone_email_task
+    from .tasks import send_milestone_email_task
     context = {}
     project = Project.objects.get(pk=project_pk)
     add_milestone_form_errors = None
@@ -1454,11 +1454,12 @@ def add_milestone(request, project_pk):
                 current_site = get_current_site(request)
 
                 # SENDS EMAIL TO EVERY INVESTOR ABOUT THE ADDITION OF A NEW MILESTONE
-                send_new_milestone_email_task.apply_async(
+                send_milestone_email_task.apply_async(
                     kwargs = {
                         'investment_pk': project_pk,
                         'milestone_pk': milestone.pk,
-                        'current_site': current_site.domain
+                        'current_site': current_site.domain,
+                        'type': 'new'
                     },
                     countdown = 10
                 )
@@ -1486,8 +1487,9 @@ def milestone_detail(request, milestone_pk):
     return render(request, 'core/milestone-detail.html', context)
 
 def update_milestone(request, milestone_pk):
+    from .tasks import send_milestone_email_task
     context = {}
-    milestone = get_object_or_404(ProjectMilestone, pk=milestone_pk)
+    milestone = ProjectMilestone.objects.get(pk=milestone_pk)
     context['milestone'] = milestone
     if request.method == 'POST':
         update_milestone_details_form_data = {
@@ -1499,24 +1501,20 @@ def update_milestone(request, milestone_pk):
             milestone.date_updated = datetime.datetime.now()
             milestone.save()
             update_milestone_details_form.save()
+            current_site = get_current_site(request)
 
             # SENDS EMAIL TO EVERY INVESTOR ABOUT THE UPDATE OF THE MILESTONE
-            current_site = get_current_site(request)
-            subject = f'Update: "{milestone.project.name}" Milestone was Updated from "{milestone.project.name}" Investment Project'
-            # investments = Make_Investment.objects.filter(investment__pk=project_pk)
-            investors = Innovator.objects.filter(send_from__investment=milestone.project)
-            for investor in investors:
-                html_message = loader.render_to_string(
-                    'core/send-milestone-update-notification.html', {
-                    'user': investor.user,
-                    'domain': current_site.domain,
-                    'milestone': milestone,
-                }, request=request
-                )
-                to_email = f'{investor.user.email}'
-                from_email = settings.EMAIL_HOST_USER
-                send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
-            messages.success(request, 'The status of the milestone has been updated!')
+            send_milestone_email_task.apply_async(
+                kwargs= {
+                    'investment_pk': milestone.project.pk,
+                    'current_site': current_site.domain,
+                    'milestone_pk': milestone.pk,
+                    'type': 'updated'
+                },
+                countdown=10
+            )
+
+            messages.success(request, 'Milestone has been updated!')
             return redirect('milestone_details', milestone.pk)
     else:
         update_milestone_details_form = UpdateMilestoneDetailsForm(
@@ -1634,23 +1632,39 @@ def send_funding_completed_email(investment_pk):
             html_message=html_message
         )
 
-def send_new_milestone_email(investment_pk, current_site, milestone_pk):
+def send_milestone_email(investment_pk, current_site, milestone_pk, type):
     investment = Project.objects.get(pk=investment_pk)
     investors = Make_Investment.objects.filter(investment__pk=investment_pk).values_list('sender', flat=True).distinct()
     milestone = ProjectMilestone.objects.get(pk=milestone_pk)
 
-    subject = f'Update: New Milestone Added to "{milestone.project.name}" Investment Project'
-    for investor in investors:
-        investor = Innovator.objects.get(pk=investor)
-        html_message = loader.render_to_string(
-            'core/send-milestone-addition-notification.html', {
-            'user': investor.user,
-            'domain': current_site,
-            'project': investment,
-            'milestone_title': milestone.title,
-            'milestone': milestone,
-        }
-        )
-        to_email = f'{investor.user.email}'
-        from_email = settings.EMAIL_HOST_USER
-        send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
+    if type.lower() == 'new':
+        subject = f'Update: New Milestone Added to "{milestone.project.name}" Investment Project by the project owner'
+        for investor in investors:
+            investor = Innovator.objects.get(pk=investor)
+            html_message = loader.render_to_string(
+                'core/send-milestone-addition-notification.html', {
+                'user': investor.user,
+                'domain': current_site,
+                'project': investment,
+                'milestone_title': milestone.title,
+                'milestone': milestone,
+            }
+            )
+            to_email = f'{investor.user.email}'
+            from_email = settings.EMAIL_HOST_USER
+            send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
+
+    elif type.lower() == 'updated':
+        subject = f'Update: "{milestone.title}" Milestone of the project "{milestone.project.name}" was updated by the project owner'
+        for investor in investors:
+            investor = Innovator.objects.get(pk=investor)
+            html_message = loader.render_to_string(
+                'core/send-milestone-update-notification.html', {
+                'user': investor.user,
+                'domain': current_site.domain,
+                'milestone': milestone,
+            },
+            )
+            to_email = f'{investor.user.email}'
+            from_email = settings.EMAIL_HOST_USER
+            send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
