@@ -1437,6 +1437,7 @@ def add_milestone(request, project_pk):
     from .tasks import send_new_milestone_email_task
     context = {}
     project = Project.objects.get(pk=project_pk)
+    add_milestone_form_errors = None
     context['project'] = project
     if request.user.username == project.innovator.user.username:
         add_milestone_form = AddMilestoneForm()
@@ -1444,6 +1445,7 @@ def add_milestone(request, project_pk):
         if request.method == 'POST':
             add_milestone_form = AddMilestoneForm(request.POST or None, request.FILES or None)
             context['add_milestone_form'] = add_milestone_form
+            add_milestone_form_errors = add_milestone_form
             if add_milestone_form.is_valid():
                 add_milestone_form_obj = add_milestone_form.save(commit=False)
                 add_milestone_form_obj.project = project
@@ -1456,7 +1458,7 @@ def add_milestone(request, project_pk):
                     kwargs = {
                         'investment_pk': project_pk,
                         'milestone_pk': milestone.pk,
-                        'current_site': current_site
+                        'current_site': current_site.domain
                     },
                     countdown = 10
                 )
@@ -1634,15 +1636,16 @@ def send_funding_completed_email(investment_pk):
 
 def send_new_milestone_email(investment_pk, current_site, milestone_pk):
     investment = Project.objects.get(pk=investment_pk)
-    investors = Group.objects.get(investment_project=investment).get_group_members
+    investors = Make_Investment.objects.filter(investment__pk=investment_pk).values_list('sender', flat=True).distinct()
     milestone = ProjectMilestone.objects.get(pk=milestone_pk)
 
     subject = f'Update: New Milestone Added to "{milestone.project.name}" Investment Project'
     for investor in investors:
+        investor = Innovator.objects.get(pk=investor)
         html_message = loader.render_to_string(
             'core/send-milestone-addition-notification.html', {
             'user': investor.user,
-            'domain': current_site.domain,
+            'domain': current_site,
             'project': investment,
             'milestone_title': milestone.title,
             'milestone': milestone,
