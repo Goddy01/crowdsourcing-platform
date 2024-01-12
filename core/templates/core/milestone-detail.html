@@ -101,10 +101,6 @@
 				<div class="row mt-3">
 					<div class="col-12">
 						<h3>Project Milestone Gallery</h3>
-						<div class="video-wrapper status-pause">
-							<video id="sample-video" src="{{ milestone.video.url }}" poster="{{ milestone.video.url }}"></video>
-							<a href="#sample-video" class="video-playback"><span class="progress"></span><em class="mdi mdi-play"></em><em class="mdi mdi-pause"></em></a>
-						</div>
                         {% if milestone.image_1 and not milestone.image_2 and not milestone.image_3 %}
 						<div class="gallery gallery-columns-1 d-flex justify-content-center">
                         {% elif milestone.image_1 and milestone.image_2 and not milestone.image_3 %}

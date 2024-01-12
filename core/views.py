@@ -1661,7 +1661,7 @@ def send_milestone_email(investment_pk, current_site, milestone_pk, type):
             html_message = loader.render_to_string(
                 'core/send-milestone-update-notification.html', {
                 'user': investor.user,
-                'domain': current_site.domain,
+                'domain': current_site,
                 'milestone': milestone,
             },
             )
