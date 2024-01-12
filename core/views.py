@@ -1434,6 +1434,7 @@ def reject_send_money_request(request, amount_to_send, recipient, send_money_pk)
     return HttpResponse(f'Your request to send  ₦{amount_to_send} to {recipient.user.username} failed due to disapproval from the owner of this account.')
 
 def add_milestone(request, project_pk):
+    from .tasks import send_new_milestone_email_task
     context = {}
     project = Project.objects.get(pk=project_pk)
     context['project'] = project
@@ -1448,13 +1449,17 @@ def add_milestone(request, project_pk):
                 add_milestone_form_obj.project = project
                 add_milestone_form.save()
                 milestone = ProjectMilestone.objects.filter(project__pk=project_pk).latest('date_added')
+                current_site = get_current_site(request)
 
                 # SENDS EMAIL TO EVERY INVESTOR ABOUT THE ADDITION OF A NEW MILESTONE
-                current_site = get_current_site(request)
-                
-
-                
-                
+                send_new_milestone_email_task.apply_async(
+                    kwargs = {
+                        'investment_pk': project_pk,
+                        'milestone_pk': milestone.pk,
+                        'current_site': current_site
+                    },
+                    countdown = 10
+                )
 
                 messages.success(request, 'Milestone added successfully.')
                 return redirect('project_details', project_pk)
