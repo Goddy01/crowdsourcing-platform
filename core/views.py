@@ -1454,21 +1454,7 @@ def add_milestone(request, project_pk):
                 
 
                 
-                subject = f'Update: New Milestone Added to "{milestone.project.name}" Investment Project'
-                # investments = Make_Investment.objects.filter(investment__pk=project_pk)
-                for investor in investors:
-                    html_message = loader.render_to_string(
-                        'core/send-milestone-addition-notification.html', {
-                        'user': investor.user,
-                        'domain': current_site.domain,
-                        'project': project,
-                        'milestone_title': add_milestone_form.cleaned_data['title'],
-                        'milestone': milestone,
-                    }, request=request
-                    )
-                    to_email = f'{investor.user.email}'
-                    from_email = settings.EMAIL_HOST_USER
-                    send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
+                
 
                 messages.success(request, 'Milestone added successfully.')
                 return redirect('project_details', project_pk)
