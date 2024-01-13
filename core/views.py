@@ -53,6 +53,9 @@ def contact_us(request):
 
 def add_project(request):
     project_creation_request = ''
+    if not request.user.verified:
+        messages.info(request, 'Your account is not yet verified, so cannot post investment projects')
+        return redirect('accounts:edit_profile')
     if request.method == 'POST':
         create_project_form = CreateProjectForm(request.POST or None, request.FILES or None)
         print('BEFORE: ', request.POST.get('business_type'))
