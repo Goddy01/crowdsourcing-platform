@@ -158,6 +158,8 @@ def project_details(request, project_pk):
             context['status_form'] = status_form
             if request.method == 'POST' and 'status' in request.POST:
                 project.status = request.POST.get('status')
+                project.approved_by = moderator
+                project.is_approved = True
                 project.save()
                 # print('broo: ', project.status)
                 messages.success(request, 'Investment details has been updated!')

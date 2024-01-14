@@ -51,14 +51,14 @@ class Project(models.Model):
     investment_deadline = models.DateField()
     completed = models.BooleanField(default=False)
     innovator_user_agreement = models.BooleanField(default=False, null=True, blank=True)
-    certified_by = models.ForeignKey(account_models.Moderator, on_delete=models.CASCADE, null=True, blank=True)
+    approved_by = models.ForeignKey(account_models.Moderator, on_delete=models.CASCADE, null=True, blank=True)
     # PROJECT GALLERY
     image_1 = models.ImageField(upload_to=upload_project_gallery, blank=False, null=False, max_length=500)
     image_2 = models.ImageField(upload_to=upload_project_gallery, blank=False, null=False, max_length=500)
     image_3 = models.ImageField(upload_to=upload_project_gallery, blank=False, null=False, max_length=500)
     video = models.FileField(upload_to=upload_project_gallery,null=True, validators=[FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv'])], max_length=500)
     business_type = models.CharField(max_length=100, blank=True)
-    approved_by = models.ForeignKey(account_models.Moderator, on_delete=models.SET_NULL, null=True, related_name='approved_name', blank=True)
+    is_approved = models.BooleanField(default=False)
 
     @property
     def fund_raised_percentage(self):
