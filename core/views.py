@@ -79,7 +79,6 @@ def add_project(request):
 def projects_list(request):
     current_date = datetime.date.today()
     context = {}
-    # print('ON RE: ', request.META.get('HTTP_REFERER'))
     if request.GET.get('from_expected_return'):
         from_expected_return = request.GET.get('from_expected_return')
         context['from_expected_return'] = from_expected_return
@@ -87,37 +86,41 @@ def projects_list(request):
         to_expected_return = request.GET.get('to_expected_return')
         context['to_expected_return'] = to_expected_return
         request.session['to_expected_return'] = to_expected_return
-        # projects = []
-        # all_projects = []
         if from_expected_return:
-            # print('FROM: ', from_expected_return)
             if to_expected_return:
-                # print('TO: ', to_expected_return)
-                projects = Project.objects.filter(
-                    Q(expected_return__range=(int(from_expected_return), int(to_expected_return)), investment_deadline__gte=current_date, completed=False)
-                )
-                # projects = pagination(request, projects, 4)
+                if request.user.is_moderator:
+                    projects = Project.objects.filter(
+                        Q(expected_return__range=(int(from_expected_return), int(to_expected_return)), investment_deadline__gte=current_date)
+                    )
+                else:
+                    projects = Project.objects.filter(
+                        Q(expected_return__range=(int(from_expected_return), int(to_expected_return)), investment_deadline__gte=current_date, completed=False)
+                    )
             else:
-                projects = Project.objects.filter(
-                    Q(expected_return__gte=int(from_expected_return), investment_deadline__gte=current_date, completed=False)
-                )
-            # for project in all_projects:
-            #     if project.investment_deadline >= current_date:
-            #         projects.append(project)
+                if request.user.is_moderator:
+                    projects = Project.objects.filter(
+                        Q(expected_return__gte=int(from_expected_return), investment_deadline__gte=current_date)
+                    )
+                else:
+                    projects = Project.objects.filter(
+                        Q(expected_return__gte=int(from_expected_return), investment_deadline__gte=current_date, completed=False)
+                    )
+
             projects = pagination(request, projects, 4)
             context['projects'] = projects
     else:
-        # request.GET
-        projects = Project.objects.filter(investment_deadline__gte=current_date, completed=False).order_by('-date_created')
+        if request.user.is_moderator:
+            projects = Project.objects.filter(investment_deadline__gte=current_date).order_by('-date_created')        
+        else:
+            projects = Project.objects.filter(investment_deadline__gte=current_date, completed=False).order_by('-date_created')
         
-        # for project in all_projects:
-        #     if project.investment_deadline >= current_date:
-        #         projects.append(project)
+        
         projects = pagination(request, projects, 4)
         context['projects'] = projects
     return render(request, 'core/projects.html', context)
 
 def project_details(request, project_pk):
+    from .tasks import send_project_approval_status_task
     context = {}
     request.session['project_pk'] = project_pk
     project = Project.objects.get(pk=project_pk)
@@ -153,6 +156,12 @@ def project_details(request, project_pk):
                 project.is_approved = True
                 project.save()
                 messages.success(request, 'Investment details has been updated!')
+                send_project_approval_status_task.apply_async(
+                    kwargs= {
+                        'investment_pk': project_pk
+                    },
+                    countdown=10
+                )
     except:
         pass
     return render(request, 'core/project_details.html', context)
