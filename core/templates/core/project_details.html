@@ -21,9 +21,7 @@
     <ul class="messages">
         {% for message in messages %}
         <li  {% if message.tags %} class="fadeout p-3 text-center {{ message.tags }} " {% endif %} style="list-style: none;"> 
-			{% if request.user.is_innovator %}
 			{{ message }}
-			{% endif %}
 		</li>
         {% endfor %}
     </ul>
