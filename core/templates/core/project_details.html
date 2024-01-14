@@ -252,7 +252,7 @@
 							{% if is_past_deadline %}
 								<button type="submit" name="invest" class="mb-5 button button-primary button-default">The investment deadline of this investment has passed.</button>
 							{% else %}
-								{% if project.status.title == 'Approved' and not project.completed %}
+								{% if project.status|title == 'Approved' and not project.completed %}
 								<form method="POST" id="payForm" action="{% url 'invest' project.pk %}">
 								{% csrf_token %}
 								<div class="mb-3">
@@ -261,9 +261,9 @@
 								<button type="submit" name="invest" class="mb-5 button button-primary button-default">Invest</button>
 								</div>
 								</form>
-								{% elif project.status.title == 'Declined' %}
+								{% elif project.status|title == 'Declined' %}
 								<button type="submit" name="invest" class="mb-5 button button-primary button-default">This project has been declined because it does not adhere to the platform's policy.</button>
-								{% elif project.status.title == 'Yet To be Reviewed' %}
+								{% elif project.status|title == 'Yet To be Reviewed' %}
 								<button type="submit" name="invest" class="mb-5 button button-primary button-default">Wait till the project is approved before you can invest</button>
 								{% endif %}
 								{% if project.completed %}
@@ -275,11 +275,10 @@
 					<form method="POST" action="{% url 'project_details' project.pk %}">
 						{% csrf_token %}
 						<div class="mb-3">
-							<label for="category" class="form-label">Status</label>
 							<!-- <input type="text" name="status" id="status"> -->
 							{{ status_form }}
 						</div>
-						<button type="submit" name="status_form">Submit</button>
+						<button type="submit" class="button button-primary" name="status_form">Submit</button>
 					</form>
 					{% endif %}
 					{% if project.innovator.user.username == request.user.username %}

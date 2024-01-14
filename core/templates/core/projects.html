@@ -21,6 +21,9 @@
 	<div id="content" class="site-content">
 		<main class="site-section section-main">
 			<div class="container">
+				<form action="{% url 'search_projects' %}" method="get">
+					<input class="" name="query" type="text" placeholder="Search projects" value="{% if query %}{{ query }}{% endif %}">
+				</form>
 				<form action="{% url 'projects' %}" class="project-filters" method="GET">
 					<div class="filter-props">
 						<!-- <p class="project-filter filter-status">
@@ -63,9 +66,6 @@
 						<button name="filter" type="submit" class="button-primary"><em class="mdi mdi-filter"></em> Filter projects</button>
 						<button type="reset"><em class="mdi mdi-restart"></em> Reset filters</button>
 					</div> -->
-				</form>
-				<form action="{% url 'search_projects' %}" method="get">
-					<input class="" name="query" type="text" placeholder="Search projects" value="{% if query %}{{ query }}{% endif %}">
 				</form>
 				{% if request.session.search_projects_no_result %}
 				<h3>No investment project matches "{{request.session.project_query}}"</h3>

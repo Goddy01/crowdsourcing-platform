@@ -1662,7 +1662,7 @@ def send_project_approval_status(investment_pk):
     to_email = [f"{investment.innovator.user.email}"]
     subject = f'Hello, {investment.innovator.user.username}.There is an update about an Investment Project you submitted recently.'
     html_message = loader.render_to_string(
-        'core/send-milestone-addition-notification.html', {
+        'core/send-project-approval_status.html', {
         'user': investment.innovator.user,
         'project': investment
     }
