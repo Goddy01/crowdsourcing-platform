@@ -178,7 +178,7 @@ def send_friend_new_msg_alert(new_message, sender, domain, content_type, recipie
             'content_type': 'file'
             }
         )
-    send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=[recipient], fail_silently=True)
+    send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=[recipient], fail_silently=False)
 
 def send_new_group_msg_email_alert(new_message, sender, domain, get_group_members_emails, content_type):
     recipient_list = get_group_members_emails
@@ -210,7 +210,7 @@ def send_new_group_msg_email_alert(new_message, sender, domain, get_group_member
                         'content_type': 'text'
                         }
                     )
-                    send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=[recipient], fail_silently=True)
+                    send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=[recipient], fail_silently=False)
                 elif f'@{recipient_username}' in content.lower():
                     username_index = content.lower().find(f'@{recipient_username}')
                     username_index += (len(f'@{recipient_username}') - 1)
@@ -231,7 +231,7 @@ def send_new_group_msg_email_alert(new_message, sender, domain, get_group_member
                                 'content_type': 'text'
                             }
                         )
-                        send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=[recipient], fail_silently=True)
+                        send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=[recipient], fail_silently=False)
                     else:
                         html_message = render_to_string(
                             'chat/new_msg_notif.html', {
@@ -247,7 +247,7 @@ def send_new_group_msg_email_alert(new_message, sender, domain, get_group_member
                                 'content_type': 'text'
                             }
                         )
-                        send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=[recipient], fail_silently=True)
+                        send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=[recipient], fail_silently=False)
 
             elif content_type == 'file':
                 html_message = render_to_string(
@@ -263,4 +263,4 @@ def send_new_group_msg_email_alert(new_message, sender, domain, get_group_member
                             'content_type': 'file'
                             }
                         )
-                send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=recipient_list, fail_silently=True)
+                send_mail(subject=subject, message='', html_message=html_message, from_email=from_email, recipient_list=recipient_list, fail_silently=False)

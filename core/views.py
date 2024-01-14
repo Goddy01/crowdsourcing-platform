@@ -34,7 +34,7 @@ import datetime
 from django.db.models import Count
 
 load_dotenv()
-
+from_email = settings.EMAIL_HOST_USER
 
 # Create your views here.
 def home(request):
@@ -125,8 +125,6 @@ def project_details(request, project_pk):
     context['project'] = project
     date_now = datetime.datetime.now().date()
     context['is_past_deadline'] = date_now > project.investment_deadline
-    # if not request.user.is_authenticated:
-    #     return redirect('accounts:innovator_login')
     
     try:
         if request.user.is_innovator:
@@ -135,7 +133,6 @@ def project_details(request, project_pk):
             context['investor_1'] = investor_1
 
             if request.method == 'POST' and 'date-filter' in request.POST:
-                # print('3')
                 date_from = request.POST.get('date-from')
                 date_to = request.POST.get('date-to')
                 investors = Make_Investment.objects.filter(investment__pk=project_pk, date_sent__date__range=(date_from, date_to))
@@ -143,25 +140,18 @@ def project_details(request, project_pk):
                 context['date_to'] = date_to
             else:
                 investors = Make_Investment.objects.filter(investment__pk=project_pk).order_by('-date_sent')
-                # context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
-                # print('4')
             context['investors'] = investors
 
         else:
-            # print('5')
             moderator = Moderator.objects.get(user__pk=request.user.pk)
             context['moderator'] = moderator
-            # print('YO: ', request.POST.get('status'))
             status_form = InvestmentStatusForm()
-            # print('STATUS_FORM: ', status_form)
-            # print('brev')
             context['status_form'] = status_form
             if request.method == 'POST' and 'status' in request.POST:
                 project.status = request.POST.get('status')
                 project.approved_by = moderator
                 project.is_approved = True
                 project.save()
-                # print('broo: ', project.status)
                 messages.success(request, 'Investment details has been updated!')
     except:
         pass
@@ -265,8 +255,7 @@ def pay_contributor(request, contribution_pk):
         }, request=request
         )
         to_email = f'{request.user.email}'
-        from_email = settings.EMAIL_HOST_USER
-        send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
+        send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=False, html_message=html_message)
         messages.success(request, f'Your request to transfer money to {recipient.user.username} has been received. You will receive an email for confirmation, soon.')
         # Create the link to your one_time_link view, including the unique_token
     else:
@@ -735,8 +724,7 @@ def send_money(request):
                     }, request=request
                     )
                     to_email = f'{request.user.email}'
-                    from_email = settings.EMAIL_HOST_USER
-                    send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
+                    send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=False, html_message=html_message)
                     messages.success(request, f'Your request to transfer money to {recipient.user.username} has been received. You will receive an email for confirmation, soon.')
                     # Create the link to your one_time_link view, including the unique_token
                 else:
@@ -1004,8 +992,7 @@ def send_withdrawal_request_confirmation_email(request, pk, type):
         }, request=request
         )
         to_email = f'{withdrawal_request.innovator.user.email}'
-        from_email = settings.EMAIL_HOST_USER
-        send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
+        send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=False, html_message=html_message)
         request.session['withdrawal_request_pk'] = withdrawal_request.pk
         request.session['withdrawal_request_type'] = 'p_f'
         request.session.save()
@@ -1034,8 +1021,7 @@ def send_withdrawal_request_confirmation_email(request, pk, type):
         }, request=request
         )
         to_email = f'{withdrawal_request.innovator.user.email}'
-        from_email = settings.EMAIL_HOST_USER
-        send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
+        send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=False, html_message=html_message)
         request.session['withdrawal_request_pk'] = withdrawal_request.pk
         request.session['withdrawal_request_type'] = 'p_c_c_f'
         request.session.save()
@@ -1072,8 +1058,7 @@ def set_withdrawal_request_status(request, pk, type):
                     }
                     )
                     to_email = f'{withdrawal_request.innovator.user.email}'
-                    from_email = settings.EMAIL_HOST_USER
-                    send_mail(subject, from_email, [to_email], fail_silently=True, html_message=html_message)
+                    send_mail(subject, from_email, [to_email], fail_silently=False, html_message=html_message)
                     # request.session['withdrawal_request_pk'] = withdrawal_request.pk
                 else:
                     withdrawal_request.is_approved = not withdrawal_request.is_approved
@@ -1103,8 +1088,7 @@ def set_withdrawal_request_status(request, pk, type):
                     }
                     )
                     to_email = f'{withdrawal_request.innovator.user.email}'
-                    from_email = settings.EMAIL_HOST_USER
-                    send_mail(subject, from_email, [to_email], fail_silently=True)
+                    send_mail(subject, from_email, [to_email], fail_silently=False)
                     # request.session['withdrawal_request_pk'] = withdrawal_request.pk
                 else:
                     withdrawal_request.is_approved = not withdrawal_request.is_approved
@@ -1175,8 +1159,7 @@ def send_kbq(request, withdrawal_pk, type):
         }, request=request
         )
         to_email = f'{withdrawal_request.innovator.user.email}'
-        from_email = settings.EMAIL_HOST_USER
-        send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
+        send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=False, html_message=html_message)
         messages.success(request, 'Confirmation email has successfully been sent. ✅')
         return redirect('withdrawal_requests')
     elif type == 'p_c_c_f':
@@ -1195,8 +1178,7 @@ def send_kbq(request, withdrawal_pk, type):
         }, request=request
         )
         to_email = f'{withdrawal_request.innovator.user.email}'
-        from_email = settings.EMAIL_HOST_USER
-        send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
+        send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=False, html_message=html_message)
         messages.success(request, 'Confirmation email has successfully been sent. ✅')
         return redirect('withdrawal_requests')
     return render(request, 'core/withdrawal-requests.html')
@@ -1289,8 +1271,7 @@ def approve_withdrawal_request(request, withdrawal_pk, type):
             }, request=request
             )
             to_email = f'{withdrawal_request.innovator.user.email}'
-            from_email = settings.EMAIL_HOST_USER
-            send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
+            send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=False, html_message=html_message)
 
             messages.success(request, 'Withdrawal request has been successfully approved')
             return redirect('withdrawal_requests')
@@ -1317,8 +1298,7 @@ def approve_withdrawal_request(request, withdrawal_pk, type):
             }, request=request
             )
             to_email = f'{withdrawal_request.innovator.user.email}'
-            from_email = settings.EMAIL_HOST_USER
-            send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
+            send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=False, html_message=html_message)
 
             messages.success(request, 'Withdrawal request has been successfully approved')
             return redirect('withdrawal_requests')
@@ -1353,8 +1333,7 @@ def reject_withdrawal_request(request, withdrawal_pk, type):
             }, request=request
             )
             to_email = f'{withdrawal_request.innovator.user.email}'
-            from_email = settings.EMAIL_HOST_USER
-            send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
+            send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=False, html_message=html_message)
 
             messages.success(request, 'Withdrawal request has been successfully rejected')
             return redirect('withdrawal_requests')
@@ -1381,8 +1360,7 @@ def reject_withdrawal_request(request, withdrawal_pk, type):
             }, request=request
             )
             to_email = f'{withdrawal_request.innovator.user.email}'
-            from_email = settings.EMAIL_HOST_USER
-            send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
+            send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=False, html_message=html_message)
 
             messages.success(request, 'Withdrawal request has been successfully rejected')
             return redirect('withdrawal_requests')
@@ -1602,13 +1580,12 @@ def send_funding_completed_email(investment_pk):
         }
     )
     to_email = [f'{investment_owner.user.email}']
-    from_email = settings.EMAIL_HOST_USER
     send_mail(
         subject=subject,
         message=strip_tags(html_message),
         from_email=from_email,
         recipient_list=to_email,
-        fail_silently=True,
+        fail_silently=False,
         html_message=html_message
     )
 
@@ -1627,13 +1604,12 @@ def send_funding_completed_email(investment_pk):
             }
         )
         to_email = [f'{recipient.email}']
-        from_email = settings.EMAIL_HOST_USER
         send_mail(
             subject=subject,
             message=strip_tags(html_message),
             from_email=from_email,
             recipient_list=to_email,
-            fail_silently=True,
+            fail_silently=False,
             html_message=html_message
         )
 
@@ -1656,8 +1632,7 @@ def send_milestone_email(investment_pk, current_site, milestone_pk, type):
             }
             )
             to_email = f'{investor.user.email}'
-            from_email = settings.EMAIL_HOST_USER
-            send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
+            send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=False, html_message=html_message)
 
     elif type.lower() == 'updated':
         subject = f'Update: "{milestone.title}" Milestone of the project "{milestone.project.name}" was updated by the project owner'
@@ -1671,5 +1646,16 @@ def send_milestone_email(investment_pk, current_site, milestone_pk, type):
             },
             )
             to_email = f'{investor.user.email}'
-            from_email = settings.EMAIL_HOST_USER
-            send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
+            send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=False, html_message=html_message)
+
+def send_project_approval_status(investment_pk):
+    investment = Project.objects.get(pk=investment_pk)
+    to_email = [f"{investment.innovator.user.email}"]
+    subject = f'Hello, {investment.innovator.user.username}.There is an update about an Investment Project you submitted recently.'
+    html_message = loader.render_to_string(
+        'core/send-milestone-addition-notification.html', {
+        'user': investment.innovator.user,
+        'project': investment
+    }
+    )
+    send_mail(subject, message=strip_tags(html_message), from_email=from_email, recipient_list=to_email, fail_silently=False, html_message=html_message)

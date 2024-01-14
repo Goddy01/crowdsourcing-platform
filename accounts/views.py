@@ -35,7 +35,9 @@ from core.models import Make_Investment
 import requests
 
 
-# Create your views here.
+
+from_email = settings.EMAIL_HOST_USER
+
 def activation_sent_view(request):
     return render(request, 'accounts/activation_sent.html')
 
@@ -66,8 +68,7 @@ def innovator_sign_up(request):
                 })
                 to_email = [form.cleaned_data.get('email')]
                 context['firstname'] = request.POST.get('first_name')
-                from_email = settings.EMAIL_HOST_USER
-                send_mail(subject, message, from_email, to_email, fail_silently=True)
+                send_mail(subject, message, from_email, to_email, fail_silently=False)
                 return redirect('accounts:activation_sent')
     else:
         form = InnovatorSignUpForm()
@@ -163,8 +164,7 @@ def moderator_sign_up(request):
                             'password': f"moderator_{request.POST.get('last_name')}",
                         })
                         to_email = [request.POST.get('email')]
-                        from_email = settings.EMAIL_HOST_USER
-                        send_mail(subject, message, from_email, to_email, fail_silently=True)
+                        send_mail(subject, message, from_email, to_email, fail_silently=False)
                         return redirect('accounts:moderator_account_setup_sent')
             else:
                 mod_form = ModeratorSignUpForm()
@@ -681,8 +681,7 @@ def resend_email_activation(request):
     })
     to_email = [request.user.email]
     context['firstname'] = request.user.first_name
-    from_email = settings.EMAIL_HOST_USER
-    send_mail(subject, message, from_email, to_email, fail_silently=True)
+    send_mail(subject, message, from_email, to_email, fail_silently=False)
     return redirect('accounts:activation_sent')
 
 def remove_pfp(request):
@@ -787,8 +786,7 @@ def send_connection_request(request, recipient_pk):
                 }, request=request
                 )
                 to_email = f'{recipient.user.email}'
-                from_email = settings.EMAIL_HOST_USER
-                send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
+                send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=False, html_message=html_message)
             else:
                 
                 ConnectionRequest.objects.create(
@@ -809,8 +807,7 @@ def send_connection_request(request, recipient_pk):
                 }, request=request
                 )
                 to_email = f'{recipient.user.email}'
-                from_email = settings.EMAIL_HOST_USER
-                send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=True, html_message=html_message)
+                send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=False, html_message=html_message)
             messages.success(request, 'Connection Request sent. Kindly wait for their response.')
             return redirect('accounts:profile_with_arg', recipient_pk)
     return render(request, 'accounts/others_profile.html')
