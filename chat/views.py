@@ -12,6 +12,7 @@ from accounts.models import Connection, Innovator
 from .models import Chat, Group, GroupChat
 from django.core.serializers import serialize
 from django.conf import settings
+from django.http import HttpResponse
 
 from_email = settings.EMAIL_HOST_USER
 
@@ -20,6 +21,8 @@ def index(request):
 
 @login_required
 def room(request, room_name=None):
+    if request.user.is_moderator:
+        return HttpResponse('Chat feature for moderators is coming soon!!!')
     if room_name is not None:
         room_name = mark_safe(json.dumps(room_name))
     user = Innovator.objects.get(user__username=request.user.username)
@@ -28,11 +31,6 @@ def room(request, room_name=None):
     )
     conversations = []
 
-    # for friend in friends_list:
-    #     if friend.user1 == user:
-    #         conversations.append(friend.user2)
-    #     else:
-    #         conversations.append(friend.user1)
     return render(request, 'chat/room.html', {
         'username': request.user.username,
         'room_name_json': room_name,
