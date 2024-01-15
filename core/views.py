@@ -445,8 +445,6 @@ def invest(request, investment_pk):
             current_investment = Project.objects.get(pk=investment_pk)
             if current_investment.amount_left == 0 and current_investment.fund_raised == current_investment.target:
                 print('reached')
-                current_investment.completed = True
-                current_investment.save(update_fields=['completed'])
                 current_site = get_current_site(request)
 
                 # SENDS EMAIL ABOUT THAT THE FUNDING GOAL HAS BEEN REACHED TO THE PROJECT OWNER AND THE PROJECT INVESTORS
@@ -1670,7 +1668,6 @@ def send_project_approval_status(investment_pk):
     send_mail(subject, message=strip_tags(html_message), from_email=from_email, recipient_list=to_email, fail_silently=False, html_message=html_message)
 
 def pay_investors(investment_pk):
-    print('YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO')
     project = Project.objects.get(pk=investment_pk)
     project_owner = project.innovator
     
@@ -1739,6 +1736,9 @@ def pay_investors(investment_pk):
         )
 
         send_mail(subject, message=strip_tags(html_message), recipient_list=to_email, fail_silently=False, html_message=html_message, from_email=from_email)
+
+        project.completed = True
+        project.save(update_fields=['completed'])
     # return HttpResponse('Payment of all ROIs is being processed.')
 
 
