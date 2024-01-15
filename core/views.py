@@ -1669,24 +1669,12 @@ def send_project_approval_status(investment_pk):
     )
     send_mail(subject, message=strip_tags(html_message), from_email=from_email, recipient_list=to_email, fail_silently=False, html_message=html_message)
 
-def pay_investors(request, investment_pk):
-    project_owner = Innovator.objects.get(user=request.user)
+def pay_investors(investment_pk):
+    print('YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO')
     project = Project.objects.get(pk=investment_pk)
-    
-    total_amount_to_pay = 0
-
-    if request.user != project.innovator.user:
-        return HttpResponse('You are not the project owner')
+    project_owner = project.innovator
     
     investments_made = Make_Investment.objects.filter(investment=project)
-
-    for investment in investments_made:
-        total_amount_to_pay += investment.expected_return
-
-    if project_owner.account_balance < total_amount_to_pay:
-        amount_remaining = total_amount_to_pay - project_owner.account_balance
-        messages.error(request, f'You do not have the sufficient funds to pay all investors. Deposit ₦{amount_remaining} more in order to be able to pay all investors.')
-        return redirect('core:deposit')
 
     for investment in investments_made:
         investor = investment.sender
@@ -1748,14 +1736,33 @@ def pay_investors(request, investment_pk):
         )
 
         send_mail(subject, message=strip_tags(html_message), recipient_list=to_email, fail_silently=False, html_message=html_message, from_email=from_email)
+    # return HttpResponse('Payment of all ROIs is being processed.')
+
 
 def payment_of_roi(request, investment_pk):
+    project = Project.objects.get(pk=investment_pk)
     from .tasks import pay_investors_task
+
+    if request.user != project.innovator.user:
+        print('! ENOUGH')
+        return HttpResponse('You are not the project owner.')
+    
+    total_amount_to_pay = 0
+
+    
+    investments_made = Make_Investment.objects.filter(investment=project)
+
+    for investment in investments_made:
+        total_amount_to_pay += investment.expected_return
+
+    if project.innovator.account_balance < total_amount_to_pay:
+        amount_remaining = total_amount_to_pay - project.innovator.account_balance
+        return HttpResponse(f'Insufficent Funds. Deposit ₦{amount_remaining} more in order to be able to pay all investors.')
 
     pay_investors_task.apply_async(
         kwargs= {
-            'request': request,
             'investment_pk': investment_pk
-        }
+        },
+        countdown=10
     )
-    return render(request, 'core/investment-capital.html')
+    return redirect('investment_capital')

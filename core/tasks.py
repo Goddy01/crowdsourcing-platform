@@ -31,7 +31,6 @@ def send_project_approval_status_task(**kwargs):
 
 @shared_task
 def pay_investors_task(**kwargs):
-    request = kwargs.get('request')
     investment_pk = kwargs.get('investment_pk')
     logger.info('PAYMENT OF INVESTORS INITIATED')
-    return pay_investors(request=request, investment_pk=investment_pk)
+    return pay_investors(investment_pk=investment_pk)

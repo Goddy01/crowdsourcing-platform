@@ -49,6 +49,7 @@
             <th class="text-success fw-bold">Term Months</th>
             <th class="text-success fw-bold">Sector</th>
             <th class="text-success fw-bold"></th>
+            <th class="text-success fw-bold"></th>
           </tr>
         </thead>
         <tbody>
@@ -266,7 +267,7 @@
                 {% endif %}
             </td>
             <td class="">
-                {%if project.amount_left is None %}
+                {% if project.amount_left is None %}
                 ₦0
                 {% else %}
                 ₦{{ project.amount_left }}
@@ -298,6 +299,15 @@
                     </ul>
                 </div>
             </td>
+            {% if project.fund_raised == project.target and project.amount_left == 0 %}
+            <td>
+                <a href="{% url 'payment_of_ROIs' project.pk %}">
+                    <button class="button button-primary" style="white-space: nowrap;">
+                        PAY INVESTORS
+                    </button>
+                </a>
+            </td>
+            {% endif %}
           </tr>
           {% endfor %}
         </tbody>
