@@ -63,6 +63,7 @@ urlpatterns = [
     path('<milestone_pk>/update-milestone', views.update_milestone, name='update_milestone'),
     path('search-projects', views.search_projects, name='search_projects'),
     path('search-innovations', views.search_innovations, name='search_innovations'),
+    path('<investment_pk>/pay-ROIs', views.payment_of_roi, name='payment_of_ROIs'),
     
     # path('contribution/reply/<innovation_pk>/', views.reply, name='reply'),
 

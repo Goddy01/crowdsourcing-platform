@@ -1748,3 +1748,14 @@ def pay_investors(request, investment_pk):
         )
 
         send_mail(subject, message=strip_tags(html_message), recipient_list=to_email, fail_silently=False, html_message=html_message, from_email=from_email)
+
+def payment_of_roi(request, investment_pk):
+    from .tasks import pay_investors_task
+
+    pay_investors_task.apply_async(
+        kwargs= {
+            'request': request,
+            'investment_pk': investment_pk
+        }
+    )
+    return render(request, 'core/investment-capital.html')
