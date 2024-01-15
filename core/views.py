@@ -1700,7 +1700,8 @@ def pay_investors(investment_pk):
                 'user': user,
                 'amount_paid': investment.expected_return,
                 'recipient': investor.user,
-                'date': project_owner_transaction.date_generated
+                'date': project_owner_transaction.date_generated,
+                'project': project
             }
         )
         # subject = f'You made payment of ROI(return of investment) of ₦{investment.expected_return} to {investment.sender.user.get_full_name} on {project_owner_transaction.date_generated}'
@@ -1731,7 +1732,8 @@ def pay_investors(investment_pk):
                 'user': user,
                 'amount_received': investment.expected_return,
                 'sender': project_owner.user,
-                'date': investor_transaction.date_generated
+                'date': investor_transaction.date_generated,
+                'investment': investment
             }
         )
 
