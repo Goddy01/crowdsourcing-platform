@@ -30,6 +30,21 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
 
+{% if messages %}
+<div class="col-lg-8 col-xl-5 toastDiv mt-5 mx-auto">
+    <!-- Then put toasts within -->
+    <div class="card toast mb-2 bg-gray animate__animated animate__pulse" role="alert" data-delay="10" aria-live="assertive" aria-atomic="true" data-autohide="false" style="margin: auto">
+    <div class="toast-body text-white m-2">
+        <ul class="messages">
+            {% for message in messages %}
+            <li {% if message.tags == 'alert-success' %} class="text-success" {% endif %} style="list-style: disc;">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    </div>
+</div>
+{% endif %}
+
 <div id="loading">
     <img id="loading-image" src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/e8305169321565.5b7d0cbe717fe.gif" alt="Loading..." />
 </div>
@@ -322,6 +337,15 @@
     function OpenBootstrapPopup() {
         $("#Modal").modal('show');
     }
-
 </script>
+
+<script>
+    $(document).ready(function(){
+        $('.toast').toast('show');
+    });
+    
+    setTimeout(function() {
+        $('.toast').toast('hide')
+    }, 8000)
+    </script>
 {% endblock content %}

@@ -1747,7 +1747,6 @@ def payment_of_roi(request, investment_pk):
     from .tasks import pay_investors_task
 
     if request.user != project.innovator.user:
-        print('! ENOUGH')
         return HttpResponse('You are not the project owner.')
     
     if not project.completed:
@@ -1768,6 +1767,7 @@ def payment_of_roi(request, investment_pk):
             },
             countdown=10
         )
+        messages.success(request, 'Your request to pay all investors of this project is being processed!')
         return redirect('investment_capital')
     else:
         return HttpResponse('This investment project has been completed')
