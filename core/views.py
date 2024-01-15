@@ -1668,3 +1668,83 @@ def send_project_approval_status(investment_pk):
     }
     )
     send_mail(subject, message=strip_tags(html_message), from_email=from_email, recipient_list=to_email, fail_silently=False, html_message=html_message)
+
+def pay_investors(request, investment_pk):
+    project_owner = Innovator.objects.get(user=request.user)
+    project = Project.objects.get(pk=investment_pk)
+    
+    total_amount_to_pay = 0
+
+    if request.user != project.innovator.user:
+        return HttpResponse('You are not the project owner')
+    
+    investments_made = Make_Investment.objects.filter(investment=project)
+
+    for investment in investments_made:
+        total_amount_to_pay += investment.expected_return
+
+    if project_owner.account_balance < total_amount_to_pay:
+        amount_remaining = total_amount_to_pay - project_owner.account_balance
+        messages.error(request, f'You do not have the sufficient funds to pay all investors. Deposit ₦{amount_remaining} more in order to be able to pay all investors.')
+        return redirect('core:deposit')
+
+    for investment in investments_made:
+        investor = investment.sender
+
+        # FOR PROJECT OWNER
+        project_owner_transaction = Transaction.objects.create(
+            owner = project_owner,
+            description = f'You sent ₦{investment.expected_return} to {investment.sender.user.get_full_name} as their ROI on their investment of  ₦{investment.amount} in {investment.name} project.',
+            successful = True,
+            amount = investment.expected_return,
+            pre_balance = project_owner.account_balance,
+            post_balance = project_owner.account_balance - investment.expected_return,
+            type = 'OUTGOING - PAYMENT OF ROI')
+        project_owner.account_balance -= investment.expected_return
+        project_owner.save(update_fields=['account_balance'])
+
+        # EMAIL FOR PROJECT SENDER
+        subject = f'You made payment of ROI(return of investment) to {investment.sender.user.get_full_name()}.'
+        to_email = [f'{project_owner.user.email}']
+        user = project_owner.user
+        html_message = loader.render_to_string(
+            'core/project-owner-roi-payment.html',{
+                'user': user,
+                'amount_paid': investment.expected_return,
+                'recipient': investor.user,
+                'date': project_owner_transaction.date_generated
+            }
+        )
+        # subject = f'You made payment of ROI(return of investment) of ₦{investment.expected_return} to {investment.sender.user.get_full_name} on {project_owner_transaction.date_generated}'
+
+        send_mail(subject, message=strip_tags(html_message), recipient_list=to_email, fail_silently=False, html_message=html_message, from_email=from_email)
+
+
+
+        # FOR INVESTOR
+        investor_transaction = Transaction.objects.create(
+            owner = investor,
+            description = f'You received ₦{investment.expected_return} from {investment.investment.innovator.user.get_full_name()} as your ROI(return of investment) on "{investment.investment.name}" investment project that you invested in on {investment.date_sent}.',
+            successful = True,
+            amount = investment.expected_return,
+            pre_balance = investor.account_balance,
+            post_balance = investor.account_balance + investment.expected_return,
+            type = 'INCOMING - PAYMENT OF ROI',
+            reference_code = project_owner_transaction.reference_code
+        )
+        investor.account_balance += investment.expected_return
+        investor.save(update_fields=['account_balance'])
+        # EMAIL FOR INVESTOR
+        subject = f'You received ₦{investment.expected_return} from {project_owner.user.get_full_name()} as payment of ROI(return of investment).'
+        to_email = [f'{investor.user.email}']
+        user = investor.user
+        html_message = loader.render_to_string(
+            'core/investor-roi-payment.html',{
+                'user': user,
+                'amount_received': investment.expected_return,
+                'sender': project_owner.user,
+                'date': investor_transaction.date_generated
+            }
+        )
+
+        send_mail(subject, message=strip_tags(html_message), recipient_list=to_email, fail_silently=False, html_message=html_message, from_email=from_email)
