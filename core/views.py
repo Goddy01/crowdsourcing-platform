@@ -1682,7 +1682,7 @@ def pay_investors(investment_pk):
         # FOR PROJECT OWNER
         project_owner_transaction = Transaction.objects.create(
             owner = project_owner,
-            description = f'You sent ₦{investment.expected_return} to {investment.sender.user.get_full_name} as their ROI on their investment of  ₦{investment.amount} in {investment.name} project.',
+            description = f'You sent ₦{investment.expected_return} to {investment.sender.user.get_full_name} as their ROI on their investment of  ₦{investment.amount} in {investment.investment.name} project.',
             successful = True,
             amount = investment.expected_return,
             pre_balance = project_owner.account_balance,
@@ -1702,6 +1702,7 @@ def pay_investors(investment_pk):
                 'recipient': investor.user,
                 'date': project_owner_transaction.date_generated,
                 'project': project,
+                'investment': investment
             }
         )
         # subject = f'You made payment of ROI(return of investment) of ₦{investment.expected_return} to {investment.sender.user.get_full_name} on {project_owner_transaction.date_generated}'
@@ -1724,7 +1725,7 @@ def pay_investors(investment_pk):
         investor.account_balance += investment.expected_return
         investor.save(update_fields=['account_balance'])
         # EMAIL FOR INVESTOR
-        subject = f'You received ₦{investment.expected_return} from {project_owner.user.get_full_name()} as payment of ROI(return of investment).'
+        subject = f'You received ₦{investment.expected_return} from {project_owner.user.get_full_name()} as payment of ROI(return of investment) on {investment.investment.name} investment project.'
         to_email = [f'{investor.user.email}']
         user = investor.user
         html_message = loader.render_to_string(
@@ -1749,22 +1750,24 @@ def payment_of_roi(request, investment_pk):
         print('! ENOUGH')
         return HttpResponse('You are not the project owner.')
     
-    total_amount_to_pay = 0
+    if not project.completed:
+        total_amount_to_pay = 0
+        
+        investments_made = Make_Investment.objects.filter(investment=project)
 
-    
-    investments_made = Make_Investment.objects.filter(investment=project)
+        for investment in investments_made:
+            total_amount_to_pay += investment.expected_return
 
-    for investment in investments_made:
-        total_amount_to_pay += investment.expected_return
+        if project.innovator.account_balance < total_amount_to_pay:
+            amount_remaining = total_amount_to_pay - project.innovator.account_balance
+            return HttpResponse(f'Insufficent Funds. Deposit ₦{amount_remaining} more in order to be able to pay all investors.')
 
-    if project.innovator.account_balance < total_amount_to_pay:
-        amount_remaining = total_amount_to_pay - project.innovator.account_balance
-        return HttpResponse(f'Insufficent Funds. Deposit ₦{amount_remaining} more in order to be able to pay all investors.')
-
-    pay_investors_task.apply_async(
-        kwargs= {
-            'investment_pk': investment_pk
-        },
-        countdown=10
-    )
-    return redirect('investment_capital')
+        pay_investors_task.apply_async(
+            kwargs= {
+                'investment_pk': investment_pk
+            },
+            countdown=10
+        )
+        return redirect('investment_capital')
+    else:
+        return HttpResponse('This investment project has been completed')

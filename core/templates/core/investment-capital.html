@@ -299,7 +299,7 @@
                     </ul>
                 </div>
             </td>
-            {% if project.fund_raised == project.target and project.amount_left == 0 %}
+            {% if project.fund_raised == project.target and project.amount_left == 0 and project.completed and project.innovator.user == request.user %}
             <td>
                 <a href="{% url 'payment_of_ROIs' project.pk %}">
                     <button class="button button-primary" style="white-space: nowrap;">
