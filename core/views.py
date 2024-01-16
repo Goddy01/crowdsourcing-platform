@@ -90,7 +90,7 @@ def projects_list(request):
             if to_expected_return:
                 if request.user.is_moderator:
                     projects = Project.objects.filter(
-                        Q(expected_return__range=(int(from_expected_return), int(to_expected_return)), investment_deadline__gte=current_date)
+                        Q(expected_return__range=(int(from_expected_return), int(to_expected_return)))
                     )
                 else:
                     projects = Project.objects.filter(
@@ -99,7 +99,7 @@ def projects_list(request):
             else:
                 if request.user.is_moderator:
                     projects = Project.objects.filter(
-                        Q(expected_return__gte=int(from_expected_return), investment_deadline__gte=current_date)
+                        Q(expected_return__gte=int(from_expected_return))
                     )
                 else:
                     projects = Project.objects.filter(
@@ -110,7 +110,7 @@ def projects_list(request):
             context['projects'] = projects
     else:
         if request.user.is_moderator:
-            projects = Project.objects.filter(investment_deadline__gte=current_date).order_by('-date_created')        
+            projects = Project.objects.filter().order_by('-date_created')        
         else:
             projects = Project.objects.filter(investment_deadline__gte=current_date, completed=False).order_by('-date_created')
         

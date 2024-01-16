@@ -122,13 +122,13 @@
 							</div>
 							<div class="project-progress">
 								<div class="progress-bar">
-									<div class="progress-current" style="width:48.665%"></div>
-									<div class="progress-minimum" style="width:62.5%">
+									<div class="progress-current" style="width:{{ project.fund_raised_percentage }}%;background-color: green;"></div>
+									<!-- <div class="progress-minimum" style="width:62.5%">
 										<div class="progress-minimum-pointer">
 											<span class="project-minimum-goal-info">Min<span class="screen-reader-text">imum</span> goal</span>
 											<span class="project-minimum-goal-amount"><span class="currency-sign">₦</span>25 000</span>
 										</div>
-									</div>
+									</div> -->
 								</div>
 								<div class="progress-info">
 									<div class="progress-current-amount"><strong><span class="currency-sign">₦</span>
@@ -138,13 +138,11 @@
 										0
 										{% endif %}
 									</strong> invested</div>
-									<div class="progress-amount-left"><strong><span class="currency-sign">₦</span>
-										{% if project.amount_left is None %}
+									<div class="progress-amount-left">
+										Target:
+										<strong><span class="currency-sign">₦</span>
 										{{ project.target }}
-										{% else %}
-										0
-										{% endif %}
-									</strong> left
+									</strong>
 									</div>
 								</div>
 							</div>
