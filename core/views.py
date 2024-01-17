@@ -785,16 +785,6 @@ def withdraw_project_funds(request, project_pk):
                 post_balance = project.fund_raised - withdraw_amount
             )
 
-            Transaction.objects.create(
-                owner=Innovator.objects.get(user__pk=request.user.pk),
-                description= f"You made a withdrawal of ₦{withdraw_amount} from {project.name}'s funds into {account_number}-{bank_name}",
-                successful = not False,
-                reference_code = withdraw_project_funds.reference_code,
-                amount = withdraw_amount,
-                pre_balance=project.fund_raised,
-                post_balance = project.fund_raised - withdraw_amount,
-                type = 'WITHDRAWAL',
-            )
             project.fund_raised -= withdraw_amount
             project.save()
             messages.success(request, f'You have successfully made a request for withdrawal from the {project.name.title()} project funds')
@@ -1130,6 +1120,17 @@ def confirm_withdrawal_request(request, type, withdrawal_pk, response):
                 withdrawal_request.confirmation = True
                 withdrawal_request.confirmation_clicked = True
                 withdrawal_request.save()
+
+                Transaction.objects.create(
+                owner=withdrawal_request.innovator,
+                description= f"You made a withdrawal of ₦{withdrawal_request.amount} from {withdrawal_request.project.name}'s funds into {withdrawal_request.account_number}-{withdrawal_request.bank_name}",
+                successful = not False,
+                reference_code = withdrawal_request.reference_code,
+                amount = withdrawal_request.amount,
+                pre_balance=withdrawal_request.project.fund_raised,
+                post_balance = withdrawal_request.project.fund_raised - withdrawal_request.amount,
+                type = 'WITHDRAWAL',
+            )
                 return HttpResponse('Thanks for your confirmation. Payment will be made soon.')
             else:
                 withdrawal_request.confirmation = False
@@ -1814,3 +1815,19 @@ def send_money_2(amount_to_send, sender_pk, recipient_pk, sender_prebalance, sen
     )
     to_email = f'{sender.user.email}'
     send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=False, html_message=html_message)
+
+def notify_investors_of_project_fund_withdrawal(withdrawal_pk):
+    withdrawal_request = WithdrawProjectFunds.objects.get(pk=withdrawal_pk)
+    investors_emails = Make_Investment.objects.filter(investment=withdrawal_request.project).values_list('sender__user_email', flat=True).distinct()
+
+    subject = "The Project Manager of An Investment Project You Invested Has Requested For Withdrawal of the Project Funds"
+    
+    html_message = loader.render_to_string(
+        'core/notify_investors_of_project_fund_withdrawal.html', {
+            'project_manager_name': withdrawal_request.project.innovator.user.get_full_name(),
+            'amount_requested': withdrawal_request.amount,
+            'date_requested': withdrawal_request.date,
+        }
+    )
+
+    send_mail(subject, message=strip_tags(html_message), recipient_list=investors_emails, fail_silently=False, from_email=from_email, html_message=html_message)
