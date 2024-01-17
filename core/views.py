@@ -1407,7 +1407,7 @@ def approve_send_money_request(request, sender, recipient, amount_to_send, send_
         send_money.create_receive_money_instance()
         send_money_recipient_email_task.apply_async(
             kwargs = {
-                'send_money': send_money
+                'send_money': send_money.pk
             },
             countdown = 10
         )
@@ -1779,7 +1779,8 @@ def payment_of_roi(request, investment_pk):
     else:
         return HttpResponse('This investment project has been completed')
     
-def send_money_recipient_email(send_money):
+def send_money_recipient_email(send_money_pk):
+    send_money = SendMoney.objects.get(pk=send_money_pk)
     to_email = [f"{send_money.recipient.user.email}"]
     subject = f"{send_money.sender.user.get_full_name()} sent you some funds."
     html_message = loader.render_to_string(
