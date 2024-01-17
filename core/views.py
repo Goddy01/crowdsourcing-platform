@@ -1786,7 +1786,7 @@ def send_money_recipient_email(send_money):
         'core/send_money_recipient_email.html', {
             'user': send_money.recipient.user,
             'amount': send_money.amount,
-            'sender': send_money.sender,
+            'sender': send_money.sender.user.get_full_name(),
             'recipient': send_money.recipient,
             'date':send_money.date
         }
