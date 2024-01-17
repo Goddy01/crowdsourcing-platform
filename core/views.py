@@ -714,7 +714,7 @@ def send_money(request):
                     send_money_task.apply_async(
                         kwargs={
                             'amount_to_send': amount_to_send, 
-                            'sender__pk': sender.pk, 
+                            'sender_pk': sender.pk, 
                             'recipient_pk': recipient.pk, 
                             'sender_prebalance': sender.account_balance, 
                             'sender_postbalance': sender.account_balance-amount_to_send, 
@@ -731,6 +731,7 @@ def send_money(request):
                 return redirect('deposit')
             except Innovator.DoesNotExist:
                 messages.error(request, 'User does not exist')
+                return redirect('deposit')
             # if not recipient_username:
             #     messages.error(request, 'You forgot to provide the username of the recipient')
     context['amount_to_send'] = request.POST.get('amount_to_send')
@@ -1811,5 +1812,5 @@ def send_money_2(amount_to_send, sender_pk, recipient_pk, sender_prebalance, sen
     'send_money_pk': send_money.pk
     }
     )
-    to_email = f'{recipient.user.email}'
+    to_email = f'{sender.user.email}'
     send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=False, html_message=html_message)

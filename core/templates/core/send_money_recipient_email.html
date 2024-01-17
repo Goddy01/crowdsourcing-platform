@@ -150,7 +150,10 @@
                                                                 
                                                                 <p style="font-weight: bold;">From Summit Team</p>
                                                                     <p>
-                                                                        <p>Dear {{ user.username|title }},</p>
+                                                                        <p>Dear 
+                                                                            <span style="font-weight: bold;">
+                                                                                {{ user.username|title }},</p>
+                                                                            </span>
                                                                         <p>
                                                                         We hope this message finds you well. We are writing to inform you that 
                                                                         <span style="font-weight: bold;">{{ sender.title }} </span>
