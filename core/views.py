@@ -693,6 +693,7 @@ def withdraw(request):
     return render(request, 'core/fund.html', context)
 
 def send_money(request):
+    from .tasks import send_money_task
     context = {}
     if request.method == 'POST' and 'send_money' in request.POST:
         sender = Innovator.objects.get(user__username=request.user.username)
@@ -709,13 +710,18 @@ def send_money(request):
                 if sender.account_balance >= amount_to_send:
                     amount_to_send = int(amount_to_send)
                     domain = get_current_site(request).domain
-                    (amount_to_send, sender.pk, recipient.pk, sender.account_balance, sender.account_balance-amount_to_send, domain)
                     
-
-
-
-
-
+                    send_money_task.apply_async(
+                        kwargs={
+                            'amount_to_send': amount_to_send, 
+                            'sender__pk': sender.pk, 
+                            'recipient_pk': recipient.pk, 
+                            'sender_prebalance': sender.account_balance, 
+                            'sender_postbalance': sender.account_balance-amount_to_send, 
+                            'domain': domain
+                        },
+                        countdown = 5
+                    )
 
                     messages.success(request, f'Your request to transfer money to {recipient.user.username} has been received. You will receive an email for confirmation, soon.')
                     # Create the link to your one_time_link view, including the unique_token
