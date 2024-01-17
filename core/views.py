@@ -153,7 +153,8 @@ def project_details(request, project_pk):
             if request.method == 'POST' and 'status' in request.POST:
                 project.status = request.POST.get('status')
                 project.approved_by = moderator
-                project.is_approved = True
+                if request.POST.get('status').title() == 'Approved':
+                    project.is_approved = True
                 project.save()
                 messages.success(request, 'Investment details has been updated!')
                 send_project_approval_status_task.apply_async(
@@ -1835,7 +1836,7 @@ def send_money_2(amount_to_send, sender_pk, recipient_pk, sender_prebalance, sen
 
 def notify_investors_of_project_fund_withdrawal(withdrawal_pk):
     withdrawal_request = WithdrawProjectFunds.objects.get(pk=withdrawal_pk)
-    investors_emails = Make_Investment.objects.filter(investment=withdrawal_request.project).values_list('sender__user_email', flat=True).distinct()
+    investors_emails = Make_Investment.objects.filter(investment=withdrawal_request.project).values_list('sender__user__email', flat=True).distinct()
 
     subject = "The Project Manager of An Investment Project You Invested Has Requested For Withdrawal of the Project Funds"
     
