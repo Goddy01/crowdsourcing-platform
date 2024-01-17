@@ -1827,6 +1827,7 @@ def notify_investors_of_project_fund_withdrawal(withdrawal_pk):
             'project_manager_name': withdrawal_request.project.innovator.user.get_full_name(),
             'amount_requested': withdrawal_request.amount,
             'date_requested': withdrawal_request.date,
+            'project_name': withdrawal_request.project.name
         }
     )
 
