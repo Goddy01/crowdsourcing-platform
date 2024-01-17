@@ -787,6 +787,15 @@ def withdraw_project_funds(request, project_pk):
 
             project.fund_raised -= withdraw_amount
             project.save()
+
+            from .tasks import notify_investors_of_project_fund_withdrawal_task
+            notify_investors_of_project_fund_withdrawal_task.apply_async(
+                kwargs={
+                    'withdrawal_pk': withdraw_project_funds.pk
+                },
+                countdown = 5
+            )
+            
             messages.success(request, f'You have successfully made a request for withdrawal from the {project.name.title()} project funds')
             return redirect('home')
         else:
@@ -1107,10 +1116,14 @@ def confirm_withdrawal_request(request, type, withdrawal_pk, response):
                 withdrawal_request.save()
                 return HttpResponse('Thanks for your confirmation. Payment will be made soon.')
             else:
+                innovator = Innovator.objects.get(pk=withdrawal_request.innovator.pk)
+                innovator.account_balance += withdrawal_request.amount
+                innovator.save(update_fields=['account_balance'])
+                
                 withdrawal_request.confirmation = False
                 withdrawal_request.confirmation_clicked = True
                 withdrawal_request.save()
-                return HttpResponse( 'Thanks for your confirmation. The withdrawal request will be cancelled. Expect refund soon')
+                return HttpResponse( 'Thanks for your confirmation. The withdrawal request is cancelled. Expect refund.')
         else:
             return HttpResponse('You have confirmed this withdrawal request before.')
     elif type == 'p_c_c_f':
@@ -1133,10 +1146,14 @@ def confirm_withdrawal_request(request, type, withdrawal_pk, response):
             )
                 return HttpResponse('Thanks for your confirmation. Payment will be made soon.')
             else:
+                project = withdrawal_request.project
+                project.fund_raised += withdrawal_request.amount
+                project.save(update_fields=['fund_raised'])
+
                 withdrawal_request.confirmation = False
                 withdrawal_request.confirmation_clicked = True
                 withdrawal_request.save()
-                return HttpResponse( 'Thanks for your confirmation. The withdrawal request will be cancelled. Expect refund soon')
+                return HttpResponse( 'Thanks for your confirmation. The withdrawal request is be cancelled. Expect refund soon')
         else:
             return HttpResponse('You have confirmed this withdrawal request before.')
     return redirect('home')
