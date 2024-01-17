@@ -706,32 +706,17 @@ def send_money(request):
             amount_to_send = int(request.POST.get('amount_to_send'))
             try:
                 recipient = Innovator.objects.get(user__username=recipient_username)
-                if amount_to_send != 0 and amount_to_send is not None and sender.account_balance >= amount_to_send:
+                if sender.account_balance >= amount_to_send:
                     amount_to_send = int(amount_to_send)
-                    send_money = SendMoney.objects.create(
-                        amount = amount_to_send,
-                        sender = sender,
-                        recipient = recipient,
-                        pre_balance = sender.account_balance,
-                        post_balance = sender.account_balance - amount_to_send,
-                        is_approved = False
-                    )
-                    current_site = get_current_site(request)
-                    subject = 'Funds Transfer Confirmation'
-                    html_message = loader.render_to_string(
-                        'core/confirm_nin.html', {
-                        'user': BaseUser.objects.get(pk=request.user.pk),
-                        'domain': current_site.domain,
-                        'amount': int(amount_to_send),
-                        'date': datetime.datetime.now(),
-                        'sender': sender,
-                        'recipient': recipient,
-                        'amount_to_send': amount_to_send,
-                        'send_money_pk': send_money.pk
-                    }, request=request
-                    )
-                    to_email = f'{request.user.email}'
-                    send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=False, html_message=html_message)
+                    domain = get_current_site(request).domain
+                    (amount_to_send, sender.pk, recipient.pk, sender.account_balance, sender.account_balance-amount_to_send, domain)
+                    
+
+
+
+
+
+
                     messages.success(request, f'Your request to transfer money to {recipient.user.username} has been received. You will receive an email for confirmation, soon.')
                     # Create the link to your one_time_link view, including the unique_token
                 else:
@@ -1793,3 +1778,32 @@ def send_money_recipient_email(send_money_pk):
         }
     )
     send_mail(subject, message=strip_tags(html_message), recipient_list=to_email, from_email=from_email, fail_silently=False, html_message=html_message)
+
+def send_money_2(amount_to_send, sender_pk, recipient_pk, sender_prebalance, sender_postbalance, domain):
+    sender = Innovator.objects.get(pk=sender_pk)
+    recipient = Innovator.objects.get(pk=recipient_pk)
+
+    send_money = SendMoney.objects.create(
+    amount = amount_to_send,
+    sender = sender,
+    recipient = recipient,
+    pre_balance = sender_prebalance,
+    post_balance = sender_postbalance,
+    is_approved = False
+    )
+
+    subject = 'Funds Transfer Confirmation'
+    html_message = loader.render_to_string(
+    'core/confirm_nin.html', {
+    'user': sender.user,
+    'domain': domain,
+    'amount': int(amount_to_send),
+    'date': datetime.datetime.now(),
+    'sender': sender,
+    'recipient': recipient,
+    'amount_to_send': amount_to_send,
+    'send_money_pk': send_money.pk
+    }
+    )
+    to_email = f'{recipient.user.email}'
+    send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=False, html_message=html_message)
