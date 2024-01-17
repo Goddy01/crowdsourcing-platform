@@ -199,6 +199,11 @@
                                 {{project.status}}
                                 {% endif %}
                             </span>
+                            {% if project.target_reached %}
+                            <span class="project-status" style="background-color: #00B951;margin-top: 200px;"><em class="mdi mdi-plus"></em> 
+                                TARGET REAHCED
+                            </span>
+                            {% endif %}
                         </div>
                         <div class="project-details">
                             <h3 class="project-title"><a href="{% url 'project_details' project.pk %}">{{ project.name }}</a></h3>

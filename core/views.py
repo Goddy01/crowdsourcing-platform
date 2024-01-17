@@ -40,10 +40,10 @@ from_email = settings.EMAIL_HOST_USER
 def home(request):
     current_date = datetime.date.today()
     context = {}
-    new_projects = Project.objects.filter(investment_deadline__gte=current_date, completed=False).order_by('-date_created')
+    new_projects = Project.objects.filter(investment_deadline__gte=current_date, target_reached=False).order_by('-date_created')
     context['new_projects'] = new_projects[:5]
 
-    popular_projects = all_popular_projects = Project.objects.annotate(num_investors=Count('the_investment')).filter(investment_deadline__gte=current_date).order_by('-num_investors')
+    popular_projects = Project.objects.annotate(num_investors=Count('the_investment')).filter(investment_deadline__gte=current_date, target_reached=False).order_by('-num_investors')
     context['popular_projects'] = popular_projects
     # .num_investors
     return render(request, 'index.html', context)
@@ -94,7 +94,7 @@ def projects_list(request):
                     )
                 else:
                     projects = Project.objects.filter(
-                        Q(expected_return__range=(int(from_expected_return), int(to_expected_return)), investment_deadline__gte=current_date, completed=False)
+                        Q(expected_return__range=(int(from_expected_return), int(to_expected_return)), investment_deadline__gte=current_date, target_reached=False)
                     )
             else:
                 if request.user.is_moderator:
@@ -103,16 +103,16 @@ def projects_list(request):
                     )
                 else:
                     projects = Project.objects.filter(
-                        Q(expected_return__gte=int(from_expected_return), investment_deadline__gte=current_date, completed=False)
+                        Q(expected_return__gte=int(from_expected_return), investment_deadline__gte=current_date, target_reached=False)
                     )
 
             projects = pagination(request, projects, 4)
             context['projects'] = projects
     else:
         if request.user.is_moderator:
-            projects = Project.objects.filter().order_by('-date_created')        
+            projects = Project.objects.filter().order_by('-date_created')
         else:
-            projects = Project.objects.filter(investment_deadline__gte=current_date, completed=False).order_by('-date_created')
+            projects = Project.objects.filter(investment_deadline__gte=current_date, target_reached=False).order_by('-date_created')
         
         
         projects = pagination(request, projects, 4)
@@ -430,6 +430,10 @@ def invest(request, investment_pk):
     investment_owner = investment.innovator
     context['project'] = investment
     if request.method == 'POST' and 'invest' in request.POST:
+        if investment.target_reached:
+            messages.info(request, 'You cannot invest in this investment project because it has reached its funding goal.')
+            return redirect('home')
+
         amount = int(request.POST.get('amount'))
         if amount <= investor.account_balance:
             # Deduct the amount from the investor's account balance
@@ -447,6 +451,8 @@ def invest(request, investment_pk):
             if current_investment.amount_left == 0 and current_investment.fund_raised == current_investment.target:
                 print('reached')
                 current_site = get_current_site(request)
+                investment.target_reached = True
+                investment.save(update_fields=['target_reached'])
 
                 # SENDS EMAIL ABOUT THAT THE FUNDING GOAL HAS BEEN REACHED TO THE PROJECT OWNER AND THE PROJECT INVESTORS
                 send_funding_completed_email_task.apply_async(

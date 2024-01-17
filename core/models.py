@@ -37,7 +37,7 @@ def upload_project_milestone_gallery(instance, filename):
 # PROJECT
 class Project(models.Model):
     innovator = models.ForeignKey(account_models.Innovator, on_delete=models.CASCADE)
-    status = models.CharField(max_length=255, null=True, blank=True, default='YET TO BE REVIEWED')
+    status = models.CharField(max_length=255, default='YET TO BE REVIEWED')
     name = models.CharField(max_length=255, null=False, blank=False, unique=True)
     motto = models.CharField(max_length=255, null=False, blank=False)
     description = models.TextField(null=True, blank=True, max_length=10000)
@@ -50,6 +50,7 @@ class Project(models.Model):
     date_created = models.DateTimeField(auto_now_add=True, null=True)
     investment_deadline = models.DateField()
     completed = models.BooleanField(default=False)
+    target_reached = models.BooleanField(default=False)
     innovator_user_agreement = models.BooleanField(default=False, null=True, blank=True)
     approved_by = models.ForeignKey(account_models.Moderator, on_delete=models.CASCADE, null=True, blank=True)
     # PROJECT GALLERY

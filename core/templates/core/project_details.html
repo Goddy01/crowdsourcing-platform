@@ -99,18 +99,28 @@
 						{% endif %}
 					</a>
 					</div>
-					<div class="my-3 mb-5">
+					<div class="my-3 mb-3">
 						<a href="{% url 'view_milestones' project.pk %}">View Milestones</a>
+					</div>
+					<div class="col-12 d-inline">
+						{% if project.target_reached %}
+						<p class="badge bg-success text-decoration-none link-light">
+							FUNDING GOAL TARGET REACHED 💸
+						</p>
+						{% endif %}
 					</div>
 					<div class="col-3 mb-5 d-inline">
 						Status: 
+						{% if project.status.title == 'Approved' %}
 						<span class="badge bg-success text-decoration-none link-light">
-							{% if project.status is None %}
-							YET TO BE REVIEWED
-							{% else %}
-							{{ project.status }}
-							{% endif %}
+						{% elif project.status.title == 'Declined' %}
+						<span class="badge bg-danger text-decoration-none link-light">
+						{% else %}
+						<span class="badge bg-info text-decoration-none link-light">
+						{% endif %}
+						{{ project.status }}
 						</span>
+
 					</div>
 					<div class="col-12 mb-5 d-inline">
 						<h4 class="d-inline">Seller of Shares: </h4>
@@ -250,7 +260,7 @@
 							{% if is_past_deadline %}
 								<button type="submit" name="invest" class="mb-5 button button-primary button-default">The investment deadline of this investment has passed.</button>
 							{% else %}
-								{% if project.status|title == 'Approved' and not project.completed %}
+								{% if project.status|title == 'Approved' and not project.target_reached %}
 								<form method="POST" id="payForm" action="{% url 'invest' project.pk %}">
 								{% csrf_token %}
 								<div class="mb-3">
@@ -264,7 +274,7 @@
 								{% elif project.status|title == 'Yet To be Reviewed' %}
 								<button type="submit" name="invest" class="mb-5 button button-primary button-default">Wait till the project is approved before you can invest</button>
 								{% endif %}
-								{% if project.completed %}
+								{% if project.target_reached %}
 								<button type="submit" name="invest" class="mb-5 button button-primary button-default">Funding Goal Reached</button>
 								{% endif %}
 							{% endif %}

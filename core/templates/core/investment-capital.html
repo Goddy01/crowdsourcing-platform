@@ -310,19 +310,13 @@
                         <li><a class="dropdown-item" href="{% url 'project_details' project.pk %}">View Details</a></li>
                         {% if project.fund_raised is not None and project.fund_raised > 0 %}
                         <li><a class="dropdown-item" href="" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{ project.pk }}">Withdraw Funds</a></li>
+                        {% if project.target_reached and project.innovator.user == request.user %}
+                        <li><a class="dropdown-item" href="{% url 'payment_of_ROIs' project.pk %}">Pay Investors</a></li>
+                        {% endif %}
                         {% endif %}
                     </ul>
                 </div>
             </td>
-            {% if project.fund_raised == project.target and project.amount_left == 0 and not project.completed and project.innovator.user == request.user %}
-            <td>
-                <a href="{% url 'payment_of_ROIs' project.pk %}">
-                    <button class="button button-primary" style="white-space: nowrap;">
-                        PAY INVESTORS
-                    </button>
-                </a>
-            </td>
-            {% endif %}
           </tr>
           {% endfor %}
         </tbody>
