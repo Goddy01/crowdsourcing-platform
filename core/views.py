@@ -717,7 +717,7 @@ def send_money(request):
                         is_approved = False
                     )
                     current_site = get_current_site(request)
-                    subject = 'NIN Confirmation'
+                    subject = 'Funds Transfer Confirmation'
                     html_message = loader.render_to_string(
                         'core/confirm_nin.html', {
                         'user': BaseUser.objects.get(pk=request.user.pk),
@@ -1377,6 +1377,7 @@ def reject_withdrawal_request(request, withdrawal_pk, type):
 
 @login_required
 def approve_send_money_request(request, sender, recipient, amount_to_send, send_money_pk, contribution_pk=None):
+    from .tasks import send_money_recipient_email_task
     send_money = SendMoney.objects.get(pk=send_money_pk)
     if send_money.is_approved == False:
         sender = Innovator.objects.get(user__username=sender)
@@ -1404,6 +1405,12 @@ def approve_send_money_request(request, sender, recipient, amount_to_send, send_
             type = 'OUTGOING TRANSFER'
         )
         send_money.create_receive_money_instance()
+        send_money_recipient_email_task.apply_async(
+            kwargs = {
+                'send_money': send_money
+            },
+            countdown = 10
+        )
         if contribution_pk is not None:
             contribution = Contribution.objects.get(pk=contribution_pk)
             innovation = contribution.innovation
@@ -1771,3 +1778,17 @@ def payment_of_roi(request, investment_pk):
         return redirect('investment_capital')
     else:
         return HttpResponse('This investment project has been completed')
+    
+def send_money_recipient_email(send_money):
+    to_email = [f"{send_money.recipient.user.email}"]
+    subject = f"{send_money.sender.user.get_full_name()} sent you some funds."
+    html_message = loader.render_to_string(
+        'core/send_money_recipient_email.html', {
+            'user': send_money.recipient.user,
+            'amount': send_money.amount,
+            'sender': send_money.sender,
+            'recipient': send_money.recipient,
+            'date':send_money.date
+        }
+    )
+    send_mail(subject, message=strip_tags(html_message), recipient_list=to_email, from_email=from_email, fail_silently=False, html_message=html_message)

@@ -1,7 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 from celery import shared_task
 
-from .views import send_funding_completed_email, send_milestone_email, send_project_approval_status, pay_investors
+from .views import send_funding_completed_email, send_milestone_email, send_project_approval_status, pay_investors, send_money_recipient_email
 from celery.utils.log import get_task_logger
 
 logger = get_task_logger(__name__)
@@ -34,3 +34,8 @@ def pay_investors_task(**kwargs):
     investment_pk = kwargs.get('investment_pk')
     logger.info('PAYMENT OF INVESTORS INITIATED')
     return pay_investors(investment_pk=investment_pk)
+
+@shared_task
+def send_money_recipient_email_task(**kwargs):
+    send_money = kwargs.get('send_money')
+    return send_money_recipient_email(send_money)

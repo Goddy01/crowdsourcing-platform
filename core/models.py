@@ -254,16 +254,11 @@ class SendMoney(models.Model):
     is_approved = models.BooleanField(default=False, null=True, blank=True)
 
     
-    def create_receive_money_instance(self, investment_pk=None):
-        investment = Project.objects.get(pk=investment_pk)
-        if investment_pk is None:
-            description = f"You received ₦{self.amount} from {self.sender.user.username}"
-        else:
-            description = f'You received ₦{self.amount} from {self.sender.user.username} as your ROI(return on investment) on an investment you made on "{investment.name.title()}" project '
+    def create_receive_money_instance(self):
         recipient_pre_balance = self.recipient.account_balance - self.amount
         transaction = Transaction.objects.create(
             owner=self.recipient,
-            description = description,
+            description = f"You received ₦{self.amount} from {self.sender.user.username}",
             successful = not False,
             reference_code = self.reference_code,
             amount = self.amount,
