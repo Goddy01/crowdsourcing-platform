@@ -1105,7 +1105,6 @@ def people(request):
 
 @login_required
 def verify_account(request, person_pk):
-    print('verified')
     if request.user.is_moderator:
         user = BaseUser.objects.get(pk=person_pk)
         if user.is_verified:
@@ -1119,7 +1118,6 @@ def verify_account(request, person_pk):
 
 @login_required
 def unverify_account(request, person_pk):
-    print('unverified')
     if request.user.is_moderator:
         user = BaseUser.objects.get(pk=person_pk)
         if not user.is_verified:

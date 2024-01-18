@@ -1,10 +1,17 @@
 from __future__ import absolute_import, unicode_literals
 from celery import shared_task
-
+from django.core.mail import send_mail
+from django.utils.html import strip_tags
+from django.template.loader import render_to_string
 from .views import send_funding_completed_email, send_milestone_email, send_project_approval_status, pay_investors, send_money_recipient_email, send_money_2, notify_investors_of_project_fund_withdrawal
 from celery.utils.log import get_task_logger
+from accounts.models import Innovator
+from crowdsourcing import settings
+
 
 logger = get_task_logger(__name__)
+from_email = settings.EMAIL_HOST_USER
+
 
 @shared_task
 def send_funding_completed_email_task(**kwargs):
@@ -54,3 +61,14 @@ def send_money_task(**kwargs):
 def notify_investors_of_project_fund_withdrawal_task(**kwargs):
     withdrawal_pk = kwargs.get('withdrawal_pk')
     return notify_investors_of_project_fund_withdrawal(withdrawal_pk)
+
+@shared_task
+def notify_account_verification_task(innovator_pk):
+    innovator = Innovator.objects.get(pk=innovator_pk)
+    subject = f"Hurray!!! Your Innovator Account Has Been Verified"
+    html_message = render_to_string(
+        'accounts/innovator-account-verified.html', {
+            'user': innovator.user
+        }
+    )
+    send_mail(subject, message=strip_tags(html_message), recipient_list=[f"{innovator.user.email}"], fail_silently=False, html_message=html_message)
