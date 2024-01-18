@@ -1112,3 +1112,16 @@ def verify_account(request, person_pk):
     else:
         return HttpResponse('You are not authorized to view this page.')
     return JsonResponse({'is_verified': user.is_verified})
+
+@login_required
+def unverify_account(request, person_pk):
+    if request.user.is_moderator:
+        user = BaseUser.objects.get(pk=person_pk)
+        if not user.is_verified:
+            return JsonResponse({'error': 'This user is already not verified'})
+        
+        user.is_verified = False
+        user.save(update_fields=['is_verified'])
+    else:
+        return HttpResponse('You are not authorized to view this page.')
+    return JsonResponse({'is_verified': user.is_verified})
