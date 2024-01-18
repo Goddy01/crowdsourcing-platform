@@ -155,7 +155,7 @@
                             <li><a href="{% url 'accounts:profile' %}">Profile</a></li>
                             {% endif %}
                             {% if request.user.is_moderator %}
-                            <li><a href="{% url 'accounts:friends_list' %}">People</a></li>
+                            <li><a href="{% url 'accounts:people' %}">People</a></li>
                             <li><a href="{% url 'accounts:mod_profile' %}">Profile</a></li>
                             {% endif %}
 						</ul>

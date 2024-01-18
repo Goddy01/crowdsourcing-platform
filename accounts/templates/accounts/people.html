@@ -138,11 +138,6 @@
         {% endif %}
         
         <div>
-            <div>
-                <a href="{%url 'accounts:person_requests' %}">
-                    View Friend Requests
-                </a>
-            </div>
             <div class="row">
                 <div class="col-md-8">
                     <div class="people-nearby">
@@ -221,78 +216,6 @@
       $('.toast').toast('hide')
     }, 9999);
 </script>
-<script>
-    // Function to get the value of a cookie by name
-        var removeFriendURL = "{% url 'accounts:remove_person' person_pk=0 %}"; // Use '0' as a placeholder
-        var addFriendURL = "{% url 'accounts:send_conn_request' recipient_pk=0 %}"; // Use '0' as a placeholder
-        var csrfToken = "{{ csrf_token }}";
-    
-        $(document).ready(function () {
-            // Function to get CSRF token from cookies
-            function getCookie(name) {
-                var cookieValue = null;
-                if (document.cookie && document.cookie !== '') {
-                    var cookies = document.cookie.split(';');
-                    for (var i = 0; i < cookies.length; i++) {
-                        var cookie = jQuery.trim(cookies[i]);
-                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                            break;
-                        }
-                    }
-                }
-                return cookieValue;
-            }
-    
-            $('.remove-person-btn').on('click', function () {
-                var personPk = $(this).data('person-pk');
-                var csrftoken = getCookie('csrftoken');
-    
-                $.ajax({
-                    type: 'POST',
-                    url: removeFriendURL.replace('0', personPk),
-                    data: {
-                        csrfmiddlewaretoken: csrftoken
-                    },
-                    success: function (data) {
 
-                                    // Check for errors in the response
-                        if (data.error) {
-                            // Display the error message in the div
-                            $('#error-div').text(data.error);
-                            $('#error-div').show();
-                        } else {
-                            $('.remove-person-btn').hide();
-                            // $('.person-removed-btn').show();
-                            $('.add-person-btn').show();
-                        }
-                }
-                });
-            });
-            
-            $('.add-person-btn').on('click', function () {
-                var personPk = $(this).data('person-pk');
-                var csrftoken = getCookie('csrftoken');
-    
-                $.ajax({
-                    type: 'POST',
-                    url: addFriendURL.replace('0', personPk),
-                    data: {
-                        csrfmiddlewaretoken: csrftoken
-                    },
-                    success: function () {
-                    // Update visibility after successful request
-                    // $('.remove-person-btn').show();
-                    $('.request-sent-btn').show();
-                    // $('.person-removed-btn').show();
-                    $('.add-person-btn').hide();
-                }
-                });
-            });
-    
-
-        });
-    </script>
-    
 </html>
 {% endblock content %}

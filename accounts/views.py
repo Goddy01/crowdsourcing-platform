@@ -249,11 +249,15 @@ def mod_profile(request):
     })
 
 def others_profile(request, innovator_pk):
+    context = {}
     innovator = Innovator.objects.get(pk=innovator_pk)
+    context['innovator'] = innovator
     if innovator.user.username == request.user.username:
         return redirect('accounts:profile')
     innovator_skills = InnovatorSkill.objects.filter(innovator__pk=innovator_pk)
     testimonies = Testimony.objects.filter(testified_person=innovator).order_by('-date_added')
+    context['innovator_skills'] = innovator_skills
+    context['testimonies'] = testimonies
     preview_testimonies = None
     if testimonies.count() >= 3:
         preview_testimonies = testimonies[0:2]
@@ -261,19 +265,23 @@ def others_profile(request, innovator_pk):
         preview_testimonies = testimonies
     innovator_services = Service.objects.filter(user__pk=innovator_pk)
     projects = Project.objects.filter(innovator=innovator)[:3]
-    conn_request = ConnectionRequest.objects.filter(
-        requester=Innovator.objects.get(user__pk=request.user.pk),
-        recipient=innovator,
-    )
-    
-    user1 = innovator
-    user2 = Innovator.objects.get(user__pk=request.user.pk)
-    friends = Connection.objects.filter(
-        (Q(user1=user1) & Q(user2=user2)) |
-        (Q(user1=user2) & Q(user2=user1))
-    ).exists()
-    print('FRIENDS: ', friends)
-    return render(request, 'accounts/others_profile.html', {'innovator': innovator, 'innovator_skills': innovator_skills, 'innovator_services': innovator_services, 'projects': projects, 'conn_request': conn_request,  'conn_already_sent': conn_request.exists(), 'friends': friends, 'preview_testimonies': preview_testimonies})
+    context['projects'] = projects
+    if request.user.is_innovator:
+        conn_request = ConnectionRequest.objects.filter(
+            requester=Innovator.objects.get(user__pk=request.user.pk),
+            recipient=innovator,
+        )
+        context['conn_request'] = conn_request
+        context['conn_already_sent'] = conn_request.exists()
+        user1 = innovator
+        user2 = Innovator.objects.get(user__pk=request.user.pk)
+        friends = Connection.objects.filter(
+            (Q(user1=user1) & Q(user2=user2)) |
+            (Q(user1=user2) & Q(user2=user1))
+        ).exists()
+        context['friends'] = friends
+    context['preview_testimonies'] = preview_testimonies
+    return render(request, 'accounts/others_profile.html', context)
 
 def set_new_msg_email_alert_preference(request, checkbox):
     checkbox = checkbox.lower()
@@ -1087,4 +1095,4 @@ def people(request):
         context['people'] = pagination(request, Innovator.objects.all(), 10)
     else:
         return HttpResponse('You are not authorized to view this page.')
-    return render('request, accounts/people.html', context)
+    return render(request, 'accounts/people.html', context)
