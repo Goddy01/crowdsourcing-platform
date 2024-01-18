@@ -160,13 +160,11 @@
                             <p style="margin-top: -10px;">{{ person.user.job_title }}</p>
                         </div>
                         {% if not query %}
-                        <div class="col-md-3 col-sm-3 mt-2 col-lg-3">
-                            {% if person.user.is_verified %}
-                            <span class="verify-person-btn btn btn-success pull-left" data-person-pk="{{ person.pk }}" >Unverify Account</span>
-                            {% else %}
-                            <span class="unverify-person-btn btn btn-success pull-left" data-person-pk="{{ person.pk }}" >Verify Account</span>
-                            {% endif %}
+                        <div class="col-md-3 col-sm-3 mt-2 col-lg-3 verify-unverify">
+                            <span class="verify-person-btn btn btn-success pull-left" style="{% if person.user.is_verified %}display: none;{% endif %}" data-person-pk="{{ person.user.pk }}" >Verify Account</span>
+                            <span class="unverify-person-btn btn btn-success pull-left" style="{% if not person.user.is_verified %}display: none;{% endif %}" data-person-pk="{{ person.user.pk }}" >Unverify Account</span>
                         </div>
+                        
                         {% endif %}
                         </div>
                     </div>
@@ -221,8 +219,8 @@
 
 <script>
     // Function to get the value of a cookie by name
-        var verifyAccountURL = "{% url 'accounts:verify_account' friend_pk=0 %}"; // Use '0' as a placeholder
-        var unverifyAccountURL = "{% url 'accounts:unverify_account' recipient_pk=0 %}"; // Use '0' as a placeholder
+        var verifyAccountURL = "{% url 'accounts:verify_account' person_pk=0 %}"; // Use '0' as a placeholder
+        var unverifyAccountURL = "{% url 'accounts:unverify_account' person_pk=0 %}"; // Use '0' as a placeholder
         var csrfToken = "{{ csrf_token }}";
     
         $(document).ready(function () {
@@ -242,9 +240,37 @@
                 return cookieValue;
             }
     
+            $('.unverify-person-btn').on('click', function () {
+                var personPk = $(this).data('person-pk');
+                var csrftoken = getCookie('csrftoken');
+                var clickedButton = $(this);
+
+                $.ajax({
+                    type: 'POST',
+                    url: unverifyAccountURL.replace('0', personPk),
+                    data: {
+                        csrfmiddlewaretoken: csrftoken
+                    },
+                    success: function (data) {
+                        // Check for errors in the response
+                        if (data.error) {
+                            // Display the error message in the div
+                            $('#error-div').text(data.error);
+                            $('#error-div').show();
+                        } else {
+                            // Toggle the visibility of verify and unverify buttons only for the clicked button's parent container
+                            clickedButton.closest('.verify-unverify').find('.verify-person-btn').show()
+                            clickedButton.closest('.verify-unverify').find('.unverify-person-btn').hide()
+                        }
+                    }
+                });
+            });
+
+            
             $('.verify-person-btn').on('click', function () {
                 var personPk = $(this).data('person-pk');
                 var csrftoken = getCookie('csrftoken');
+                var clickedButton2 = $(this);
     
                 $.ajax({
                     type: 'POST',
@@ -252,38 +278,11 @@
                     data: {
                         csrfmiddlewaretoken: csrftoken
                     },
-                    success: function (data) {
-
-                                    // Check for errors in the response
-                        if (data.error) {
-                            // Display the error message in the div
-                            $('#error-div').text(data.error);
-                            $('#error-div').show();
-                        } else {
-                            $('.verify-person-btn').hide();
-                            // $('.friend-removed-btn').show();
-                            $('.unverify-person-btn').show();
-                        }
-                }
-                });
-            });
-            
-            $('.unverify-person-btn').on('click', function () {
-                var personPk = $(this).data('person-pk');
-                var csrftoken = getCookie('csrftoken');
-    
-                $.ajax({
-                    type: 'POST',
-                    url: unverifyAccountURL.replace('0', personPk),
-                    data: {
-                        csrfmiddlewaretoken: csrftoken
-                    },
                     success: function () {
-                    // Update visibility after successful request
-                    // $('.remove-friend-btn').show();
-                    $('.unverify-person-btn').hide();
-                    // $('.friend-removed-btn').show();
-                    $('.verify-person-btn').show();
+                        clickedButton2.closest('.verify-unverify').find('.verify-person-btn').hide()
+                        clickedButton2.closest('.verify-unverify').find('.unverify-person-btn').show()
+                    // // $('.friend-removed-btn').show();
+                    // $('.verify-person-btn').hide();
                 }
                 });
             });
