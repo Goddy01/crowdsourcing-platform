@@ -1080,3 +1080,11 @@ def downvote_testimony(request, testimony_pk):
         testimony.downvotes += 1
         testimony.save()
     return JsonResponse({'downvotes': testimony.downvoted_by.count(), 'upvotes': testimony.upvoted_by.count()})
+
+def people(request):
+    context = {}
+    if request.user.is_moderator:
+        context['people'] = pagination(request, Innovator.objects.all(), 10)
+    else:
+        return HttpResponse('You are not authorized to view this page.')
+    return render('request, accounts/people.html', context)
