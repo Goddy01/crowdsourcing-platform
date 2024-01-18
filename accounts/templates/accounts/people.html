@@ -161,9 +161,11 @@
                         </div>
                         {% if not query %}
                         <div class="col-md-3 col-sm-3 mt-2 col-lg-3">
-                            <span class="remove-person-btn btn btn-danger pull-left" data-person-pk="{{ person.pk }}" >Remove Friend</span>
-                            <span class="add-person-btn btn btn-success pull-left" style="display: none;" data-person-pk="{{ person.pk }}">Add Back</span>
-                            <span class="request-sent-btn btn btn-success pull-left" style="display: none;">Request Sent</span>
+                            {% if person.user.is_verified %}
+                            <span class="verify-person-btn btn btn-success pull-left" data-person-pk="{{ person.pk }}" >Unverify Account</span>
+                            {% else %}
+                            <span class="unverify-person-btn btn btn-success pull-left" data-person-pk="{{ person.pk }}" >Verify Account</span>
+                            {% endif %}
                         </div>
                         {% endif %}
                         </div>
@@ -216,6 +218,79 @@
       $('.toast').toast('hide')
     }, 9999);
 </script>
+
+<script>
+    // Function to get the value of a cookie by name
+        var verifyAccountURL = "{% url 'accounts:verify_account' friend_pk=0 %}"; // Use '0' as a placeholder
+        var unverifyAccountURL = "{% url 'accounts:unverify_account' recipient_pk=0 %}"; // Use '0' as a placeholder
+        var csrfToken = "{{ csrf_token }}";
+    
+        $(document).ready(function () {
+            // Function to get CSRF token from cookies
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+    
+            $('.verify-person-btn').on('click', function () {
+                var personPk = $(this).data('person-pk');
+                var csrftoken = getCookie('csrftoken');
+    
+                $.ajax({
+                    type: 'POST',
+                    url: verifyAccountURL.replace('0', personPk),
+                    data: {
+                        csrfmiddlewaretoken: csrftoken
+                    },
+                    success: function (data) {
+
+                                    // Check for errors in the response
+                        if (data.error) {
+                            // Display the error message in the div
+                            $('#error-div').text(data.error);
+                            $('#error-div').show();
+                        } else {
+                            $('.verify-person-btn').hide();
+                            // $('.friend-removed-btn').show();
+                            $('.unverify-person-btn').show();
+                        }
+                }
+                });
+            });
+            
+            $('.unverify-person-btn').on('click', function () {
+                var personPk = $(this).data('person-pk');
+                var csrftoken = getCookie('csrftoken');
+    
+                $.ajax({
+                    type: 'POST',
+                    url: unverifyAccountURL.replace('0', personPk),
+                    data: {
+                        csrfmiddlewaretoken: csrftoken
+                    },
+                    success: function () {
+                    // Update visibility after successful request
+                    // $('.remove-friend-btn').show();
+                    $('.unverify-person-btn').hide();
+                    // $('.friend-removed-btn').show();
+                    $('.verify-person-btn').show();
+                }
+                });
+            });
+    
+
+        });
+    </script>
 
 </html>
 {% endblock content %}
