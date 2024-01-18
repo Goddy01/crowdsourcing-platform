@@ -1563,19 +1563,23 @@ def pagination(request, object, num_of_pages):
 def search_projects(request):
     context = {}
     query = request.GET.get('query')
+    print('QUERY: ', len(query))
     context['query'] = query
     request.session['project_query'] = query
     if request.method == 'GET':
-        if query is not None:
+        if query:
             projects = Project.objects.filter(
                 Q(name__icontains=query) | Q(motto__icontains=query)
             ).order_by('-date_created').distinct()
             if not projects:
                 request.session['search_projects_no_result'] = True
                 return redirect('projects')
-            projects = pagination(request, projects, 2)
+            projects = pagination(request, projects, 4)
             context['projects'] = projects
             request.session['search_projects_no_result'] = False
+        else:
+            projects = pagination(request, Project.objects.filter(investment_deadline__gte=datetime.datetime.now(), target_reached=False).order_by('-date_created'), 2)
+            context['projects'] = projects
     return render(request, 'core/projects.html', context)
 
 def search_innovations(request):
@@ -1584,7 +1588,7 @@ def search_innovations(request):
     request.session['innovation_query'] = query
     context['query'] = query
     if request.method == 'GET':
-        if query is not None:
+        if query:
             innovations = Innovation.objects.filter(
                 Q(title__icontains=query) | Q(description__icontains=query)
             ).order_by('-date_created').distinct()
@@ -1594,6 +1598,9 @@ def search_innovations(request):
             innovations = pagination(request, innovations, 4)
             context['innovations'] = innovations
             request.session['search_innovations_no_result'] = False
+        else:
+            innovations = pagination(request, Innovation.objects.all().order_by('-date_created'), 4)
+            context['innovations'] = innovations
     return render(request, 'core/innovations-list.html', context)
 
 def send_funding_completed_email(investment_pk):

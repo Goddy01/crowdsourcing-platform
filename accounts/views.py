@@ -1036,7 +1036,7 @@ def search_people(request):
     context['query'] = query.lower()
     request.session['people_query'] = query
     if request.method == 'GET':
-        if query is not None:
+        if query:
             people = Innovator.objects.filter(
                 Q(user__first_name__icontains=query) | Q(user__last_name__icontains=query) | Q(user__middle_name__icontains=query) | Q(user__username__icontains=query) | Q(user__job_title__icontains=query)
             ).distinct()
@@ -1048,6 +1048,9 @@ def search_people(request):
                 people = pagination(request, people, 10)
                 context['friends'] = people
                 request.session['no_result'] = False
+        else:
+            people = pagination(request, Innovator.objects.all(), 10)
+            context['friends'] = people
     return render(request, 'accounts/friends-list.html', context)
 
 @login_required
@@ -1135,7 +1138,7 @@ def moderator_search_people(request):
     context['query'] = query.lower()
     request.session['people_query'] = query
     if request.method == 'GET':
-        if query is not None:
+        if query:
             people = Innovator.objects.filter(
                 Q(user__first_name__icontains=query) | Q(user__last_name__icontains=query) | Q(user__middle_name__icontains=query) | Q(user__username__icontains=query) | Q(user__job_title__icontains=query)
             ).distinct()
@@ -1144,7 +1147,10 @@ def moderator_search_people(request):
                 request.session['no_result'] = True
                 # return redirect('accounts:friends_list')
             else:
-                people = pagination(request, people, 2)
+                people = pagination(request, people, 10)
                 context['people'] = people
                 request.session['no_result'] = False
+        else:
+            people = pagination(request, Innovator.objects.all(), 10)
+            context['people'] = people
     return render(request, 'accounts/people.html', context)
