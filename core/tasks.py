@@ -72,3 +72,14 @@ def notify_account_verification_task(innovator_pk):
         }
     )
     send_mail(subject, message=strip_tags(html_message), recipient_list=[f"{innovator.user.email}"], fail_silently=False, html_message=html_message)
+
+@shared_task
+def notify_account_unverification_task(innovator_pk):
+    innovator = Innovator.objects.get(pk=innovator_pk)
+    subject = f"Oops. Your Verification Has Been Suspended"
+    html_message = render_to_string(
+        'accounts/innovator-account-unverified.html', {
+            'user': innovator.user
+        }
+    )
+    send_mail(subject, message=strip_tags(html_message), recipient_list=[f"{innovator.user.email}"], fail_silently=False, html_message=html_message)
