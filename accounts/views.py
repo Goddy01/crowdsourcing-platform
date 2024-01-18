@@ -1106,6 +1106,14 @@ def people(request):
 @login_required
 def verify_account(request, person_pk):
     if request.user.is_moderator:
+        from .tasks import notify_account_verification_task
+        
+        notify_account_verification_task.apply_async(
+            kwargs={
+                'user_pk': person_pk
+            },
+            countdown = 5
+        )
         user = BaseUser.objects.get(pk=person_pk)
         if user.is_verified:
             return JsonResponse({'error': 'This user is already verified'})
@@ -1119,6 +1127,14 @@ def verify_account(request, person_pk):
 @login_required
 def unverify_account(request, person_pk):
     if request.user.is_moderator:
+        from .tasks import notify_account_unverification_task
+    
+        notify_account_unverification_task.apply_async(
+            kwargs={
+                'user_pk': person_pk
+            },
+            countdown = 5
+        )
         user = BaseUser.objects.get(pk=person_pk)
         if not user.is_verified:
             return JsonResponse({'error': 'This user is already not verified'})
