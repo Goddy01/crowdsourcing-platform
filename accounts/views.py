@@ -1099,3 +1099,16 @@ def people(request):
     else:
         return HttpResponse('You are not authorized to view this page.')
     return render(request, 'accounts/people.html', context)
+
+@login_required
+def verify_account(request, person_pk):
+    if request.user.is_moderator:
+        user = BaseUser.objects.get(pk=person_pk)
+        if user.is_verified:
+            return JsonResponse({'error': 'This user is already verified'})
+        
+        user.is_verified = True
+        user.save(update_fields=['is_verified'])
+    else:
+        return HttpResponse('You are not authorized to view this page.')
+    return JsonResponse({'is_verified': user.is_verified})
