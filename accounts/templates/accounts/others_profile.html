@@ -160,7 +160,6 @@
                         </p>
                         {% endif %}
 
-
                         <div>
                             {% if friends %}
                             <small>
@@ -199,6 +198,82 @@
                     </div>
                </div>
             </div>
+
+            {% if request.user.is_moderator %}
+            <div class="row">
+                <h3 class="text-center">Investor Data</h3>
+                <div class="col-12 table-responsive">
+                    <table class="text-center table">
+                        <thead>
+                            <tr>
+                                <th>Last Name</th>
+                                <th>First Name</th>
+                                <th>Middle Name</th>
+                                <th>Username</th>
+                                <th>Date of Birth</th>
+                                <th>Email</th>
+                                <th>Job Title</th>
+                                <th>NIN</th>
+                                <th>City</th>
+                                <th>State</th>
+                                <th>Address</th>
+                                <th>Phone Number</th>
+                                <th>Zipcode</th>
+                                <th>Date Joined</th>
+                                <th>Last Login</th>
+                                <th>Facebook</th>
+                                <th>Twitter</th>
+                                <th>Instagram</th>
+                                <th>LinkedIn</th>
+                                <th>Website</th>
+                                <th>Is Active</th>
+                                <th>Is Verified</th>
+                                <th>Signup Confirmation</th>
+                                <th>Signup with Google</th>
+                                <th>Receive Message Email Notif</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                
+                                <td>{{ innovator.user.last_name }}</td>
+                                <td>{{ innovator.user.first_name }}</td>
+                                <td>{{ innovator.user.middle_name }}</td>
+                                <td>{{ innovator.user.username }}</td>
+                                <td>{{ innovator.user.date_of_birth }}</td>
+                                <td>{{ innovator.user.email }}</td>
+                                <td>{{ innovator.user.job_title }}</td>
+                                <td>
+                                    {% if innovator.user.nin %}
+                                    Provided
+                                    {% else %}
+                                    None
+                                    {% endif %}
+                                </td>
+                                <td>{{ innovator.user.city }}</td>
+                                <td>{{ innovator.user.state }}</td>
+                                <td>{{ innovator.user.address }}</td>
+                                <td>{{ innovator.user.phone_num }}</td>
+                                <td>{{ innovator.user.zipcode }}</td>
+                                <td>{{ innovator.user.date_joined }}</td>
+                                <td>{{ innovator.user.last_login }}</td>
+                                <td>{{ innovator.user.facebook }}</td>
+                                <td>{{ innovator.user.twitter }}</td>
+                                <td>{{ innovator.user.instagram }}</td>
+                                <td>{{ innovator.user.linkedin }}</td>
+                                <td>{{ innovator.user.website }}</td>
+                                <td>{{ innovator.user.is_active }}</td>
+                                <td>{{ innovator.user.is_verified }}</td>
+                                <td>{{ innovator.user.signup_confirmation }}</td>
+                                <td>{{ innovator.user.signup_with_google }}</td>
+                                <td>{{ innovator.user.receive_msg_email_notif }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+            </div>
+            {% endif %}
             
             <!--########################## About Us Starts Here ############################# -->
             
@@ -236,86 +311,6 @@
                     </div> -->
                 </div>
             </div>
-            
-            <!--########################## Services Starts Here ############################# -->
-            
-            <!-- <div id="service" class="service px-4 py-5">
-                 <div class="titie-row row mb-2">
-                    <h2 class="fw-bolder text-success">Services</h2>
-                </div>
-                <div class="row">
-                    {% if innovator_services.count == 1 %}
-                    {% for service in innovator_services %}
-                    <div class="col-lg-12 col-md-12 mb-4">
-                       <div class="serv-cove shadow-md rounded bg-white text-center p-4">
-                            <i class="bi fs-1 bi-boxes"></i>
-                            <h5 class="mt-3 fs-6 fw-bold">{{ service.service }}</h5>
-                            
-                       </div>
-                    </div>
-                    {% endfor %}
-                    {% endif %}
-                    
-                    {% if innovator_services.count == 2 %}
-                    {% for service in innovator_services %}
-                    <div class="col-lg-6 col-md-6 mb-4">
-                       <div class="serv-cove shadow-md rounded bg-white text-center p-4">
-                            <i class="bi fs-1 bi-boxes"></i>
-                            <h5 class="mt-3 fs-6 fw-bold">{{ service.service }}</h5>
-                            
-                       </div>
-                    </div>
-                    {% endfor %}
-                    {% endif %}
-                    
-                    {% if innovator_services.count == 3 %}
-                    {% for service in innovator_services %}
-                    <div class="col-lg-4 col-md-4 mb-4">
-                       <div class="serv-cove shadow-md rounded bg-white text-center p-4">
-                            <i class="bi fs-1 bi-boxes"></i>
-                            <h5 class="mt-3 fs-6 fw-bold">{{ service.service }}</h5>
-                            
-                       </div>
-                    </div>
-                    {% endfor %}
-                    {% endif %}
-
-                    {% if innovator_services.count == 4 %}
-                    {% for service in innovator_services %}
-                    {% if forloop.counter < 3 %}
-                    <div class="col-lg-6 col-md-6 mb-4">
-                    {% else %}
-                    <div class="col-lg-6 col-md-6 mb-4">
-                    {% endif %}
-                       <div class="serv-cove shadow-md rounded bg-white text-center p-4">
-                            <i class="bi fs-1 bi-boxes"></i>
-                            <h5 class="mt-3 fs-6 fw-bold">{{ service.service }}</h5>
-                            
-                       </div>
-                    </div>
-                    {% endfor %}
-                    {% endif %}
-
-                    {% if innovator_services.count == 5 %}
-                    {% for service in innovator_services %}
-                    {% if forloop.counter < 4 %}
-                    <div class="col-lg-4 col-md-4 mb-4">
-                    {% else %}
-                    <div class="col-lg-6 col-md-6 mb-4">
-                    {% endif %}
-                       <div class="serv-cove shadow-md rounded bg-white text-center p-4">
-                            <i class="bi fs-1 bi-boxes"></i>
-                            <h5 class="mt-3 fs-6 fw-bold">{{ service.service }}</h5>
-                            
-                       </div>
-                    </div>
-                    {% endfor %}
-                    {% endif %}
-                </div>
-            </div> -->
-            
-             <!--########################## Portfolio Starts Here ############################# -->
-            
             
             
              <!--########################## Portfolio Starts Here ############################# -->
@@ -433,10 +428,8 @@
             </div>
                 </div>
             </div>
-            
-            
-            
         </div>
+        
         </div>
     </body>
 <script>
