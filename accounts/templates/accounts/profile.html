@@ -142,9 +142,19 @@
                             {% endif %}
                         </div>
                         <script src="https://js.paystack.co/v1/inline.js"></script>
-                        <b class="fs-6">Hello I am, {{user.last_name}} {{user.first_name}}</b>
+                        <p class="mb-0">
+                            <span class="fw-bold">
+                                {{ request.user.get_full_name }}
+                            </span>
+                            <span>(@{{ request.user.username }})</span>
+                        </p>
                         {% if user.job_title %}
-                        <h1 class="fw-bold mb-4 fs-1">{{ user.job_title }}</h1>
+                        <h1 class="fw-bold mt-0 mb-2 fs-1">{{ user.job_title }}</h1>
+                        {% endif %}
+                        {% if innovator.user.is_verified %}
+                        <button class="btn btn-success text-white btn-outline-success fw-bolder fs-7 px-4">
+                            Verified✅
+                        </button>
                         {% endif %}
                         <p>
                             {% if user.bio %}
@@ -154,7 +164,7 @@
                         <ul>
                             <li></li>
                         </ul>
-                        <a href="{% url 'accounts:edit_profile' %}" class="btn btn-outline-success fw-bolder fs-7 px-4 py-2 mt-3">Edit Profile</a>
+                        <a href="{% url 'accounts:edit_profile' %}" class="btn btn-outline-success rounded-pill fw-bolder fs-7 px-4 py-2 mt-5">Edit Profile</a>
                         <!-- <p>
                             <a href="{% url 'deposit' %}" class="btn btn-outline-success fw-bolder fs-7 px-4 py-2 mt-3">Deposit Money Into Your Account</a>
                         </p> -->

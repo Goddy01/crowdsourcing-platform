@@ -140,21 +140,19 @@
                         </div>
                         <!-- <p class="fw-bold">@{{ innovator.user.username }}</p> -->
                         <p class="mb-0">
-                            {% if innovator.user.middle_name %}
                             <span class="fw-bold">
-                                {{ innovator.user.last_name }}, {{innovator.user.first_name}} {{ innovator.user.middle_name}}
+                                {{ innovator.user.get_full_name }}
                             </span>
                             <span>(@{{ innovator.user.username }})</span>
-                            {% else %}
-                            <span class="fw-bold">
-                                {{innovator.user.first_name}} {{ innovator.user.last_name }}
-                            </span>
-                            <span>(@{{ innovator.user.username }})</span>
-                            {% endif %}
                         </p>
                         
                         <p class="fw-bold mt-0 mb-2 fs-1">{{ innovator.user.job_title }}</p>
                         <div>
+                            {% if innovator.user.is_verified %}
+                            <button class="btn btn-success text-white btn-outline-success fw-bolder fs-7 px-4 py-2">
+                                Verified✅
+                            </button>
+                            {% endif %}
                             {% if friends %}
                             <small>
                                 <button class="btn btn-success text-white btn-outline-success fw-bolder fs-7 px-4 py-2" id="send-a-msg">

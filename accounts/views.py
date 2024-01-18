@@ -926,17 +926,20 @@ def remove_friend(request, friend_pk):
     return JsonResponse(data= {'status': 'success'})
 
 def testify(request, testified_person_pk):
+    context = {}
     testified_person = Innovator.objects.get(pk=testified_person_pk)
 
-    testifier = Innovator.objects.get(user__pk=request.user.pk)
+    if request.user.is_innovator:
+        testifier = Innovator.objects.get(user__pk=request.user.pk)
+        context['testifier_pk'] = testifier.pk
+
+
     testimonies = Testimony.objects.filter(testified_person__pk=testified_person_pk)
     investors = Make_Investment.objects.filter(investment__innovator=testified_person)
     print('INVESTORS: ', investors)
     rating = request.POST.get('rating')
 
-    context = {}
     context['testified_person_pk'] = testified_person.pk
-    context['testifier_pk'] = testifier.pk
     context['testified_person_fullname'] = testified_person.user.get_full_name()
     context['testimonies'] = testimonies
     if testimonies.count() > 0:

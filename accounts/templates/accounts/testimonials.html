@@ -204,6 +204,7 @@
     <div class="offer-dedicated-body-left">
         <div class="tab-content" id="pills-tabContent">
             <div class="tab-pane fade active show" id="pills-reviews" role="tabpanel" aria-labelledby="pills-reviews-tab">
+                {% if request.user.is_innovator %}
                 {% if request.user != testimonies.0.testified_person.user %}
                 <div class="bg-white rounded shadow-sm p-4 mb-5 rating-review-select-page">
                     <h5 class="mb-4">Leave your review and rating for {{ testified_person_fullname }}</h5>
@@ -231,6 +232,7 @@
                 </div>
                 {% else %}
                 <h5 class="mb-4">Your review and ratings</h5>
+                {% endif %}
                 {% endif %}
 
                 <div class="bg-white rounded shadow-sm p-4 mb-4 clearfix graph-star-rating">
@@ -317,10 +319,13 @@
                         <button type="button" class="btn btn-outline-primary btn-sm">Rate and Review</button>
                     </div> -->
                 </div>
+                <div>
+                    <h5 class="mb-1">All Ratings and Reviews</h5>
+                    <a id="see-all-testimonies" class="text-decoration-none text-center w-100 d-block mt-4 font-weight-bold" href="#">See All Reviews</a>
+                </div>
                 <div class="bg-white rounded shadow-sm p-4 mb-4 restaurant-detailed-ratings-and-reviews" id="reviews-container">
                     <!-- <a href="#" class="btn btn-outline-primary btn-sm float-right">Top Rated</a> -->
-                    <h5 class="mb-1">All Ratings and Reviews</h5>
-                    <a onclick="loadMoreReviews()" class="text-decoration-none text-center w-100 d-block mt-4 font-weight-bold" href="#">See All Reviews</a>
+                    
                 </div>
             </div>
         </div>
@@ -328,76 +333,119 @@
 </div>
 </div>
 <script>
-    var offset = 2;  // Initial offset, showing the first two reviews
+var offset = 2;  // Initial offset, showing the first two reviews
+var reviewsLoaded = false;  // Flag to track whether reviews have been loaded
 
-    function loadMoreReviews() {
-        // Fetch more reviews from the server
-        fetch("{% url 'accounts:get_testimonies' testified_person_pk %}?offset=" + offset + '&limit=10')
-            .then(response => response.json())
-            .then(data => {
-                // Parse the JSON data
-                var testimonies = data.get_testimonies;
+function loadMoreReviews() {
+    // Fetch more reviews from the server
+    fetch("{% url 'accounts:get_testimonies' testified_person_pk %}?offset=" + offset + '&limit=10')
+        .then(response => response.json())
+        .then(data => {
+            // Parse the JSON data
+            var testimonies = data.get_testimonies;
 
-                // Append the new reviews to the existing reviews container
-                var reviewsContainer = document.getElementById('reviews-container');
-                testimonies.forEach(testimony => {
-                    var reviewElement = document.createElement('div');
-                    reviewElement.classList.add('reviews-members', 'pt-4', 'pb-4');
-                    console.log('Yo: ', testimony);
-                    var options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
-                    var date_added = new Date(testimony.date_added).toLocaleString('en-US', options);
-                    var testimonyPk = testimony.testimony_pk;
-                    var profileUrl = "{% url 'accounts:profile_with_arg' '0' %}".replace('0', testimony.testifier_pk);
+            // Append the new reviews to the existing reviews container
+            var reviewsContainer = document.getElementById('reviews-container');
 
-                    var starHtml = '';
-                    for (var i = 0; i < testimony.rating; i++) {
-                        starHtml += "<i class='fas fa-star active text-success mt-2'></i>";
-                    }
-                    console.log('PK: ', profileUrl);
+            // Clear existing reviews if they have been loaded before
+            
 
+            testimonies.forEach(testimony => {
+                var reviewElement = document.createElement('div');
+                reviewElement.classList.add('reviews-members', 'pt-4', 'pb-4');
+
+                var options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+                var date_added = new Date(testimony.date_added).toLocaleString('en-US', options);
+                var testimonyPk = testimony.testimony_pk;
+                var isInnovator = '{{ request.user.is_innovator }}'.toLowerCase();
+                var profileUrl = "{% url 'accounts:profile_with_arg' '0' %}".replace('0', testimony.testifier_pk);
+
+                var starHtml = '';
+                for (var i = 0; i < testimony.rating; i++) {
+                    starHtml += "<i class='fas fa-star active text-success mt-2'></i>";
+                }
+
+                if (isInnovator === 'true') {
                     reviewElement.innerHTML = `<div class="reviews-members pb-4">
-                            <div class="media">
-                                <a href="${profileUrl}">
-                                    <img alt="Generic placeholder image" src="${testimony.testifier_pfp}" class="mr-3 rounded-pill">
-                                </a>
-                                <div class="media-body">
-                                    <div class="reviews-members-header">
-                                        <h6 class="mb-3 mt-2" style="display: inline"><a class="text-black" href="${profileUrl}">${testimony.testifier_fullname}</a></h6>
-                                        <span class="font-italic" style="display: inline">
-                                            ( ${date_added} )
-                                        </span>
-                                        <p>
+                        <div class="media">
+                            <a href="${profileUrl}">
+                                <img alt="Generic placeholder image" src="${testimony.testifier_pfp}" class="mr-3 rounded-pill">
+                            </a>
+                            <div class="media-body">
+                                <div class="reviews-members-header">
+                                    <h6 class="mb-3 mt-2" style="display: inline"><a class="text-black" href="${profileUrl}">${testimony.testifier_fullname}</a></h6>
+                                    <span class="font-italic" style="display: inline">
+                                        ( ${date_added} )
+                                    </span>
+                                    <p>
                                         ${starHtml}
-                                        </p>
-                                    </div>
-                                    <div class="reviews-members-body" style="margin-top: 5px">
-                                        ${testimony.review}
-                                        
-                                    </div>
-                                    <div class="reviews-members-footer mt-2" style="cursor: pointer;">
-                                        <span class="total-like text-success text-decoration-none upvote-btn" data-testimony-pk="${testimonyPk}">
-                                            <i class="fa fa-thumbs-up"></i> 
-                                            <span id="upvote-count-${testimonyPk}">${testimony.upvotes}</span>
-                                        </span> 
-                                        <span class="total-like text-danger text-decoration-none downvote-btn" data-testimony-pk="${testimonyPk}">
-                                            <i class="fa fa-thumbs-down"></i> 
-                                            <span id="downvote-count-${testimonyPk}">${testimony.downvotes}</span>
-                                        </span>
-                                    </div>
+                                    </p>
+                                </div>
+                                <div class="reviews-members-body" style="margin-top: 5px">
+                                    ${testimony.review}
+                                </div>
+                                <div class="reviews-members-footer mt-2" style="cursor: pointer;">
+                                    <span class="total-like text-success text-decoration-none upvote-btn" data-testimony-pk="${testimonyPk}">
+                                        <i class="fa fa-thumbs-up"></i> 
+                                        <span id="upvote-count-${testimonyPk}">${testimony.upvotes}</span>
+                                    </span> 
+                                    <span class="total-like text-danger text-decoration-none downvote-btn" data-testimony-pk="${testimonyPk}">
+                                        <i class="fa fa-thumbs-down"></i> 
+                                        <span id="downvote-count-${testimonyPk}">${testimony.downvotes}</span>
+                                    </span>
                                 </div>
                             </div>
                         </div>
-                        <hr>`;
+                    </div>
+                    <hr>`;
+                } else if (isInnovator === 'false') {
+                    reviewElement.innerHTML = `<div class="reviews-members pb-4">
+                        <div class="media">
+                            <a href="${profileUrl}">
+                                <img alt="Generic placeholder image" src="${testimony.testifier_pfp}" class="mr-3 rounded-pill">
+                            </a>
+                            <div class="media-body">
+                                <div class="reviews-members-header">
+                                    <h6 class="mb-3 mt-2" style="display: inline"><a class="text-black" href="${profileUrl}">${testimony.testifier_fullname}</a></h6>
+                                    <span class="font-italic" style="display: inline">
+                                        ( ${date_added} )
+                                    </span>
+                                    <p>
+                                        ${starHtml}
+                                    </p>
+                                </div>
+                                <div class="reviews-members-body" style="margin-top: 5px">
+                                    ${testimony.review}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>`;
+                }
 
-                    reviewsContainer.appendChild(reviewElement);
+                reviewsContainer.appendChild(reviewElement);
 
-                    // Move the click event handling inside the forEach loop
-                    setupClickHandlers(testimonyPk);
-                });
-
-                offset += 10;  // Increment the offset for the next batch
+                // Move the click event handling inside the forEach loop
+                setupClickHandlers(testimonyPk);
             });
-    }
+
+            
+            if (reviewsLoaded) {
+                reviewsContainer.innerHTML = '';
+            }
+            offset += 10;  // Increment the offset for the next batch
+            reviewsLoaded = true;  // Set the flag to true after loading reviews
+
+            // Reset the flag to false if it's the third click
+            if (offset === 22) {
+                reviewsLoaded = false;
+                offset = 2;  // Reset offset to start from the beginning
+            }
+        });
+}
+
+document.getElementById('see-all-testimonies').onclick = loadMoreReviews;
+
 
     function setupClickHandlers(testimonyPk) {
         var upvoteURL = "{% url 'accounts:upvote_testimony' testimony_pk=0 %}".replace('0', testimonyPk);
@@ -471,6 +519,7 @@
             });
         });
     }
+    
 </script>
 
     
