@@ -1127,3 +1127,24 @@ def unverify_account(request, person_pk):
     else:
         return HttpResponse('You are not authorized to view this page.')
     return JsonResponse({'is_verified': user.is_verified})
+
+def moderator_search_people(request):
+    context = {}
+    query = request.GET.get('query')
+    people = []
+    context['query'] = query.lower()
+    request.session['people_query'] = query
+    if request.method == 'GET':
+        if query is not None:
+            people = Innovator.objects.filter(
+                Q(user__first_name__icontains=query) | Q(user__last_name__icontains=query) | Q(user__middle_name__icontains=query) | Q(user__username__icontains=query) | Q(user__job_title__icontains=query)
+            ).distinct()
+            
+            if not people:
+                request.session['no_result'] = True
+                # return redirect('accounts:friends_list')
+            else:
+                people = pagination(request, people, 2)
+                context['people'] = people
+                request.session['no_result'] = False
+    return render(request, 'accounts/people.html', context)

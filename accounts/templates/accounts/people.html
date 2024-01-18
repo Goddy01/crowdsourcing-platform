@@ -125,7 +125,7 @@
 </head>
 <body>
     <div class="container" style="margin: 0 auto; padding: 30px;margin-top: 100px;">
-        <form action="{% url 'accounts:search_people' %}" method="get">
+        <form action="{% url 'accounts:moderator_search_people' %}" method="get">
             <input class="" name="query" type="text" placeholder="Search for people by name, username, and job title" value="{% if query %}{{ query }}{% endif %}">
         </form>
         {% if request.session.no_result and query %}

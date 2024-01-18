@@ -147,12 +147,21 @@
                         </p>
                         
                         <p class="fw-bold mt-0 mb-2 fs-1">{{ innovator.user.job_title }}</p>
+                        {% if innovator.user.is_verified and request.user.is_innovator %}
+                        <button class="btn btn-success text-white btn-outline-success fw-bolder fs-7 px-4 py-2">
+                            Verified✅
+                        </button>
+                        {% endif %}
+
+                        {% if request.user.is_moderator %}
+                        <p class="verify-unverify fw-bold mt-0 mb-2 fs-1">
+                            <span class="verify-person-btn btn btn-success" style="{% if innovator.user.is_verified %}display: none;{% endif %}" data-person-pk="{{ innovator.user.pk }}" >Verify Account</span>
+                            <span class="unverify-person-btn btn btn-success" style="{% if not innovator.user.is_verified %}display: none;{% endif %}" data-person-pk="{{ innovator.user.pk }}" >Unverify Account</span>
+                        </p>
+                        {% endif %}
+
+
                         <div>
-                            {% if innovator.user.is_verified %}
-                            <button class="btn btn-success text-white btn-outline-success fw-bolder fs-7 px-4 py-2">
-                                Verified✅
-                            </button>
-                            {% endif %}
                             {% if friends %}
                             <small>
                                 <button class="btn btn-success text-white btn-outline-success fw-bolder fs-7 px-4 py-2" id="send-a-msg">
@@ -454,7 +463,79 @@
 // });
 
 </script>
+<script>
+    // Function to get the value of a cookie by name
+        var verifyAccountURL = "{% url 'accounts:verify_account' person_pk=0 %}"; // Use '0' as a placeholder
+        var unverifyAccountURL = "{% url 'accounts:unverify_account' person_pk=0 %}"; // Use '0' as a placeholder
+        var csrfToken = "{{ csrf_token }}";
+    
+        $(document).ready(function () {
+            // Function to get CSRF token from cookies
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+    
+            $('.unverify-person-btn').on('click', function () {
+                var personPk = $(this).data('person-pk');
+                var csrftoken = getCookie('csrftoken');
+                var clickedButton = $(this);
 
+                $.ajax({
+                    type: 'POST',
+                    url: unverifyAccountURL.replace('0', personPk),
+                    data: {
+                        csrfmiddlewaretoken: csrftoken
+                    },
+                    success: function (data) {
+                        // Check for errors in the response
+                        if (data.error) {
+                            // Display the error message in the div
+                            $('#error-div').text(data.error);
+                            $('#error-div').show();
+                        } else {
+                            // Toggle the visibility of verify and unverify buttons only for the clicked button's parent container
+                            clickedButton.closest('.verify-unverify').find('.verify-person-btn').show()
+                            clickedButton.closest('.verify-unverify').find('.unverify-person-btn').hide()
+                        }
+                    }
+                });
+            });
+
+            
+            $('.verify-person-btn').on('click', function () {
+                var personPk = $(this).data('person-pk');
+                var csrftoken = getCookie('csrftoken');
+                var clickedButton2 = $(this);
+    
+                $.ajax({
+                    type: 'POST',
+                    url: verifyAccountURL.replace('0', personPk),
+                    data: {
+                        csrfmiddlewaretoken: csrftoken
+                    },
+                    success: function () {
+                        clickedButton2.closest('.verify-unverify').find('.verify-person-btn').hide()
+                        clickedButton2.closest('.verify-unverify').find('.unverify-person-btn').show()
+                    // // $('.friend-removed-btn').show();
+                    // $('.verify-person-btn').hide();
+                }
+                });
+            });
+    
+
+        });
+    </script>
 
 
 <script src="{% static 'accounts/js/jquery-3.2.1.min.js' %}"></script>
