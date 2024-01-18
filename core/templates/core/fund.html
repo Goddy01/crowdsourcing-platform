@@ -204,6 +204,11 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    document.getElementById("payForm").addEventListener("keyup", function(event) {
+    if (event.key === "Enter") {
+        makePayment();
+    }
+});
     // document.getElementById('make-payment-btn').addEventListener('click', makePayment);
     function makePayment(){
         let amount = document.getElementById('amount').value

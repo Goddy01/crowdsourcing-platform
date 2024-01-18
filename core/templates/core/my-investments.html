@@ -46,11 +46,12 @@
 								<tr>
 									<th><span class="d-none d-xl-inline">Name</span></th>
 									<!-- <th>ID</th> -->
-									<th><span class="d-none d-lg-inline">Proprietor</span></th>
-									<th><span class="d-none d-lg-inline">Date of Investment</span></th>
-									<th><span class="d-none d-xl-inline">ROI</span></th>
+									<th>Proprietor</th>
+									<th>Date of Investment</th>
+									<th>ROI</th>
 									<th>Amount Invested</th>
-									<th><span class="d-none d-xl-inline">Expected Return Amount</th>
+									<th>Expected Return Amount</th>
+									<th>ROI Paid</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -89,6 +90,13 @@
 									<td>{{ investment.investment.expected_return }}%</td>
 									<td>₦{{ investment.amount }}</td>
 									<td>₦{{ investment.expected_return }}</td>
+									<td>
+										{% if investment.investment.completed %}
+										✅
+										{% else %}
+										❌
+										{% endif %}
+									</td>
 								</tr>
                                 {% endfor %}
 							</tbody>

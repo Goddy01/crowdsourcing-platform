@@ -145,18 +145,17 @@
                             {% if request.user.is_moderator %}
 							<li><a href="{% url 'withdrawal_requests' %}">Withdrawal Requests</a></li>
                             {% endif %}
-							<li><a href="{% url 'my-investments' %}">Investments</a></li>
+                            {% if request.user.is_innovator %}
+							<li><a href="{% url 'my-investments' %}">My Investments</a></li>
 							<li><a href="{% url 'statement' %}">Statement</a></li>
-							<li><a href="{% url 'deposit' %}">Funds</a></li>
-							{% if request.user.is_innovator %}
+							<li><a href="{% url 'deposit' %}">Manage Funds</a></li>
                             <li><a href="{% url 'add_innovation' %}">Add Innovation</a></li>
                             <li><a href="{% url 'add_project' %}">Add Investment Project</a></li>
-                            {% endif %}
-                            brev
-                            {% if request.user.is_innovator %}
                             <li><a href="{% url 'accounts:friends_list' %}">Friends</a></li>
                             <li><a href="{% url 'accounts:profile' %}">Profile</a></li>
-                            {% else %}
+                            {% endif %}
+                            {% if request.user.is_moderator %}
+                            <li><a href="{% url 'accounts:friends_list' %}">People</a></li>
                             <li><a href="{% url 'accounts:mod_profile' %}">Profile</a></li>
                             {% endif %}
 						</ul>

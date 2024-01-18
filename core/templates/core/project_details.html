@@ -123,7 +123,7 @@
 
 					</div>
 					<div class="col-12 mb-5 d-inline">
-						<h4 class="d-inline">Seller of Shares: </h4>
+						<h4 class="d-inline">Investment Manager/Owner: </h4>
 						<a href="{% url 'accounts:profile_with_arg' project.innovator.pk %}" class="text-decoration-none text-dark">
 							{% if project.innovator.user.middle_name %}
 							{{ project.innovator.user.last_name }}, {{ project.innovator.user.first_name }} {{ project.innovator.user.middle_name }}
@@ -133,7 +133,7 @@
 						</a>
 					</div>
 					<div class="col-12">
-						<h3>Project description</h3>
+						<h3>Project Description</h3>
 						<p>Sector: 
 									{% for category in project.get_business_categories_list %}
 									<span class="badge bg-success text-decoration-none link-light" href="#!">
@@ -144,25 +144,37 @@
 						</p>
 						<p>{{ project.description }}</p>
 					</div>
-					<div class="col-6 col-lg-3">
+					<div class="col-6 col-lg-4">
+						<div class="featured-box">
+							<h5 class="featured-box-title">{% if project.target_reached %} ✅ {% else %} ❌ {% endif %}</h5>
+							<p class="featured-box-content">Target Reached?</p>
+						</div>
+					</div>
+					<div class="col-6 col-lg-4">
 						<div class="featured-box">
 							<h5 class="featured-box-title">₦{{ project.target }}</h5>
 							<p class="featured-box-content">Target</p>
 						</div>
 					</div>
-					<div class="col-6 col-lg-3">
+					<div class="col-6 col-lg-4">
+						<div class="featured-box">
+							<h5 class="featured-box-title">₦{{ project.amount_left }}</h5>
+							<p class="featured-box-content">Amount Left</p>
+						</div>
+					</div>
+					<div class="col-6 col-lg-4">
 						<div class="featured-box">
 							<h5 class="featured-box-title">{{ project.expected_return }}%</h5>
 							<p class="featured-box-content">Expected return</p>
 						</div>
 					</div>
-					<div class="col-6 col-lg-3">
+					<div class="col-6 col-lg-4">
 						<div class="featured-box">
 							<h5 class="featured-box-title">{{ project.term_months }} months</h5>
 							<p class="featured-box-content">Term</p>
 						</div>
 					</div>
-					<div class="col-6 col-lg-3">
+					<div class="col-6 col-lg-4">
 						<div class="featured-box">
 							<h5 class="featured-box-title">{{ project.investment_deadline }}</h5>
 							<p class="featured-box-content">Investment Deadline</p>
