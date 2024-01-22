@@ -26,6 +26,7 @@ daphne==4.0.0
 defusedxml==0.7.1
 diff-match-patch==20230430
 Django==4.2.4
+django-celery-beat==2.5.0
 django-celery-results==2.5.1
 django-channels==0.7.0
 django-ckeditor==6.7.0
@@ -48,6 +49,7 @@ django-resized==1.0.2
 django-social-share==2.2.1
 django-static-fontawesome==5.14.0.0
 django-taggit==3.0.0
+django-timezone-field==6.1.0
 django-truncate==0.1
 django-urlcrypt==0.1.6
 et-xmlfile==1.1.0
