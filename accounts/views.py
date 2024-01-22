@@ -92,7 +92,6 @@ def innovator_login(request):
                 if user.user.is_verified:
                     return redirect('home')
                 redirect_to = request.GET.get('next')
-                print('REDIRECT TO: ', redirect_to)
                 if redirect_to is None:
                     return redirect('accounts:edit_profile')
                 else:
@@ -374,7 +373,6 @@ def edit_profile(request):
     if request.method == 'POST' and 'kba_question' in request.POST:
         kba_question = request.POST.get('kba_question')
         answer = request.POST.get('answer')
-        print('brev_man')
         kba_data = {
             'kba_question': kba_question,
             'answer': answer
@@ -401,7 +399,6 @@ def edit_profile(request):
 
     # USER NIN DATA
     if request.method == 'POST' and 'nin' in request.POST:
-        print('YES BRO')
         nin = request.POST.get('nin', '').strip()
         nin_data = {
             'nin': nin
@@ -422,17 +419,14 @@ def edit_profile(request):
             }
 
             response = requests.post(url, json=payload, headers=headers)
-            print('BRO DAYUM')
             if response.json()['description'].lower() == "success":
                 user_nin_info.save()
-                print('DONE MAN')
                 messages.success(request, 'NIN is valid. ✅')
                 return JsonResponse(response.json(), status=200)
                 # return redirect('accounts:profile')
             else:
                 messages.error(request, f"No NIN record found for '{nin}'")
                 return redirect('accounts:edit_profile')
-            print(response.text)
             # user_nin_info.save()
     else:
         user_nin_info = ''
@@ -564,7 +558,6 @@ def moderator_edit_profile(request):
     
         # USER PERSONAL DATA
     if request.method == 'POST' and 'user_p_form' in request.POST:
-        print('YOOOOO: ', request.POST.get('job_title'))
         user_p_data = {
             'about_me': request.POST.get('about_me'),
             'username': request.POST.get('username'),
@@ -589,7 +582,6 @@ def moderator_edit_profile(request):
                 user_obj.about_me = user_p_info.cleaned_data['about_me']
             
             user_obj.save()
-            print('BREVVVVVVVV', user_obj.job_title)
             return redirect('accounts:mod_profile')
         else:
             print(user_p_info.errors.as_data())
@@ -936,7 +928,6 @@ def testify(request, testified_person_pk):
 
     testimonies = Testimony.objects.filter(testified_person__pk=testified_person_pk)
     investors = Make_Investment.objects.filter(investment__innovator=testified_person)
-    print('INVESTORS: ', investors)
     rating = request.POST.get('rating')
 
     context['testified_person_pk'] = testified_person.pk

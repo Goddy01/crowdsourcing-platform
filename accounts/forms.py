@@ -312,12 +312,10 @@ class CustomPasswordResetForm(PasswordResetForm):
         password1 = self.cleaned_data.get('password1')
         password2 = self.cleaned_data.get('password2')
         if password1 and password2 and password1 != password2:
-            print('NIGGA WHAT')
             raise forms.ValidationError(
                 self.error_messages['password_mismatch'],
                 code='password_mismatch',
             )
-        print('COOL NIGGA')
         password_validation.validate_password(password2, self.user)
         return password2
 

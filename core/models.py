@@ -66,7 +66,6 @@ class Project(models.Model):
         if self.fund_raised is None:
             self.fund_raised = 0
         if self.target > 0:
-            print('PERCENTAGE IS: ', (self.fund_raised / self.target) * 100)
             return (self.fund_raised / self.target) * 100
         else:
             return 0  # To handle the case where target is 0 (to avoid division by zero)

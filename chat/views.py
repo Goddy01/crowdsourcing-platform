@@ -63,7 +63,6 @@ def get_group_messages(logged_in_user, group_pk):
 #     for m in messages:
 #         m.is_seen = True
 #         m.save(update_fields=['is_seen'])
-#     print('SHITE')
 #     return JsonResponse(data = {'status': 'success'})
 
 # @login_required
@@ -88,7 +87,6 @@ def send_file_message(request, sender, recipient, parent_message=None):
                 file_content=file
             )
         if parent_message is not None:
-            print('Parent Message: ', parent_message)
             message_tagged = Chat.objects.get(pk=parent_message)
             
             message  = Chat.objects.create(

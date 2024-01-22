@@ -1,5 +1,7 @@
 FROM python:3.10-bullseye
 
+ENV PYTHONUNBUFFERED=1
+
 WORKDIR /crowdsourcing-platform
 
 COPY requirements.txt requirements.txt

@@ -58,7 +58,6 @@ def add_project(request):
             messages.info(request, 'Your account is not yet verified, so you cannot post investment projects')
             return redirect('accounts:edit_profile')
         create_project_form = CreateProjectForm(request.POST or None, request.FILES or None)
-        print('BEFORE: ', request.POST.get('business_type'))
         if create_project_form.is_valid():
             project_obj = create_project_form.save(commit=False)
             project_obj.innovator = Innovator.objects.get(user__username=request.user.username)
@@ -131,7 +130,6 @@ def project_details(request, project_pk):
     
     try:
         if request.user.is_innovator:
-            # print('2')
             investor_1 = Innovator.objects.get(user__pk=request.user.pk)
             context['investor_1'] = investor_1
 
@@ -276,7 +274,6 @@ def pay_contributor(request, contribution_pk):
 def upvote_contribution(request, contribution_pk):
     contribution = Contribution.objects.get(pk=contribution_pk)
     user = Innovator.objects.get(user__pk=request.user.pk)
-    # print('ALL: ', contribution.upvoted_by.all())
 
     # Check if the user has already upvoted this contribution
     if user in contribution.upvoted_by.all():
@@ -344,7 +341,6 @@ def deposit_money(request):
     user = BaseUser.objects.get(pk=request.user.pk)
     innovator = Innovator.objects.get(user__pk=user.pk)
     if request.method == 'POST' and 'amount' in request.POST:
-        print('BREV')
         deposit_money = DepositMoney.objects.create(
             amount=request.POST.get('amount'),
             innovator = Innovator.objects.get(user__pk=request.user.pk)
@@ -353,8 +349,6 @@ def deposit_money(request):
         if request.POST.get('bool') == 'True':
             if deposit_money.innovator.account_balance is None:
                 deposit_money.innovator.account_balance = 0
-            # print('MAN')
-            # print('AMount: ', request.POST.get('amount'))
             deposit_money.pre_balance = innovator.account_balance
             deposit_money.innovator.account_balance += int(request.POST.get('amount'))
             deposit_money.innovator.save()
@@ -372,8 +366,6 @@ def deposit_money(request):
                 type='DEPOSIT'
             )
             context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
-            # print(innovator.account_balance)
-            # print('DONDA')
             return redirect('projects')
         else:
             print('Transaction could not be completed')
@@ -449,7 +441,6 @@ def invest(request, investment_pk):
             # Check if the investment project is fully funded
             current_investment = Project.objects.get(pk=investment_pk)
             if current_investment.amount_left == 0 and current_investment.fund_raised == current_investment.target:
-                print('reached')
                 current_site = get_current_site(request)
                 investment.target_reached = True
                 investment.save(update_fields=['target_reached'])
@@ -535,7 +526,6 @@ def my_investments(request):
     
     context['category_form'] = MyInvestmentForm()
     if request.method == 'POST' and 'filter_investments' in request.POST:
-        print('WHY, MAN!!!')
         investment_date_from = request.POST.get('investment_date_from')
         investment_date_to = request.POST.get('investment_date_to')
         investment_categories = request.POST.getlist('business_type')
@@ -574,7 +564,6 @@ def statement(request):
         is_approved_list = request.POST.getlist('type')
         context['statement_date_from'] = statement_date_from
         context['statement_date_to'] = statement_date_to
-        # print('TYPE LIST: ', is_approved_list)
         if statement_date_from != None and statement_date_to != None and len(is_approved_list) > 0:
             context['transactions'] = Transaction.objects.filter(
                 type__in=is_approved_list,
@@ -613,11 +602,8 @@ def statement(request):
 
 def get_bank_details(request):
     amount = request.POST.get('withdraw_amount')
-    # print('AMOUNT: ', amount)
     account_number = request.POST.get('withdraw_to')
-    # print('ACCOUNT NUMBER: ', account_number)
     bank_code = request.POST.get('bank_code')
-    # print('BANK CODE', bank_code)
     bank_name = ''
     banks = requests.get(f"https://api.paystack.co/bank")
     banks = banks.json()['data']
@@ -634,7 +620,6 @@ def get_bank_details(request):
             "Authorization": f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}"
         }
         response = requests.get(url, headers=headers)
-        # print('GET BANK DETAILS RESPONSE: ', response)
         if response.status_code == 200:
             withdrawal_data = response.json()
             request.session['account_holder'] = withdrawal_data['data']['account_name']
@@ -648,7 +633,6 @@ def get_bank_details(request):
             return JsonResponse(data, status=200)
         else:
             print("Request failed with status code:", response.status_code)
-            # print("Response content:", response.text)
             return JsonResponse({'error': 'Error encountered while retrieving bank account details.', 'status': 'failed'})
 
 def withdraw(request):
@@ -666,7 +650,6 @@ def withdraw(request):
         "Authorization": f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}"
     }
     response = requests.get(url, headers=headers)
-    # print('WITHDRAW RESPONSE: ', response.json())
     innovator = Innovator.objects.get(user__pk=request.user.pk)
     if response.status_code == 200:
         if innovator.account_balance >= withdraw_amount:
@@ -748,7 +731,6 @@ def send_money(request):
 def investment_capital(request):
     context = {}
     banks = requests.get(f"https://api.paystack.co/bank")
-    # print('BANKS: ', banks.json())
     context['banks'] = banks.json()['data']
     projects_owned = Project.objects.filter(
         innovator__user__pk=request.user.pk
@@ -776,7 +758,6 @@ def withdraw_project_funds(request, project_pk):
         "Authorization": f"Bearer {os.environ.get('PAYSTACK_SECRET_KEY')}"
     }
     response = requests.get(url, headers=headers)
-    # print('WITHDRAW PROJECT FUNDS RESPONSE: ', response.json())
     innovator = Innovator.objects.get(user__pk=request.user.pk)
     if response.status_code == 200:
         if project.fund_raised >= withdraw_amount:
@@ -1006,7 +987,6 @@ def send_withdrawal_request_confirmation_email(request, pk, type):
         messages.success(request, 'Confirmation email has successfully been sent. ✅')
         return redirect('withdrawal_requests')
     elif type == 'project_capital_contribution_funds':
-        print('project_capital_contribution_funds')
         withdrawal_request = WithdrawProjectFunds.objects.get(pk=pk)
         current_site = get_current_site(request)
         subject = 'Withdrawal Request Confirmation'
@@ -1044,7 +1024,6 @@ def set_withdrawal_request_status(request, pk, type):
         is_approved = request.POST.get('is_approved')
         print('TYPE: ', is_approved)
         if type == 'personal_funds':
-            print('personal_funds')
             withdrawal_request = Withdrawal.objects.get(pk=pk)
             if is_approved == 'True':
                 if not withdrawal_request.confirmation:
@@ -1074,7 +1053,6 @@ def set_withdrawal_request_status(request, pk, type):
             context['withdrawal_request'] = withdrawal_request
             return redirect('withdrawal_requests')
         elif type == 'project_capital_contribution_funds':
-            print('project_capital_contribution_funds')
             withdrawal_request = WithdrawProjectFunds.objects.get(pk=pk)
             if is_approved == 'True':
                 if not withdrawal_request.confirmation:
@@ -1210,7 +1188,6 @@ def send_kbq(request, withdrawal_pk, type):
 # @login_required
 @csrf_exempt
 def kbq_confirmation(request, withdrawal_pk, type):
-    print('brev')
     # withdrawal_pk = request.GET.get('withdrawal_pk')
     # type = request.GET.get('type')
     context = {}
@@ -1244,7 +1221,6 @@ def kbq_confirmation(request, withdrawal_pk, type):
                 withdrawal_request = WithdrawProjectFunds.objects.get(pk=withdrawal_pk)
                 withdrawal_request.kbq_answer = kbq_answer
                 withdrawal_request.save(update_fields=['kbq_answer'])
-                print('KBQ: ', withdrawal_request.kbq_answer)
                 context['withdrawal_request'] = withdrawal_request
 
                 user = withdrawal_request.innovator.user
@@ -1563,7 +1539,6 @@ def pagination(request, object, num_of_pages):
 def search_projects(request):
     context = {}
     query = request.GET.get('query')
-    print('QUERY: ', len(query))
     context['query'] = query
     request.session['project_query'] = query
     if request.method == 'GET':
