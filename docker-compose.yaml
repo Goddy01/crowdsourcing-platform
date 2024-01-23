@@ -9,6 +9,8 @@ services:
     image: app:crowdsourcing-platform
     container_name: crowdsourcing_container
     command: python manage.py runserver  0.0.0.0:8000
+    depends_on:
+      - db
   db:
     image: postgres
     volumes:

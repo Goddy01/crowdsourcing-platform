@@ -31,3 +31,9 @@ docker-compose up
     ( Used to start the services defined in Docker Compose configuration. It reads the 
     docker-compose.yml file in the current directory (or a specified file) and creates and 
     starts the containers for the services defined. )
+
+pg_ctl -D /var/lib/postgresql/data -l logfile start
+    ( Starts postgres db server )
+
+docker exec -it crowdsourcing_container bash
+    ( Access docker bash terminal)

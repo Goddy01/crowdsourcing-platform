@@ -23,6 +23,7 @@ def upload_group_inchat_files(instance, filename):
 #         return qs
 
 class Chat(models.Model):
+    id = models.IntegerField(primary_key=True, null=False, blank=False)
     message_tagged = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='reply_to')
     timestamp = models.DateTimeField(auto_now_add=True)
     sender = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='chat_sender')
@@ -33,13 +34,11 @@ class Chat(models.Model):
 
     class Meta:
         ordering = ('timestamp', )
-    # objects = ChatManager()
-
-    # def __str__(self):
-    #     return f'{self.sender.username} -- {self.recipient.username}'
     
+    @staticmethod
     def last_10_messages():
         return Chat.objects.order_by('timestamp').all()[:10]
+
     
 
 # class TagChat(models.Model):
