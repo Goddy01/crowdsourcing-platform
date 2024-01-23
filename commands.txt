@@ -1,5 +1,33 @@
-docker build --tag python-django .
+docker build --tag python-django . 
+    ( The command is telling Docker to build an image using the Dockerfile in the current directory, 
+    and the resulting image will be named python-django with the latest tag since a tag name was not explicitly provided. The --tag option is 
+    often used to provide a meaningful name and version information to the image being built. )
+
 docker run --publish 8000:8000 python-django
+    ( The command is telling Docker to run a container based on the python-django image and map port
+     8000 on the host to port 8000 on the container. This is commonly used for web applications or 
+    services where you want to expose a specific port on the host machine to interact with the 
+    application running inside the Docker container. )
+
 docker run --rm -p 6379:6379 redis:7
-python manage.py runserver
-celery -A crowdsourcing worker --pool=solo -l info
+    ( The command is telling Docker to run a Redis container based on the Redis image with version 7. 
+    It maps port 6379 on the host to port 6379 on the Redis container, allowing external processes to 
+    interact with Redis on the specified port. )
+
+python manage.py runserver (To run django server)
+
+
+celery -A crowdsourcing worker --pool=solo -l info (Development Env)
+
+celery -A crowdsourcing worker --loglevel=info --concurrency=4 -Ofair (Production Env)
+
+
+docker-compose run --rm <app_name> 
+    ( Used with Docker Compose to run a one-off command in a service defined in docker-compose.yml 
+    file and removing the temporary container after execution )
+
+
+docker-compose up
+    ( Used to start the services defined in Docker Compose configuration. It reads the 
+    docker-compose.yml file in the current directory (or a specified file) and creates and 
+    starts the containers for the services defined. )
