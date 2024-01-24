@@ -29,23 +29,13 @@ services:
     depends_on:
       - db
 
-  rabbit:
-    image: rabbitmq:3-management
-    container_name: rabbit
-    hostname: rabbit
-    ports:
-      - "5682:5672"
-      - "15682:15672"
 
   # CELERY
   celery:
     restart: always
     build:
       context: .
-    environment:
-      TEST_BROKER: amqp://rabbit:5672
-      TEST_BACKEND: redis://redis
-    command: celery -A crowdsourcing worker --loglevel=info --concurrency=4 -Ofair
+    command: celery -A crowdsourcing worker -l INFO
     volumes:
       - .:/crowdsourcing-platform
     container_name: celery
@@ -54,3 +44,16 @@ services:
       - rabbit
       - redis
       - app
+
+  rabbit:
+    image: rabbitmq:3-management
+    env_file:
+      - .env
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS}
+    container_name: rabbit
+    hostname: rabbit
+    ports:
+      - "5672:5672"
+      - "15672:15672"
