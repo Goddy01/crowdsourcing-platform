@@ -385,5 +385,6 @@ THOUSAND_SEPARATOR = True
 # CELERY
 CELERY_BROKER_USER = os.environ.get('BROKER_USER')
 CELERY_BROKER_PASSWORD = os.environ.get('BROKER_PASSWORD')
-CELERY_BROKER_URL = "redis://redis:6379"
+CELERY_BROKER_URL = f'amqp://{os.environ.get("RABBITMQ_USER")}:{os.environ.get("RABBITMQ_PASS")}@rabbit:5672//'
+CELERY_RESULT_BACKEND = 'django-db'
 CELERY_BROKER_BACKEND = "redis://redis:6379"
