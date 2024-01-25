@@ -52,3 +52,10 @@ psql -U <username>
 
 CREATE USER <username> WITH PASSWORD '<password>';
 ALTER USER <username> WITH SUPERUSER;
+
+rabbitmqctl add_user RabbitUser YOURPASSORDHERE
+rabbitmqctl add_vhost rabbit
+rabbitmqctl set_user_tags RabbitUser administrator
+rabbitmqctl set_permissions -p rabbit RabbitUser ".*" ".*" ".*"
+rabbitmqctl delete_user guest
+    ( For adding a new user to RabbitMQ, adding vhost, and setting set_permissions for the new user )
