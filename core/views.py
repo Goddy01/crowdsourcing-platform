@@ -1,4 +1,5 @@
 from django.db.models.functions import Length
+from django.contrib.auth.models import AnonymousUser
 from chat.models import Group, GroupChat
 from django.template import RequestContext
 from django.db.models import Q
@@ -78,44 +79,47 @@ def add_project(request):
 def projects_list(request):
     current_date = datetime.date.today()
     context = {}
-    if request.GET.get('from_expected_return'):
-        from_expected_return = request.GET.get('from_expected_return')
-        context['from_expected_return'] = from_expected_return
-        request.session['from_expected_return'] = from_expected_return
-        to_expected_return = request.GET.get('to_expected_return')
-        context['to_expected_return'] = to_expected_return
-        request.session['to_expected_return'] = to_expected_return
-        if from_expected_return:
-            if to_expected_return:
-                if request.user.is_moderator:
-                    projects = Project.objects.filter(
-                        Q(expected_return__range=(int(from_expected_return), int(to_expected_return)))
-                    )
-                else:
-                    projects = Project.objects.filter(
-                        Q(expected_return__range=(int(from_expected_return), int(to_expected_return)), investment_deadline__gte=current_date, target_reached=False)
-                    )
-            else:
-                if request.user.is_moderator:
-                    projects = Project.objects.filter(
-                        Q(expected_return__gte=int(from_expected_return))
-                    )
-                else:
-                    projects = Project.objects.filter(
-                        Q(expected_return__gte=int(from_expected_return), investment_deadline__gte=current_date, target_reached=False)
-                    )
 
-            projects = pagination(request, projects, 4)
-            context['projects'] = projects
-    else:
-        if request.user.is_moderator:
-            projects = Project.objects.filter().order_by('-date_created')
+    from_expected_return = request.GET.get('from_expected_return')
+    to_expected_return = request.GET.get('to_expected_return')
+
+    if from_expected_return:
+        request.session['from_expected_return'] = from_expected_return
+        request.session['to_expected_return'] = to_expected_return
+
+        context.update({
+            'from_expected_return': from_expected_return,
+            'to_expected_return': to_expected_return,
+        })
+
+        filter_conditions = Q()
+
+        if to_expected_return:
+            filter_conditions &= Q(expected_return__range=(int(from_expected_return), int(to_expected_return)))
         else:
-            projects = Project.objects.filter(investment_deadline__gte=current_date, target_reached=False).order_by('-date_created')
-        
-        
+            filter_conditions &= Q(expected_return__gte=int(from_expected_return))
+
+        if request.user.is_authenticated and not isinstance(request.user, AnonymousUser):
+            if not request.user.is_moderator:
+                filter_conditions &= Q(investment_deadline__gte=current_date, target_reached=False)
+
+        projects = Project.objects.filter(filter_conditions).order_by('-date_created')
         projects = pagination(request, projects, 4)
+
         context['projects'] = projects
+
+    else:
+        filter_conditions = Q()
+
+        if request.user.is_authenticated and not isinstance(request.user, AnonymousUser):
+            if not request.user.is_moderator:
+                filter_conditions &= Q(investment_deadline__gte=current_date, target_reached=False)
+
+        projects = Project.objects.filter(filter_conditions).order_by('-date_created')
+        projects = pagination(request, projects, 4)
+
+        context['projects'] = projects
+
     return render(request, 'core/projects.html', context)
 
 def project_details(request, project_pk):
