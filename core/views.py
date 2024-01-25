@@ -52,6 +52,7 @@ def home(request):
 def contact_us(request):
     return render(request, 'core/contact.html')
 
+@login_required
 def add_project(request):
     project_creation_request = ''
     if request.method == 'POST':
@@ -132,7 +133,7 @@ def project_details(request, project_pk):
     date_now = datetime.datetime.now().date()
     context['is_past_deadline'] = date_now > project.investment_deadline
     
-    try:
+    if request.user.is_authenticated:
         if request.user.is_innovator:
             investor_1 = Innovator.objects.get(user__pk=request.user.pk)
             context['investor_1'] = investor_1
@@ -165,10 +166,10 @@ def project_details(request, project_pk):
                     },
                     countdown=10
                 )
-    except:
-        pass
+    
     return render(request, 'core/project_details.html', context)
 
+@login_required
 def add_innovation(request):
     context = {}
     if not request.user.is_authenticated:
@@ -233,6 +234,7 @@ def innovation_detail(request, pk):
     context['is_answered'] = Contribution.objects.filter(innovation__pk=pk, accepted=True).exists()
     return render(request, 'core/innovation-details.html', context)
 
+@login_required
 def pay_contributor(request, contribution_pk):
     contribution = Contribution.objects.get(pk=contribution_pk)
     innovation = contribution.innovation
@@ -559,6 +561,7 @@ def my_investments(request):
         context['my_investments'] = my_investments
     return render(request, 'core/my-investments.html', context)
 
+@login_required
 def statement(request):
     context = {}
     context['statement_type_form'] = StatementTypeForm()
@@ -604,6 +607,7 @@ def statement(request):
         context['transactions'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')
     return render(request, 'core/statement.html', context)
 
+@login_required
 def get_bank_details(request):
     amount = request.POST.get('withdraw_amount')
     account_number = request.POST.get('withdraw_to')
@@ -639,6 +643,7 @@ def get_bank_details(request):
             print("Request failed with status code:", response.status_code)
             return JsonResponse({'error': 'Error encountered while retrieving bank account details.', 'status': 'failed'})
 
+@login_required
 def withdraw(request):
     context = {}
     withdraw_amount = int(request.session.get('amount'))
@@ -686,6 +691,7 @@ def withdraw(request):
             return HttpResponse('You cannot withdraw more than what you have.')
     return render(request, 'core/fund.html', context)
 
+@login_required
 def send_money(request):
     from .tasks import send_money_task
     context = {}
@@ -732,6 +738,7 @@ def send_money(request):
     context['recipient_username'] = request.POST.get('recipient_username')
     return render(request, 'core/fund.html', context)
 
+@login_required
 def investment_capital(request):
     context = {}
     banks = requests.get(f"https://api.paystack.co/bank")
@@ -742,10 +749,12 @@ def investment_capital(request):
     context['projects_owned'] = projects_owned
     return render(request, 'core/investment-capital.html', context)
 
+@login_required
 def withdraw_project_funds_page(request):
     context = {}
     return render(request, 'core/withdraw-project-funds-page.html', context)
 
+@login_required
 def withdraw_project_funds(request, project_pk):
     context = {}
     project = Project.objects.get(pk=project_pk)
@@ -796,6 +805,7 @@ def withdraw_project_funds(request, project_pk):
 
 # PAYSTACK REAL-TIME TRANSFER FEATURE
 
+# @login_required
 # def create_recipient(request):
 #     # CREATE TRANSFER RECIPIENT
 #     create_recipient_url = "https://api.paystack.co/transferrecipient"
@@ -957,6 +967,7 @@ def withdrawal_requests(request):
         return HttpResponse('You are not authorized to view this page')
     return render(request, 'core/withdrawal-requests.html', context)
 
+@login_required
 def send_withdrawal_request_confirmation_email(request, pk, type):
     context = {}
     moderator = Moderator.objects.get(user__email=request.user.email)
@@ -1019,6 +1030,7 @@ def send_withdrawal_request_confirmation_email(request, pk, type):
         return redirect('withdrawal_requests')
     return render(request, 'core/withdrawal-requests.html', context)
 
+@login_required
 def set_withdrawal_request_status(request, pk, type):
     request.session['mandem'] = 'yo'
     context = {}
@@ -1092,7 +1104,7 @@ def set_withdrawal_request_status(request, pk, type):
         )
     return render(request, 'core/withdrawal-requests.html', context)
 
-# @login_required
+@login_required
 def confirm_withdrawal_request(request, type, withdrawal_pk, response):
     if not request.user.is_authenticated:
         return redirect('accounts:innovator_login')
@@ -1148,6 +1160,7 @@ def confirm_withdrawal_request(request, type, withdrawal_pk, response):
     return redirect('home')
     # return render(request, 'core/withdrawal-confirmation.html', context)
 
+@login_required
 def send_kbq(request, withdrawal_pk, type):
     if type == 'p_f':
         withdrawal_request = Withdrawal.objects.get(pk=withdrawal_pk)
@@ -1248,6 +1261,7 @@ def kbq_confirmation(request, withdrawal_pk, type):
             
     return render(request, 'core/kbq-confirmation-request.html', context)
 
+@login_required
 def approve_withdrawal_request(request, withdrawal_pk, type):
     context = {}
     if request.user.is_moderator:
@@ -1310,6 +1324,8 @@ def approve_withdrawal_request(request, withdrawal_pk, type):
         return HttpResponse('You do not have the privilege to view this page.')
     return render(request, 'core/withdrawal_requests.html', context)
 
+
+@login_required
 def reject_withdrawal_request(request, withdrawal_pk, type):
     context = {}
     if request.user.is_moderator:
@@ -1427,6 +1443,7 @@ def reject_send_money_request(request, amount_to_send, recipient, send_money_pk)
         return HttpResponseForbidden('You have already responded to this request')
     return HttpResponse(f'Your request to send  ₦{amount_to_send} to {recipient.user.username} failed due to disapproval from the owner of this account.')
 
+@login_required
 def add_milestone(request, project_pk):
     from .tasks import send_milestone_email_task
     context = {}
@@ -1467,6 +1484,7 @@ def add_milestone(request, project_pk):
         return HttpResponse('You do not have the privilege to access this page')
     return render(request, 'core/add-milestone.html', context)
 
+@login_required
 def project_milestones(request, project_pk):
     context = {}
     project = Project.objects.get(pk=project_pk)
@@ -1474,12 +1492,14 @@ def project_milestones(request, project_pk):
     context['project_milestones'] = project_milestones
     return render(request, 'core/project-milestones.html', context)
 
+@login_required
 def milestone_detail(request, milestone_pk):
     context = {}
     milestone = ProjectMilestone.objects.get(pk=milestone_pk)
     context['milestone'] = milestone
     return render(request, 'core/milestone-detail.html', context)
 
+@login_required
 def update_milestone(request, milestone_pk):
     from .tasks import send_milestone_email_task
     context = {}
@@ -1582,6 +1602,7 @@ def search_innovations(request):
             context['innovations'] = innovations
     return render(request, 'core/innovations-list.html', context)
 
+
 def send_funding_completed_email(investment_pk):
     investment = Project.objects.get(pk=investment_pk)
 
@@ -1630,6 +1651,7 @@ def send_funding_completed_email(investment_pk):
             html_message=html_message
         )
 
+
 def send_milestone_email(investment_pk, current_site, milestone_pk, type):
     investment = Project.objects.get(pk=investment_pk)
     investors = Make_Investment.objects.filter(investment__pk=investment_pk).values_list('sender', flat=True).distinct()
@@ -1664,6 +1686,7 @@ def send_milestone_email(investment_pk, current_site, milestone_pk, type):
             )
             to_email = f'{investor.user.email}'
             send_mail(subject, message = strip_tags(html_message), from_email=from_email, recipient_list= [to_email], fail_silently=False, html_message=html_message)
+
 
 def send_project_approval_status(investment_pk):
     investment = Project.objects.get(pk=investment_pk)
@@ -1752,6 +1775,7 @@ def pay_investors(investment_pk):
     # return HttpResponse('Payment of all ROIs is being processed.')
 
 
+@login_required
 def payment_of_roi(request, investment_pk):
     project = Project.objects.get(pk=investment_pk)
     from .tasks import pay_investors_task
