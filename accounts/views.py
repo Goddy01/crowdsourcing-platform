@@ -207,6 +207,7 @@ def sign_out(request):
     logout(request)
     return redirect('home')
 
+@login_required
 def profile(request):
     user = None
     if not request.user.is_authenticated:
@@ -230,7 +231,7 @@ def profile(request):
         
     })
 
-
+@login_required
 def mod_profile(request):
     if not request.user.is_authenticated:
         return redirect('accounts:moderator_login')
@@ -247,6 +248,7 @@ def mod_profile(request):
         
     })
 
+@login_required
 def others_profile(request, innovator_pk):
     context = {}
     innovator = Innovator.objects.get(pk=innovator_pk)
@@ -282,6 +284,7 @@ def others_profile(request, innovator_pk):
     context['preview_testimonies'] = preview_testimonies
     return render(request, 'accounts/others_profile.html', context)
 
+@login_required
 def set_new_msg_email_alert_preference(request, checkbox):
     checkbox = checkbox.lower()
     user = BaseUser.objects.get(username=request.user.username)
@@ -293,7 +296,7 @@ def set_new_msg_email_alert_preference(request, checkbox):
 
     return JsonResponse(data=user.receive_msg_email_notif, status=200, safe=False)
 
-
+@login_required
 def edit_profile(request):
     user = BaseUser.objects.get(username=request.user.username)
     try:
@@ -542,6 +545,7 @@ def edit_profile(request):
         'kba': len(KBAQuestion.objects.filter(user__username=request.user.username))
     })
 
+@login_required
 def moderator_edit_profile(request):
     try:
         user = Moderator.objects.get(user__username=request.user.username)
@@ -684,6 +688,7 @@ def resend_email_activation(request):
     send_mail(subject, message, from_email, to_email, fail_silently=False)
     return redirect('accounts:activation_sent')
 
+@login_required
 def remove_pfp(request):
     user = BaseUser.objects.get(username=request.user.username)
     if user.pfp:
@@ -693,11 +698,13 @@ def remove_pfp(request):
         bool = False
     return JsonResponse(bool, safe=False)
 
+@login_required
 def remove_skill(request, skill_id):
     skill = InnovatorSkill.objects.get(skill_id=skill_id)
     skill.delete()
     return redirect('accounts:edit_profile')
 
+@login_required
 def remove_service(request, pk):
     service = Service.objects.get(pk=pk)
     service.delete()
@@ -730,6 +737,7 @@ def payment(request):
     return redirect('accounts:make_payment')
     # return render(request, 'accounts/payment.html')
 
+@login_required
 def send_connection_request(request, recipient_pk):
     recipient = get_object_or_404(Innovator, pk=recipient_pk)
     requester = get_object_or_404(Innovator, user__pk=request.user.pk)
@@ -917,6 +925,7 @@ def remove_friend(request, friend_pk):
         return JsonResponse({'error': 'You are not friends with the user you want to remove'})
     return JsonResponse(data= {'status': 'success'})
 
+@login_required
 def testify(request, testified_person_pk):
     context = {}
     testified_person = Innovator.objects.get(pk=testified_person_pk)
@@ -984,6 +993,7 @@ def testify(request, testified_person_pk):
     return render(request, 'accounts/testimonials.html', context)
 
 
+@login_required
 def get_testimonies(request, testified_person_pk):
     offset = int(request.GET.get('offset', 0))
     limit = int(request.GET.get('limit', 10))
@@ -1019,6 +1029,7 @@ def pagination(request, object, num_of_pages):
         objects = objects_paginator.page(objects_paginator.num_pages)
     return objects
 
+@login_required
 def search_people(request):
     context = {}
     query = request.GET.get('query')
@@ -1086,6 +1097,7 @@ def downvote_testimony(request, testimony_pk):
         testimony.save()
     return JsonResponse({'downvotes': testimony.downvoted_by.count(), 'upvotes': testimony.upvoted_by.count()})
 
+@login_required
 def people(request):
     context = {}
     if request.user.is_moderator:
@@ -1136,6 +1148,7 @@ def unverify_account(request, person_pk):
         return HttpResponse('You are not authorized to view this page.')
     return JsonResponse({'is_verified': user.is_verified})
 
+@login_required
 def moderator_search_people(request):
     context = {}
     query = request.GET.get('query')
