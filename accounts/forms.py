@@ -65,6 +65,12 @@ class BaseUserSignUpForm(UserCreationForm):
         if BaseUser.objects.filter(username__iexact=username):
             raise forms.ValidationError('A user with this username already exist.')
         return username
+    # def clean_first_name(self):
+    #     first_name = self.cleaned_data.get('first_name')
+    #     return first_name
+    # def clean_last_name(self):
+    #     last_name = self.cleaned_data.get('last_name')
+    #     return last_name
 
 class InnovatorSignUpForm(UserCreationForm):
     # job_title = forms.CharField(

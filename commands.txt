@@ -40,3 +40,15 @@ docker exec -it crowdsourcing_container bash
 
 docker exec -it crowdsourcing_container sh
     ( Access docker shell terminal)
+
+docker ps
+    ( Lists the currently running containers on the system )
+
+docker inspect <container_id>
+    ( Used to obtain detailed information about a Docker container, image, network, or volume )
+
+psql -U <username>
+    ( To access postgresql terminal in order to write SLQ statements. Default name and password is postgres)
+
+CREATE USER <username> WITH PASSWORD '<password>';
+ALTER USER <username> WITH SUPERUSER;

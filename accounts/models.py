@@ -47,11 +47,13 @@ class BaseUserMgr(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, username, password):
+    def create_superuser(self, email, username, first_name, last_name, password):
         """Creates and saves a superuser with the given details"""
         user = self.create_user(
             email=email,
             username=username,
+            first_name=first_name,
+            last_name=last_name,
             password=password
         )
 
@@ -110,7 +112,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = "email"
     # REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'middle_name', 'phone_num']
-    REQUIRED_FIELDS = ['username', ]
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
     objects = BaseUserMgr()
 

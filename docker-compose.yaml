@@ -5,20 +5,27 @@ services:
   redis:
     image: redis:latest
     container_name: redis
+    restart: always
 
   # POSTGRESQL DB
   db:
     image: postgres
+    env_file:
+      - .env
     volumes:
       - ./data/db:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USERNAME=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     container_name: postgres_db
+    restart: always
+    ports:
+      - "5432:5432"
 
   app:
     build: .
+    restart: always
     volumes:
       - .:/crowdsourcing-platform
     ports:
@@ -47,6 +54,7 @@ services:
 
   rabbit:
     image: rabbitmq:3-management
+    restart: always
     env_file:
       - .env
     environment:
@@ -57,3 +65,15 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+  pgadmin:
+    container_name: pgadmin4
+    env_file:
+      - .env
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+      - PGADMIN_LISTEN_PORT=${PGADMIN_LISTEN_PORT}
+    ports:
+      - "5050:80"

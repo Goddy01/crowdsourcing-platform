@@ -150,11 +150,11 @@ ASGI_APPLICATION = 'crowdsourcing.asgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'NAME': f"{os.environ.get('POSTGRES_DB')}",
+        'USER': f"{os.environ.get('POSTGRES_USERNAME')}",
+        'PASSWORD': f"{os.environ.get('POSTGRES_PASSWORD')}",
         'HOST': 'db',
-        'PORT': 5432
+        'PORT': '5432'
     }
 }
 
