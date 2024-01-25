@@ -19,10 +19,9 @@
             <form action="{% url 'search_innovations' %}" method="get">
                 <input class="" name="query" type="text" placeholder="Search innovations" value="{% if query %}{{ query }}{% endif %}">
             </form>
-            {% if request.session.search_innovations_no_result %}
+            {% if query and not innovations %}
             <h3>No innovation matches "{{ request.session.innovation_query }}"</h3>
-            {% else %}
-            {% if query %}
+            {% elif query and innovations %}
             <h3 class="mb-5">Results for "{{ query }}"</h3>
             {% endif %}
 
@@ -53,6 +52,7 @@
                     <!-- Pagination-->
                 </div>
                 
+        {% if innovations.count > 4 %}
         <div class="d-flex flex-column m-auto pagination mt-5">
             <nav aria-label="Page navigation">
                 <ul class="pagination pg-grey justify-content-center" style="list-style: none;">

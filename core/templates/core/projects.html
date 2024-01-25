@@ -67,12 +67,12 @@
 						<button type="reset"><em class="mdi mdi-restart"></em> Reset filters</button>
 					</div> -->
 				</form>
-				{% if request.session.search_projects_no_result %}
-				<h3>No investment project matches "{{request.session.project_query}}"</h3>
-				{% else %}
-				{% if query %}
+				{% if query and not projects %}
+				<h3>No investment project matches "{{query}}"</h3>
+				{% elif query and projects %}
 				<h3 class="mb-5">Results for "{{ query }}"</h3>
 				{% endif %}
+
 				<div class="project-listing">
                     {% for project in projects %}
 					<div class="entry-project project-status-active">
@@ -159,6 +159,7 @@
                     {% endfor %}
 				</div>
 				
+				{% if projects.count > 4 %}
 				<div class="d-flex flex-column m-auto pagination mt-5">
 					<nav aria-label="Page navigation">
 					{% if from_expected_return %}

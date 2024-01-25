@@ -77,6 +77,28 @@ def add_project(request):
         create_project_form = CreateProjectForm()
     return render(request, 'core/add-project.html', {'countries': countries, 'create_project_form': create_project_form, 'project_creation_request': project_creation_request})
 
+def search_projects(request):
+    context = {}
+    query = request.GET.get('query')
+    context['query'] = query
+    request.session['project_query'] = query
+    if request.method == 'GET':
+        if query is not None:
+            projects = Project.objects.filter(
+                Q(name__icontains=query) | Q(motto__icontains=query)
+            ).order_by('-date_created').distinct()
+            # if not projects:
+            #     request.session['search_projects_no_result'] = True
+            #     return redirect('projects')
+            projects = pagination(request, projects, 4)
+            context['projects'] = projects
+            request.session['search_projects_no_result'] = False
+        else:
+            projects = pagination(request, Project.objects.filter(investment_deadline__gte=datetime.datetime.now(), target_reached=False).order_by('-date_created'), 2)
+            context['projects'] = projects
+    return render(request, 'core/projects.html', context)
+
+
 def projects_list(request):
     current_date = datetime.date.today()
     context = {}
@@ -372,7 +394,7 @@ def deposit_money(request):
                 type='DEPOSIT'
             )
             context['transaction'] = Transaction.objects.filter(owner__user__pk=request.user.pk).order_by('-date_generated')[0]
-            return redirect('projects')
+            return redirect('deposit')
         else:
             print('Transaction could not be completed')
         # print('DONE')
@@ -1560,26 +1582,6 @@ def pagination(request, object, num_of_pages):
         objects = objects_paginator.page(objects_paginator.num_pages)
     return objects
 
-def search_projects(request):
-    context = {}
-    query = request.GET.get('query')
-    context['query'] = query
-    request.session['project_query'] = query
-    if request.method == 'GET':
-        if query:
-            projects = Project.objects.filter(
-                Q(name__icontains=query) | Q(motto__icontains=query)
-            ).order_by('-date_created').distinct()
-            if not projects:
-                request.session['search_projects_no_result'] = True
-                return redirect('projects')
-            projects = pagination(request, projects, 4)
-            context['projects'] = projects
-            request.session['search_projects_no_result'] = False
-        else:
-            projects = pagination(request, Project.objects.filter(investment_deadline__gte=datetime.datetime.now(), target_reached=False).order_by('-date_created'), 2)
-            context['projects'] = projects
-    return render(request, 'core/projects.html', context)
 
 def search_innovations(request):
     context = {}
@@ -1591,9 +1593,9 @@ def search_innovations(request):
             innovations = Innovation.objects.filter(
                 Q(title__icontains=query) | Q(description__icontains=query)
             ).order_by('-date_created').distinct()
-            if not innovations:
-                request.session['search_innovations_no_result'] = True
-                return redirect('innovations_list')
+            # if not innovations:
+            #     request.session['search_innovations_no_result'] = True
+            #     return redirect('innovations_list')
             innovations = pagination(request, innovations, 4)
             context['innovations'] = innovations
             request.session['search_innovations_no_result'] = False

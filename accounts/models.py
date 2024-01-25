@@ -80,7 +80,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     email =                         models.EmailField(max_length=128, unique=True, blank=True)
     job_title =                     models.CharField(max_length=100, null=True, blank=True)
     bio =                           models.CharField(max_length=100, null=True, blank=True)
-    about_me =                      models.TextField(null=True, blank=True, max_length=2000)
+    about_me =                      models.TextField(null=True, blank=True, max_length=2000, default='')
     pfp =                           models.ImageField(upload_to=upload_location_pfp, blank=True, null=True, default='pfps/default_profile_image.jpg')
     nin =                           models.CharField(null=True, blank=True, max_length=254)
     # id_card =                       models.ImageField(upload_to=upload_location_id_card, blank=True, null=True)

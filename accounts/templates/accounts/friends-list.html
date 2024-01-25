@@ -176,6 +176,7 @@
                     {% endfor %}
                     </div>
                 </div>
+                {% if friends.count > 10 %}
                 <ul class="pagination pg-grey justify-content-center" style="list-style: none;">
                     {% if friends.has_previous %}
                         <li class="page-item">
@@ -207,6 +208,7 @@
                         </li>
                     {% endif %}
                 </ul>
+                {% endif %}
             </div>
         </div>
         

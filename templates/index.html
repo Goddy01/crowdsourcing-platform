@@ -174,6 +174,7 @@
             <div class="container">
                 <h2 class="entry-title">New projects</h2>
                 <div class="project-listing">
+                    {% if new_projects %}
                     {% for project in new_projects %}
                     <div class="entry-project project-status-active">
                         <div class="project-media">
@@ -246,6 +247,9 @@
                         </div>
                     </div>
                     {% endfor %}
+                    {% else %}
+                    <p>No New Projects</p>
+                    {% endif %}
                     <!-- <div class="entry-project project-status-coming-soon">
                         <div class="project-media">
                             <a href="single-project.html">
@@ -283,6 +287,7 @@
                 <div class="spacing1"></div>
                 <h2 class="entry-title">Popular Projects</h2>
                 <div class="project-listing grid-format">
+                    {% if popular_projects %}
                     {% for project in popular_projects %}
                     <!-- {% if project.num_investors > 0 %} -->
                     <div class="entry-project project-status-funded">
@@ -333,6 +338,9 @@
                     </div>
                     <!-- {% endif %} -->
                     {% endfor %}
+                    {% else %}
+                    <p>No Popular Projects</p>
+                    {% endif %}
                 </div>
                 <!-- <div class="pagination">
                     <a href="projects.html" class="button"><em class="mdi mdi-dots-horizontal"></em> Browse more projects</a>

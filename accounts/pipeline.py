@@ -32,4 +32,5 @@ def save_profile(backend, user, response, *args, **kwargs):
     user = BaseUser.objects.get(email=user.email)
     user.signup_confirmation = True
     user.signup_with_google = True
+    user.is_innovator = True
     user.save()

@@ -228,6 +228,7 @@ def profile(request):
         'user_services': Service.objects.filter(user__pk=request.user.pk),
         'testimonies': testimonies,
         'preview_testimonies': preview_testimonies,
+        'projects': Project.objects.filter(innovator__user=user)
         
     })
 
