@@ -59,3 +59,5 @@ rabbitmqctl set_user_tags RabbitUser administrator
 rabbitmqctl set_permissions -p rabbit RabbitUser ".*" ".*" ".*"
 rabbitmqctl delete_user guest
     ( For adding a new user to RabbitMQ, adding vhost, and setting set_permissions for the new user )
+
+docker-compose run --rm <service-name-defined-in-django-compose.yaml> sh -c "django-admin startproject <project-name> ."

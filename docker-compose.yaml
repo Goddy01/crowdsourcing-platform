@@ -31,6 +31,7 @@ services:
     restart: always
     volumes:
       - .:/crowdsourcing-platform
+      - ./static:/static
     image: app:crowdsourcing-platform
     container_name: crowdsourcing_container
     command: python manage.py runserver 0.0.0.0:8000
@@ -38,6 +39,8 @@ services:
       - db
     ports:
       - "8000:8000"
+    environment:
+      - DEBUG=0
 
 
   # CELERY
