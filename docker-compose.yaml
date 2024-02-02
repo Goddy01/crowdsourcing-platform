@@ -26,12 +26,14 @@ services:
     #   app_net:
     #     ipv4_address: 192.168.0.2
 
+# WEB APP
   app:
     build: .
     restart: always
     volumes:
       - .:/crowdsourcing-platform
       - ./static:/static
+      - ./media:/media
     image: app:crowdsourcing-platform
     container_name: crowdsourcing_container
     command: python manage.py runserver 0.0.0.0:8000
@@ -42,6 +44,20 @@ services:
     environment:
       - DEBUG=0
 
+# RABBITMQ
+  rabbit:
+    image: rabbitmq:3-management
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS}
+    container_name: rabbit
+    hostname: rabbit
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 
   # CELERY
   celery:
@@ -58,19 +74,8 @@ services:
       - redis
       - app
 
-  rabbit:
-    image: rabbitmq:3-management
-    restart: always
-    env_file:
-      - .env
-    environment:
-      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
-      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS}
-    container_name: rabbit
-    hostname: rabbit
-    ports:
-      - "5672:5672"
-      - "15672:15672"
+
+# PDAGMIN4
   pgadmin:
     container_name: pgadmin4
     env_file:

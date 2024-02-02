@@ -7,6 +7,7 @@ ENV PYTHONUNBUFFERED=1
 
 # FOR DEBIAN
 RUN /usr/bin/python3 -m venv /py && \
+    /py/bin/pip install --upgrade pip && \
     /py/bin/pip install -r requirements.txt && \
     adduser --disabled-password --no-create-home django-user && \
     apt-get update && apt-get install -y postgresql-server-dev-all gcc python3-dev && \
@@ -16,6 +17,8 @@ RUN /usr/bin/python3 -m venv /py && \
 #     /py/bin/pip install -r requirements.txt && \
 #     adduser --disabled-password --no-create-home django-user
 # RUN apt-get update && apt-get install -y postgresql-server-dev-all gcc python3-dev
+
+USER django-user
 
 ENV PATH="/py/bin:$PATH"
 

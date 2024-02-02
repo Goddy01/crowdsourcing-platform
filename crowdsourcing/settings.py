@@ -30,8 +30,14 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # 1 => True
 DEBUG = bool(int(os.environ.get('DEBUG', 0)))
 
-ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['*']
+ALLOWED_HOSTS = []
+ALLOWED_HOSTS.extend(
+    filter(
+        None,
+        os.environ.get('ALLOWED_HOSTS', '').split(','),
+    )
+)
+# CSRF_TRUSTED_ORIGINS = ['*']
 
 
 # Application definition
@@ -389,5 +395,5 @@ THOUSAND_SEPARATOR = True
 CELERY_BROKER_USER = os.environ.get('BROKER_USER')
 CELERY_BROKER_PASSWORD = os.environ.get('BROKER_PASSWORD')
 CELERY_BROKER_URL = f'amqp://{os.environ.get("RABBITMQ_USER")}:{os.environ.get("RABBITMQ_PASS")}@rabbit:5672/rabbit'
-CELERY_RESULT_BACKEND = 'django-db'
+# CELERY_RESULT_BACKEND = 'django-db'
 CELERY_BROKER_BACKEND = "rpc://"
