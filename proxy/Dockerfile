@@ -1,4 +1,4 @@
-FROM nginxinc/nginx-unprivileged:1.24-bullseye-perl
+FROM nginxinc/nginx-unprivileged:1.24.0-bullseye
 
 LABEL maintainer="toshirothe3rd.vercel.app"
 
@@ -14,14 +14,19 @@ ENV APP_PORT=9000
 
 USER root
 
-RUN mkdir -p /vol/static && \
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y nginx && \
+    mkdir -p /vol/static && \
     chmod 755 /vol/static && \
+    mkdir -p /vol/media && \
+    chmod 755 /vol/media && \
     touch /etc/nginx/conf.d/default.conf && \
     chown nginx:nginx /etc/nginx/conf.d/default.conf && \
     chmod +x /run.sh
 
-VOLUME /vol/static
+VOLUME /vol/static /vol/media
 
 USER nginx
 
-CMD ["/run.sh"]
+CMD ["nginx", "-g", "daemon off;"]

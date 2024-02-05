@@ -5,17 +5,28 @@ ENV PYTHONUNBUFFERED=1
 # For ALPINE
 # RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev
 
+COPY requirements.txt /requirements.txt
+
+RUN pip freeze > requirements.txt
+
+COPY ./scripts /scripts
+
+COPY . .
 # FOR DEBIAN
-RUN /usr/bin/python3 -m venv /py && \
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y linux-headers-generic && \
+    apt-get install -y python3-venv python3-dev python-dev && \
+    apt-get install -y nginx && \
+    /usr/bin/python3 -m venv /py && \
     /py/bin/pip install --upgrade pip && \
-    /py/bin/pip install -r requirements.txt && \
+    /py/bin/pip install --requirement /requirements.txt && \
     adduser --disabled-password --no-create-home django-user && \
-    apt-get update && apt-get install -y postgresql-server-dev-all gcc python3-dev linux-headers && \
+    apt-get install -y postgresql-server-dev-all gcc && \
     rm -rf /var/lib/apt/lists/* && \
-    mkdir -p /vol/web/static && \
-    mkdir -p /vol/web/media && \
-    chown -R crowdsourcing:crowdsourcing /vol && \
-    chmod -R +x /scripts
+    mkdir -p /vol/web/static /vol/web/media && \
+    chmod -R +x /scripts /requirements.txt
+
 
 # RUN python -m venv /py && \
 #     /py/bin/pip install -r requirements.txt && \
@@ -28,13 +39,9 @@ ENV PATH="/scripts:/py/bin:$PATH"
 
 WORKDIR /crowdsourcing-platform
 
-COPY requirements.txt requirements.txt
 
-COPY ./scripts /scripts
+# RUN pip3 install -r requirements.txt
 
-RUN pip3 install -r requirements.txt
-
-COPY . .
 
 CMD ["run.sh"]
 
