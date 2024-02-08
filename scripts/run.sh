@@ -2,6 +2,9 @@
 
 set -e
 
+ls -la /vol/
+ls -la /vol/web 
+
 python manage.py runserver
 python manage.py collectstatic --noinput 
 python manage.py migrate

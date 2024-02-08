@@ -13,7 +13,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./data/db:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USERNAME=${POSTGRES_USERNAME}
@@ -32,19 +32,23 @@ services:
     env_file:
       - .env
     restart: always
+    command: sh -c "python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/crowdsourcing-platform
-      - ./static:/static
-      - ./media:/media
+      - ./data/web:/vol/web
     image: app:crowdsourcing-platform
     container_name: crowdsourcing_container
-    command: python manage.py runserver 0.0.0.0:8000
+    
     depends_on:
       - db
-    ports:
-      - "8000:8000"
+    # ports:
+    #   - 8000:8000
     environment:
       - DEBUG=${DEBUG}
+      - SECRET_KEY=${SECRET_KEY}
+      - DJANGO_ALLOWED_HOSTS=${DOMAIN}
+    # networks:
+    #   - default
 
 # RABBITMQ
   rabbit:
@@ -106,11 +110,42 @@ services:
   proxy:
     build: 
       context: ./proxy
-    command: nginx -g "daemon off;"
     restart: always
     depends_on:
       - app
     ports:
-      - 80:8000
+      - 80:80
+      - 433:433
     volumes:
-      - ./static:/vol/static
+      - certbot-web:/vol/www
+      - proxy-dhparams:/vol/proxy
+      - certbot-certs:/etc/letsencrypt
+    environment:
+      - DOMAIN=${DOMAIN}
+    # networks:
+    #   - default
+
+  certbot:
+    build:
+      context: ./certbot
+    command: echo "Skipping..."
+    environment:
+      - EMAIL=${ACME_DEFAULT_EMAIL}
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - certbot-web:/vol/www
+      - certbot-certs:/etc/letsencrypt/
+    depends_on:
+      - proxy
+
+
+# networks:
+#   default:
+#     driver: bridge
+
+volumes:
+  certbot-web:
+  proxy-dhparams:
+  certbot-certs:
+  postgres-data:
+  static-data:

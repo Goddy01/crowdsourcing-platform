@@ -61,3 +61,20 @@ rabbitmqctl delete_user guest
     ( For adding a new user to RabbitMQ, adding vhost, and setting set_permissions for the new user )
 
 docker-compose run --rm <service-name-defined-in-django-compose.yaml> sh -c "django-admin startproject <project-name> ."
+
+<------------------------Configuring NGINX Docker Image------------------------>
+
+The next step is to add an NGINX reverse proxy to the project.
+
+The first time we run it, it will handle the following initialisation steps:
+
+    Generate DH Parameters which will be stored in a volume (see What’s the purpose of DH Parameters? to learn what this is for)
+    Handle the acme challenge of HTTP for initialising our certificate
+
+These are only required the first time we deploy our project to a new server.
+
+After the first run, it will then handle the following:
+
+    Redirect HTTP requests to HTTPS
+    Handle Django static files
+    Forward requests to uWSGI

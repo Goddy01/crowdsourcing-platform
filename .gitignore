@@ -86,6 +86,7 @@ cover/
 # Django stuff:
 db.sqlite3
 /static
+/data
 
 # Flask stuff:
 instance/
