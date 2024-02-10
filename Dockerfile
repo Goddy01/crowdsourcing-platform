@@ -42,5 +42,4 @@ ENV PATH="/scripts:/py/bin:$PATH"
 USER django-user
 
 # Define the default command to run the application
-# CMD ["run.sh"]
-CMD ["uwsgi", "--socket", ":9000", "--workers", "4", "--master", "--enable-threads", "--module", "crowdsourcing.wsgi"]
+CMD ["run.sh"]

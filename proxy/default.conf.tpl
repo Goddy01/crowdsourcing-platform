@@ -1,10 +1,8 @@
 server {
-    listen 80;
+    listen ${LISTEN_PORT};
 
-    location /.well-known/acme-challenge/ {
-        root /vol/www/;
-    }
 
+    
     location /static {
         alias /vol/static;
     }

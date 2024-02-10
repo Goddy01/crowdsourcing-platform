@@ -78,3 +78,5 @@ After the first run, it will then handle the following:
     Redirect HTTP requests to HTTPS
     Handle Django static files
     Forward requests to uWSGI
+
+docker compose -f docker-compose.yml logs
