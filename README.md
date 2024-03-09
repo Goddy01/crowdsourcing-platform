@@ -2,6 +2,7 @@ CrowdSourceIt
 Technologies Used:
 
 Frontend:
+
     HTML
     CSS
     Bootstrap
@@ -10,12 +11,14 @@ Frontend:
     AJAX
 
 Backend:
+
     Python
     Django
     Django Channels
     Websocket
 
 Technologies:
+
     Redis
     RabbitMQ
     Celery
@@ -24,9 +27,11 @@ Technologies:
     Git
 
 Database:
+
     PostgreSQL
 
 APIs:
+
     Paystack Payment Gateway
     Google OAuth
 
@@ -35,6 +40,7 @@ Project Overview:
   CrowdSourceIt is a web application designed and implemented for crowdsourcing and crowdfunding, employing a stack of modern technologies. The platform accommodates distinct user types, providing tailored experiences for investors/innovators and moderators.
 
 Key Features:
+
     => Specialized Moderator Role:
         Introduced a specialized moderator role with authorization capabilities for investment projects and user account verification, ensuring a secure and reliable platform.
     => Robust Built-in Chat System:
@@ -53,6 +59,7 @@ Key Features:
         Implemented a comprehensive testimonial system featuring ratings and reviews, allowing investors to provide valuable feedback about project owners.
 
 Technology Highlights:
+
     => Containerization with Docker:
         Utilized Docker for containerization, simplifying deployment and ensuring consistent behavior across environments.
     => Enhanced Chat System Performance:
