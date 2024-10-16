@@ -144,9 +144,9 @@
                         <script src="https://js.paystack.co/v1/inline.js"></script>
                         <p class="mb-0">
                             <span class="fw-bold">
-                                {{ request.user.get_full_name }}
+                                <!-- {{ request.user.get_full_name }} -->
                             </span>
-                            <span>(@{{ request.user.username }})</span>
+                            <b>@{{ request.user.username }}</b>
                         </p>
                         {% if user.job_title %}
                         <h1 class="fw-bold mt-0 mb-2 fs-1">{{ user.job_title }}</h1>
@@ -156,11 +156,11 @@
                             Verified✅
                         </button>
                         {% endif %}
-                        <p>
+                        <!-- <p>
                             {% if user.bio %}
                             <b>{{ user.bio }}</b>
                             {% endif %}
-                        </p>
+                        </p> -->
                         <ul>
                             <li></li>
                         </ul>

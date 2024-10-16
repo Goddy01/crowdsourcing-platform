@@ -80,3 +80,7 @@ After the first run, it will then handle the following:
     Forward requests to uWSGI
 
 docker compose -f docker-compose.yml logs
+
+ssh ec2-user@ec2-16-171-14-241.eu-north-1.compute.amazonaws.com
+    ( Access aws shell for the ec2 instance)
+    ( ssh ec2-user(default user created on ec2)@<Public IPv4 DNS> )
